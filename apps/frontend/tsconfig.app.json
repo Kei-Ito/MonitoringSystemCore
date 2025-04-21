@@ -1,0 +1,14 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "composite": true,
+    "allowImportingTsExtensions": true,  // ← ここだけ必要
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@shared/*": ["../../shared/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "references": [{ "path": "../../shared" }]
+}

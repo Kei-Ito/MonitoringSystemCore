@@ -1,0 +1,20 @@
+{
+  "name": "monitoring-core-service",
+  "private": true,
+  "packageManager": "pnpm@9.1.0",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "dev": "pnpm --filter ./apps/frontend... run dev & pnpm --filter ./apps/backend... run dev",
+    "lint": "pnpm -r run lint",
+    "test": "pnpm -r test",
+    "generate:barrels": "barrelsby -d shared/src --location all --delete"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "@vue/tsconfig": "^0.7.0",
+    "barrelsby": "^2.8.1"
+  },
+  "dependencies": {
+    "tsc": "^2.0.4"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@monitoring/backend",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@monitoring/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.2"
+  }
+}
