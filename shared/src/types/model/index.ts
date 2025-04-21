@@ -4,3 +4,4 @@
 
 export * from "./ChartSetting/index";
 export * from "./IOModule/index";
+export * from "./SystemSetting/index";

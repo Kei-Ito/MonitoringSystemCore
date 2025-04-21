@@ -5,7 +5,16 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "clean": "tsc -b --clean",
+    "rebuild": "pnpm run clean && pnpm run build"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./api": "./dist/types/api/index.js",
+    "./enum": "./dist/enum/index.js",
+    "./model":"./dist/types/model/index.js",
+    "./utils": "./dist/types/utils/index.js"
   },
   "devDependencies": {
     "typescript": "~5.7.2"

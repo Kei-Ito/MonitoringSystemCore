@@ -9,8 +9,8 @@ export default defineConfig({
     alias: {
       // @/ はフロントエンド自身
       "@": fileURLToPath(new URL("./src", import.meta.url)),
-      // @shared/xxx で共通コードを参照
-      "@shared": fileURLToPath(
+      // @monitoring/shared/xxx で共通コードを参照
+      "@monitoring/shared": fileURLToPath(
         new URL("../../shared/src", import.meta.url)
       )
     }

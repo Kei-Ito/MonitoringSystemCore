@@ -10,7 +10,7 @@
       "declaration": true,
       "noEmit": false,            // 必ず emit を許可
       "paths": {
-         "@shared/*": ["src/*"]
+         "@shared/*": ["src/*"],
       }
     },
     "include": ["src/**/*.ts"]

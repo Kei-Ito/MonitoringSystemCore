@@ -12,7 +12,8 @@
   "devDependencies": {
     "@types/node": "^22.14.1",
     "@vue/tsconfig": "^0.7.0",
-    "barrelsby": "^2.8.1"
+    "barrelsby": "^2.8.1",
+    "typescript": "^5.7.2"
   },
   "dependencies": {
     "tsc": "^2.0.4"

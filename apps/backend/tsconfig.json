@@ -3,8 +3,13 @@
   "compilerOptions": {
     "composite": true,
     "rootDir": "src",
+    "baseUrl": ".",
     "outDir": "dist",
-    "declaration": true
+    "declaration": true,
+    "paths": {      
+      "@/*": ["src/*"],            // srcディレクトリへのエイリアス
+      "@monitoring/shared/*": ["../../shared/dist/*"], // sharedディレクトリへのエイリアス
+    }
   },
   "include": ["src/**/*.ts"],
   "references": [{ "path": "../../shared" }]

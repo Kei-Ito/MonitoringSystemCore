@@ -2,14 +2,29 @@
   "name": "@monitoring/backend",
   "version": "0.0.0",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "dev"  : "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts --watch src --ext ts,js",
+    "serve": "node -r tsconfig-paths/register dist/server.js",
+    "start": "pnpm run serve"
   },
   "dependencies": {
-    "@monitoring/shared": "workspace:*"
+    "@monitoring/shared": "workspace:*",
+    "express": "^4.21.1",
+    "cors": "^2.8.5",
+    "axios": "^1.7.7",
+    "mysql2": "^3.11.4",
+    "uuid": "^10.0.0",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
-    "typescript": "~5.7.2"
+    "ts-node": "^10.9.2",
+    "nodemon": "^3.1.7",
+    "@types/node": "^22.7.6",
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.5.13"
   }
 }
