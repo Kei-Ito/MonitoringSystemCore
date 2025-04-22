@@ -1,7 +1,7 @@
 // src/controllers/fileController.ts
 import { Request, Response } from 'express';
 import fs from 'fs';
-import { getCSVFilePath, deleteCSVFile } from '@/services/fileService';
+import { getCSVFilePath, deleteCSVFile } from 'src/services/fileService';
 
 // 既存のCSVダウンロード関数
 export const downloadCSV = (req: Request, res: Response) => {

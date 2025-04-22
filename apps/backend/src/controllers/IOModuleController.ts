@@ -1,6 +1,6 @@
 // src/controllers/IOModuleController.ts
 import { Request, Response } from 'express';
-import * as IOModuleService from '@/services/IOModuleService';
+import * as IOModuleService from 'src/services/IOModuleService';
 import { deleteIOModuleRequest } from '@monitoring/shared/api';
 import { IOModule,IChannelSetting } from '@monitoring/shared/model';
 import { IOModuleStatus } from '@monitoring/shared/enum';

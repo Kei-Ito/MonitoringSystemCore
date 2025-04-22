@@ -5,18 +5,23 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -b",
-    "clean": "tsc -b --clean",
+    "build": "pnpm exec tsc -p ./tsconfig.json && pnpm exec tsc-alias -p ./tsconfig.json",
+    "clean": "pnpm exec tsc -b --clean",
     "rebuild": "pnpm run clean && pnpm run build"
   },
   "exports": {
-    ".": "./dist/index.js",
-    "./api": "./dist/types/api/index.js",
-    "./enum": "./dist/enum/index.js",
-    "./model":"./dist/types/model/index.js",
-    "./utils": "./dist/types/utils/index.js"
-  },
-  "devDependencies": {
-    "typescript": "~5.7.2"
+    "./package.json": "./package.json",
+    "./model": {
+      "import": "./dist/types/model/index.js"
+    },
+    "./utils": {
+      "import": "./dist/types/utils/index.js"
+    },
+    "./api": {
+      "import": "./dist/types/api/index.js"
+    },
+    "./enum": {
+      "import": "./dist/enum/index.js"
+    }
   }
 }

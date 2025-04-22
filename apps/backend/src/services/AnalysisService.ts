@@ -1,6 +1,6 @@
-import { Mesurement } from '@/models/MesurementModel';
-import * as database from '@/services/databaseService';
-import { saveDailyCumulativeValue, findCumulativeValueForDate } from '@/infra/database/trendDatabase';
+import { Mesurement } from 'src/models/MesurementModel';
+import * as database from 'src/services/databaseService';
+import { saveDailyCumulativeValue, findCumulativeValueForDate } from 'src/infra/database/trendDatabase';
 import { trendDataRequest } from '@monitoring/shared/api';
 
 /**

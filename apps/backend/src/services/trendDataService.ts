@@ -1,4 +1,4 @@
-import * as database from '@/services/databaseService';
+import * as database from 'src/services/databaseService';
 import { getIsDataExistRequestModel, getIsDataExistResponseModel } from '@monitoring/shared/api';
 
 

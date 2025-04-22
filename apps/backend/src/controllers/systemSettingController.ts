@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { SystemSettingService } from '@/config/SystemSetting';
-import { setSamplingInterval } from '@/services/IOModuleService';
-import { SystemSettingData } from '@monitoring/shared/types/model';
+import { SystemSettingService } from 'src/config/SystemSetting';
+import { setSamplingInterval } from 'src/services/IOModuleService';
+import { SystemSettingData } from '@monitoring/shared/model';
 
 const systemSettingService = SystemSettingService.getInstance();
 

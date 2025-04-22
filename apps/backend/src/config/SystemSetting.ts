@@ -1,4 +1,4 @@
-import * as database from "@/services/databaseService";
+import * as database from "src/services/databaseService";
 import { SystemSettingData } from "@monitoring/shared/model";
 import { Result } from "@monitoring/shared/utils";
 

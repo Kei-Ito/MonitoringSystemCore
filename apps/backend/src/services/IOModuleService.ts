@@ -1,9 +1,8 @@
-import * as api from '@/api/IOModuleAPI';
-import { getIOModuleInputResponse } from '@monitoring/shared/types/api/IOModule';
-import * as database from '@/services/databaseService';
-import SystemSettingService from '@/config/SystemSetting';
+import * as api from 'src/api/IOModuleAPI';
+import * as database from 'src/services/databaseService';
+import SystemSettingService from 'src/config/SystemSetting';
 import { IOModule,IChannelSetting } from '@monitoring/shared/model';
-import { IOModuleStatusResponse } from '@monitoring/shared/api';
+import { IOModuleStatusResponse,getIOModuleInputResponse } from '@monitoring/shared/api';
 import { IOModuleStatus } from '@monitoring/shared/enum';
 import { Result, ok, err } from '@monitoring/shared/utils';
 
@@ -251,7 +250,7 @@ export async function deleteChannel(channel_setting: IChannelSetting): Promise<R
       return err("指定されたIOモジュールが見つかりません。");
     }
     if (channel_setting.direction === "input") {
-      index = io_modules[io_module_index].input_channels.findIndex(channel => channel.channel_id === channel_setting.channel_id);
+      index = io_modules[io_module_index].input_channels.findIndex((channel:IChannelSetting) => channel.channel_id === channel_setting.channel_id);
       if (index === -1) {
         console.log(`Type of channel_id: ${typeof channel_setting.channel_id}`);
         console.log("指定された入力チャンネルが見つかりません。");
@@ -261,7 +260,7 @@ export async function deleteChannel(channel_setting: IChannelSetting): Promise<R
       }
       io_modules[io_module_index].input_channels.splice(index, 1);
     } else {
-      index = io_modules[io_module_index].output_channels.findIndex(channel => channel.channel_id === channel_setting.channel_id);
+      index = io_modules[io_module_index].output_channels.findIndex((channel:IChannelSetting) => channel.channel_id === channel_setting.channel_id);
       if (index === -1) {
         console.log("指定された出力チャンネルが見つかりません。");
         return err("チャンネルの削除に失敗しました。");

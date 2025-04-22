@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import * as database from '@/services/databaseService';
-import { getIsDataExist } from '@/services/trendDataService';
-import { getCumulativeValue } from '@/services/AnalysisService';
+import * as database from 'src/services/databaseService';
+import { getIsDataExist } from 'src/services/trendDataService';
+import { getCumulativeValue } from 'src/services/AnalysisService';
 import { trendSpan } from '@monitoring/shared/enum';
 import { csvDataRequest ,trendDataRequest,getIsDataExistRequestModel } from '@monitoring/shared/api';
 

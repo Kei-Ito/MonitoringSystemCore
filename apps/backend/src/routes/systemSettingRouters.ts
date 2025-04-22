@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import * as systemSettingController from '@/controllers/systemSettingController';
+import * as systemSettingController from 'src/controllers/systemSettingController';
 
 const router: Router = Router();
 

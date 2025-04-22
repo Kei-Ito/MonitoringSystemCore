@@ -1,6 +1,6 @@
 // src/routes/fileRoutes.ts
 import { Router } from 'express';
-import { downloadCSV } from '@/controllers/fileController';
+import { downloadCSV } from 'src/controllers/fileController';
 
 const router: Router = Router();
 

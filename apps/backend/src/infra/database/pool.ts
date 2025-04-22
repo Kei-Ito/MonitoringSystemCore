@@ -1,5 +1,5 @@
 import { createPool, Pool } from 'mysql2/promise';
-import { dbConfig } from '@/config/databaseConfig';
+import { dbConfig } from 'src/config/databaseConfig';
 
 // データベースの初期化時に使用するPool 
 let initPool: Pool | undefined;

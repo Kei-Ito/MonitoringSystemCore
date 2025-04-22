@@ -1,6 +1,6 @@
 // src/routes/sensorRoutes.ts
 import { Router } from 'express';
-import * as chartController from '@/controllers/chartController';
+import * as chartController from 'src/controllers/chartController';
 
 const router: Router = Router();
 

@@ -5,11 +5,19 @@
     "rootDir": "src",
     "baseUrl": ".",
     "outDir": "dist",
+    "esModuleInterop": true,
     "declaration": true,
     "paths": {      
-      "@/*": ["src/*"],            // srcディレクトリへのエイリアス
-      "@monitoring/shared/*": ["../../shared/dist/*"], // sharedディレクトリへのエイリアス
+      "src/*": ["src/*"],
+      "@monitoring/shared/*": ["../../shared/src/*"]
     }
+  },
+  "ts-node": {
+    "esm": true
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "resolveFullExtensions": true,//拡張子を追加するオプション
   },
   "include": ["src/**/*.ts"],
   "references": [{ "path": "../../shared" }]

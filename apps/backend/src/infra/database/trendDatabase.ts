@@ -1,5 +1,5 @@
-import { pool } from '@/infra/database/pool';
-import { Result ,ok,err} from '@/utils/result';
+import { pool } from 'src/infra/database/pool';
+import { Result ,ok,err} from 'src/utils/result';
 
 /**
  * 集計データをデータベースに登録する\

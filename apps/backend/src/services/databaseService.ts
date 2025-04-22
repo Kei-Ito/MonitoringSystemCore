@@ -1,10 +1,10 @@
-import { pool } from '@/infra/database/pool.js';
-import { Mesurement } from '@/models/MesurementModel';
-import { databaseModuleTableModel } from '@/models/Database/databaseModuleTableModel';
-import { databaseChannelTableModel } from '@/models/Database/databaseChannelTableModel';
-import { databaseDashboardChartsTableModel } from '@/models/Database/databaseDashboardChartsTableModel';
-import { IOModuleFactory_from_Database } from '@/factories/IOModuleFactoryMethod';
-import { DashboardChartsFactory_from_Database } from '@/factories/DashboardChartFactoryMethods';
+import { pool } from 'src/infra/database/pool.js';
+import { Mesurement } from 'src/models/MesurementModel';
+import { databaseModuleTableModel } from 'src/models/Database/databaseModuleTableModel';
+import { databaseChannelTableModel } from 'src/models/Database/databaseChannelTableModel';
+import { databaseDashboardChartsTableModel } from 'src/models/Database/databaseDashboardChartsTableModel';
+import { IOModuleFactory_from_Database } from 'src/factories/IOModuleFactoryMethod';
+import { DashboardChartsFactory_from_Database } from 'src/factories/DashboardChartFactoryMethods';
 import { IOModule,ChartSetting,ChartPosition,IChannelSetting,SystemSettingData } from '@monitoring/shared/model';
 import { getIOModuleInputResponse,trendDataRequest } from '@monitoring/shared/api';
 import { Result ,ok,err} from '@monitoring/shared/utils';

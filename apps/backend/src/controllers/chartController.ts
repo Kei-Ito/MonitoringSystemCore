@@ -1,6 +1,6 @@
 
 import { Request, Response } from 'express';
-import { getDashboardChartList,addDashboardChart ,updateDashboardChart} from "@/services/databaseService";
+import { getDashboardChartList,addDashboardChart ,updateDashboardChart} from "src/services/databaseService";
 import { ChartSetting } from '@monitoring/shared/model';
 
 export async function addChart(req: Request<{},{},ChartSetting>, res: Response) {

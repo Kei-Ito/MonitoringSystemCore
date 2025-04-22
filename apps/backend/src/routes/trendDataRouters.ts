@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import * as trendDataController from '@/controllers/trendDataController';
+import * as trendDataController from 'src/controllers/trendDataController';
 
 const router: Router = Router();
 

@@ -1,19 +1,17 @@
-
-import path,{ dirname } from 'path';
+import path, { dirname } from 'path';
 import { fileURLToPath } from "node:url";
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { WebSocketServer } from 'ws';
-import fileRoutes from '@/routes/fileRoutes';
-import IOModuleRoutes from '@/routes/IOModuleRoutes';
-import trendDataRoutes from '@/routes/trendDataRouters';
-import chartRoutes from '@/routes/chartRouters';
-import systemSettingRoutes from '@/routes/systemSettingRouters';
-import { getIsSamplingIntervalRunning } from '@/services/IOModuleService';
-import { initializeDatabase } from '@/infra/database/pool';
-import { initializeIOModules }from '@/services/IOModuleService';
-import { SystemSettingService } from '@/config/SystemSetting';
-
+import fileRoutes from './routes/fileRoutes.js';
+import IOModuleRoutes from './routes/IOModuleRoutes.js';
+import trendDataRoutes from './routes/trendDataRouters.js';
+import chartRoutes from './routes/chartRouters.js';
+import systemSettingRoutes from './routes/systemSettingRouters.js';
+import { getIsSamplingIntervalRunning } from './services/IOModuleService.js';
+import { initializeDatabase } from './infra/database/pool.js';
+import { initializeIOModules } from './services/IOModuleService.js';
+import { SystemSettingService } from './config/SystemSetting.js';
 
 async function bootstrap() {
   const app = express();
@@ -76,7 +74,7 @@ async function bootstrap() {
 
   // 未定義のルートに対してindex.htmlを返す
   app.get('*', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../../monitoring-frontend/dist', 'index.html'));
+    res.sendFile(path.join(__dirname, '../../apps/frontend/dist', 'index.html'));
   });
 
   
@@ -88,4 +86,3 @@ async function bootstrap() {
 }
 
 bootstrap();
-

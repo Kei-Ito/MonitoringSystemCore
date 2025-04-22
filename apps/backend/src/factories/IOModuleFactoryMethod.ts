@@ -1,6 +1,6 @@
 
-import { databaseModuleTableModel } from "@/models/Database/databaseModuleTableModel";
-import { databaseChannelTableModel } from "@/models/Database/databaseChannelTableModel";
+import { databaseModuleTableModel } from "src/models/Database/databaseModuleTableModel";
+import { databaseChannelTableModel } from "src/models/Database/databaseChannelTableModel";
 import { IOModule,IChannelSetting,createModuleForInitialization,ModuleTypeMap } from "@monitoring/shared/model";
 import { IOModuleStatus ,IOModuleTypes} from "@monitoring/shared/enum";
 

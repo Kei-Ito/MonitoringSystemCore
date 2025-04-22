@@ -1,6 +1,6 @@
 // src/routes/sensorRoutes.ts
 import { Router } from 'express';
-import * as sensorController from '@/controllers/IOModuleController';
+import * as sensorController from 'src/controllers/IOModuleController';
 
 const router: Router = Router();
 

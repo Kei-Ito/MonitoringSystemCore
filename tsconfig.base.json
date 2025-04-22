@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "ESNext",
+    "module": "ESNext", 
     "moduleResolution": "bundler",
     "strict": true,
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true,
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true,//フルパスを解決するオプション
+    "resolveFullExtensions": true,//拡張子を追加するオプション
+  },
 }

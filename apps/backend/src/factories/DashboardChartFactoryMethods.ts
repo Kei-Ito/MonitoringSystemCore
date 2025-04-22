@@ -1,4 +1,4 @@
-import { databaseDashboardChartsTableModel } from "@/models/Database/databaseDashboardChartsTableModel";
+import { databaseDashboardChartsTableModel } from "src/models/Database/databaseDashboardChartsTableModel";
 import { ChartSetting,ChartTypeMap, createChartForInitialization,ChartPosition } from "@monitoring/shared/model";
 import { ChartTypes } from "@monitoring/shared/enum";
 
