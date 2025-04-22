@@ -1,0 +1,128 @@
+<template>
+  <div> 
+    <div ref="chartRef" :style="{  height,minHeight }"></div>
+    <h1 v-if="error" :style="{  height  ,minHeight}">Error</h1>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref, onMounted, onBeforeUnmount, watch, nextTick, computed ,type PropType, } from 'vue';
+import { useStore} from 'vuex';
+import * as echarts from 'echarts';
+import * as api from '@/api/trendDataAPI';
+import { getDefaultTrendLineChartOptions, getTrendLineChartOptions } from './TrendLineChartOption';
+import type { IOModule } from '@monitoring/shared/model';
+
+interface SelectedDate {
+  startDate: Date;
+  endDate: Date;
+}
+
+const props = defineProps({
+  width: { type: String, default: "100%" },
+  height: { type: String, default: "40vh" },
+  minHeight: { type: String, default: "250px" },
+  selectedDate: {
+    type: Object as PropType<SelectedDate>,
+    required: true
+  }
+});
+
+const store = useStore();
+
+// computed相当（storeのstateをcomputedでラップ）
+const trendChartSetting = computed(()=> store.state.systemSetting.trendChartSetting);
+const channelSetting = computed(() => {
+  if (!trendChartSetting.value) return null; // chartSettingがnullの場合はnullを返す
+  const module_uuid = trendChartSetting.value.module_uuid;
+  const channel_id = trendChartSetting.value.channel_id;
+  return (store.state.systemSetting.ioModules as IOModule[]).find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
+});
+
+const chartRef = ref<HTMLDivElement | null>(null);
+const error = ref(false);
+const myChart = ref<echarts.ECharts | null>(null);
+const loading = ref(false);
+
+async function fetchData(startDate: Date, endDate: Date) {
+  loading.value = true;
+  await nextTick();
+  try {
+    if (myChart.value ) {
+      myChart.value.showLoading('default', { text: '', spinnerRadius: 30, color: '#c23531' });
+    }
+
+    const response = await api.fetchTrendData(trendChartSetting.value.channel_id,startDate, endDate);
+    myChart.value?.hideLoading();
+    updateChart(response.data);
+  } catch (err) {
+    console.error("Error fetching data:", err);
+    error.value = true;
+  } finally {
+    loading.value = false;
+  }
+}
+
+function getSelectedDate(date: Date) {
+  const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+  return {
+    startDate:startDate,
+    endDate:endDate
+  };
+}
+
+async function initChart() {
+  const chartDom = chartRef.value;
+  if (!chartDom) {
+    console.error("Chart DOM element is not available.");
+    error.value = true;
+    return;
+  }
+  myChart.value = echarts.init(chartDom, null, { renderer: 'svg' });
+  myChart.value.setOption(getDefaultTrendLineChartOptions());
+  fetchData(props.selectedDate.startDate, props.selectedDate.endDate);
+}
+
+function updateChart(input_data: any) {
+  if (!myChart.value) {
+    console.error("Chart is not initialized.");
+    return;
+  }
+  const min_threshold = channelSetting.value?.min_threshold??0;
+  const max_threshold = channelSetting.value?.max_threshold??80;
+  const TrendLineChartOptions = getTrendLineChartOptions(input_data,min_threshold,max_threshold);
+  myChart.value.setOption(TrendLineChartOptions, { lazyUpdate: true });
+}
+
+function handleResize() {
+  if (myChart.value && chartRef.value) {
+    myChart.value?.resize();
+    // 0.18秒後にリサイズ
+    setTimeout(() => {
+      myChart.value?.resize();
+    }, 250);
+  }
+}
+
+// チャンネルIDが変更されたらデータを再取得
+watch(() => trendChartSetting.value.channel_id, () => {
+  const {startDate, endDate} = getSelectedDate(trendChartSetting.value.specific_chart_setting.selected_date);
+  fetchData(startDate, endDate);
+});
+
+// 選択された日付が変更されたらデータを再取得
+watch(() => trendChartSetting.value.specific_chart_setting.selected_date, async() => {
+  const {startDate, endDate} = getSelectedDate(trendChartSetting.value.specific_chart_setting.selected_date);
+  fetchData(startDate, endDate);
+});
+
+onMounted(() => {
+  initChart();
+  window.addEventListener('resize', handleResize);});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize);
+  if (myChart.value) myChart.value.dispose();
+});
+</script>

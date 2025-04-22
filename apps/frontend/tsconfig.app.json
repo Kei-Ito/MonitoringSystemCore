@@ -3,10 +3,12 @@
   "compilerOptions": {
     "composite": true,
     "allowImportingTsExtensions": true,  // ← ここだけ必要
+    "allowJs": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@monitoring/shared/*": ["../../shared/src/*"]
+      "@monitoring/shared/*": ["../../shared/src/*"],
+      
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],
