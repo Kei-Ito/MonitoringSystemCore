@@ -4,3 +4,4 @@
 
 export * from "./IOModule/index";
 export * from "./Trend/index";
+export * from "./utils/index";

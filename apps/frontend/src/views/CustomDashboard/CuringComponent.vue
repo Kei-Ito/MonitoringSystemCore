@@ -51,18 +51,21 @@
   
   <script setup lang="ts">
   import { ref,watch,onMounted } from "vue";
-  import { useStore } from "vuex";
+  import { storeToRefs } from "pinia";
+  import { useMonitoringStore } from "@/pinia/monitoringStore";
 
-  const store = useStore();
+  const monitoringStore = useMonitoringStore();
+
+  const { isSampling } = storeToRefs(monitoringStore);
   const UVColor = ref("rgba(0,0,0,0)");
   onMounted(()=>{
-  if (store.state.systemSetting.isSampling){
+  if (isSampling.value){
     UVColor.value = "url(#smoothFog)";
   }
 });
 
-watch(() => store.state.systemSetting.isSampling, () => {
-  if (store.state.systemSetting.isSampling) {
+watch(() => isSampling.value, () => {
+  if (isSampling.value) {
     UVColor.value = "url(#smoothFog)";
   }
   else {

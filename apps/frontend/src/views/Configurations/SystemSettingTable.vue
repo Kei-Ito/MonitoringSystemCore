@@ -99,15 +99,16 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useStore } from "vuex";
-import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
+import { ref } from "vue";
+import { useUiStore } from "@/pinia/uiStore";
 import LanguageSelector from "@/components/Selector/LanguageSelector.vue";
 import ColorSelector from "@/components/ColorSelector.vue";
 import ClockView from "@/components/ClockView.vue";
 import SamplingClockSettingModal from "./SamplingClockSettingModal.vue";
 
-const store = useStore();
-const color = computed(() => store.state.systemSetting.color);
+const uiStore = useUiStore();
+const { color } = storeToRefs(uiStore);
 
 const isModalVisible = ref<boolean>(false);
 function showModal() {

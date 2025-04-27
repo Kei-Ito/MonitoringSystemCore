@@ -124,8 +124,11 @@
 
 <script setup lang="ts">
 import { getCurrentInstance, ref, onMounted, defineEmits, computed, type Ref, type ComputedRef, type PropType } from 'vue';
-import { useStore } from 'vuex';
+import { storeToRefs } from 'pinia';
 import { Collapse } from 'bootstrap';
+import { useUiStore } from '@/pinia/uiStore';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
+import { updateDashboardChart } from '@/service/chartService';
 import IOModuleSelector from '@/components/Selector/IOModuleSelector.vue';
 import ChannelSelector from '@/components/Selector/ChannelSelector.vue';
 
@@ -139,9 +142,11 @@ const props = defineProps({
     }
 });
 
-const store = useStore();
-const ioModules: ComputedRef<IOModule[]> = computed(() => store.state.systemSetting.ioModules);
-const isDarkMode: ComputedRef<boolean> = computed(() => store.state.systemSetting.isDarkMode);
+const uiStore = useUiStore();
+const monitoringStore = useMonitoringStore();
+
+const { ioModules } = storeToRefs(monitoringStore);
+const { isDarkMode } = storeToRefs(uiStore);
 
 // collapseの開閉を制御するためにインスタンスのuidを取得
 const instance = getCurrentInstance();
@@ -184,7 +189,7 @@ async function updateSelectedChannel() {
         }
 
     }
-    await store.dispatch('updateDashboardChart', localSetting.value);
+    await updateDashboardChart(localSetting.value);
 }
 
 function handleIOModuleUpdate(moduleUUID: string) {
@@ -197,7 +202,7 @@ function handleChannelUpdate(channelID: number) {
 
 function onCancelClicked() {
     localSetting.value = JSON.parse(JSON.stringify(props.setting));
-    store.dispatch('updateDashboardChart', localSetting.value);
+    updateDashboardChart(localSetting.value);
     close();
 }
 
@@ -207,7 +212,7 @@ function onUpdateClicked() {
     const updatedSetting = JSON.parse(JSON.stringify(localSetting.value));
     emit('update', updatedSetting.module_uuid, updatedSetting.channel_id);
     // store 更新
-    store.dispatch('updateDashboardChart', updatedSetting);
+    updateDashboardChart(updatedSetting);
     close();
 }
 

@@ -1,108 +1,49 @@
-import axios from 'axios';
 import type { IOModule,IChannelSetting } from '@monitoring/shared/model';
 import type { IOModuleStatusResponse } from '@monitoring/shared/api';
-import {type Result , ok , err} from '@monitoring/shared/utils';
 import { IOModuleStatus } from '@monitoring/shared/enum';
+import { request } from '@/api/apiClient';
 
-const protocol = window.location.protocol;
-const host = window.location.hostname;
+/**
+ * 全てのIOモジュールを取得するAPI関数
+ */
+export const getIOModules = () => request<IOModule[]>( 'get', '/io_module/get_io_modules/' );
 
-export async function getIOModules(): Promise<IOModule[]> {
-    const endpoint = `${protocol}//${host}:2478/api/io_module/get_io_modules/`;
-    return axios.get(endpoint)
-        .then(response => {
-            console.log(response.data);
-            return response.data;
-        })
-        .catch(error => {
-            console.error('Error getting IOModules:', error);
-            throw error;
-        });
-}
+/**
+ * 新しいIOモジュールをシステムに追加するAPI関数
+ * @param moduleData 追加するIOモジュールのデータ
+ */
+export const addIOModule = (moduleData: IOModule) => request<IOModule>('post', '/io_module/add_io_module/', moduleData );
 
-export async function addIOModule(request: IOModule): Promise<Result<IOModule>> {
-    const endpoint = `${protocol}//${host}:2478/api/io_module/add_io_module/`;
-    return axios.post(endpoint, request)
-        .then(response => {
-            return ok(response.data);
-        })
-        .catch(error => {
-            console.error('Error adding IOModule:', error);
-            return err(error);
-        });
-}
+/**
+ * 既存のIOモジュールの情報を更新するAPI関数
+ * @param moduleData 更新するIOモジュールのデータ
+ */
+export const updateIOModule = (moduleData: IOModule) => request<IOModuleStatus>('patch', '/io_module/update_io_module/', moduleData );
 
-export async function updateIOModule(IOModule: IOModule):Promise<Result<IOModuleStatus>> {
-    const endpoint = `${protocol}//${host}:2478/api/io_module/update_io_module/`;
-    return axios.patch(endpoint, IOModule)
-        .then(response => {
-            return ok(response.data);
-        })
-        .catch(error => {
-            console.error('Error updating IOModule:', error);
-            return err(error);
-        });
-}
+/**
+ * 指定されたUUIDのIOモジュールを削除するAPI関数
+ * @param moduleUUID 削除するモジュールのUUID
+ */
+export const deleteIOModule = (moduleUUID: string) => request<void>('delete', `/io_module/delete_io_module/?module_uuid=${moduleUUID}` );
 
-export async function deleteIOModule(moduleUUID: string) : Promise<Result<void>> {
-    const endpoint = `${protocol}//${host}:2478/api/io_module/?module_uuid=${moduleUUID}`;
-    return axios.delete(endpoint)
-        .then(response => {
-            console.log('Delete successful:', response.data);
-            return ok(void 0);
-        })
-        .catch(error => {
-            console.error('Error deleting IOModule:', error);
-            return err(error);
-        });
-}
+/**
+ * IOモジュールにチャンネルを追加するAPI関数
+ * @param channel 追加するチャンネル設定
+ */
+export const addChannel = (channel: IChannelSetting) => request<IChannelSetting>('post', '/io_module/add_channel/', channel );
 
+/**
+ * IOモジュールからチャンネルを削除するAPI関数
+ * @param channel 削除するチャンネル設定
+ */
+export const deleteChannel = (channel: IChannelSetting) => request<void>('post', '/io_module/delete_channel/', channel );
 
-export async function addChannel(channel: IChannelSetting): Promise<IChannelSetting> {
-    const endpoint = `${protocol}//${host}:2478/api/io_module/add_channel/`;
-    return axios.post(endpoint, channel)
-        .then(response => {
-            return response.data;
-        })
-        .catch(error => {
-            console.error('Error adding Channel:', error);
-            throw error;
-        });
-}
+/**
+ * IOモジュールのサンプリングを開始するAPI関数
+ */
+export const startSampling = () => request<IOModuleStatusResponse[]>('post', '/io_module/start/' );
 
-export async function deleteChannel(channel_setting: IChannelSetting) {
-    const endpoint = `${protocol}//${host}:2478/api/io_module/delete_channel/`;
-    return axios.post(endpoint, channel_setting)
-        .then(response => {
-            console.log('Delete successful:', response.data);
-            return;
-        })
-        .catch(error => {
-            console.error('Error deleting Channel:', error);
-            throw error;
-        });
-}
-
-export async function startSampling(): Promise<Result<IOModuleStatusResponse[]>> {
-    const endpoint = `${protocol}//${host}:2478/api/io_module/start/`;
-    return await axios.post(endpoint)
-        .then(response => {
-            return ok(response.data);
-        })
-        .catch(error => {
-            return err(error);
-        });
-}
-
-export async function stopSampling() : Promise<Result<void>> {
-    const endpoint = `${protocol}//${host}:2478/api/io_module/stop/`;
-    return await axios.post(endpoint)
-        .then(response => {
-            console.log('Data sent successfully:', response.data);
-            return ok(void 0);
-        })
-        .catch(error => {
-            console.error('Error sending data:', error);
-            return err(error);
-        });
-}
+/**
+ * IOモジュールのサンプリングを停止するAPI関数
+ */
+export const stopSampling = () => request<void>('post', '/io_module/stop/' );

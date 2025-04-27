@@ -7,7 +7,9 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount, watch, nextTick, computed ,type PropType, } from 'vue';
-import { useStore} from 'vuex';
+import { storeToRefs } from 'pinia';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
+import { useChartStore } from '@/pinia/chartStore';
 import * as echarts from 'echarts';
 import * as api from '@/api/trendDataAPI';
 import { getDefaultTrendLineChartOptions, getTrendLineChartOptions } from './TrendLineChartOption';
@@ -28,15 +30,17 @@ const props = defineProps({
   }
 });
 
-const store = useStore();
+//TODO: トレンドグラフは複数表示する仕様に変更になったので要修正
+const monitoringStore = useMonitoringStore();
+const chartStore = useChartStore();
 
-// computed相当（storeのstateをcomputedでラップ）
-const trendChartSetting = computed(()=> store.state.systemSetting.trendChartSetting);
+const { ioModules} = storeToRefs(monitoringStore);
+const { trendChartSettings } = storeToRefs(chartStore);
 const channelSetting = computed(() => {
-  if (!trendChartSetting.value) return null; // chartSettingがnullの場合はnullを返す
-  const module_uuid = trendChartSetting.value.module_uuid;
-  const channel_id = trendChartSetting.value.channel_id;
-  return (store.state.systemSetting.ioModules as IOModule[]).find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
+  if (!trendChartSettings.value) return null; // chartSettingがnullの場合はnullを返す
+  const module_uuid = trendChartSettings.value[0].module_uuid;
+  const channel_id = trendChartSettings.value[0].channel_id;
+  return ioModules.value.find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
 });
 
 const chartRef = ref<HTMLDivElement | null>(null);
@@ -52,7 +56,7 @@ async function fetchData(startDate: Date, endDate: Date) {
       myChart.value.showLoading('default', { text: '', spinnerRadius: 30, color: '#c23531' });
     }
 
-    const response = await api.fetchTrendData(trendChartSetting.value.channel_id,startDate, endDate);
+    const response = await api.fetchTrendData(trendChartSettings.value[0].channel_id,startDate, endDate);
     myChart.value?.hideLoading();
     updateChart(response.data);
   } catch (err) {
@@ -106,14 +110,14 @@ function handleResize() {
 }
 
 // チャンネルIDが変更されたらデータを再取得
-watch(() => trendChartSetting.value.channel_id, () => {
-  const {startDate, endDate} = getSelectedDate(trendChartSetting.value.specific_chart_setting.selected_date);
+watch(() => trendChartSettings.value[0].channel_id, () => {
+  const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   fetchData(startDate, endDate);
 });
 
 // 選択された日付が変更されたらデータを再取得
-watch(() => trendChartSetting.value.specific_chart_setting.selected_date, async() => {
-  const {startDate, endDate} = getSelectedDate(trendChartSetting.value.specific_chart_setting.selected_date);
+watch(() => trendChartSettings.value[0].specific_chart_setting.selected_date, async() => {
+  const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   fetchData(startDate, endDate);
 });
 

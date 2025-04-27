@@ -35,8 +35,10 @@
 
 <script setup lang="ts">
 import { ref,computed } from 'vue';
-import { useStore } from 'vuex';
+import { storeToRefs } from 'pinia';
 import { useToast } from "vue-toastification";
+import { useMonitoringStore } from '@/pinia/monitoringStore';
+import { useChartStore } from '@/pinia/chartStore';
 import DatePickerModal from '@/components/DatePickerModal.vue';
 import ChannelPickerModal from '@/components/ChannelPickerModal.vue';
 import type { IOModule,IChannelSetting } from '@monitoring/shared/model';
@@ -44,11 +46,16 @@ import { getCsvData } from "@/api/trendDataAPI";
 
 
 const toast = useToast();
-const store = useStore();
+const monitoringStore = useMonitoringStore();
+const chartStore = useChartStore();
 
+const { ioModules } = storeToRefs(monitoringStore);
+const { trendChartSettings } = storeToRefs(chartStore);
+
+// TODO: トレンドチャートは複数表示する仕様に変更されたので要修正
 const selectedChannelName = computed(() => {
-    const channel_id=store.state.systemSetting.trendChartSetting.channel_id;
-    const module = store.state.systemSetting.ioModules.find((module:IOModule)=>module.input_channels.some((channel:IChannelSetting)=>channel.channel_id===channel_id));
+    const channel_id=trendChartSettings.value[0].channel_id;
+    const module = ioModules.value.find((module:IOModule)=>module.input_channels.some((channel:IChannelSetting)=>channel.channel_id===channel_id));
     if(module){
         const channel = module.input_channels.find((channel:IChannelSetting)=>channel.channel_id===channel_id);
         if (channel){
@@ -58,7 +65,7 @@ const selectedChannelName = computed(() => {
     }
     else return '';
 });
-const selectedDate = computed(() => store.state.systemSetting.trendChartSetting.specific_chart_setting.selected_date);
+const selectedDate = computed(() => trendChartSettings.value[0].specific_chart_setting.selected_date);
 const isModalVisible = ref(false);
 const isModulePickerVisible = ref(false);
 
@@ -89,7 +96,7 @@ function DateToString(date: Date) {
 }
 
 async function downloadCSV() {
-  await getCsvData([1, 2, 3,4,5,6,7], new Date(store.state.trendChartSetting.specific_chart_setting.selected_date));
+  await getCsvData([1, 2, 3,4,5,6,7], new Date(trendChartSettings.value[0].specific_chart_setting.selected_date));
   toast.success("CSV downloaded");
 }
 

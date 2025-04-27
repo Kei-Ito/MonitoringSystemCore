@@ -43,13 +43,17 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, type Ref } from 'vue';
-import { useStore } from "vuex";
+import { storeToRefs } from 'pinia';
+import { useUiStore } from '@/pinia/uiStore';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
+import { startSampling,stopSampling } from '@/service/monitoringService';
 import toggleBtn from "./ToggleBtn.vue";
 
-// Vuex ストア
-const store = useStore();
-const isSampling = computed(() => store.state.systemSetting.isSampling);
-const color = computed(() => store.state.systemSetting.color);
+const uiStore = useUiStore();
+const monitoringStore = useMonitoringStore();
+
+const { isSampling } = storeToRefs(monitoringStore); 
+const { color } = storeToRefs(uiStore);
 
 // ステータス文言
 const status: Ref<string> = ref("Ready");
@@ -68,11 +72,11 @@ const waveDuration = 20;
 function onToggleChanged(payload: { value: boolean; origin: 'user' | 'external' }) {
   // ユーザー操作で切り替えた場合のみ API 呼び出し
   if (payload.origin === 'user') {
-    store.commit('setSampling', payload.value);
+    isSampling.value = payload.value;
     if (payload.value) {
-      store.dispatch('startSampling');
+      startSampling();
     } else {
-      store.dispatch('stopSampling');
+      stopSampling();
     }
   }
   // ステータス文言更新

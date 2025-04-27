@@ -70,7 +70,7 @@ const { visible, channel } = toRefs(props)
 
 // localSettingはspecific_channel_settingをディープコピーしたもの
 // 初期表示用の設定 
-const localSetting = ref<Record<string, any> | null>(null)
+const localSetting = ref<Record<string, any>>({})
 
 watch(channel, (newVal) => {
     // チャンネル内にspecific_channel_settingがある場合、それを編集対象にする
@@ -78,7 +78,7 @@ watch(channel, (newVal) => {
         // ディープコピーしてlocalSettingに保持
         localSetting.value = JSON.parse(JSON.stringify(newVal.specific_channel_setting))
     } else {
-        localSetting.value = null
+        localSetting.value = {};
     }
 }, { immediate: true, deep: true })
 

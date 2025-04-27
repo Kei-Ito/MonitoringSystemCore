@@ -3,15 +3,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, watch ,computed,type PropType} from 'vue';
-import { useStore } from 'vuex';
+import { onMounted, onBeforeUnmount, ref, watch, computed, type PropType } from 'vue';
+import { storeToRefs } from 'pinia';
 import * as echarts from 'echarts';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
 import { getDefaultGaugeChartOptions } from '@/components/Charts/GaugeChartOption';
-import type { IOModule,ChartSetting } from '@monitoring/shared/model';
+import type { IOModule, ChartSetting } from '@monitoring/shared/model';
 
-const store = useStore();
+const monitoringStore = useMonitoringStore();
+const { ioModules } = storeToRefs(monitoringStore);
+
 const props = defineProps({
-    chartSetting:{
+    chartSetting: {
         type: Object as PropType<ChartSetting>,
         required: true
     },
@@ -23,52 +26,42 @@ const props = defineProps({
 
 let isActivated = false;
 const channelSetting = computed(() => {
-  if (!props.chartSetting) return null; // chartSettingがnullの場合はnullを返す
-  const module_uuid = props.chartSetting.module_uuid;
-  const channel_id = props.chartSetting.channel_id;
-  return (store.state.systemSetting.ioModules as IOModule[]).find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
+    if (!props.chartSetting) return null; // chartSettingがnullの場合はnullを返す
+    const module_uuid = props.chartSetting.module_uuid;
+    const channel_id = props.chartSetting.channel_id;
+    return ioModules.value.find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
 });
 
 
 const chartRef = ref(null);
-let chart:any = null;
-let resizeTimeout;
+let chart: echarts.ECharts | null = null;
+let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
+let observer: ResizeObserver | null = null;
 
 
 function initChart() {
     if (!chartRef.value) return;
 
-    chart = echarts.init(chartRef.value, null, { renderer: 'svg',useDirtyRect:false });
+    chart?.dispose();
+    chart = echarts.init(chartRef.value, null, { renderer: 'svg', useDirtyRect: false });
     chart.setOption(getDefaultGaugeChartOptions(props.chartSetting));
-    if(props.chartSetting.specific_chart_setting.lastValue!==null && props.chartSetting.specific_chart_setting.lastValue!==undefined && 
-    !Number.isNaN(props.chartSetting.specific_chart_setting.lastValue)){
+    if (props.chartSetting.specific_chart_setting.lastValue !== null && props.chartSetting.specific_chart_setting.lastValue !== undefined &&
+        !Number.isNaN(props.chartSetting.specific_chart_setting.lastValue)) {
         updateChart(props.chartSetting.specific_chart_setting.lastValue);
         isActivated = true;
     }
-    
-    const observer = new ResizeObserver(()=>{
-		clearTimeout(resizeTimeout);
-		resizeTimeout = setTimeout(()=>{
-			if (chart){
-				chart.resize();
-			}
-		},50);
-	});
-	observer.observe(chartRef.value);	
-}
 
-function handleResize() {
-    if (chart) {
-        chart.resize();
-        setTimeout(() => {
-            chart.resize();
-        }, 150);
-    }
+    observer?.disconnect();
+    observer = new ResizeObserver(() => {
+        if (resizeTimeout !== undefined) clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => chart?.resize(), 50);
+    });
+    observer.observe(chartRef.value);
 }
 
 function updateChart(newValue: number) {
     if (!chart) return;
-    if(!isActivated){
+    if (!isActivated) {
         activateChart();
         isActivated = true;
     }
@@ -104,13 +97,15 @@ function activateChart() {
 }
 onMounted(() => {
     initChart();
-    
+
 });
 
 onBeforeUnmount(() => {
-    window.removeEventListener('resize', () => handleResize());
+    observer?.disconnect();
     chart?.dispose();
+    if (resizeTimeout !== undefined) clearTimeout(resizeTimeout);
 });
+
 
 watch(() => props.value, updateChart);
 watch(() => props.chartSetting, () => {
@@ -121,9 +116,8 @@ watch(() => props.chartSetting, () => {
 
 </script>
 <style scoped>
-.chart-container
-{
-    width:100%;
+.chart-container {
+    width: 100%;
     min-width: 300px;
     height: 100%;
     min-height: 160px;

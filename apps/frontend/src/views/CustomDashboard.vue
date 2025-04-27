@@ -23,10 +23,10 @@
                     内蔵センサ
                   </p>
                 </div>
-                <UVComponent :value="chartSettings[0].specific_chart_setting.lastValue"
-                  :chartSetting="chartSettings[0]" />
-                <FlowVolumeCard :value="chartSettings[1].specific_chart_setting.lastValue"
-                  :chartSetting="chartSettings[1]" />
+                <UVComponent :value="dashboardCharts[0].specific_chart_setting.lastValue"
+                  :chartSetting="dashboardCharts[0]" />
+                <FlowVolumeCard :value="dashboardCharts[1].specific_chart_setting.lastValue"
+                  :chartSetting="dashboardCharts[1]" />
               </div>
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2">
                 <div
@@ -87,12 +87,12 @@
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="row">
                   <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                    <UVComponent2 :value="chartSettings[2].specific_chart_setting.lastValue"
-                      :chartSetting="chartSettings[2]" />
+                    <UVComponent2 :value="dashboardCharts[2].specific_chart_setting.lastValue"
+                      :chartSetting="dashboardCharts[2]" />
                   </div>
                   <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                    <WaterTemperatureCard :value="chartSettings[3].specific_chart_setting.lastValue"
-                      :chartSetting="chartSettings[3]" />
+                    <WaterTemperatureCard :value="dashboardCharts[3].specific_chart_setting.lastValue"
+                      :chartSetting="dashboardCharts[3]" />
                   </div>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-7 pt-2">
@@ -135,8 +135,10 @@
 </template>
 <script setup lang="ts">
 import { computed, ref, watch ,type ComputedRef } from 'vue';
-import { useStore } from 'vuex';
+import { storeToRefs } from 'pinia';
 import type { ChartSetting } from '@monitoring/shared/model';
+import { useUiStore } from '@/pinia/uiStore';
+import { useChartStore } from '@/pinia/chartStore';
 import WaterTemperatureCard from './CustomDashboard/WaterTemperatureCard.vue';
 import FlowVolumeCard from './CustomDashboard/FlowVolumeCard.vue';
 import LiquidComoponent from './CustomDashboard/LiquidComponent.vue';
@@ -145,9 +147,11 @@ import UVComponent from "./CustomDashboard/UVComponent.vue";
 import UVComponent2 from "./CustomDashboard/UVComponent2.vue";
 import CustomDashboardCard from './CustomDashboard/CustomDashboardCard.vue';
 
-const store = useStore();
-const chartSettings: ComputedRef<ChartSetting[]> = computed(() => store.state.systemSetting.dashboardCharts);
-const color = computed(() => store.state.systemSetting.color);
+const uiStore = useUiStore();
+const chartStore = useChartStore();
+
+const { color } = storeToRefs(uiStore);
+const { dashboardCharts } = storeToRefs(chartStore);
 
 const status1 = ref('Good');
 const status2 = ref('Good');
@@ -169,15 +173,15 @@ const TemplatureMax = 40;
 const TemplatureBest = 20;
 let CuringValue = 0;
 
-watch(chartSettings.value, (newVal) => {
+watch(dashboardCharts.value, (newVal) => {
   updateChart(newVal);
 });
 
-function updateChart(chartSettings: ChartSetting[]) {
-  LiquidValue = (1 - Math.abs(chartSettings[0].specific_chart_setting.lastValue - UV1Best) / Math.max((UV1Best - UV1Min), (UV1Max - UV1Min))) * 100 * 0.7 +
-    (1 - Math.abs(chartSettings[1].specific_chart_setting.lastValue - LiquidBest) / Math.max((LiquidBest - LiquidMin), (LiquidMax - LiquidBest))) * 100 * 0.3;
-  CuringValue = (1 - Math.abs(chartSettings[2].specific_chart_setting.lastValue - UV2Best) / Math.max((UV2Best - UV2Min), (UV2Max - UV2Min))) * 100 * 0.7 +
-    (1 - Math.abs(chartSettings[3].specific_chart_setting.lastValue - TemplatureBest) / Math.max((TemplatureBest - TemplatureMin), (TemplatureMax - TemplatureBest))) * 100 * 0.3;
+function updateChart(dashboardCharts: ChartSetting[]) {
+  LiquidValue = (1 - Math.abs(dashboardCharts[0].specific_chart_setting.lastValue - UV1Best) / Math.max((UV1Best - UV1Min), (UV1Max - UV1Min))) * 100 * 0.7 +
+    (1 - Math.abs(dashboardCharts[1].specific_chart_setting.lastValue - LiquidBest) / Math.max((LiquidBest - LiquidMin), (LiquidMax - LiquidBest))) * 100 * 0.3;
+  CuringValue = (1 - Math.abs(dashboardCharts[2].specific_chart_setting.lastValue - UV2Best) / Math.max((UV2Best - UV2Min), (UV2Max - UV2Min))) * 100 * 0.7 +
+    (1 - Math.abs(dashboardCharts[3].specific_chart_setting.lastValue - TemplatureBest) / Math.max((TemplatureBest - TemplatureMin), (TemplatureMax - TemplatureBest))) * 100 * 0.3;
   if (LiquidValue >= 80) {
     status1.value = 'Very Good';
   } else if (LiquidValue >= 50 && LiquidValue < 80) {

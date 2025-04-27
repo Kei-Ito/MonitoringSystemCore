@@ -45,22 +45,25 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { storeToRefs } from 'pinia';
+import { useMonitoringStore } from "@/pinia/monitoringStore";
+import { useChartStore } from "@/pinia/chartStore";
 import ChannelView from "@/components/ChannelView.vue";
 
 const props = defineProps({
   show: Boolean
 });
 
-const store = useStore();
-const ioModules = computed(() => store.state.systemSetting.ioModules);
-const trendChartSetting = computed(() => store.state.systemSetting.trendChartSetting);
+const monitoringStore = useMonitoringStore();
+const chartStore = useChartStore();
+
+const {ioModules} = storeToRefs(monitoringStore);
+const {trendChartSettings} = storeToRefs(chartStore);
 
 const emit = defineEmits(['close-channel-picker']);
-
+//TODO: Trendは複数表示する仕様になったので要変更箇所
 function on_channel_selected(channel_id: number) {
-  const newSetting = { ...trendChartSetting.value, channel_id: channel_id };
-  store.commit('updateTrendChartSetting', newSetting);
+  trendChartSettings.value[0].channel_id = channel_id;
   emit('close-channel-picker');
 }
 

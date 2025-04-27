@@ -6,7 +6,7 @@
         <!-- ゲージチャート 表示部-->
         <div class="row mt-4">
           <div class="col-ultra-wide-2 col-wide-3 col-midium-wide-4 col-midium-6 col-sm-12 mb-4"
-            v-for="(chartSetting, index) in chartSettings" :key="index">
+            v-for="(chartSetting, index) in dashboardCharts" :key="index">
             <DashboardChartHolderCard :setting="chartSetting">
               <e-charts-gauge-chart :value="chartSetting.specific_chart_setting.lastValue"
                 :chartSetting="chartSetting" />
@@ -26,29 +26,29 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, type ComputedRef } from 'vue';
-import { useStore } from 'vuex';
+import { storeToRefs } from 'pinia';
+import { useChartStore } from '@/pinia/chartStore';
+import { addDashboardChart } from '@/service/chartService';
 import DashboardChartHolderCard from "@/components/Cards/DashboardChartHolderCard.vue";
 import EChartsGaugeChart from "@/components/Charts/EChartsGaugeChart.vue";
-import { type ChartSetting, createChartForInitialization } from '@monitoring/shared/model';
+import { createChartForInitialization } from '@monitoring/shared/model';
 import { ChartTypes } from '@monitoring/shared/enum';
 
-
-const store = useStore();
-const chartSettings: ComputedRef<ChartSetting[]> = computed(() => store.state.systemSetting.dashboardCharts);
+const chartStore = useChartStore();
+const { dashboardCharts } = storeToRefs(chartStore);
 
 function onAddChartButtonClick() {
-  if (chartSettings.value.length >= 10) {
+  if (dashboardCharts.value.length >= 10) {
     alert("最大10個までしか追加できません");
     return;
   }
-  else if (chartSettings.value.length === 0) {
-    store.dispatch('addDashboardChart', createChartForInitialization(0, ChartTypes.GaugeChart))
+  else if (dashboardCharts.value.length === 0) {
+    addDashboardChart(createChartForInitialization(0, ChartTypes.GaugeChart))
     return;
   }
   else {
-    const chart_id = Math.max(...chartSettings.value.map((chart) => chart.chart_id)) + 1;
-    store.dispatch('addDashboardChart', createChartForInitialization(chart_id, ChartTypes.GaugeChart))
+    const chart_id = Math.max(...dashboardCharts.value.map((chart) => chart.chart_id)) + 1;
+    addDashboardChart(createChartForInitialization(chart_id, ChartTypes.GaugeChart))
   }
 
 }

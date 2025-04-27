@@ -183,9 +183,11 @@
 
 <script setup lang="ts">
 import { ref, watch ,onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { storeToRefs } from "pinia";
+import { useMonitoringStore } from "@/pinia/monitoringStore";
 
-const store = useStore();
+const monitoringStore = useMonitoringStore();
+const { isSampling } = storeToRefs(monitoringStore);
 
 const DownColor = ref("#5aabe2");
 const UpColor = ref("#5aabe2");
@@ -195,7 +197,7 @@ const RightColor = ref("#5aabe2");
 const UVColor = ref("rgba(0,0,0,0)");
 
 onMounted(()=>{
-  if (store.state.systemSetting.isSampling){
+  if (isSampling.value){
     DownColor.value = "url(#gradientFill-Down)";
     UpColor.value = "url(#gradientFill-Up)";
     LeftColor.value = "url(#gradientFill-Left)";
@@ -204,8 +206,8 @@ onMounted(()=>{
   }
 });
 
-watch(() => store.state.systemSetting.isSampling, () => {
-  if (store.state.systemSetting.isSampling) {
+watch(() => isSampling.value, () => {
+  if (isSampling.value) {
     DownColor.value = "url(#gradientFill-Down)";
     UpColor.value = "url(#gradientFill-Up)";
     LeftColor.value = "url(#gradientFill-Left)";

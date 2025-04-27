@@ -1,0 +1,43 @@
+import axios, { AxiosError, type Method } from 'axios';
+import { ok, err, type Result } from '@monitoring/shared/utils';
+import type { ApiError } from '@monitoring/shared/api';
+
+function toApiError(e: unknown): ApiError {
+  if (axios.isAxiosError(e)) {
+    return {
+      message: e.message,
+      status: e.response?.status,
+      code: e.code,
+      data: e.response?.data,
+    };
+  }
+  return { message: (e as Error).message };
+}
+
+const api = axios.create({
+  baseURL: `${window.location.protocol}//${window.location.hostname}:2478/api`,
+  timeout: 1000,
+});
+
+// 成功・失敗ログを一括管理するためのインターセプター
+api.interceptors.response.use(
+  (res) => { console.debug(res.config.url, res.data); return res; },
+  (error: AxiosError) => Promise.reject(error)
+);
+
+/** apiリクエストを一括管理するメソッド */
+export async function request<T>(
+  method: Method,
+  url: string,
+  data?: unknown,
+  signal?: AbortSignal,
+): Promise<Result<T,ApiError>> {
+  try {
+    const res = await api.request<T>({ method, url, data, signal });
+    return ok(res.data);
+  } catch (e) {
+    // responseに届かない場合に備えてインターセプターではなくここでcatchする
+    console.error({url,e});
+    return err(toApiError(e));
+  }
+}

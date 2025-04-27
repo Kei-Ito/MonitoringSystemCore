@@ -1,29 +1,16 @@
-import axios from 'axios';
 import type { SystemSettingData } from '@monitoring/shared/model';
+import { request } from '@/api/apiClient';
 
-const protocol = window.location.protocol;
-const host = window.location.hostname;
+/**
+ * システム設定データを取得するAPI関数
+ *
+ * @returns システム設定データを含むPromiseオブジェクト
+ */
+export const getSystemSetting = () => request<SystemSettingData>('get', '/system_setting/get_system_setting/');
 
-export async function getSystemSetting(): Promise<SystemSettingData> {
-    const endpoint = `${protocol}//${host}:2478/api/system_setting/get_system_setting/`;
-    return axios.get(endpoint)
-        .then(response => {
-            return response.data;
-        })
-        .catch(error => {
-            console.error('Error getting SystemSetting:', error);
-            throw error;
-        });
-}
-
-export async function setSamplingInterval(samplingInterval:number): Promise<void> {
-    const endpoint = `${protocol}//${host}:2478/api/system_setting/set_sampling_interval/`;
-    return axios.post(endpoint,{samplingInterval:samplingInterval})
-        .then(response => {
-            return response.data;
-        })
-        .catch(error => {
-            console.error('Error getting SystemSetting:', error);
-            throw error;
-        });
-}
+/**
+ * サンプリング間隔を設定するAPI関数
+ * 
+ * @param samplingInterval - 設定するサンプリング間隔（単位：ミリ秒）
+ */
+export const setSamplingInterval = (samplingInterval: number) => request<void>('post', '/system_setting/set_sampling_interval/', { samplingInterval });

@@ -45,8 +45,7 @@
                 </th>
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
                   少数点以下表示</th>
-                <th 
-                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
                   style="width: 15px;">
                   入力値設定
                 </th>
@@ -74,9 +73,10 @@
                   <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
                     class="w-100" />
                 </td>
-                <td  class="align-middle text-center">
+                <td class="align-middle text-center">
                   <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0">
-                    <i class="material-icons-round" aria-hidden="true" @click="openNormalizeSettingModal(channel)">tune</i>
+                    <i class="material-icons-round" aria-hidden="true"
+                      @click="openNormalizeSettingModal(channel)">tune</i>
                   </a>
                 </td>
                 <td v-if="isEditableSpecificInputChannelSetting" class="align-middle text-center">
@@ -86,7 +86,7 @@
                   </a>
                 </td>
                 <td v-if="isAdditableInputChannel" class="align-middle text-center">
-                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannel(channel)">
+                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannelButtonClick(channel)">
                     <i class="material-icons-round" aria-hidden="true">delete</i>
                   </a>
                 </td>
@@ -176,21 +176,22 @@
         </div>
       </div>
     </div>
-    <ChannelSpecificSettingModal :visible="isChannelSpecificSettingVisible" :channel="selectedChannel || {}"
-      @close="isChannelSpecificSettingVisible = false" @update="updateChannelSetting" />
-    <InputDataSettingModal :visible="isNormalizeSettingModalVisible" :channelSetting="selectedChannel"
-    @close="isNormalizeSettingModalVisible = false" @update="updateChannelSetting"/>
-    <CheckModal ref="checkModal"/>
+    <ChannelSpecificSettingModal v-if="selectedChannel" :visible="isChannelSpecificSettingVisible"
+      :channel="selectedChannel!" @close="isChannelSpecificSettingVisible = false" @update="updateChannelSetting" />
+
+    <InputDataSettingModal v-if="selectedChannel" :visible="isNormalizeSettingModalVisible"
+      :channelSetting="selectedChannel!" @close="isNormalizeSettingModalVisible = false"
+      @update="updateChannelSetting" />
+    <CheckModal ref="checkModal" />
   </div>
 </template>
 
 <script lang="ts" setup>
 
-import { ref, watch, toRefs,type Ref } from 'vue'
-import { useStore } from 'vuex'
-import type { IOModule,IChannelSetting } from '@monitoring/shared/model';
+import { ref, watch, toRefs, type Ref } from 'vue'
+import type { IOModule, IChannelSetting } from '@monitoring/shared/model';
 import { createInputChannelForInitialization, createOutputChannelForInitialization } from '@monitoring/shared/model';
-import type { Result } from '@monitoring/shared/types/utils/Result';
+import { updateIOModule, deleteIOModule, addChannel, deleteChannel } from '@/service/monitoringService';
 import ChannelSpecificSettingModal from '@/components/ChannelSpecificSettingModal.vue';
 import CheckModal from '@/components/Modal/CheckModal.vue';
 import InputDataSettingModal from '@/views/Configurations/InputDataSettingModal.vue';
@@ -208,8 +209,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'update'])
 
-const { visible, module } = toRefs(props)
-const store = useStore()
+const { visible, module } = toRefs(props);
 
 // propsで受け取ったmoduleをlocalModuleにディープコピー
 const localModule: Ref<IOModule> = ref(JSON.parse(JSON.stringify(module.value)))
@@ -228,7 +228,7 @@ const selectedChannel = ref<IChannelSetting<any> | null>(null);
 
 const isError = ref(false);
 // ConfirmModal の参照を保持する
-const checkModal = ref(null);
+const checkModal = ref<InstanceType<typeof CheckModal> | null>(null)
 
 // moduleが変更されたらlocalModuleを更新し、isAdditableを制御
 watch(module, (newModule) => {
@@ -257,7 +257,7 @@ function close() {
 
 // モジュール更新処理
 async function updateBtnClicked() {
-  const result: Result<void> = await store.dispatch('updateIOModule', localModule.value);
+  const result = await updateIOModule(localModule.value);
   if (result.ok) {
     close();
   }
@@ -277,33 +277,36 @@ async function deleteModuleBtnClicked() {
     return;
   }
   //削除するかどうかを確認
-  const result:boolean = await checkModal.value.showModal('確認', 'この操作は実行後に復元することができません。\nモジュールを削除しますか？', '削除', 'キャンセル');
-  if(result){
-    deleteModule();
+  const result = await checkModal.value.showModal('確認', 'この操作は実行後に復元することができません。\nモジュールを削除しますか？', '削除', 'キャンセル');
+  if (result) {
+    const apiResult = await deleteIOModule(localModule.value.module_uuid);
+    if (apiResult.ok) {
+      close();
+    } else {
+      // エラー処理(エラーメッセージ表示等)
+      isError.value = true;
+    }
   }
 }
 
-// モジュール削除処理
-function deleteModule() {
-  store.dispatch('deleteIOModule', localModule.value.module_uuid)
-  close()
-}
-
-async function addInputChannel() {
+function addInputChannel() {
   const newChannel: IChannelSetting<any> = createInputChannelForInitialization(localModule.value.module_uuid, -1, localModule.value.module_type);
-  store.dispatch('addChannel', newChannel);
+  addChannel(newChannel);
 }
 
 async function addOutputChannel() {
   const newChannel: IChannelSetting<any> = createOutputChannelForInitialization(localModule.value.module_uuid, -1, localModule.value.module_type);
-  store.dispatch('addChannel', newChannel);
+  addChannel(newChannel);
 }
 
-async function deleteChannel(channel: IChannelSetting<any>) {
+async function deleteChannelButtonClick(channel: IChannelSetting<any>) {
+  if (!checkModal.value) {
+    return;
+  }
   //削除するかどうかを確認
-  const result:boolean = await checkModal.value.showModal('確認', 'この操作は実行後に復元することができません。\nチャンネルを削除しますか？', '削除', 'キャンセル');
+  const result = await checkModal.value.showModal('確認', 'この操作は実行後に復元することができません。\nチャンネルを削除しますか？', '削除', 'キャンセル');
   if (result) {
-    store.dispatch('deleteChannel', channel);
+    deleteChannel(channel);
   }
 }
 
@@ -367,7 +370,6 @@ function determineInputType(value: any): string {
 .container {
   border-radius: 10px;
   border: 1px solid #ffffff31;
-  box-radius: 10px;
   box-shadow: 0 0 1px 1px rgba(58, 58, 58, 0.2) !important;
 }
 </style>

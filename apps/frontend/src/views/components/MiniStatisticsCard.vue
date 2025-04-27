@@ -26,8 +26,9 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from "vuex";
-import { computed ,ref } from "vue";
+import { storeToRefs } from "pinia";
+import { ref } from "vue";
+import { useUiStore } from "@/pinia/uiStore";
 
 const props = defineProps({
   title: {
@@ -52,9 +53,9 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const uiStore = useUiStore();
 
-const isRTL = computed(() => store.state.isRTL);
+const { isRTL } = storeToRefs(uiStore);
 const reverseDirection = ref("flex-row-reverse justify-content-between");
 
 </script>

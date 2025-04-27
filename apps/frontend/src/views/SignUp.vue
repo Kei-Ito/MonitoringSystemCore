@@ -21,12 +21,7 @@
               >
                 <div
                   class="position-relative h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center"
-                  :style="{
-                    backgroundImage:
-                      'url(' +
-                      require('@/assets/img/illustrations/illustration-signin.jpg') +
-                      ')',
-                  }"
+                  :style="{ backgroundImage: `url(${illustrationSignin})` }"
                 ></div>
               </div>
               <div
@@ -112,34 +107,42 @@
   </div>
 </template>
 
-<script>
-import Navbar from "@/examples/PageLayout/Navbar.vue";
-import MaterialInput from "@/components/MaterialInput.vue";
-import MaterialCheckbox from "@/components/MaterialCheckbox.vue";
-import MaterialButton from "@/components/MaterialButton.vue";
-const body = document.getElementsByTagName("body")[0];
-import { mapMutations } from "vuex";
+<script setup lang="ts">
+/* ---------- import ---------- */
+import { onMounted, onBeforeUnmount, defineOptions } from 'vue';
+import { useUiStore } from '@/pinia/uiStore';
+import Navbar from '@/examples/PageLayout/Navbar.vue';
+import MaterialInput from '@/components/MaterialInput.vue';
+import MaterialCheckbox from '@/components/MaterialCheckbox.vue';
+import MaterialButton from '@/components/MaterialButton.vue';
+import illustrationSignin from '@/assets/img/illustrations/illustration-signin.jpg';
 
-export default {
-  name: "sign-up",
-  components: {
-    Navbar,
-    MaterialInput,
-    MaterialCheckbox,
-    MaterialButton,
-  },
-  beforeMount() {
-    this.toggleEveryDisplay();
-    this.toggleHideConfig();
-    body.classList.remove("bg-gray-100");
-  },
-  beforeUnmount() {
-    this.toggleEveryDisplay();
-    this.toggleHideConfig();
-    body.classList.add("bg-gray-100");
-  },
-  methods: {
-    ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
-  },
-};
+/* ---------- component meta ---------- */
+defineOptions({ name: 'sign-up' });
+
+/* ---------- refs / state ---------- */
+const body = document.body;
+const uiStore = useUiStore();
+
+/* ---------- local wrappers ---------- */
+function toggleEveryDisplay() {
+  uiStore.toggleEveryDisplay();
+}
+
+function toggleHideConfig() {
+  uiStore.toggleHideConfig();
+}
+
+/* ---------- lifecycle ---------- */
+onMounted(() => {
+  toggleEveryDisplay();
+  toggleHideConfig();
+  body.classList.remove('bg-gray-100');
+});
+
+onBeforeUnmount(() => {
+  toggleEveryDisplay();
+  toggleHideConfig();
+  body.classList.add('bg-gray-100');
+});
 </script>

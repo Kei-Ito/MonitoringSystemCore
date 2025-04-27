@@ -23,15 +23,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref,computed,watch,onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { ref,watch,onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useChartStore } from '@/pinia/chartStore';
 import ColorCalendar from "@/components/ColorCalendar.vue";
+
+// TODO: トレンドグラフが複数配置される仕様に変更されたので要修正
 const props = defineProps({
   show: Boolean
 });
 
-const store = useStore();
-const trendChartSetting = computed(()=> store.state.systemSetting.trendChartSetting);
+const chartStore = useChartStore();
+const { trendChartSettings } = storeToRefs(chartStore);
 
 const selectedDate = ref(new Date());
 
@@ -42,24 +45,17 @@ function closeModal() {
 }
 
 function confirmDate() {
-  const newSetting={
-    ...trendChartSetting.value,
-    specific_chart_setting:{
-      ...trendChartSetting.value.specific_chart_setting,
-      selected_date:selectedDate.value
-    }
-  }
-  store.commit('updateTrendChartSetting', newSetting);
+  trendChartSettings.value[0].specific_chart_setting.selected_date = selectedDate.value;
   emit('date-selected', selectedDate.value);
   closeModal();
 }
 
 onMounted(()=>{
-  selectedDate.value = trendChartSetting.value.specific_chart_setting.selected_date;
+  selectedDate.value = trendChartSettings.value[0].specific_chart_setting.selected_date;
 })
 
-watch(()=>trendChartSetting.value,()=>{
-  selectedDate.value = trendChartSetting.value.specific_chart_setting.selected_date;
+watch(()=>trendChartSettings.value[0],()=>{
+  selectedDate.value = trendChartSettings.value[0].specific_chart_setting.selected_date;
 })
 
 </script>

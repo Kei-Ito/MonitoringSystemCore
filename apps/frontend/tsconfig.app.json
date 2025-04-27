@@ -3,6 +3,8 @@
   "compilerOptions": {
     "composite": true,
     "allowImportingTsExtensions": true,  // ← ここだけ必要
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
@@ -11,6 +13,9 @@
       
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "include": ["src/**/*.ts","src/**/*.js", "src/**/*.vue"],
+  "exclude": [
+    "src/assets/js/world.js"   // ← ここを追加
+  ],
   "references": [{ "path": "../../shared" }]
 }

@@ -1,18 +1,9 @@
 <template>
   <div class="language-selector">
-    <select 
-    v-model="currentLocale" 
-    @change="changeLanguage($event.target.value)"
-    class="form-select"
-    >
-    <option 
-      v-for="lang in languages" 
-      :key="lang.code"
-      :value="lang.code"
-      style="text-align: center"
-    >
-      {{ lang.label }}
-    </option>
+    <select v-model="currentLocale" class="form-select">
+      <option v-for="lang in languages" :key="lang.code" :value="lang.code" style="text-align: center">
+        {{ lang.label }}
+      </option>
     </select>
   </div>
 </template>
@@ -30,10 +21,12 @@ const languages = [
   { code: 'ko', label: '한국어' }
 ]
 
-const currentLocale = computed(() => locale.value)
+const currentLocale = computed<string>({
+  get: () => locale.value,
+  set: (lang) => {
+    locale.value = lang
+    localStorage.setItem('locale', lang)
+  }
+})
 
-const changeLanguage = (lang: string) => {
-  locale.value = lang
-  localStorage.setItem('locale', lang)
-}
 </script>

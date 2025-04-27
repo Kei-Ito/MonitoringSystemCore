@@ -69,7 +69,7 @@
           <button
             id="btn-dark"
             class="px-3 mb-2 btn bg-gradient-dark"
-            :class="sidebarType.value === 'bg-gradient-dark' ? 'active' : ''"
+            :class="sidebarType === 'bg-gradient-dark' ? 'active' : ''"
             @click="sidebar('bg-gradient-dark')"
           >
             Dark
@@ -77,7 +77,7 @@
           <button
             id="btn-transparent"
             class="px-3 mb-2 btn bg-gradient-dark ms-2"
-            :class="sidebarType.value === 'bg-transparent' ? 'active' : ''"
+            :class="sidebarType === 'bg-transparent' ? 'active' : ''"
             @click="sidebar('bg-transparent')"
           >
             Transparent
@@ -85,7 +85,7 @@
           <button
             id="btn-white"
             class="px-3 mb-2 btn bg-gradient-dark ms-2"
-            :class="sidebarType.value === 'bg-white' ? 'active' : ''"
+            :class="sidebarType === 'bg-white' ? 'active' : ''"
             @click="sidebar('bg-white')"
           >
             White
@@ -103,7 +103,7 @@
             <input
               class="form-check-input mt-1 ms-auto"
               type="checkbox"
-              :checked="isDarkMode.value"
+              :checked="isDarkMode"
               @click="darkMode"
             />
           </div>
@@ -138,43 +138,38 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
-import { useStore } from "vuex";
+import { onMounted,type PropType } from "vue";
+import { storeToRefs } from "pinia";
 import {
   activateDarkMode,
   deactivateDarkMode,
 } from "@/assets/js/dark-mode";
+import { useUiStore } from "@/pinia/uiStore";
 
 /* Props */
 defineProps({
-  toggle: Function,
+  toggle: Function as PropType<(e: MouseEvent) => void>,
 });
 
-
-/* Vuex Store */
-const store = useStore();
-
-/* Computed State */
-const isRTL = computed(() => store.state.systemSetting.isRTL);
-const sidebarType = computed(() => store.state.systemSetting.sidebarType);
-const isDarkMode = computed(() => store.state.systemSetting.isDarkMode);
+const uiStore = useUiStore(); 
+const { isRTL, sidebarType,isDarkMode } = storeToRefs(uiStore);
 
 /* Methods */
 function sidebarColor(color = "success") {
   document.querySelector("#sidenav-main")?.setAttribute("data-color", color);
-  store.dispatch("setColor", color);
+  uiStore.setColor(color);
 }
 
 function sidebar(type: string) {
-  store.state.systemSetting.sidebarType = type;
+  sidebarType.value = type;
 }
 
 function darkMode() {
   if (isDarkMode.value) {
-    store.state.systemSetting.isDarkMode = false;
+    isDarkMode.value = false;
     deactivateDarkMode();
   } else {
-    store.state.systemSetting.isDarkMode = true;
+    isDarkMode.value = true;
     activateDarkMode();
   }
 }
@@ -193,8 +188,8 @@ function sidenavTypeOnResize() {
 
 /* Lifecycle Hooks */
 onMounted(() => {
-  store.state.isTransparent = "bg-transparent";
   window.addEventListener("resize", sidenavTypeOnResize);
   window.addEventListener("load", sidenavTypeOnResize);
 });
+
 </script>

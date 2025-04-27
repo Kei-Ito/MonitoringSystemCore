@@ -28,20 +28,21 @@
 </template>
 <script setup lang="ts">
 
-import { computed } from 'vue';
-import { useStore } from "vuex";
+import { storeToRefs } from 'pinia';
+import { useUiStore } from "@/pinia/uiStore";
 import MonitoringView from "@/components/MonitoringView.vue";
 import SidenavList from '@/examples/Sidenav/SidenavList.vue';
 
-const store = useStore();
+const uiStore = useUiStore();
 
-const isDarkMode = computed(() => store.state.systemSetting.isDarkMode);
-const isRTL = computed(() => store.state.systemSetting.isRTL);
-const sidebarType = computed(() => store.state.systemSetting.sidebarType);
-
+const{
+  isDarkMode,
+  isRTL,
+  sidebarType,
+} = storeToRefs(uiStore);
 
 function toggleSidebar() {
-  store.commit('navbarMinimize');
+  uiStore.toggleSidebar();
 }
 
 

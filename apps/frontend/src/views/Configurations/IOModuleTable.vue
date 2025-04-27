@@ -47,7 +47,7 @@
                 </td>
                 <td class="align-middle text-center">
                   <span class="text-secondary text-xs font-weight-bold">{{ formatDate(io_module.created_at)
-                    }}</span>
+                  }}</span>
                 </td>
                 <td class="align-middle text-center">
                   <a class="btn btn-link text-dark px-3 mb-0 " @click="openIOModuleEditModal(io_module)">
@@ -71,88 +71,86 @@
         </div>
       </div>
     </div>
-    <IOModuleEditModal :visible="isEditModalVisible" :module="selectedModule" @close="closeEditModal"/>
+    <IOModuleEditModal v-if="selectedModule" :visible="isEditModalVisible" :module="selectedModule" @close="closeEditModal" />
     <IOModuleAddModal :visible="isAddModalVisible" @close="closeAddModal" @add="handleAdd" />
   </div>
 </template>
 <script lang="ts" setup>
-import { useStore } from "vuex";
+import { ref } from "vue";
+import { storeToRefs } from 'pinia';
 import IOModuleEditModal from '@/components/IOModuleEditModal.vue';
 import IOModuleAddModal from "@/components/IOModuleAddModal.vue";
 import { IOModuleTypeImages } from "@/enum/IOModuleTypeImages";
-import { IOModuleStatus,IOModuleTypes } from "@monitoring/shared/enum";
+import { IOModuleStatus, IOModuleTypes } from "@monitoring/shared/enum";
 import type { IOModule } from "@monitoring/shared/model";
-import { ref,computed } from "vue";
+import { useUiStore } from '@/pinia/uiStore';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
+import { addIOModule } from "@/service/monitoringService";
 
 
+const uiStore = useUiStore();
+const monitoringStore = useMonitoringStore();
+
+const { color } = storeToRefs(uiStore);
+const { ioModules } = storeToRefs(monitoringStore);
+
+const isEditModalVisible = ref<boolean>(false);
+const isAddModalVisible = ref<boolean>(false);
+const selectedModule = ref<IOModule | null>(null);
+
+const openIOModuleEditModal = (module: IOModule) => {
+  selectedModule.value = { ...module };
+  isEditModalVisible.value = true;
+};
+
+const closeEditModal = () => {
+  isEditModalVisible.value = false;
+};
+
+const getIOModuleStatus = (status: IOModuleStatus) => {
+  if (status === IOModuleStatus.Active) {
+    return 'bg-gradient-success';
+  } else if (status === IOModuleStatus.Inactive) {
+    return 'bg-gradient-danger';
+  } else if (status === IOModuleStatus.Unknown) {
+    return 'bg-gradient-secondary';
+  }
 
 
-    const store = useStore();
+  return status;
+};
 
-    // data相当
-    const isEditModalVisible = ref<boolean>(false);
-    const isAddModalVisible = ref<boolean>(false);
-    const selectedModule = ref<IOModule | null>(null);
+const openIOModuleAddModal = () => {
+  isAddModalVisible.value = true;
+};
 
-    // computed相当（storeのstateをcomputedでラップ）
-    const ioModules = computed(() => store.state.systemSetting.ioModules);
-    const color = computed(() => store.state.systemSetting.color);
+const closeAddModal = () => {
+  isAddModalVisible.value = false;
+};
 
-    // methods相当（Vuexアクションはstore.dispatchで呼び出し）
-    const openIOModuleEditModal = (module:IOModule) => {
-      selectedModule.value = { ...module };
-      isEditModalVisible.value = true;
-    };
+const handleAdd = (newModule: IOModule) => {
+  addIOModule(newModule);
+  closeAddModal();
+};
 
-    const closeEditModal = () => {
-      isEditModalVisible.value = false;
-    };
+const getModuleImage = (type: IOModuleTypes) => {
+  const module = IOModuleTypeImages.find(m => m.module_type === type.toString());
+  return module ? module.image : '';
+};
 
-    const getIOModuleStatus = (status: IOModuleStatus) => {
-      if (status === IOModuleStatus.Active) {
-        return 'bg-gradient-success';
-      } else if (status === IOModuleStatus.Inactive) {
-        return 'bg-gradient-danger';
-      }else if (status === IOModuleStatus.Unknown) {
-        return 'bg-gradient-secondary';
-      }
+const formatDate = (date:Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
 
+  return `${year}-${month}-${day}`;
+};
 
-      return status;
-    };
-
-    const openIOModuleAddModal = () => {
-      isAddModalVisible.value = true;
-    };
-
-    const closeAddModal = () => {
-      isAddModalVisible.value = false;
-    };
-
-    const handleAdd = (newModule: IOModule) => {
-      store.dispatch('addIOModule', newModule);
-      closeAddModal();
-    };
-
-    const getModuleImage = (type: IOModuleTypes) => {
-      const module = IOModuleTypeImages.find(m => m.module_type === type.toString());
-      return module ? module.image : '';
-    };
-
-    const formatDate = (dateString: string) => {
-      const date = new Date(dateString);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const day = String(date.getDate()).padStart(2, "0");
-
-      return `${year}-${month}-${day}`;
-    };
-
-    // 必要に応じてstore.dispatch('getIOModules')などで初期データ取得可能
-    // mounted相当はonMountedフックを使用可能（必要な場合のみ）
-    // onMounted(() => {
-    //   store.dispatch('getIOModules');
-    // });
+// 必要に応じてstore.dispatch('getIOModules')などで初期データ取得可能
+// mounted相当はonMountedフックを使用可能（必要な場合のみ）
+// onMounted(() => {
+//   store.dispatch('getIOModules');
+// });
 
 
 </script>

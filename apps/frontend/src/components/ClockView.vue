@@ -22,11 +22,13 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useStore } from "vuex";
-import { computed,type Ref, } from "vue";
+import { storeToRefs } from "pinia";
+import { computed } from "vue";
+import { useMonitoringStore } from "@/pinia/monitoringStore";
 
-const store = useStore();
-const samplingInterval:Ref<number> = computed(() => store.state.systemSetting.systemSetting.samplingInterval);
+const monitoringStore = useMonitoringStore();
+
+const { samplingInterval } = storeToRefs(monitoringStore);
 
 const timeHoursStr = computed(() => {
     const hours = Math.floor(samplingInterval.value/1000 / 3600);

@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :class="{ active: isActive }">
+  <div class="container" :class="{ active: isSampling }">
 
     <div class="content">
       <e-charts-gauge-chart :value="props.value" />
@@ -8,7 +8,8 @@
 </template>
 <script setup lang="ts">
 import EChartsGaugeChart from "./CustomEChartsGaugeChart.vue";
-import { useStore } from 'vuex';
+import { storeToRefs } from "pinia";
+import { useMonitoringStore } from "@/pinia/monitoringStore";
 import { computed } from 'vue';
 const props = defineProps({
   value: {
@@ -17,8 +18,8 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
-const isActive = computed(() => store.state.systemSetting.isSampling);
+const monitoringStore = useMonitoringStore();
+const { isSampling } = storeToRefs(monitoringStore);
 
 </script>
 <style scoped>

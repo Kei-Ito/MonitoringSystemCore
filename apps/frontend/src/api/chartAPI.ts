@@ -1,41 +1,24 @@
-import axios from 'axios';
 import type { ChartSetting } from '@monitoring/shared/model';
+import { request } from '@/api/apiClient';
 
-const protocol = window.location.protocol;
-const host = window.location.hostname;
 
-export async function getDashboardCharts(): Promise<ChartSetting[]> {
-    const endpoint = `${protocol}//${host}:2478/api/chart/get_dashboard_charts/`;
-    return axios.get(endpoint)
-        .then(response => {
-            return response.data;
-        })
-        .catch(error => {
-            console.error('Error getting Dashboard Chart:', error);
-            throw error;
-        });
-}
+/**
+ * ダッシュボードチャートの設定を取得するAPI関数
+ * 
+ * @returns ダッシュボードチャートの設定を含むPromiseオブジェクト
+ */
+export const getDashboardCharts = () => request<ChartSetting[]>('get', '/chart/get_dashboard_charts/');
 
-export async function addDashboardChart(chart: ChartSetting): Promise<void> {
-    const endpoint = `${protocol}//${host}:2478/api/chart/add_dashboard_chart/`;
-    return axios.post(endpoint, chart)
-        .then(() => {
-            console.log('Chart added:', chart.channel_id);
-        })
-        .catch(error => {
-            console.error('Error adding chart:', error);
-            throw error;
-        });
-}
+/**
+ * ダッシュボードチャートを追加するAPI関数
+ * 
+ * @param chart - 追加するチャートの設定
+ */
+export const addDashboardChart= (chart: ChartSetting) => request<void>('post', '/chart/add_dashboard_chart/', chart);
 
-export async function updateDashboardChart(chart: ChartSetting): Promise<void> {
-    const endpoint = `${protocol}//${host}:2478/api/chart/update_dashboard_chart/`;
-    return axios.post(endpoint, chart)
-        .then(() => {
-            console.log('Chart updated:', chart.channel_id);
-        })
-        .catch(error => {
-            console.error('Error updating chart:', error);
-            throw error;
-        });
-}
+/**
+ * ダッシュボードチャートを更新するAPI関数
+ * 
+ * @param chart - 更新するチャートの設定
+ */
+export const updateDashboardChart = (chart: ChartSetting) => request<void>('post', '/chart/update_dashboard_chart/', chart);

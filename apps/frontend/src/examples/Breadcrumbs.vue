@@ -25,11 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import { useStore } from "vuex";
-import { computed } from "vue";
+import { storeToRefs } from "pinia";
+import { useUiStore } from "@/pinia/uiStore";
 
-const store = useStore();
-const isRTL  = computed(()=>store.state.systemSetting.isRTL);
+const uiStore = useUiStore();
+const { isRTL } = storeToRefs(uiStore);
 
 const props = defineProps({
   currentPage: {

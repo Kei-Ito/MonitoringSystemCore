@@ -11,34 +11,21 @@
   </div>
 </template>
 
-<script>
-import { defineComponent,ref } from 'vue'
-import { mapActions } from 'vuex'
+<script setup lang="ts">
+import { useUiStore } from '@/pinia/uiStore'
 
-export default defineComponent({
-  name: 'ColorSelector',
-  setup() {
-    const colors = [
-    { code: 'info', label: 'Blue' },
-    { code: 'success', label: 'Green' },
-      { code: 'primary', label: 'Pink' },
-      { code: 'dark', label: 'Black' },
-      { code: 'warning', label: 'Orange' },
-      { code: 'danger', label: 'Red' }
-    ]
+const uiStore = useUiStore()
 
-    const selectedColor = ref(colors[0].code)
+const colors = [
+  { code: 'info', label: 'Blue' },
+  { code: 'success', label: 'Green' },
+  { code: 'primary', label: 'Pink' },
+  { code: 'dark', label: 'Black' },
+  { code: 'warning', label: 'Orange' },
+  { code: 'danger', label: 'Red' }
+];
 
-    return {
-      colors,
-      selectedColor,
-    }
-  },
-  methods: {
-    changeColor(color) {
-      this.setColor(color);
-    },
-    ...mapActions(["setColor"]),
-  }
-});
+function changeColor(color: string) {
+  uiStore.setColor(color);
+}
 </script>

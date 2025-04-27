@@ -32,15 +32,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref,Ref,computed,watch,onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { ref,computed,watch,onMounted,type Ref } from 'vue';
+import { storeToRefs } from "pinia";
+import { useMonitoringStore } from "@/pinia/monitoringStore";
+import { useChartStore } from '@/pinia/chartStore';
 import CumulativeValueBarChart from "./CumulativeValueBarChart.vue";
 import CumulativeValueViewer from './CumulativeValueViewer.vue';
 import * as api from '@/api/';
 
-const store = useStore();
-// computed相当（storeのstateをcomputedでラップ）
-const trendChartSetting = computed(()=> store.state.systemSetting.trendChartSetting);
+const monitoringStore = useMonitoringStore();
+const chartStore = useChartStore();
+
+const { trendChartSettings } = storeToRefs(chartStore);
+
 const activeValue = ref('daily');
 const cumulativeValue= ref(0);
 const cumulativeValueList:Ref<number[]>= ref([]);
@@ -106,13 +110,13 @@ function getSelectedDate(date: Date) {
 }
 
 // 選択された日付が変更されたらデータを再取得
-watch(() => trendChartSetting.value.specific_chart_setting.selected_date, async() => {
-  const {startDate, endDate} = getSelectedDate(trendChartSetting.value.specific_chart_setting.selected_date);
+watch(() => trendChartSettings.value[0].specific_chart_setting.selected_date, async() => {
+  const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   getCumulativeValue(startDate, endDate);
 });
 
 onMounted(async () => {
-  const {startDate, endDate} = getSelectedDate(trendChartSetting.value.specific_chart_setting.selected_date);
+  const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   getCumulativeValue(startDate, endDate);
 });
 </script>

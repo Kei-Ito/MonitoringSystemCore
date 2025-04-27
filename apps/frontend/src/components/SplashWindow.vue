@@ -1,76 +1,50 @@
 <template>
   <div class="splashwindow_container">
-    <h1 class="ml3">UV Monitoring System</h1>
+    <h1 class="ml3">
+      <span
+        v-for="(c, i) in text"
+        :key="i"
+        class="letter"
+        :style="{ animationDelay: `${i * 0.15}s` }"
+      >
+        {{ c }}
+      </span>
+    </h1>
     <loading-spinner />
   </div>
-  
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import anime from 'animejs/lib/anime.es.js';
-import LoadingSpinner from './LoadingSpinner.vue';
+import LoadingSpinner from './LoadingSpinner.vue'
 
-const props = defineProps({
-  width: {
-    type: String,
-    default: '100%'
-  },
-  height: {
-    type: String,
-    default: '100%'
-  }
-});
-
-const components = {
-  LoadingSpinner
-};
-
-onMounted(() => {
-  const textWrapper = document.querySelector('.ml3');
-  if (textWrapper) {
-    textWrapper.innerHTML = textWrapper.textContent?.replace(/\S/g, "<span class='letter'>$&</span>") || '';
-
-    anime.timeline({ loop: true })
-      .add({
-        targets: '.ml3 .letter',
-        opacity: [0, 1],
-        easing: "easeInOutQuad",
-        duration: 1800,
-        delay: (_el:any, i:number) => 150 * (i + 1)
-      }).add({
-        targets: '.ml3',
-        opacity: 0,
-        duration: 1000,
-        easing: "easeOutExpo",
-        delay: 1000
-      });
-  } else {
-    console.error('textWrapper not found');
-  }
-});
+// 文字列を変数にしておくと i18n などにも対応しやすい
+const text = 'UV Monitoring System'.split('')
 </script>
 
 <style scoped>
 .splashwindow_container {
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: rgb(18, 18, 36)
-  
+  background: rgb(18 18 36);
 }
 
 .ml3 {
   font-weight: 900;
   font-size: 5em;
-  color: white;
+  color: #fff;
+}
+
+@keyframes fadeInUp {
+  0%   { opacity: 0; transform: translateY(40%); }
+  100% { opacity: 1; transform: translateY(0);  }
 }
 
 .letter {
   display: inline-block;
-  
-  line-height: 1em;
+  animation: fadeInUp 0.6s ease-out forwards;
+  /* animation-delay は inline-style で付与 */
 }
 </style>

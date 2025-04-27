@@ -37,9 +37,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { useStore } from "vuex";
+import { storeToRefs } from "pinia";
+import { useUiStore } from "@/pinia/uiStore";
 
 /* Props */
 const props = defineProps({
@@ -60,10 +61,9 @@ const props = defineProps({
 /* Reactive State */
 const isExpanded = ref(false);
 
-/* Vuex Store */
 const store = useStore();
-const isRTL = computed(() => store.state.isRTL);
-const color = computed(() => store.state.color);
+const uiStore = useUiStore();
+const { isRTL , color } = storeToRefs(uiStore);
 
 /* Route */
 const route = useRoute();

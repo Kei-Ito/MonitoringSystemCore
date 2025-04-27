@@ -24,6 +24,7 @@
           </div>
         </a>
       </li>
+      <!-- TODO: 要修正箇所-->
       <breadcrumbs :currentPage="currentRouteName" :color="props.color" />
       <div
         class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4"
@@ -41,8 +42,9 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useStore } from "vuex";
+import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
+import { useUiStore } from "@/pinia/uiStore";
 import Breadcrumbs from "../Breadcrumbs.vue";
 
 /* Props */
@@ -50,19 +52,21 @@ const props = defineProps({
   color: String,
 });
 
-/* Vuex Store */
-const store = useStore();
+const uiStore = useUiStore();
 
 /* Route */
 const route = useRoute();
 
 /* Computed Properties */
-const isRTL = computed(() => store.state.systemSetting.isRTL);
-const isAbsolute = computed(() => store.state.systemSetting.isAbsolute);
-const currentRouteName = computed(() => route.name);
+const { 
+  isRTL,
+  isAbsolute
+} = storeToRefs(uiStore);
+
+const currentRouteName = computed<string>(() => String(route.name ?? ""));
 
 const toggleSidebar = () => {
-  store.commit("navbarMinimize");
+  uiStore.navbarMinimize()
 };
 
 </script>

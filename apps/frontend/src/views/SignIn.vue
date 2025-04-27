@@ -141,31 +141,41 @@
   </div>
 </template>
 
-<script>
-import Navbar from "@/examples/PageLayout/Navbar.vue";
-import MaterialInput from "@/components/MaterialInput.vue";
-import MaterialSwitch from "@/components/MaterialSwitch.vue";
-import MaterialButton from "@/components/MaterialButton.vue";
-import { mapMutations } from "vuex";
+<script setup lang="ts">
+/* ---------- imports ---------- */
+import { onMounted, onBeforeUnmount, defineOptions } from 'vue';
+import { useUiStore } from '@/pinia/uiStore';
+// import { useUiStore as useStore } from '@/pinia/uiStore';
 
-export default {
-  name: "sign-in",
-  components: {
-    Navbar,
-    MaterialInput,
-    MaterialSwitch,
-    MaterialButton,
-  },
-  beforeMount() {
-    this.toggleEveryDisplay();
-    this.toggleHideConfig();
-  },
-  beforeUnmount() {
-    this.toggleEveryDisplay();
-    this.toggleHideConfig();
-  },
-  methods: {
-    ...mapMutations(["toggleEveryDisplay", "toggleHideConfig"]),
-  },
-};
+import Navbar from '@/examples/PageLayout/Navbar.vue';
+import MaterialInput from '@/components/MaterialInput.vue';
+import MaterialSwitch from '@/components/MaterialSwitch.vue';
+import MaterialButton from '@/components/MaterialButton.vue';
+
+/* ---------- component meta ---------- */
+defineOptions({ name: 'sign-in' });
+
+/* ---------- store & helpers ---------- */
+const uiStore = useUiStore();
+
+function toggleEveryDisplay() {
+  uiStore.toggleEveryDisplay();
+  // store.toggleEveryDisplay();              // Pinia アクション想定
+}
+
+function toggleHideConfig() {
+  uiStore.toggleHideConfig();
+  // store.toggleHideConfig();                // Pinia
+}
+
+/* ---------- lifecycle ---------- */
+onMounted(() => {
+  toggleEveryDisplay();
+  toggleHideConfig();
+});
+
+onBeforeUnmount(() => {
+  toggleEveryDisplay();
+  toggleHideConfig();
+});
 </script>

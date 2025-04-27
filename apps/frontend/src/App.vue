@@ -30,45 +30,54 @@ Coded by www.creative-tim.com
 
 </template>
 <script setup lang="ts">
-import { ref,  onMounted, onUnmounted, computed,type Ref,type ComputedRef, } from "vue";
-import { useStore } from "vuex";
+import { ref,  onMounted, onUnmounted,type Ref } from "vue";
+import { storeToRefs } from 'pinia'
 import { useToast } from "vue-toastification";
-import type { ChartSetting } from '@monitoring/shared/model';
 import type { getIOModuleInputResponse } from '@monitoring/shared/api'
+import { useUiStore } from "@/pinia/uiStore";
+import { useMonitoringStore } from "@/pinia/monitoringStore";
+import { useChartStore } from "@/pinia/chartStore";
 import SplashWindow from "@/components/SplashWindow.vue";
-import Sidenav from "@/examples/Sidenav";
+import Sidenav from "@/examples/Sidenav/index.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
+import { getIOModules,fetchSystemSetting } from "@/service/monitoringService";
+import { getDashboardCharts } from "@/service/chartService";
 
-
-const store = useStore();
+const uiStore = useUiStore()
+const monitoringStore = useMonitoringStore()
+const chartStore = useChartStore()
 const toast = useToast();
 
 let socket: WebSocket | null;
-let retryTimer: number | null = null;
+let retryTimer:  ReturnType<typeof setTimeout> | null = null;
 
 const isLoading: Ref<boolean> = ref(true);
 
-const isRTL = computed(() => store.state.systemSetting.isRTL);
-const color = computed(() => store.state.systemSetting.color);
-const isAbsolute = computed(() => store.state.systemSetting.isAbsolute);
-const isNavFixed = computed(() => store.state.systemSetting.isNavFixed);
-const navbarFixed = computed(() => store.state.systemSetting.navbarFixed);
-const absolute = computed(() => store.state.systemSetting.absolute);
-const showSidenav = computed(() => store.state.systemSetting.showSidenav);
-const showNavbar = computed(() => store.state.systemSetting.showNavbar);
-const showFooter = computed(() => store.state.systemSetting.showFooter);
+const { 
+  isRTL,
+  color,
+  isAbsolute,
+  isNavFixed,
+  navbarFixed,
+  absolute,
+  showSidenav,
+  showNavbar,
+  showFooter,
+} = storeToRefs(uiStore);
 
-const chartSettings: ComputedRef<ChartSetting[]> = computed(() => store.state.systemSetting.dashboardCharts);
+const {
+  dashboardCharts
+} = storeToRefs(chartStore);
 
 onMounted(async () => {
 
   // IOモジュールの一覧を取得
-  await store.dispatch('getIOModules');
+  await getIOModules();
   // ダッシュボードのチャート情報を取得
-  await store.dispatch('getDashboardCharts');
+  await getDashboardCharts();
   // サンプリング間隔を取得
-  await store.dispatch('getSystemSetting');
+  await fetchSystemSetting();
 
   const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
 
@@ -90,7 +99,7 @@ onUnmounted(() => {
 });
 
 function navbarMinimize() {
-  store.commit("navbarMinimize");
+  uiStore.navbarMinimize();
 }
 
 function setupWebSocket() {
@@ -110,6 +119,7 @@ function setupWebSocket() {
       }
     };
 
+    // WebSocketのメッセージ受信時の処理
     ws.onmessage = (event: MessageEvent) => {
       const message = JSON.parse(event.data);
       switch (message.type) {
@@ -117,24 +127,26 @@ function setupWebSocket() {
           updateGaugeValues(message.data);
           break;
         case "StartSampling":
-          store.commit('setSampling', true);
+          monitoringStore.isSampling = true;
           toast.success("Sampling started");
           break;
         case "StopSampling":
-          store.commit('setSampling', false);
+          monitoringStore.isSampling = false;
           toast.success("Sampling stoped");
           break;
         case "samplingStatus":
-          store.commit('setSampling', message.data);
+          // TODO: 不要かも。要確認
+          monitoringStore.isSampling = message.data;
           break;
         default:
           console.error("Unknown message type:", message.type);
       }
     };
 
+    // WebSocketが閉じられたときの処理
     ws.onclose = () => {
       console.log("WebSocket connection closed");
-      store.commit('setSampling', false);
+      monitoringStore.isSampling = false;
       // 数秒待って再接続
       retryTimer = setTimeout(() => {
         socket = createWebSocket();
@@ -152,17 +164,17 @@ function setupWebSocket() {
 
 function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
   // 受け取ったデータをゲージチャートに反映
-  for (let i = 0; i < chartSettings.value.length; i++) {
+  for (let i = 0; i < dashboardCharts.value.length; i++) {
     try {
-      const module_uuid = chartSettings.value[i].module_uuid;
-      const channel_id = chartSettings.value[i].channel_id;
+      const module_uuid = dashboardCharts.value[i].module_uuid;
+      const channel_id = dashboardCharts.value[i].channel_id;
 
       // モジュールIDとチャンネルIDが一致するデータを取得
       const module_data = module_datas.find((data) => data.module_uuid === module_uuid);
       if (module_data) {
         const channel_data = module_data.channels.find((channel) => channel.channel_id === channel_id);
         if (channel_data) {
-          chartSettings.value[i].specific_chart_setting.lastValue = channel_data.input_data;
+          dashboardCharts.value[i].specific_chart_setting.lastValue = channel_data.input_data;
         }
       }
     } catch {

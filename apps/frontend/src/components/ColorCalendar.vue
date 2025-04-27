@@ -4,6 +4,7 @@
   
   <script setup lang="ts">
   import { ref ,onMounted , watch} from "vue";
+  // @ts-expect-error
   import Calendar from "color-calendar/dist/bundle.js";
   import "color-calendar/dist/css/theme-glass.css";
   import * as api from "@/api";

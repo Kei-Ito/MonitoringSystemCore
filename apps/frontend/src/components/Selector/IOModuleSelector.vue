@@ -10,13 +10,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed ,defineEmits,watch,type ComputedRef} from 'vue';
-import { useStore} from 'vuex';
-import type { IOModule } from '@monitoring/shared/model';
+import { ref,defineEmits,watch} from 'vue';
+import { storeToRefs }  from 'pinia';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
 
-const store = useStore();
-// computed相当（storeのstateをcomputedでラップ）
-const ioModules:ComputedRef<IOModule[]> = computed(() => store.state.systemSetting.ioModules);
+const monitoringStore = useMonitoringStore();
+const { ioModules } = storeToRefs(monitoringStore);
 
 const props = defineProps({
   selectedUUID: {

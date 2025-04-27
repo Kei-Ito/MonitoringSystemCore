@@ -85,7 +85,9 @@
    * Imports
    * -------------------------------------- */
   import { ref, computed, watch, onMounted } from 'vue';
-  import { useStore } from 'vuex';
+  import { storeToRefs } from 'pinia';
+  import { useMonitoringStore } from "@/pinia/monitoringStore";
+  import { updateSamplingInterval } from '@/service/monitoringService';
   
   /* --------------------------------------
    * Props / Emits
@@ -96,10 +98,8 @@
   
   // 親コンポーネントへイベントを送る
   const emit =  defineEmits(['close', 'update'])
-  /* --------------------------------------
-   * Vuex Store
-   * -------------------------------------- */
-  const store = useStore();
+
+  const monitoringStore = useMonitoringStore();
   
   /* --------------------------------------
    * Reactive State
@@ -109,7 +109,7 @@
   const timeSecondsStr = ref('');
   const isError = ref(false);
   
-  const systemSetting = computed(() => store.state.systemSetting.systemSetting);
+  const { isSampling,samplingInterval } = storeToRefs(monitoringStore);
   
   /**
    * モーダルを閉じる
@@ -136,8 +136,7 @@
   
     const milliseconds = serializeTime({ hours, minutes, seconds });
   
-    // vuex のアクション呼び出し
-    store.dispatch('updateSamplingInterval', milliseconds);
+    updateSamplingInterval(milliseconds);
   
     // 親コンポーネントにも更新値を通知
     emit('update', milliseconds);
@@ -177,10 +176,10 @@
   }
   
   /**
-   * Vuex store からサンプリング周期を取得し、timHoursStr などに反映
+   * store からサンプリング周期を取得し、timHoursStr などに反映
    */
   function syncClockWithStore() {
-    const { hours, minutes, seconds } = deserializeTime(systemSetting.value.samplingInterval);
+    const { hours, minutes, seconds } = deserializeTime(samplingInterval.value);
     timHoursStr.value = padZero(hours);
     timMinutesStr.value = padZero(minutes);
     timeSecondsStr.value = padZero(seconds);
@@ -218,7 +217,7 @@
    * -------------------------------------- */
   onMounted(() => {
     // 初期表示時にストアから時間を同期
-    const { hours, minutes, seconds } = deserializeTime(systemSetting.value.samplingInterval);
+    const { hours, minutes, seconds } = deserializeTime(samplingInterval.value);
     timHoursStr.value = padZero(hours);
     timMinutesStr.value = padZero(minutes);
     timeSecondsStr.value = padZero(seconds);
