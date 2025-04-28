@@ -7,7 +7,6 @@ import { useMonitoringStore } from '@/pinia/monitoringStore'
 import { handleApiRequest } from '@/service/handle';
 import { RequestLock } from '@/utils/requestLock';
 
-const monitoringStore = useMonitoringStore()
 /** チャンネル追加ボタン連打の対策 */
 const channelLock = new RequestLock<string>(); // key = channelUUID など
 
@@ -18,7 +17,7 @@ export const fetchSystemSetting = () =>
         apiCall: () => api.getSystemSetting(),
         onSuccess: (val) => {
             // TODO: 以前の実装の名残。修正が望ましい。
-            monitoringStore.samplingInterval=val.samplingInterval;
+            useMonitoringStore().samplingInterval=val.samplingInterval;
         },
         errorMsg: "システム設定の取得に失敗しました",
     });
@@ -28,7 +27,7 @@ export const updateSamplingInterval = (samplingInterval: number) =>
     handleApiRequest({
         apiCall: () => api.setSamplingInterval(samplingInterval),
         onSuccess: () => {
-            monitoringStore.samplingInterval = samplingInterval;
+            useMonitoringStore().samplingInterval = samplingInterval;
         },
         successMsg: "サンプリング周期を更新しました",
         errorMsg: "サンプリング周期の更新に失敗しました",
@@ -39,7 +38,7 @@ export const getIOModules = () =>
     handleApiRequest({
         apiCall: () => api.getIOModules(),
         onSuccess: (val) => {
-            monitoringStore.setIOModules(val);
+            useMonitoringStore().setIOModules(val);
         },
         errorMsg: "IOモジュールの取得に失敗しました",
     });
@@ -49,7 +48,7 @@ export const addIOModule = (module: IOModule) =>
     handleApiRequest({
         apiCall: () => api.addIOModule(module),
         onSuccess: (val) => {
-            monitoringStore.ioModules.push(val);
+            useMonitoringStore().ioModules.push(val);
         },
         successMsg: "IOモジュールの追加に成功しました",
         errorMsg: "IOモジュールの追加に失敗しました",
@@ -62,7 +61,7 @@ export const updateIOModule = (updatedModule: IOModule) =>
         onSuccess: (val) => {
             // TODO: ステータスの更新はstore内で行う等変更したほうがいい
             updatedModule.status = val;
-            monitoringStore.updateIOModule(updatedModule);
+            useMonitoringStore().updateIOModule(updatedModule);
         },
         successMsg: "IOモジュールの設定を更新しました",
         errorMsg: "IOモジュールの更新に失敗しました",
@@ -73,7 +72,7 @@ export const deleteIOModule = (moduleUUID: string) =>
     handleApiRequest({
         apiCall: () => api.deleteIOModule(moduleUUID),
         onSuccess: () => {
-            monitoringStore.deleteIOModule(moduleUUID);
+            useMonitoringStore().deleteIOModule(moduleUUID);
         },
         successMsg: "IOモジュールの削除に成功しました",
         errorMsg: "IOモジュールの削除に失敗しました",
@@ -96,7 +95,7 @@ export const addChannel = (channel: IChannelSetting) =>
             }
         },
         onSuccess: (val) => {
-            monitoringStore.addChannel(val);
+            useMonitoringStore().addChannel(val);
         },
         errorMsg: "IOモジュールのチャンネルの追加に失敗しました",
     });
@@ -106,7 +105,7 @@ export const deleteChannel = (channel: IChannelSetting) =>
     handleApiRequest({
         apiCall: () => api.deleteChannel(channel),
         onSuccess: () => {
-            monitoringStore.deleteChannel(channel);
+            useMonitoringStore().deleteChannel(channel);
         },
         errorMsg: "IOモジュールのチャンネルの削除に失敗しました",
     });
@@ -116,7 +115,7 @@ export const startSampling = () =>
     handleApiRequest({
         apiCall: () => api.startSampling(),
         onSuccess: (dataList) => {
-            monitoringStore.$patch(store => {
+            useMonitoringStore().$patch(store => {
                 dataList.forEach((data) => {
                     const module = store.ioModules.find(m => m.module_uuid === data.module_uuid);
                     if (module) {

@@ -74,7 +74,7 @@ async function bootstrap() {
 
   // 未定義のルートに対してindex.htmlを返す
   app.get('*', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../../apps/frontend/dist', 'index.html'));
+    res.sendFile(path.join(__dirname, './../../frontend/dist', 'index.html'));
   });
 
   

@@ -7,7 +7,6 @@ import { handleApiRequest } from '@/service/handle';
 import { RequestLock } from '@/utils/requestLock';
 
 
-const chartStore = useChartStore();
 /** チャート追加ボタン連打の対策 */
 const chartLock = new RequestLock<number>(); // key = chartID
 
@@ -16,7 +15,7 @@ export const getDashboardCharts = () =>
     handleApiRequest({
         apiCall: () => api.getDashboardCharts(),
         onSuccess: (val) => {
-            chartStore.$patch({ dashboardCharts: val });
+            useChartStore().$patch({ dashboardCharts: val });
         },
         errorMsg: "ダッシュボードの取得に失敗しました",
     });
@@ -38,7 +37,7 @@ export const addDashboardChart = (chart: ChartSetting) =>
             }
         },
         onSuccess: () => {
-            chartStore.dashboardCharts.push(chart);
+            useChartStore().dashboardCharts.push(chart);
         },
         errorMsg: "グラフの追加に失敗しました",
     });
@@ -49,7 +48,7 @@ export const updateDashboardChart = (chart: ChartSetting) =>
     handleApiRequest({
         apiCall: () => api.updateDashboardChart(chart),
         onSuccess: () => {
-            chartStore.updateDashboardChart(chart);
+            useChartStore().updateDashboardChart(chart);
         },
         errorMsg: "更新に失敗しました",
     });

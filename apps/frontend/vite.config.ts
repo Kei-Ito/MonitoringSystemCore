@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import tsconfigPaths from 'vite-tsconfig-paths' 
 import { VitePWA } from 'vite-plugin-pwa'
 import { fileURLToPath, URL } from "node:url";
 
@@ -8,6 +9,7 @@ export default defineConfig({
   base: process.env.PUBLIC_URL || '/',            // ← object 記法のまま
   plugins: [
     vue(),
+    tsconfigPaths(),    
     VitePWA({
       registerType: 'autoUpdate',         // skipWaiting + clientsClaim を自動有効化 :contentReference[oaicite:1]{index=1}
       manifest: {
@@ -25,9 +27,7 @@ export default defineConfig({
       // @/ はフロントエンド自身
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       // @monitoring/shared/xxx で共通コードを参照
-      "@monitoring/shared": fileURLToPath(
-        new URL("../../shared/src", import.meta.url)
-      )
-    }
+    },
+    
   },
 })

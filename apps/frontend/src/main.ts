@@ -10,7 +10,6 @@ import "@/assets/css/nucleo-svg.css";
 import "@/assets/css/Material-Icons.css";
 import MaterialDashboard from "@/material-dashboard.ts";
 
-console.log("MaterialDashboard");
 
 const options = {
     toastDefaults: {
@@ -26,12 +25,10 @@ const options = {
 };
 
 
-
 const appInstance = createApp(App);
 appInstance.use(createPinia());
 appInstance.use(router);
 appInstance.use(i18n);
 appInstance.use(MaterialDashboard);
-
 appInstance.use(Toast, options);
 appInstance.mount("#app");

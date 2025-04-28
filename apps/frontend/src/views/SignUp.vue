@@ -109,7 +109,7 @@
 
 <script setup lang="ts">
 /* ---------- import ---------- */
-import { onMounted, onBeforeUnmount, defineOptions } from 'vue';
+import { onMounted, onBeforeUnmount } from 'vue';
 import { useUiStore } from '@/pinia/uiStore';
 import Navbar from '@/examples/PageLayout/Navbar.vue';
 import MaterialInput from '@/components/MaterialInput.vue';

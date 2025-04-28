@@ -143,7 +143,7 @@
 
 <script setup lang="ts">
 /* ---------- imports ---------- */
-import { onMounted, onBeforeUnmount, defineOptions } from 'vue';
+import { onMounted, onBeforeUnmount } from 'vue';
 import { useUiStore } from '@/pinia/uiStore';
 // import { useUiStore as useStore } from '@/pinia/uiStore';
 
