@@ -1,6 +1,8 @@
 # pnpn ignore
 pnpm-lock.yaml
 package-lock.json
+*.tsbuildinfo
+
 
 # Logs
 logs
@@ -26,4 +28,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-apps/backend/tsconfig.tsbuildinfo
