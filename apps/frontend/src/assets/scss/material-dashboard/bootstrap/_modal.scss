@@ -33,8 +33,8 @@
 
   // When fading in the modal, animate it to slide down
   .modal.fade & {
-    @include transition($modal-transition);
     transform: $modal-fade-transform;
+    @include transition($modal-transition);
   }
   .modal.show & {
     transform: $modal-show-transform;
@@ -76,11 +76,11 @@
   pointer-events: auto;
   background-color: $modal-content-bg;
   background-clip: padding-box;
+  outline: 0;
   border: $modal-content-border-width solid $modal-content-border-color;
   @include border-radius($modal-content-border-radius);
   @include box-shadow($modal-content-box-shadow-xs);
   // Remove focus outline from opened modal
-  outline: 0;
 }
 
 // Modal background

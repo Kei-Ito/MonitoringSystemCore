@@ -1,3 +1,4 @@
+@use "sass:color";
 @each $prop, $value in $theme-gradient-colors {
   .bg-gradient-#{$prop} {
     @include gradient-directional(nth($value, 1) 0%, nth($value, -1) 100%, $deg: 195deg);
@@ -6,7 +7,7 @@
 
 @each $prop, $value in $theme-colors {
   .bg-gradient-faded-#{$prop} {
-    background-image: radial-gradient(370px circle at 80% 50%,rgba($value, .6) 0,darken($value, 10%) 100%)
+    background-image: radial-gradient(370px circle at 80% 50%,rgba($value, .6) 0,color.scale($value,$lightness: -10%) 100%)
   }
 }
 

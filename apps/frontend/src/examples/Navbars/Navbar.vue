@@ -66,7 +66,7 @@ const {
 const currentRouteName = computed<string>(() => String(route.name ?? ""));
 
 const toggleSidebar = () => {
-  uiStore.navbarMinimize()
+  uiStore.navbarMinimize();
 };
 
 </script>

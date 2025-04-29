@@ -1,3 +1,4 @@
+@use "sass:color";
 // Variables
 //
 // Variables should follow the `$component-state-property-size` formula for
@@ -1139,7 +1140,7 @@ $form-range-thumb-border-radius: 1rem !default;
 $form-range-thumb-box-shadow: 0 0.1rem 0.25rem rgba($black, 0.1) !default;
 $form-range-thumb-focus-box-shadow: 0 0 0 1px $body-bg, $input-focus-box-shadow !default;
 $form-range-thumb-focus-box-shadow-width: $input-focus-width !default; // For focus box shadow issue in Edge
-$form-range-thumb-active-bg: lighten($component-active-bg, 35%) !default;
+$form-range-thumb-active-bg: color.adjust($component-active-bg, $lightness: 35%) !default;
 $form-range-thumb-disabled-bg: $gray-500 !default;
 $form-range-thumb-transition: background-color 0.15s ease-in-out,
   border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !default;
@@ -1493,7 +1494,7 @@ $popover-arrow-width: 1rem !default;
 $popover-arrow-height: 0.5rem !default;
 $popover-arrow-color: $popover-bg !default;
 
-$popover-arrow-outer-color: fade-in($popover-border-color, 0.05) !default;
+$popover-arrow-outer-color: color.adjust($popover-border-color, $alpha: 0.05) !default;
 
 // Toasts
 

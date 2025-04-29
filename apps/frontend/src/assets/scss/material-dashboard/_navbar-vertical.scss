@@ -505,9 +505,9 @@ body:not(.dark-version) {
   .nav-item {
     .nav-link {
       span.sidenav-mini-icon {
-        @include transition($transition-base);
         text-align: center;
         min-width: $navbar-icon-min-width;
+        @include transition($transition-base);
       }
     }
   }

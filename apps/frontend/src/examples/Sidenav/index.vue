@@ -42,7 +42,7 @@ const{
 } = storeToRefs(uiStore);
 
 function toggleSidebar() {
-  uiStore.toggleSidebar();
+  uiStore.navbarMinimize();
 }
 
 

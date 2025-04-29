@@ -1,10 +1,11 @@
+@use "sass:color";
 .form-check:not(.form-switch) .form-check-input {
   float: initial !important;
   margin-left: auto !important;
 
   &[type="checkbox"],
   &[type="radio"] {
-    border: 1px solid darken($gray-200, 10%);
+    border: 1px solid color.scale($gray-200,$lightness: -10%);
     margin-top: $form-text-margin-top;
     position: relative;
 
