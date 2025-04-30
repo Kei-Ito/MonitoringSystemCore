@@ -1,3 +1,4 @@
+@use "sass:map";
 @import "./bootstrap/functions";
 @import "./bootstrap/variables";
 @import "./bootstrap/utilities";
@@ -170,7 +171,7 @@ $utilities: (
   "border-color": (
     property: border-color,
     class: border,
-    values: map-merge($theme-colors, ("white": $white))
+    values: map.merge($theme-colors, ("white": $white))
   ),
   "border-width": (
     property: border-width,
@@ -353,43 +354,43 @@ $utilities: (
     responsive: true,
     property: margin,
     class: m,
-    values: map-merge($spacers, (auto: auto))
+    values: map.merge($spacers, (auto: auto))
   ),
   "margin-x": (
     responsive: true,
     property: margin-right margin-left,
     class: mx,
-    values: map-merge($spacers, (auto: auto))
+    values: map.merge($spacers, (auto: auto))
   ),
   "margin-y": (
     responsive: true,
     property: margin-top margin-bottom,
     class: my,
-    values: map-merge($spacers, (auto: auto))
+    values: map.merge($spacers, (auto: auto))
   ),
   "margin-top": (
     responsive: true,
     property: margin-top,
     class: mt,
-    values: map-merge($spacers, (auto: auto))
+    values: map.merge($spacers, (auto: auto))
   ),
   "margin-end": (
     responsive: true,
     property: margin-right,
     class: me,
-    values: map-merge($spacers, (auto: auto))
+    values: map.merge($spacers, (auto: auto))
   ),
   "margin-bottom": (
     responsive: true,
     property: margin-bottom,
     class: mb,
-    values: map-merge($spacers, (auto: auto))
+    values: map.merge($spacers, (auto: auto))
   ),
   "margin-start": (
     responsive: true,
     property: margin-left,
     class: ms,
-    values: map-merge($spacers, (auto: auto))
+    values: map.merge($spacers, (auto: auto))
   ),
   // Negative margin utilities
   "negative-margin": (
@@ -555,7 +556,7 @@ $utilities: (
   "color": (
     property: color,
     class: text,
-    values: map-merge(
+    values: map.merge(
       $theme-colors,
       (
         "white": $white,
@@ -573,7 +574,7 @@ $utilities: (
   "background-color": (
     property: background-color,
     class: bg,
-    values: map-merge(
+    values: map.merge(
       $theme-colors,
       (
         "body": $body-bg,

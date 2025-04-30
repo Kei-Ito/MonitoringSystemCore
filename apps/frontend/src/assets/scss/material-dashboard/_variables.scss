@@ -1,3 +1,5 @@
+@use "sass:map";
+@use "sass:string";
 @use "sass:color";
 // Variables
 //
@@ -875,7 +877,7 @@ $btn-light-font-color: #3a416f !default;
 
 $btn-font-colors: () !default;
 
-$btn-font-colors: map-merge(
+$btn-font-colors: map.merge(
   (
     "primary": $btn-primary-font-color,
     "secondary": $btn-secondary-font-color,
@@ -1651,7 +1653,7 @@ $breadcrumb-margin-bottom: 1rem !default;
 $breadcrumb-bg: $gray-200 !default;
 $breadcrumb-divider-color: $gray-600 !default;
 $breadcrumb-active-color: $gray-600 !default;
-$breadcrumb-divider: quote("/") !default;
+$breadcrumb-divider: string.quote("/") !default;
 $breadcrumb-border-radius: $border-radius-md !default;
 
 // Carousel

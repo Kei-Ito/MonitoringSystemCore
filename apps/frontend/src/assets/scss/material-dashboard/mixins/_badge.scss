@@ -1,7 +1,7 @@
 @use "sass:color";
 @mixin badge-variant($bg) {
-	color: saturate(color.scale($bg, $lightness: -10%), 10);
-    background-color: lighten($bg, 32%);
+	color: color.adjust(color.scale($bg, $lightness: -10%), $saturation: 10);
+    background-color: color.adjust($bg, $lightness: 32%);
 
   	&[href] {
 	    @include hover-focus {
