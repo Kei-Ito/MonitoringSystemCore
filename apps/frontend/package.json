@@ -34,7 +34,7 @@
     "sass-migrator": "^2.3.1",
     "typescript": "~5.7.2",
     "vite": "^6.3.1",
-    "vite-plugin-mock-dev-server": "^1.8.5",
+    "vite-plugin-mock": "^3.0.2",
     "vite-plugin-pwa": "^1.0.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vue-tsc": "^2.2.8"

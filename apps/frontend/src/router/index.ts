@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import CustomDashboard from "../views/CustomDashboard.vue";
+import OperationCondition from "@/uniqueComponents/OperationCondition.vue";
 import Dashboard from "../views/Dashboard.vue";
 import Trend from "../views/Trend.vue";
 import Configurations from "../views/Configurations.vue";
@@ -17,9 +17,9 @@ const routes:any = [
     redirect: "/dashboard",
   },
   {
-    path: "/custom-dashboard",
-    name: "CustomDashboard",
-    component: CustomDashboard,
+    path: "/operation-condition",
+    name: "OperationCondition",
+    component: OperationCondition,
   },
   {
     path: "/dashboard",

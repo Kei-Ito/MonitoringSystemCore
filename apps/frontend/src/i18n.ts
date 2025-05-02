@@ -5,6 +5,7 @@ const savedLocale = localStorage.getItem('locale')
 const translations:any = {
   ja: {
     menu: {
+      operation_condition: '稼働状態',
       dashboard: 'ダッシュボード',
       custom_dashboard: 'カスタムダッシュボード',
       trend: 'トレンド', 
@@ -54,6 +55,7 @@ const translations:any = {
   },
   en: {
     menu: {
+      operation_condition: 'Operation Condition',
       dashboard: 'Dashboard',
       custom_dashboard: 'Custom Dashboard',
       trend: 'Trend',
@@ -103,6 +105,7 @@ const translations:any = {
   },
   zh: {
     menu: {
+      operation_condition: '运行状态',
       dashboard: '仪表板',
       custom_dashboard: '自定义仪表板',
       trend: '趋势',
@@ -152,6 +155,7 @@ const translations:any = {
   },
   ko: {
     menu: {
+      operation_condition: '운영 상태',
       dashboard: '대시보드',
       custom_dashboard: '커스텀 대시보드',
       trend: '트렌드',

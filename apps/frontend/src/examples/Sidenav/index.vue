@@ -14,7 +14,8 @@
     </div>
 
     <hr class="horizontal light mt-0 mb-2" />
-
+    <DeviceHealthList :devices="deviceInfoList" class="mx-3 mb-2" />
+    <hr class="horizontal light mt-0 mb-2 " />
      <!-- 中身：可変部分をスクロールできるようにする -->
     <div class="flex-grow-1 overflow-auto custom-scrollbar-area w-100">
       <sidenav-list />
@@ -30,8 +31,19 @@
 
 import { storeToRefs } from 'pinia';
 import { useUiStore } from "@/pinia/uiStore";
+import { DeviceHealthEnum} from '@/uniqueComponents/DeviceHealthEnum';
 import MonitoringView from "@/components/MonitoringView.vue";
 import SidenavList from '@/examples/Sidenav/SidenavList.vue';
+import DeviceHealthList from "@/uniqueComponents/DeviceHealthList.vue";
+
+interface DeviceInfo {
+    /** 表示名 (例: 照射炉 1) */
+    name: string
+    /** normal = 緑, warning = 黄, error = 赤 */
+    status: DeviceHealthEnum
+    /** （任意）v-for 用の固有 ID */
+    id?: string | number
+  }
 
 const uiStore = useUiStore();
 
@@ -40,6 +52,12 @@ const{
   isRTL,
   sidebarType,
 } = storeToRefs(uiStore);
+
+const deviceInfoList:DeviceInfo[] = [
+  { name: '照射炉 1', status: DeviceHealthEnum.Good },
+  { name: '照射炉 2', status: DeviceHealthEnum.Caution },
+  { name: '照射炉 3', status: DeviceHealthEnum.Error },
+]
 
 function toggleSidebar() {
   uiStore.navbarMinimize();

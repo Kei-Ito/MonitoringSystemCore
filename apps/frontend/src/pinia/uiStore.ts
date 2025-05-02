@@ -29,7 +29,6 @@ export const useUiStore = defineStore('uiStore', {
             if (!el) return;
 
             const pinned = el.classList.contains('g-sidenav-pinned');
-            console.log('pinned', pinned);
             if (pinned) {
                 el.classList.remove('g-sidenav-pinned');
                 this.isPinned = false;

@@ -38,7 +38,6 @@ export const getIOModules = () =>
     handleApiRequest({
         apiCall: () => api.getIOModules(),
         onSuccess: (val) => {
-            console.log(val);
             useMonitoringStore().setIOModules(val);
         },
         errorMsg: "IOモジュールの取得に失敗しました",
