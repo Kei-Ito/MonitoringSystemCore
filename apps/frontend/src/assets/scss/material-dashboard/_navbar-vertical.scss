@@ -1,3 +1,4 @@
+@use "sass:list";
 //
 // Vertical navbar + Sidenav
 //
@@ -167,8 +168,8 @@
           .nav-item.active {
             .nav-link.active {
               @include gradient-directional(
-                nth(#{$value}, 1) 0%,
-                nth(#{$value}, -1) 100%,
+                list.nth(#{$value}, 1) 0%,
+                list.nth(#{$value}, -1) 100%,
                 $deg: 195deg
               );
             }
@@ -180,8 +181,8 @@
                 .nav-item {
                   .nav-link.active {
                     @include gradient-directional(
-                      nth(#{$value}, 1) 0%,
-                      nth(#{$value}, -1) 100%,
+                      list.nth(#{$value}, 1) 0%,
+                      list.nth(#{$value}, -1) 100%,
                       $deg: 195deg
                     );
                   }
@@ -382,8 +383,8 @@ body:not(.dark-version) {
       .nav-item.active {
         .nav-link.active {
           @include gradient-directional(
-            nth($success, 1) 0%,
-            nth($success, -1) 100%,
+            list.nth($success, 1) 0%,
+            list.nth($success, -1) 100%,
             $deg: 195deg
           );
           span {
@@ -398,8 +399,8 @@ body:not(.dark-version) {
             .nav-item {
               .nav-link.active {
                 @include gradient-directional(
-                  nth($success, 1) 0%,
-                  nth($success, -1) 100%,
+                  list.nth($success, 1) 0%,
+                  list.nth($success, -1) 100%,
                   $deg: 195deg
                 );
               }
@@ -505,9 +506,9 @@ body:not(.dark-version) {
   .nav-item {
     .nav-link {
       span.sidenav-mini-icon {
-        @include transition($transition-base);
         text-align: center;
         min-width: $navbar-icon-min-width;
+        @include transition($transition-base);
       }
     }
   }

@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref,defineEmits,watch} from 'vue';
+import { ref,watch} from 'vue';
 import { storeToRefs }  from 'pinia';
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 

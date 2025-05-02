@@ -1,6 +1,7 @@
+@use "sass:color";
 $navbar-light-bg:                          #FBFBFB !default;
-$navbar-light-hover-bg:                    darken($gray-100, 5%) !default;
-$navbar-light-active-bg:                   darken($gray-100, 5%) !default;
+$navbar-light-hover-bg:                    color.scale($gray-100,$lightness: -5%) !default;
+$navbar-light-active-bg:                   color.scale($gray-100,$lightness: -5%) !default;
 $navbar-light-border-color:                rgba($black, .05) !default;
 $navbar-light-color:                       rgba($black, .6) !default;
 $navbar-light-hover-color:                 rgba($black, .7) !default;

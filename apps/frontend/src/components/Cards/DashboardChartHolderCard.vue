@@ -123,7 +123,7 @@
 </template>
 
 <script setup lang="ts">
-import { getCurrentInstance, ref, onMounted, defineEmits, computed, type Ref, type ComputedRef, type PropType } from 'vue';
+import { getCurrentInstance, ref, onMounted, type Ref, type PropType } from 'vue';
 import { storeToRefs } from 'pinia';
 import { Collapse } from 'bootstrap';
 import { useUiStore } from '@/pinia/uiStore';

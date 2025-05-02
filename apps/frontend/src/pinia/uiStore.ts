@@ -24,10 +24,19 @@ export const useUiStore = defineStore('uiStore', {
     actions: {
         toggleConfigurator() { this.showConfig = !this.showConfig },
         navbarMinimize() {
+            
             const el = document.querySelector('.g-sidenav-show');
             if (!el) return;
-            el.classList.toggle('g-sidenav-pinned');
-            this.isPinned = !this.isPinned;
+
+            const pinned = el.classList.contains('g-sidenav-pinned');
+            console.log('pinned', pinned);
+            if (pinned) {
+                el.classList.remove('g-sidenav-pinned');
+                this.isPinned = false;
+            } else {
+                el.classList.add('g-sidenav-pinned');
+                this.isPinned = true;
+            }
         },
         navbarFixed() {
             this.isNavFixed = !this.isNavFixed;

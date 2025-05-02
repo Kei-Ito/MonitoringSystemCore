@@ -1,3 +1,4 @@
+@use "sass:list";
 .page-item {
   &.active .page-link {
     box-shadow: $pagination-active-box-shadow;
@@ -49,7 +50,7 @@
         &,
         &:focus,
         &:hover {
-          @include gradient-directional(nth($value, 1) 0%, nth($value, -1) 100%, $deg: 195deg);
+          @include gradient-directional(list.nth($value, 1) 0%, list.nth($value, -1) 100%, $deg: 195deg);
           border: none;
         }
       }

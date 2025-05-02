@@ -1,3 +1,4 @@
+@use "sass:list";
 .card {
   &.card-background {
     align-items: $card-bg-align-items;
@@ -62,7 +63,7 @@
         }
 
         &:after {
-          @include gradient-directional(nth($val, 1) 0%, nth($val, -1) 100%, $deg: 195deg);
+          @include gradient-directional(list.nth($val, 1) 0%, list.nth($val, -1) 100%, $deg: 195deg);
           opacity: .85;
         }
       }
