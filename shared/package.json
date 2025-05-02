@@ -13,7 +13,7 @@
     "./package.json": "./package.json",
     "./model": {
       "import": "./dist/types/model/index.js",
-      "types":  "./dist/types/model/index.d.ts"
+      "types": "./dist/types/model/index.d.ts"
     },
     "./utils": {
       "import": "./dist/types/utils/index.js",

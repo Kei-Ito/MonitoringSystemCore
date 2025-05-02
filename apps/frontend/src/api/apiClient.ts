@@ -15,7 +15,7 @@ function toApiError(e: unknown): ApiError {
 }
 
 const api = axios.create({
-  baseURL: `${window.location.protocol}//${window.location.hostname}:2478/api`,
+  baseURL: `/api`,
   timeout: 1000,
 });
 
