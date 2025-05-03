@@ -6,7 +6,7 @@ export default [
       method: 'get',
       response: () => {
         return {
-            samplingInterval:30000,
+            samplingInterval:3000,
         }
       },
     },
