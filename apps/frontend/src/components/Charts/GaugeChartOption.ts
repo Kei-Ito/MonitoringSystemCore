@@ -1,6 +1,7 @@
-import type { ChartSetting } from "@monitoring/shared/model";
+import type { ChartConfig } from "@monitoring/shared/model";
+import type { Chart } from "chart.js";
 
-export function getDefaultGaugeChartOptions(setting : ChartSetting) {
+export function getDefaultGaugeChartOptions(setting : ChartConfig) {
 
 
     const options={
@@ -18,8 +19,10 @@ export function getDefaultGaugeChartOptions(setting : ChartSetting) {
             startAngle: 180,
             endAngle: 0,
             center: ['50%', '75%'],
-            min: setting.specific_chart_setting.minValue,
-            max: setting.specific_chart_setting.maxValue,
+            // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+            //min: setting.specific_chart_setting.minValue,
+            // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+            //max: setting.specific_chart_setting.maxValue,
             splitNumber: 8,
             axisLine: {
                 lineStyle: {

@@ -132,12 +132,12 @@ import { updateDashboardChart } from '@/service/chartService';
 import IOModuleSelector from '@/components/Selector/IOModuleSelector.vue';
 import ChannelSelector from '@/components/Selector/ChannelSelector.vue';
 
-import type { IOModule, IChannelSetting, ChartSetting } from '@monitoring/shared/model';
+import type { IOModule, IChannelSetting, ChartConfig } from '@monitoring/shared/model';
 
 const props = defineProps({
     color: String,
     setting: {
-        type: Object as PropType<ChartSetting>,
+        type: Object as PropType<ChartConfig>,
         required: true
     }
 });
@@ -183,7 +183,7 @@ onMounted(() => {
 async function updateSelectedChannel() {
     let selectedModule: IOModule | undefined = ioModules.value.find((ioModule) => ioModule.module_uuid === localSetting.value.module_uuid);
     if (selectedModule) {
-        let Channel = selectedModule.input_channels.find((channel) => channel.channel_id === localSetting.value.channel_id);
+        let Channel = selectedModule.input_channels.find((channel) => channel.channel_uuid === localSetting.value.channel_uuid);
         if (Channel) {
             selectedChannel.value = Channel;
         }

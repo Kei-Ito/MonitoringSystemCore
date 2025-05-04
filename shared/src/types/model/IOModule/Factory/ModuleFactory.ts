@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { IOModuleTypes } from "@shared/enum";
 import { IOModule } from "@shared/types/model/IOModule";
 import { IChannelSetting } from "@shared/types/model/IOModule/utils/IChannelSetting";
@@ -42,25 +43,32 @@ export function createModuleForInitialization(module_uuid: string, module_name: 
  * @param module_type 
  * @returns 
  */
-export function createInputChannelForInitialization(module_uuid: string, channel_id: number,module_type:IOModuleTypes): IChannelSetting {
+export function createInputChannelForInitialization(module_uuid: string,module_type:IOModuleTypes): IChannelSetting {
     const handler = handlers[module_type];
     if (!handler) {
         throw new Error(`Module type :${module_type} はファクトリメソッドで未対応です。`);
     }
+
+    const channel_uuid = uuidv4();
     return {
-        channel_id: channel_id,
+        channel_uuid: channel_uuid,
         channel_name: "",
         module_uuid: module_uuid,
         direction: "input",
         unit: "",
         channel_number: -1,
         decimals: 2,
-        src_min: 0,
-        src_max: 5,
-        dst_min: 0,
-        dst_max: 5,
-        min_threshold:0,
-        max_threshold:5,
+        normalize:{
+            is_enabled: false,
+            src_min: 0,
+            src_max: 5,
+            dst_min: 0,
+            dst_max: 5,
+        },
+        threshold:{
+            min_threshold:null,
+            max_threshold:null,
+        },
         specific_channel_setting: handler.createDefaultSpecificInputChannelSetting(),
         created_at: new Date(),
         updated_at: new Date(),
@@ -74,25 +82,33 @@ export function createInputChannelForInitialization(module_uuid: string, channel
  * @param module_type 
  * @returns 
  */
-export function createOutputChannelForInitialization(module_uuid: string, channel_id: number,module_type:IOModuleTypes): IChannelSetting {
+export function createOutputChannelForInitialization(module_uuid: string,module_type:IOModuleTypes): IChannelSetting {
     const handler = handlers[module_type];
     if (!handler) {
         throw new Error(`Module type :${module_type} はファクトリメソッドで未対応です。`);
     }
+
+    const channel_uuid = uuidv4();
+
     return {
-        channel_id: channel_id,
+        channel_uuid: channel_uuid,
         channel_name: "",
         module_uuid: module_uuid,
         direction: "output",
         unit: "",
         channel_number: -1,
         decimals: 2,
-        src_min: 0,
-        src_max: 5,
-        dst_min: 0,
-        dst_max: 5,
-        min_threshold:0,
-        max_threshold:5,
+        normalize:{
+            is_enabled: false,
+            src_min: 0,
+            src_max: 5,
+            dst_min: 0,
+            dst_max: 5,
+        },
+        threshold:{
+            min_threshold:null,
+            max_threshold:null,
+        },
         specific_channel_setting: handler.createDefaultSpecificOutputChannelSetting(),
         created_at: new Date(),
         updated_at: new Date(),

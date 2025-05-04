@@ -18,8 +18,8 @@
       type: String,
       default: ''
     },
-    channel_id: {
-      type: Number,
+    channel_uuid: {
+      type: String,
       required: true
     },
     status: {
@@ -35,7 +35,7 @@
     if (props.status === TrendStatus.no_data) {
       return;
     }
-    emit('channel-selected', props.channel_id);
+    emit('channel-selected', props.channel_uuid);
   }
 
   function getIcon() {

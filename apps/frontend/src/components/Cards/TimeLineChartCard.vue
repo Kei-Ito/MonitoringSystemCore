@@ -52,7 +52,7 @@ const props = defineProps<{
   /** chart title (optional) */
   title: string
   /** allow parent to tweak/extend raw ECharts options */
-  optionOverrides?: echarts.EChartsOption
+  optionOverrides?: echarts.EChartsCoreOption
 }>();
 
 

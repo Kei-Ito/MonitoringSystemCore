@@ -8,14 +8,14 @@ import { storeToRefs } from 'pinia';
 import * as echarts from 'echarts';
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 import { getDefaultGaugeChartOptions } from '@/components/Charts/GaugeChartOption';
-import type { IOModule, ChartSetting } from '@monitoring/shared/model';
+import type { IOModule, ChartConfig } from '@monitoring/shared/model';
 
 const monitoringStore = useMonitoringStore();
 const { ioModules } = storeToRefs(monitoringStore);
 
 const props = defineProps({
     chartSetting: {
-        type: Object as PropType<ChartSetting>,
+        type: Object as PropType<ChartConfig>,
         required: true
     },
     value: {
@@ -27,9 +27,13 @@ const props = defineProps({
 let isActivated = false;
 const channelSetting = computed(() => {
     if (!props.chartSetting) return null; // chartSettingがnullの場合はnullを返す
+
+    // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+    /**
     const module_uuid = props.chartSetting.module_uuid;
-    const channel_id = props.chartSetting.channel_id;
-    return ioModules.value.find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
+    const channel_id = props.chartSetting.channel_uuid;
+    return ioModules.value.find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_uuid === channel_id);
+    */
 });
 
 
@@ -44,12 +48,15 @@ function initChart() {
 
     chart?.dispose();
     chart = echarts.init(chartRef.value, null, { renderer: 'svg', useDirtyRect: false });
+    // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+    /**
     chart.setOption(getDefaultGaugeChartOptions(props.chartSetting));
     if (props.chartSetting.specific_chart_setting.lastValue !== null && props.chartSetting.specific_chart_setting.lastValue !== undefined &&
         !Number.isNaN(props.chartSetting.specific_chart_setting.lastValue)) {
         updateChart(props.chartSetting.specific_chart_setting.lastValue);
         isActivated = true;
     }
+        */
 
     observer?.disconnect();
     observer = new ResizeObserver(() => {
@@ -83,6 +90,8 @@ function activateChart() {
             axisLine: {
                 lineStyle: {
                     width: 6,
+                    // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+                    /**
                     color: [
                         [props.chartSetting.specific_chart_setting.thresholds[0], props.chartSetting.specific_chart_setting.colors[0]],
                         [props.chartSetting.specific_chart_setting.thresholds[1], props.chartSetting.specific_chart_setting.colors[1]],
@@ -90,6 +99,7 @@ function activateChart() {
                         [props.chartSetting.specific_chart_setting.thresholds[3], props.chartSetting.specific_chart_setting.colors[3]],
                         [props.chartSetting.specific_chart_setting.maxValue, props.chartSetting.specific_chart_setting.colors[4]]
                     ]
+                        */
                 }
             },
         }]

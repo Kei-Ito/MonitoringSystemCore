@@ -10,8 +10,8 @@ export interface IOModule<
   IC = {}, // 入力チャンネル固有設定
   OC = {}  // 出力チャンネル固有設定
   >{
-    module_uuid: string;         // 各モジュールのユニークID
-    module_type: IOModuleTypes;  // モジュールの種類（特定のIOモジュールなど）
+    readonly module_uuid: string;         // 各モジュールのユニークID
+    readonly module_type: IOModuleTypes;  // モジュールの種類（特定のIOモジュールなど）
     module_name: string;         // モジュールの名前
     status: IOModuleStatus;     // モジュールのステータス（例：active, inactiveなど）
     input_channel_num: number;    // モジュールの入力チャンネル数
@@ -21,6 +21,6 @@ export interface IOModule<
     specific_device_setting: D;   // デバイスに固有の設定
     input_channels: IChannelSetting<IC>[];    // モジュールの入力チャンネル
     output_channels: IChannelSetting<OC>[];   // モジュールの出力チャンネル
-    is_editable_input_channel: boolean;       // 入力チャンネルの編集が可能かどうか
-    is_editable_output_channel: boolean;      // 出力チャンネルの編集が可能かどうか
+    readonly is_editable_input_channel: boolean;       // 入力チャンネルの編集が可能かどうか
+    readonly is_editable_output_channel: boolean;      // 出力チャンネルの編集が可能かどうか
 }

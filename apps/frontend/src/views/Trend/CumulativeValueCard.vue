@@ -78,7 +78,7 @@ async function getCumulativeValue(startDate: Date, endDate: Date) {
     
     localCumulativeValueList.push(response.data/3600/1000);
     localLabelList.push(formatDateToMMDD(startDate));
-    
+     
     for (let i = 1; i < 7; i++) {
       const start = new Date(startDate);
       const end = new Date(endDate);
@@ -110,6 +110,8 @@ function getSelectedDate(date: Date) {
 }
 
 // 選択された日付が変更されたらデータを再取得
+//TODO: チャートの修正の影響を一時的に抑制
+/*
 watch(() => trendChartSettings.value[0].specific_chart_setting.selected_date, async() => {
   const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   getCumulativeValue(startDate, endDate);
@@ -119,6 +121,7 @@ onMounted(async () => {
   const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   getCumulativeValue(startDate, endDate);
 });
+*/
 </script>
 
 <style scoped>

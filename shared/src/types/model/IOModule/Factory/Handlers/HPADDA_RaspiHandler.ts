@@ -24,7 +24,7 @@ export class HPADDA_RaspiHandler implements IModuleHandler {
         };
         
         for (let i = 0; i < dummyModule.input_channel_num; i++) {
-            dummyModule.input_channels.push(createInputChannelForInitialization(module_uuid,-1,module_type));
+            dummyModule.input_channels.push(createInputChannelForInitialization(module_uuid,module_type));
         }
 
         return dummyModule;

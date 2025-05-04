@@ -27,7 +27,7 @@ export class ContecRAIHandler implements IModuleHandler {
 
         
         for (let i = 0; i < contecRAIModule.input_channel_num; i++) {
-            contecRAIModule.input_channels.push(createInputChannelForInitialization(module_uuid,-1,module_type));
+            contecRAIModule.input_channels.push(createInputChannelForInitialization(module_uuid,module_type));
             contecRAIModule.input_channels[i].channel_name = "input"+i.toString();
         }
 

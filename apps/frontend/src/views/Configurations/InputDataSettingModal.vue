@@ -17,12 +17,12 @@
                             <div class="d-flex align-items-center">
                                 <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最大値</label>
                                 <input type="number" class="form-control border px-2 fs-5" style="width:100px"
-                                    v-model="localChannelSetting.src_max" :min="localChannelSetting.src_min" />
+                                    v-model="localChannelSetting.normalize.src_max" :min="localChannelSetting.normalize.src_min" />
                             </div>
                             <div class="d-flex align-items-center mb-2">
                                 <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最小値</label>
                                 <input type="number" class="form-control border px-2 fs-5" style="width:100px"
-                                    v-model="localChannelSetting.src_min" :max="localChannelSetting.src_max" />
+                                    v-model="localChannelSetting.normalize.src_min" :max="localChannelSetting.normalize.src_max" />
                             </div>  
                         </div>
                         <div class="form-group mb-3 p-2 border rounded-3">
@@ -30,12 +30,12 @@
                             <div class="d-flex align-items-center">
                                 <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最大値</label>
                                 <input type="number" class="form-control border px-2 fs-5" style="width:100px"
-                                    v-model="localChannelSetting.dst_max" :min="localChannelSetting.dst_min" />
+                                    v-model="localChannelSetting.normalize.dst_max" :min="localChannelSetting.normalize.dst_min" />
                             </div>
                             <div class="d-flex align-items-center mb-2">
                                 <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最小値</label>
                                 <input type="number" class="form-control border px-2 fs-5" style="width:100px"
-                                    v-model="localChannelSetting.dst_min" :max="localChannelSetting.dst_max" />
+                                    v-model="localChannelSetting.normalize.dst_min" :max="localChannelSetting.normalize.dst_max" />
                             </div>
                         </div>
                     </div>
@@ -49,12 +49,12 @@
                         <div class="d-flex align-items-center">
                             <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最大値</label>
                             <input type="number" class="form-control border px-2 fs-5"
-                                v-model="localChannelSetting.max_threshold" :min="localChannelSetting.min_threshold" />
+                                v-model="localChannelSetting.threshold.max_threshold" :min="localChannelSetting.threshold.min_threshold??0" />
                         </div>
                         <div class="d-flex align-items-center mb-2">
                             <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最小値</label>
                             <input type="number" class="form-control border px-2 fs-5"
-                                v-model="localChannelSetting.min_threshold" :max="localChannelSetting.max_threshold" />
+                                v-model="localChannelSetting.threshold.min_threshold" :max="localChannelSetting.threshold.max_threshold??999999" />
                         </div>
                     </div>
 
@@ -115,7 +115,7 @@ function update() {
 
 //設定された値が有効かどうかを判定
 function validateValue(): boolean {
-    if (localChannelSetting.value.dst_min > localChannelSetting.value.dst_max || localChannelSetting.value.src_min > localChannelSetting.value.src_max) {
+    if (localChannelSetting.value.normalize.dst_min > localChannelSetting.value.normalize.dst_max || localChannelSetting.value.normalize.src_min > localChannelSetting.value.normalize.src_max) {
         return true;
     } else {
         return false;

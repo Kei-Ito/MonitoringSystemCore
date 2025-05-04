@@ -27,7 +27,7 @@
                 :key="cIndex"
               >
                 <ChannelView
-                  :channel_id="channel.channel_id"
+                  :channel_uuid="channel.channel_uuid"
                   :name="channel.channel_name"
                   @channel-selected="on_channel_selected"
                 />
@@ -61,8 +61,8 @@ const {trendChartSettings} = storeToRefs(chartStore);
 
 const emit = defineEmits(['close-channel-picker']);
 //TODO: Trendは複数表示する仕様になったので要変更箇所
-function on_channel_selected(channel_id: number) {
-  trendChartSettings.value[0].channel_id = channel_id;
+function on_channel_selected(channel_uuid: string) {
+  trendChartSettings.value[0].channel_uuids[0] = channel_uuid;
   emit('close-channel-picker');
 }
 

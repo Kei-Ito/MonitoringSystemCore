@@ -290,12 +290,12 @@ async function deleteModuleBtnClicked() {
 }
 
 function addInputChannel() {
-  const newChannel: IChannelSetting<any> = createInputChannelForInitialization(localModule.value.module_uuid, -1, localModule.value.module_type);
+  const newChannel: IChannelSetting<any> = createInputChannelForInitialization(localModule.value.module_uuid, localModule.value.module_type);
   addChannel(newChannel);
 }
 
 async function addOutputChannel() {
-  const newChannel: IChannelSetting<any> = createOutputChannelForInitialization(localModule.value.module_uuid, -1, localModule.value.module_type);
+  const newChannel: IChannelSetting<any> = createOutputChannelForInitialization(localModule.value.module_uuid, localModule.value.module_type);
   addChannel(newChannel);
 }
 
@@ -321,7 +321,7 @@ function openNormalizeSettingModal(channel: IChannelSetting<any>) {
 }
 
 function updateChannelSetting(updatedChannel: IChannelSetting<any>) {
-  const index = localModule.value.input_channels.findIndex(channel => channel.channel_id === updatedChannel.channel_id)
+  const index = localModule.value.input_channels.findIndex(channel => channel.channel_uuid === updatedChannel.channel_uuid)
   if (index !== -1) {
     localModule.value.input_channels[index] = updatedChannel;
   }

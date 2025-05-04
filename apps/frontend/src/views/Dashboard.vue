@@ -2,31 +2,27 @@
   <div class=" container-fluid">
     <div class="row">
       <div class="col-lg-12 position-relative z-index-2">
-
-        <!-- ゲージチャート 表示部-->
-        <div class="row mt-4">
-          <div class="col-ultra-wide-2 col-wide-3 col-midium-wide-4 col-midium-6 col-sm-12 mb-4"
-            v-for="(chartSetting, index) in dashboardCharts" :key="index">
-            <DashboardChartHolderCard :setting="chartSetting">
-              <e-charts-gauge-chart :value="chartSetting.specific_chart_setting.lastValue"
-                :chartSetting="chartSetting" />
-            </DashboardChartHolderCard>
-          </div>
-        </div>
+        <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="30" :is-draggable="true"
+          :is-resizable="true" :vertical-compact="true" :use-css-transforms="true">
+          <GridItem v-for="(item, index) in layoutModel" :key="index" :static="item.static" :x="item.x" :y="item.y"
+            :w="item.w" :h="item.h" :i="item.i">
+            <span class="text">{{ item.chart_uuid }}</span>
+          </GridItem>
+        </GridLayout>
         <!-- ゲージチャート 表示部-->
         <div class="row mt-4">
           <div class="col-ultra-wide-2 col-wide-3 col-midium-wide-4 col-midium-6 col-sm-12 mb-4">
             <button class="btn btn-primary" @click="onAddChartButtonClick">グラフ追加</button>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
+import { computed, reactive } from 'vue';
 import { storeToRefs } from 'pinia';
+import { GridLayout, GridItem } from 'vue-grid-layout-v3';
 import { useChartStore } from '@/pinia/chartStore';
 import { addDashboardChart } from '@/service/chartService';
 import DashboardChartHolderCard from "@/components/Cards/DashboardChartHolderCard.vue";
@@ -35,8 +31,17 @@ import { createChartForInitialization } from '@monitoring/shared/model';
 import { ChartTypes } from '@monitoring/shared/enum';
 
 const chartStore = useChartStore();
-const { dashboardCharts } = storeToRefs(chartStore);
+const { dashboardCharts, gridLayouts } = storeToRefs(chartStore);
 
+const layoutModel = computed({
+  get: () => gridLayouts.value,
+  set: (newLayouts) => {
+    newLayouts.forEach((l) => chartStore.patchGrid(l));
+  }
+});
+
+
+console.log("layoutModel", gridLayouts.value);
 function onAddChartButtonClick() {
   if (dashboardCharts.value.length >= 10) {
     alert("最大10個までしか追加できません");
@@ -85,5 +90,31 @@ function onAddChartButtonClick() {
     max-width: 50%;
     margin: 0;
   }
+}
+
+.vue-grid-layout {
+  background: #eee;
+}
+
+.vue-grid-item:not(.vue-grid-placeholder) {
+  background: #ccc;
+  border: 1px solid black;
+}
+
+.vue-grid-item.static {
+  background: #cce;
+}
+
+.vue-grid-item .text {
+  font-size: 24px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 100%;
+  width: 100%;
 }
 </style>

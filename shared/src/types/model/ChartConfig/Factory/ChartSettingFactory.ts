@@ -1,7 +1,10 @@
-import { ChartSetting } from "@shared/types/model/ChartSetting";
+import { v4 as uuidv4 } from "uuid"
+import { ChartConfig } from "@shared/types/model/ChartConfig";
+import { gridLayoutFactory } from "@shared/types/model/ChartConfig";
 import { ChartTypes } from "@shared/enum";
 import * as Handlers from "./Handlers";
-import * as Charts from "@shared/types/model/ChartSetting/Charts"
+import * as Charts from "@shared/types/model/ChartConfig/Charts"
+
 
 // ハンドラのマッピング
 const SpecificChartSetting: Record<ChartTypes, any> = {
@@ -16,25 +19,24 @@ export interface ChartTypeMap {
     // 例: [IOModuleTypes.XYZModule]:IModules.XYZModule;
 }
 
-export function createChartForInitialization(chart_id: number, chart_type: ChartTypes): ChartSetting {
+export function createChartForInitialization(chart_type: ChartTypes): ChartConfig {
 
     const specific_chart_setting = SpecificChartSetting[chart_type];
     if (!specific_chart_setting) {
         throw new Error(`ChartType :${chart_type} はファクトリメソッドで未対応です。`);
     }
-    const chart_setting: ChartSetting = {
-        chart_id: chart_id,
-        module_uuid: "",
-        channel_id: -1,
+
+    const chart_uuid = uuidv4();
+
+    const chart_setting: ChartConfig = {
+        chart_uuid: chart_uuid,
         chart_type: chart_type,
-        chart_position: {
-            chart_id: chart_id,
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0
-        },
-        specific_chart_setting: specific_chart_setting
+        channel_uuids: [],
+        grid_layout: gridLayoutFactory(chart_uuid),
+        //TODO: 要検討、EChartsの仕様に合わせるか？
+        chart_options: specific_chart_setting.chart_options,
+        category1:null,
+        category2:null,
     }
 
     return chart_setting;

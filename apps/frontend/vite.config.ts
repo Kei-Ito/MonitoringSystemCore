@@ -11,7 +11,6 @@ export default defineConfig(({command }: ConfigEnv) => {
   const enableMock = command === 'serve' && process.env.MOCK !== 'false';
 
   return {
-    root: __dirname,                 // apps/frontend をプロジェクトルート扱い
     base: process.env.PUBLIC_URL || '/',
     plugins: [
       vue(),

@@ -1,17 +1,42 @@
 import { defineStore } from 'pinia'
 import type { IOModule, IChannelSetting } from '@monitoring/shared/model'
+import { ok , err } from '@monitoring/shared/utils';
 
 export const useMonitoringStore = defineStore('monitoringStore', {
+  /** ------------state-------------- */
   state: () => ({
     isSampling: false,
-    ioModules: [] as IOModule<any, any, any>[],
+    ioModules: [] as IOModule[],
     samplingInterval: 30000,
   }),
+  /** ------------getters-------------- */
+  getters: {
+    findByUuid: (state) => {
+      return (uuid: string) => {
+        const module = state.ioModules.find(m => m.module_uuid === uuid);
+        if (!module) {
+          return err(`Module with UUID ${uuid} not found`);
+        }
+        return ok<IOModule>(module);
+      };
+    },
+     /** チャンネルを uuid → 設定 へフラット化 */
+     channelMap: (state) => {
+      const map: Record<string, IChannelSetting> = {}
+      Object.values(state.ioModules).forEach((m) => {
+        ;[...m.input_channels, ...m.output_channels].forEach(
+          (ch) => (map[ch.channel_uuid] = ch),
+        )
+      })
+      return map
+    },
+  },
+  /** ------------actions-------------- */
   actions: {
     setSamplingInterval(clock: number) {
       this.samplingInterval = clock;
     },
-    setIOModules(modules: IOModule<any, any, any>[]) {
+    setIOModules(modules: IOModule[]) {
       // グルーピング
       const groupedModules = modules.reduce((acc, module) => {
         if (!acc[module.module_type]) {
@@ -55,12 +80,12 @@ export const useMonitoringStore = defineStore('monitoringStore', {
     },
     deleteChannel(channel: IChannelSetting) {
       if (channel.direction === "input") {
-        const index = this.ioModules.find(m => m.module_uuid === channel.module_uuid)?.input_channels.findIndex(c => c.channel_id === channel.channel_id);
+        const index = this.ioModules.find(m => m.module_uuid === channel.module_uuid)?.input_channels.findIndex(c => c.channel_uuid === channel.channel_uuid);
         if (index !== -1 && index !== undefined) {
           this.ioModules.find(m => m.module_uuid === channel.module_uuid)?.input_channels.splice(index, 1);
         }
       } else if (channel.direction === "output") {
-        const index = this.ioModules.find(m => m.module_uuid === channel.module_uuid)?.output_channels.findIndex(c => c.channel_id === channel.channel_id);
+        const index = this.ioModules.find(m => m.module_uuid === channel.module_uuid)?.output_channels.findIndex(c => c.channel_uuid === channel.channel_uuid);
         if (index !== -1 && index !== undefined) {
           this.ioModules.find(m => m.module_uuid === channel.module_uuid)?.output_channels.splice(index, 1);
         }

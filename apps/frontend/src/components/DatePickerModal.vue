@@ -45,17 +45,20 @@ function closeModal() {
 }
 
 function confirmDate() {
-  trendChartSettings.value[0].specific_chart_setting.selected_date = selectedDate.value;
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+  //trendChartSettings.value[0].specific_chart_setting.selected_date = selectedDate.value;
   emit('date-selected', selectedDate.value);
   closeModal();
 }
 
 onMounted(()=>{
-  selectedDate.value = trendChartSettings.value[0].specific_chart_setting.selected_date;
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+  //selectedDate.value = trendChartSettings.value[0].specific_chart_setting.selected_date;
 })
 
 watch(()=>trendChartSettings.value[0],()=>{
-  selectedDate.value = trendChartSettings.value[0].specific_chart_setting.selected_date;
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+  //selectedDate.value = trendChartSettings.value[0].specific_chart_setting.selected_date;
 })
 
 </script>

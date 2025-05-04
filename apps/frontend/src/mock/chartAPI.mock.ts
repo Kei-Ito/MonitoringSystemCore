@@ -7,8 +7,9 @@ export default [
       url: '/api/chart/get_dashboard_charts/',
       method: 'get',
       response: () => [
-        createChartForInitialization(0,ChartTypes.GaugeChart),
-        createChartForInitialization(1,ChartTypes.GaugeChart),
+        createChartForInitialization(ChartTypes.GaugeChart),
+        createChartForInitialization(ChartTypes.GaugeChart),
+        createChartForInitialization(ChartTypes.GaugeChart),
       ]
     },
   ] as MockMethod[];

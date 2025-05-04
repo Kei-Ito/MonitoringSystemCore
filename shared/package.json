@@ -27,5 +27,11 @@
       "import": "./dist/enum/index.js",
       "types": "./dist/enum/index.d.ts"
     }
+  },
+  "dependencies": {
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0"
   }
 }

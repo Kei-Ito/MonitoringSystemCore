@@ -164,6 +164,8 @@ function setupWebSocket() {
 
 function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
   // 受け取ったデータをゲージチャートに反映
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+  /**
   for (let i = 0; i < dashboardCharts.value.length; i++) {
     try {
       const module_uuid = dashboardCharts.value[i].module_uuid;
@@ -182,6 +184,7 @@ function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
       console.log("取得したゲージチャートのデータが不正です");
     }
   }
+    */
 }
 
 </script>

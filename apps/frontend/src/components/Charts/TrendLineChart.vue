@@ -38,9 +38,10 @@ const { ioModules} = storeToRefs(monitoringStore);
 const { trendChartSettings } = storeToRefs(chartStore);
 const channelSetting = computed(() => {
   if (!trendChartSettings.value) return null; // chartSettingがnullの場合はnullを返す
-  const module_uuid = trendChartSettings.value[0].module_uuid;
-  const channel_id = trendChartSettings.value[0].channel_id;
-  return ioModules.value.find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
+  // TODO: チャートの設定の更新影響を受ける箇所のため、要修正箇所
+  //const module_uuid = trendChartSettings.value[0].module_uuid;
+  //const channel_id = trendChartSettings.value[0].channel_id;
+  //return ioModules.value.find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
 });
 
 const chartRef = ref<HTMLDivElement | null>(null);
@@ -55,10 +56,11 @@ async function fetchData(startDate: Date, endDate: Date) {
     if (myChart.value ) {
       myChart.value.showLoading('default', { text: '', spinnerRadius: 30, color: '#c23531' });
     }
-
-    const response = await api.fetchTrendData(trendChartSettings.value[0].channel_id,startDate, endDate);
+    // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+    //const response = await api.fetchTrendData(trendChartSettings.value[0].channel_id,startDate, endDate);
     myChart.value?.hideLoading();
-    updateChart(response.data);
+    // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+    //updateChart(response.data);
   } catch (err) {
     console.error("Error fetching data:", err);
     error.value = true;
@@ -93,10 +95,14 @@ function updateChart(input_data: any) {
     console.error("Chart is not initialized.");
     return;
   }
-  const min_threshold = channelSetting.value?.min_threshold??0;
-  const max_threshold = channelSetting.value?.max_threshold??80;
-  const TrendLineChartOptions = getTrendLineChartOptions(input_data,min_threshold,max_threshold);
-  myChart.value.setOption(TrendLineChartOptions, { lazyUpdate: true });
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+  //const min_threshold = channelSetting.value?.min_threshold??0;
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+  //const max_threshold = channelSetting.value?.max_threshold??80;
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+  //const TrendLineChartOptions = getTrendLineChartOptions(input_data,min_threshold,max_threshold);
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+  //myChart.value.setOption(TrendLineChartOptions, { lazyUpdate: true });
 }
 
 function handleResize() {
@@ -110,16 +116,22 @@ function handleResize() {
 }
 
 // チャンネルIDが変更されたらデータを再取得
+// TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+/**
 watch(() => trendChartSettings.value[0].channel_id, () => {
   const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   fetchData(startDate, endDate);
 });
+*/
 
 // 選択された日付が変更されたらデータを再取得
+// TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+/**
 watch(() => trendChartSettings.value[0].specific_chart_setting.selected_date, async() => {
   const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   fetchData(startDate, endDate);
 });
+*/
 
 onMounted(() => {
   initChart();

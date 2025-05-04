@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 
-import type { ChartSetting } from '@monitoring/shared/model'
+import type { ChartConfig } from '@monitoring/shared/model'
 import EChartHorizontalBarChart from '@/components/Charts/EChartsHorizontalBarChart.vue';
 
 interface BarDatum {
@@ -47,7 +47,7 @@ interface ColorRule {
 
 const props = defineProps<{
     unit: String,
-    setting: ChartSetting,
+    setting: ChartConfig,
     /** データ配列 */
     data: BarDatum[]
     /** グラフタイトル（任意） */

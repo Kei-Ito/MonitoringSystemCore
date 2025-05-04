@@ -26,6 +26,45 @@
       </li>
       <!-- TODO: 要修正箇所-->
       <breadcrumbs :currentPage="currentRouteName" :color="props.color" />
+      <div class="d-flex flex-grow-1  align-items-center justify-content-center gap-3 py-2">
+        <select  class="form-select fs-4 select-with-border"  >
+          <option class="fs-6" style="text-align: center">
+            照射炉1
+          </option>
+          <option class="fs-6" style="text-align: center">
+            照射炉2
+          </option>
+          <option class="fs-6" style="text-align: center">
+            照射炉3
+          </option>
+        </select>
+        <select class="form-select fs-4 select-with-border">
+          <option class="fs-6" style="text-align: center">
+            All
+          </option>
+          <option class="fs-6" style="text-align: center">
+            液温
+          </option>
+          <option class="fs-6" style="text-align: center">
+            UV強度
+          </option>
+          <option class="fs-6" style="text-align: center">
+            炉内温度
+          </option>
+          <option class="fs-6" style="text-align: center">
+            ランプ電圧
+          </option>
+          <option class="fs-6" style="text-align: center">
+            ランプ電流
+          </option>
+          <option class="fs-6" style="text-align: center">
+            安定器電流
+          </option>
+          <option class="fs-6" style="text-align: center">
+            冷却ファン周波数
+          </option>
+        </select>
+      </div>
       <div
         class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4"
         :class="isRTL ? 'px-0' : 'me-sm-4'"
@@ -70,3 +109,17 @@ const toggleSidebar = () => {
 };
 
 </script>
+<style scoped>
+/* 「常に」同じ見た目にしたいので :focus の上書きも忘れずに */
+.select-with-border,
+.select-with-border:focus {
+  border: 1px solid #929292;
+  /* 好きな色と太さに変更 */
+  box-shadow: none;
+  /* フォーカス時の青い影を消すなら */
+  width: 30vw;
+  max-width: 200px;
+  /* 幅を指定 */
+
+}
+</style>

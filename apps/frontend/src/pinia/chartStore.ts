@@ -1,37 +1,37 @@
 import { defineStore } from 'pinia'
-import type { ChartSetting } from '@monitoring/shared/model'
+import { createChartForInitialization, type ChartConfig } from '@monitoring/shared/model'
 import { ChartTypes } from '@monitoring/shared/enum'
+import { ok, err } from '@monitoring/shared/utils';
 
 // 検証用にデフォルトのチャート設定を追加
-const defaultTrendChartSetting: ChartSetting = {
-  chart_id: 0,
-  module_uuid: "2adb03fa-6ee4-49bb-97c1-c83d82dde04a",
-  channel_id: 1,
-  chart_type: ChartTypes.GaugeChart,
-  chart_position: {
-    chart_id: 0,
-    x: 0,
-    y: 0,
-    width: 4,
-    height: 4,
-  },
-  specific_chart_setting: {
-    selected_date: new Date(),
-    data: null,
-  },
-}
+const defaultTrendChartSetting: ChartConfig = createChartForInitialization(ChartTypes.GaugeChart);
 
 export const useChartStore = defineStore('chartStore', {
+  /** ------------state-------------- */
   state: () => ({
-    dashboardCharts: [] as ChartSetting[],
-    trendChartSettings:[defaultTrendChartSetting],
+    dashboardCharts: {} as Record<string, ChartConfig>,
+    trendChartSettings: [defaultTrendChartSetting],
   }),
+  /** ------------getters-------------- */
+  getters: {
+    /** グリッドレイアウトを library 用フォーマットに変換 */
+    gridLayouts: (state) =>
+      Object.values(state.dashboardCharts).map((c) => c.grid_layout),
+  },
   actions: {
-    updateDashboardChart( chart: ChartSetting) {
-        const index = this.dashboardCharts.findIndex(c => c.chart_id === chart.chart_id);
-        if (index !== -1) {
-          this.dashboardCharts.splice(index, 1, chart);
-        }
-      },
+    patchGrid(layout: { i:string; x:number; y:number; w:number; h:number }) {
+      const c = this.dashboardCharts[layout.i];
+      if (!c)return;
+      c.grid_layout = {...c.grid_layout,x:layout.x,y:layout.y,w:layout.w,h:layout.h};
+    },
+    updateDashboardChart(chart: ChartConfig) {
+      const chart_uuid = chart.chart_uuid;
+      if (this.dashboardCharts[chart_uuid]) {
+        this.dashboardCharts[chart_uuid] = chart;
+        return ok(chart);
+      } else {
+        return err(`Chart with UUID ${chart_uuid} not found`);
+      }
+    },
   },
 })

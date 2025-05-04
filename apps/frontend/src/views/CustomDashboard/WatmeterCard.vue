@@ -37,16 +37,19 @@ const channelSetting = computed(() => {
   if (!props.chartSetting) return null; // chartSettingがnullの場合はnullを返す
   const module_uuid = props.chartSetting.module_uuid;
   const channel_id = props.chartSetting.channel_id;
-  return (ioModules.value).find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_id === channel_id);
+  return (ioModules.value).find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_uuid === channel_id);
 });
 
 watch(() => props.value, (newVal) => {
   if (channelSetting.value) {
+    // TODO: チャートの設定変更の影響を受けているので一時的に抑制
+    /*
     if (newVal < channelSetting.value.min_threshold || newVal > channelSetting.value.max_threshold) {
       isError.value = true;
     } else {
       isError.value = false;
     }
+      */
   } else {
     isError.value = false; // channelSettingが無効ならエラー状態をリセット
   }

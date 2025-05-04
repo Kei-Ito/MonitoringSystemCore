@@ -1,11 +1,11 @@
 <template>
   <div>
-    <select v-model="localSelectedChannelID" class="form-select fs-5" @change="onChannelChange">
+    <select v-model="localSelectedChannelUUID" class="form-select fs-5" @change="onChannelChange">
       <option 
         v-for="input_channel in selectedIOModule?.input_channels" 
         class="fs-5"
-        :key="input_channel.channel_id" 
-        :value="input_channel.channel_id"
+        :key="input_channel.channel_uuid" 
+        :value="input_channel.channel_uuid"
         style="text-align: center"
       >
         {{ input_channel.channel_name }}
@@ -25,8 +25,8 @@ const { ioModules } = storeToRefs(monitoringStore);
 const emit = defineEmits(['update']);
 
 const props = defineProps({
-  selectedChannelID: {
-    type: Number,
+  selectedChannelUUID: {
+    type: String,
     default: -1,
   },
   selectedModuleUUID: {
@@ -41,29 +41,29 @@ const selectedIOModule = computed(() => {
 });
 
 // localSelectedChannelIDをpropsから初期化
-const localSelectedChannelID = ref(props.selectedChannelID);
+const localSelectedChannelUUID = ref(props.selectedChannelUUID);
 
 // props.selectedChannelIDが変わったらlocalへ反映
-watch(() => props.selectedChannelID, (newVal) => {
-  localSelectedChannelID.value = newVal;
+watch(() => props.selectedChannelUUID, (newVal) => {
+  localSelectedChannelUUID.value = newVal;
 });
 
 // モジュールが変わったとき、現在のチャンネルが存在しなければ初期化（任意）
 watch(() => selectedIOModule.value, (newModule) => {
   if (newModule) {
-    const hasChannel = newModule.input_channels.some(ch => ch.channel_id === localSelectedChannelID.value);
+    const hasChannel = newModule.input_channels.some(ch => ch.channel_uuid === localSelectedChannelUUID.value);
     if (!hasChannel && newModule.input_channels.length > 0) {
       // 該当チャンネルがない場合は-1や最初のチャンネルIDなどで初期化
-      localSelectedChannelID.value = newModule.input_channels[0].channel_id;
+      localSelectedChannelUUID.value = newModule.input_channels[0].channel_uuid;
     }
   } else {
     // モジュールがない場合も初期化
-    localSelectedChannelID.value = -1;
+    localSelectedChannelUUID.value = "";
   }
   onChannelChange();
 });
 
 function onChannelChange() {
-  emit('update', localSelectedChannelID.value);
+  emit('update', localSelectedChannelUUID.value);
 }
 </script>
