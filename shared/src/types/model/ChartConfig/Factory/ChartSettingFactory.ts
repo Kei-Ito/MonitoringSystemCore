@@ -32,6 +32,8 @@ export function createChartForInitialization(chart_type: ChartTypes): ChartConfi
         chart_uuid: chart_uuid,
         chart_type: chart_type,
         channel_uuids: [],
+        chart_title: "",
+        chart_unit: "",
         grid_layout: gridLayoutFactory(chart_uuid),
         //TODO: 要検討、EChartsの仕様に合わせるか？
         chart_options: specific_chart_setting.chart_options,

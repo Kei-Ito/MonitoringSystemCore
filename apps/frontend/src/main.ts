@@ -8,6 +8,7 @@ import i18n from "@/i18n.ts";
 import "@/assets/css/nucleo-icons.css";
 import "@/assets/css/nucleo-svg.css";
 import "@/assets/css/Material-Icons.css";
+import "@/assets/css/global-style.css";
 import MaterialDashboard from "@/material-dashboard.ts";
 
 

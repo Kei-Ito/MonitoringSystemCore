@@ -7,7 +7,11 @@ import type { ChannelRuntimeValue } from "@monitoring/shared/model";
 export const useChannelRuntimeValuesStore = defineStore("runtimeValues", {
     /** ------------state-------------- */
     state: () => ({
-        runtimeValues: {} as Record<string, ChannelRuntimeValue>,
+        runtimeValues: {"channel_mock_uuid0":{
+            channel_uuid: "channel_mock_uuid0",
+            value: 20,
+            timestamp: new Date(),
+        }} as Record<string, ChannelRuntimeValue>,
     }),
     /** ------------actions-------------- */
     actions: {

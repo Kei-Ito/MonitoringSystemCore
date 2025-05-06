@@ -1,0 +1,77 @@
+<template>
+    <div ref="el" class="w-full h-full"  style="height: 100%;width: 100%"/>
+  </template>
+<script setup lang="ts">
+import type { ChartConfig } from '@monitoring/shared/model'
+import { useEChart } from '@/components/Charts/useEChart'
+
+// ----- props -----
+const props = defineProps<{
+  chart: ChartConfig
+  series: any[]          // ← ここが追加ポイント
+}>()
+
+const optionBuilder = () => {
+
+  const s = props.series[0] ?? { value: 0, channel_name: '' }
+
+  return {
+    grid: {
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            containLabel: false
+        },
+    series: [{
+      type : 'gauge',
+      radius: '100%',
+      center: ['50%', '56%'],
+      max  : props.chart.chart_options?.max ?? 100,
+      data : [{ value: s.value ?? 0 }],
+      splitNumber: 8,
+            axisLine: {
+                lineStyle: {
+                    color: [
+                        [1, '#696969'],
+                    ]
+                }
+            },
+            pointer: {
+                offsetCenter: [0, 0],
+                itemStyle: {
+                    color: 'auto'
+                }
+            },
+            axisTick: {
+                length: 12,
+                lineStyle: {
+                    color: 'auto',
+                    width: 2
+                }
+            },
+            splitLine: {
+                length: 20,
+                lineStyle: {
+                    color: 'auto',
+                    width: 5
+                }
+            },
+            axisLabel: {
+                show: false
+            },
+            detail: {
+                show:true,
+                valueAnimation: true,
+                formatter: (value:number) => value.toFixed(2),
+                color: 'inherit'
+            },
+    }],
+    
+  }
+}
+
+// ----- EChartsをマウント -----
+const { el,chart} = useEChart(optionBuilder, [props.series, props.chart.chart_options])
+</script>
+

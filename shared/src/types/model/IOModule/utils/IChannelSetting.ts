@@ -4,7 +4,7 @@ import { NormalizeConfig,ThresholdConfig } from "@shared/types/model/IOModule/ut
  */
 export interface IChannelSetting<T={}> {
     readonly module_uuid: string; //所属するモジュールのUUID
-    readonly channel_uuid: string; //チャンネルのID(登録時に連番で振られる)
+    channel_uuid: string; //チャンネルのID(登録時に連番で振られる)
     channel_name: string; //チャンネルの名前
     readonly direction: "input" | "output";//チャンネルの役割（入力か出力か）
     channel_number: number; //所属するモジュール内でのチャンネルの番号  

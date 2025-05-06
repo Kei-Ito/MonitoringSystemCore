@@ -1,0 +1,9 @@
+/*
+アプリケーション内のテキストをドラッグで選択できないようにするためのスタイル
+*/
+* {
+    user-select: none;
+    -webkit-user-select: none;  /* Chrome, Safari 対応 */
+    -moz-user-select: none;     /* Firefox 対応 */
+    -ms-user-select: none;      /* Edge, IE 対応 */
+  }

@@ -24,7 +24,7 @@
 <script setup lang="ts">
 
 import type { ChartConfig } from '@monitoring/shared/model'
-import EChartHorizontalBarChart from '@/components/Charts/EChartsHorizontalBarChart.vue';
+import EChartHorizontalBarChart from '@/components/Charts/HorizontalBarChart.vue';
 
 interface BarDatum {
     /** 棒の長さに使う値 */

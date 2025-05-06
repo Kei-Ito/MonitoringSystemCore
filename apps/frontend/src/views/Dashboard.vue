@@ -5,8 +5,8 @@
         <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="30" :is-draggable="true"
           :is-resizable="true" :vertical-compact="true" :use-css-transforms="true">
           <GridItem v-for="(item, index) in layoutModel" :key="index" :static="item.static" :x="item.x" :y="item.y"
-            :w="item.w" :h="item.h" :i="item.i">
-            <span class="text">{{ item.chart_uuid }}</span>
+            :w="item.w" :h="item.h" :i="item.i" class="p-2">
+            <ChartHolderCard :chart="dashboardCharts[item.i]"/>
           </GridItem>
         </GridLayout>
         <!-- ゲージチャート 表示部-->
@@ -20,15 +20,15 @@
   </div>
 </template>
 <script setup>
-import { computed, reactive } from 'vue';
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { GridLayout, GridItem } from 'vue-grid-layout-v3';
-import { useChartStore } from '@/pinia/chartStore';
-import { addDashboardChart } from '@/service/chartService';
-import DashboardChartHolderCard from "@/components/Cards/DashboardChartHolderCard.vue";
-import EChartsGaugeChart from "@/components/Charts/EChartsGaugeChart.vue";
 import { createChartForInitialization } from '@monitoring/shared/model';
 import { ChartTypes } from '@monitoring/shared/enum';
+import { useChartStore } from '@/pinia/chartStore';
+import { addDashboardChart } from '@/service/chartService';
+import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
+
 
 const chartStore = useChartStore();
 const { dashboardCharts, gridLayouts } = storeToRefs(chartStore);
@@ -40,8 +40,6 @@ const layoutModel = computed({
   }
 });
 
-
-console.log("layoutModel", gridLayouts.value);
 function onAddChartButtonClick() {
   if (dashboardCharts.value.length >= 10) {
     alert("最大10個までしか追加できません");
@@ -98,7 +96,8 @@ function onAddChartButtonClick() {
 
 .vue-grid-item:not(.vue-grid-placeholder) {
   background: #ccc;
-  border: 1px solid black;
+  border: 1px solid rgb(140, 140, 140);
+  border-style:double
 }
 
 .vue-grid-item.static {
