@@ -2,10 +2,11 @@
   <div class=" container-fluid">
     <div class="row">
       <div class="col-lg-12 position-relative z-index-2">
-        <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="30" :is-draggable="true"
-          :is-resizable="true" :vertical-compact="true" :use-css-transforms="true">
+        <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="30" :is-draggable="isAdmin"
+          :is-resizable="isAdmin" :vertical-compact="true" :use-css-transforms="true"
+          :class = "isAdmin ? 'vue-grid-layout-style':''">
           <GridItem v-for="(item, index) in layoutModel" :key="index" :static="item.static" :x="item.x" :y="item.y"
-            :w="item.w" :h="item.h" :i="item.i" class="p-2">
+            :w="item.w" :h="item.h" :i="item.i" :class = "isAdmin ? 'p-2 vue-grid-item-style':''">
             <ChartHolderCard :chart="dashboardCharts[item.i]"/>
           </GridItem>
         </GridLayout>
@@ -27,12 +28,16 @@ import { createChartForInitialization } from '@monitoring/shared/model';
 import { ChartTypes } from '@monitoring/shared/enum';
 import { useChartStore } from '@/pinia/chartStore';
 import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
+import { useUiStore } from '@/pinia/uiStore';
 import { addDashboardChart } from '@/service/chartService';
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
 
 
 const chartStore = useChartStore();
 const { dashboardCharts, gridLayouts } = storeToRefs(chartStore);
+
+const uiStore = useUiStore();
+const { isAdmin } = storeToRefs(uiStore);
 
 const layoutModel = computed({
   get: () => gridLayouts.value,
@@ -43,7 +48,10 @@ const layoutModel = computed({
 
 function onAddChartButtonClick() {
   const channelRuntimeValuesStore = useChannelRuntimeValuesStore();
-  channelRuntimeValuesStore.setValue('channel_mock_uuid0  ',Math.floor(Math.random() * 101));
+  for (let i = 0;i<8;i++){
+    channelRuntimeValuesStore.setValue(`channel_mock_uuid${i}`,Math.floor(Math.random() * 101));
+  }
+  
   /**
   if (dashboardCharts.value.length >= 10) {
     alert("最大10個までしか追加できません");
@@ -94,21 +102,21 @@ function onAddChartButtonClick() {
   }
 }
 
-.vue-grid-layout {
+.vue-grid-layout-style {
   background: #eee;
 }
 
-.vue-grid-item:not(.vue-grid-placeholder) {
+.vue-grid-item-style:not(.vue-grid-placeholder) {
   background: #ccc;
   border: 1px solid rgb(140, 140, 140);
   border-style:double
 }
 
-.vue-grid-item.static {
+.vue-grid-item-style.static {
   background: #cce;
 }
 
-.vue-grid-item .text {
+.vue-grid-item-style .text {
   font-size: 24px;
   text-align: center;
   position: absolute;

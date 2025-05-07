@@ -30,6 +30,7 @@ function defaultChart() {
   chart2.channel_uuids = ['channel_mock_uuid0', 'channel_mock_uuid1', 'channel_mock_uuid2', 'channel_mock_uuid3', 'channel_mock_uuid4', 'channel_mock_uuid5', 'channel_mock_uuid6', 'channel_mock_uuid7', 'channel_mock_uuid8'];
 
   const chart3 = createChartForInitialization(ChartTypes.GaugeChart);
+  chart3.channel_uuids = [ 'channel_mock_uuid1' ];
   chart3.chart_title = '流量';
   chart3.chart_unit = 'L/min';
   chart3.grid_layout = {
@@ -39,6 +40,7 @@ function defaultChart() {
     y:8
   }
   const chart4 = createChartForInitialization(ChartTypes.GaugeChart);
+  chart4.channel_uuids = [ 'channel_mock_uuid2' ];
   chart4.chart_title = '照度';
   chart4.chart_unit = 'mW/cm2';
   chart4.grid_layout = {

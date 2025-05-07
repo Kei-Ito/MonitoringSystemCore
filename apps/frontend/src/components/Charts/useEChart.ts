@@ -5,7 +5,7 @@ export function useEChart(
   optionBuilder: () => echarts.EChartsCoreOption,
   deps: any[],                       // 依存の配列
 ) {
-  const el    = ref<HTMLDivElement | null>(null)
+  const el = ref<HTMLDivElement | null>(null)
   const chart = shallowRef<echarts.ECharts | null>(null)
 
   /** コンテナサイズが 0×0 でなければ init */
@@ -33,7 +33,12 @@ export function useEChart(
     })
     ro.observe(el.value!)
 
-    watch(() => deps, update, { deep: true })
+    // マウント外で watch を張る
+    watch(
+      deps,
+      () => { if (chart.value) update() },
+      { deep: true, immediate: true },
+    )
 
     // クリーンアップ
     onBeforeUnmount(() => {

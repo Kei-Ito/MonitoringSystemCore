@@ -65,6 +65,7 @@
           </option>
         </select>
       </div>
+      <toggleBtn v-model="isAdmin" class="mr-3" />
       <div
         class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4"
         :class="isRTL ? 'px-0' : 'me-sm-4'"
@@ -84,6 +85,7 @@ import { computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { useUiStore } from "@/pinia/uiStore";
+import toggleBtn from "@/components/ToggleBtn.vue";
 import Breadcrumbs from "../Breadcrumbs.vue";
 
 /* Props */
@@ -99,7 +101,8 @@ const route = useRoute();
 /* Computed Properties */
 const { 
   isRTL,
-  isAbsolute
+  isAbsolute,
+  isAdmin
 } = storeToRefs(uiStore);
 
 const currentRouteName = computed<string>(() => String(route.name ?? ""));

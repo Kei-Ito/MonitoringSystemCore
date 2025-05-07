@@ -84,7 +84,8 @@ onMounted(async () => {
   if (window.innerWidth > 1200) {
     sidenav.classList.add("g-sidenav-pinned");
   }
-  setupWebSocket();
+  // TODO: デバッグ用に抑制
+  //setupWebSocket();
   isLoading.value = false;
 
 });
