@@ -39,6 +39,7 @@ import { ref, computed } from 'vue'
 import type { ChartConfig } from '@monitoring/shared/model'
 import { useSeries } from '@/pinia/useSeries'
 import GaugeChart from '@/components/Charts/GaugeChart.vue'
+import HorizontalBarChart from '@/components/Charts/HorizontalBarChart.vue'
 import { useAutoScroll } from '@/components/Cards/useAutoScroll'
 
 /* ---------- props & series ---------- */
@@ -65,7 +66,7 @@ const {
 } = useAutoScroll(unitBox, unitTxt, 'run-unit')
 
 /* ---------- 動的チャート ---------- */
-const componentMap = { GaugeChart }
+const componentMap = { HorizontalBarChart,GaugeChart, }
 const resolved = computed(() => componentMap[props.chart.chart_type])
 </script>
 

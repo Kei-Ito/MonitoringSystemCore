@@ -1,5 +1,6 @@
-import { computed } from 'vue';
+import { computed} from 'vue';
 import { storeToRefs } from 'pinia';
+import type { ChannelRuntimeValue,IChannelSetting } from '@monitoring/shared/model';
 import { useMonitoringStore} from '@/pinia/monitoringStore';
 import { useChartStore } from '@/pinia/chartStore';
 import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
@@ -11,10 +12,10 @@ import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore'
  */
 export function useSeries(chart_uuid: string) {
   const { dashboardCharts } = storeToRefs(useChartStore());
-  const { channelMap } = storeToRefs(useMonitoringStore());
+  const { channelMap} = storeToRefs(useMonitoringStore());
   const { runtimeValues } = storeToRefs(useChannelRuntimeValuesStore());
 
-  const chart = computed(() => dashboardCharts.value[chart_uuid]);
+  const chart= computed(() => dashboardCharts.value[chart_uuid]);
 
   const series = computed(() =>
     chart.value.channel_uuids.map((cu:string) => ({

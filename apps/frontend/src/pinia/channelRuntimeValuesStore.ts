@@ -11,7 +11,43 @@ export const useChannelRuntimeValuesStore = defineStore("runtimeValues", {
             channel_uuid: "channel_mock_uuid0",
             value: 20,
             timestamp: new Date(),
-        }} as Record<string, ChannelRuntimeValue>,
+        },
+        "channel_mock_uuid1":{
+            channel_uuid: "channel_mock_uuid1",
+            value: 30,
+            timestamp: new Date(),
+        },
+        "channel_mock_uuid2":{
+            channel_uuid: "channel_mock_uuid2",
+            value: 40,
+            timestamp: new Date(),
+        },
+        "channel_mock_uuid3":{
+            channel_uuid: "channel_mock_uuid3",
+            value: 40,
+            timestamp: new Date(),
+        },
+        "channel_mock_uuid4":{
+            channel_uuid: "channel_mock_uuid4",
+            value: 100,
+            timestamp: new Date(),
+        },
+        "channel_mock_uuid5":{
+            channel_uuid: "channel_mock_uuid5",
+            value: 80,
+            timestamp: new Date(),
+        },
+        "channel_mock_uuid6":{
+            channel_uuid: "channel_mock_uuid6",
+            value: 40,
+            timestamp: new Date(),
+        },
+        "channel_mock_uuid7":{
+            channel_uuid: "channel_mock_uuid7",
+            value: 60,
+            timestamp: new Date(),
+        },
+            } as Record<string, ChannelRuntimeValue>,
     }),
     /** ------------actions-------------- */
     actions: {

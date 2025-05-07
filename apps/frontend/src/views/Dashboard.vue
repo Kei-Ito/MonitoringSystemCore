@@ -26,6 +26,7 @@ import { GridLayout, GridItem } from 'vue-grid-layout-v3';
 import { createChartForInitialization } from '@monitoring/shared/model';
 import { ChartTypes } from '@monitoring/shared/enum';
 import { useChartStore } from '@/pinia/chartStore';
+import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
 import { addDashboardChart } from '@/service/chartService';
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
 
@@ -41,6 +42,9 @@ const layoutModel = computed({
 });
 
 function onAddChartButtonClick() {
+  const channelRuntimeValuesStore = useChannelRuntimeValuesStore();
+  channelRuntimeValuesStore.setValue('channel_mock_uuid0  ',Math.floor(Math.random() * 101));
+  /**
   if (dashboardCharts.value.length >= 10) {
     alert("最大10個までしか追加できません");
     return;
@@ -53,7 +57,7 @@ function onAddChartButtonClick() {
     const chart_id = Math.max(...dashboardCharts.value.map((chart) => chart.chart_id)) + 1;
     addDashboardChart(createChartForInitialization(chart_id, ChartTypes.GaugeChart))
   }
-
+*/
 }
 
 </script>

@@ -9,6 +9,8 @@ import * as Charts from "@shared/types/model/ChartConfig/Charts"
 // ハンドラのマッピング
 const SpecificChartSetting: Record<ChartTypes, any> = {
     [ChartTypes.GaugeChart]: Handlers.createGaugeChartSpecificSetting(),
+    // TODO: 必要があれば、HorizontalBarChartの固有設定を保存するデータ構造を作成する
+    [ChartTypes.HorizontalBarChart]: ()=> {},
     // 新規モジュールタイプを追加するときはここにハンドラを登録
     // 例: [IOModuleTypes.XYZModule]: new XYZModuleHandler(),
 };
