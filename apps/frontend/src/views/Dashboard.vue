@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-lg-12 position-relative z-index-2">
         <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="30" :is-draggable="isAdmin"
-          :is-resizable="isAdmin" :vertical-compact="true" :use-css-transforms="true"
+          :is-resizable="isAdmin" :vertical-compact="false" :use-css-transforms="true"
           :class = "isAdmin ? 'vue-grid-layout-style':''">
           <GridItem v-for="(item, index) in layoutModel" :key="index" :static="item.static" :x="item.x" :y="item.y"
             :w="item.w" :h="item.h" :i="item.i" :class = "isAdmin ? 'p-2 vue-grid-item-style':''">
@@ -108,8 +108,10 @@ function onAddChartButtonClick() {
 
 .vue-grid-item-style:not(.vue-grid-placeholder) {
   background: #ccc;
-  border: 1px solid rgb(140, 140, 140);
-  border-style:double
+  /* 線種を点線に */
+  border-style: dotted;
+  /* 不透明度を下げて目立たなくする */
+  border-color: rgba(140, 140, 140, 0.35);
 }
 
 .vue-grid-item-style.static {

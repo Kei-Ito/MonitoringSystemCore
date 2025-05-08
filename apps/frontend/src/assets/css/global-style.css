@@ -7,3 +7,7 @@
     -moz-user-select: none;     /* Firefox 対応 */
     -ms-user-select: none;      /* Edge, IE 対応 */
   }
+
+  body {
+    font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
+  }
