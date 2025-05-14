@@ -37,7 +37,7 @@ const chartStore = useChartStore();
 const { dashboardCharts, gridLayouts } = storeToRefs(chartStore);
 
 const uiStore = useUiStore();
-const { isAdmin } = storeToRefs(uiStore);
+const { isAdmin,dashboardViewCategory1Selected,dashboardViewCategory2Selected } = storeToRefs(uiStore);
 
 const layoutModel = computed({
   get: () => gridLayouts.value,
