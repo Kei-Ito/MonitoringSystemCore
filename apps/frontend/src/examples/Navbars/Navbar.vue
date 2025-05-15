@@ -17,19 +17,50 @@
         <!-- 照射炉選択（カテゴリ1）のマルチセレクト -->
         <div class="multiselect-container">
           <multiselect v-model="selectedCategory1" :options="category1List" :multiple="false" :close-on-select="true"
-            :clear-on-select="false" :allow-empty="false" :preserve-search="true" placeholder="" :preselect-first="false">
+            :clear-on-select="false" :searchable="false" :allow-empty="false" :preserve-search="false" selectLabel=""
+            selectedLabel="" deselectLabel="" placeholder="Category1を選択" :preselect-first="false">
+            <!-- マルチセレクト時のテンプレート -->
+            <template #selection>
+              <span class="multiselect-selected">
+                {{ selectedCategory1.length === 1
+                  ? selectedCategory1[0]
+                  : `${selectedCategory1.length} 項目 選択中` }}
+              </span>
+            </template>
+
+            <template #option="props">
+              <div class="option__desc d-flex align-items-center">
+                <span class="material-icons-round me-2 fs-5">
+                  {{ isSelected(props.option, selectedCategory1) }}
+                  </span>
+                <span class="option__title">{{ props.option }}</span>
+              </div>
+            </template>
           </multiselect>
         </div>
 
-        <!-- 測定項目選択（カテゴリ2）のマルチセレクト -->
+        <!-- カテゴリ2のマルチセレクト -->
         <div class="multiselect-container">
           <multiselect v-model="selectedCategory2" :options="category2List" :multiple="true" :close-on-select="false"
-            :clear-on-select="false" :preserve-search="true" placeholder="測定項目を選択" :preselect-first="false"
-           >
+            :clear-on-select="false" :preserve-search="false" placeholder="" :searchable="false" selectLabel=""
+            selectedLabel="" deselectLabel="" :preselect-first="false">
+            <!-- マルチセレクト時のテンプレート -->
             <template #selection="{ values }">
               <span class="multiselect-selected">
-                {{ values.length === category2List.length ? `All` : `${values.length} 項目 選択中` }}
+                {{ values.length === 1
+                  ? values[0]
+                  : `${values.length} 項目 選択中` }}
               </span>
+            </template>
+
+            <!-- プルダウンのテンプレート -->
+            <template #option="props">
+              <div class="option__desc d-flex align-items-center">
+                <span class="material-icons-round me-2 fs-5">
+                  {{ isSelected(props.option, selectedCategory2) }}
+                </span>
+                <span class="option__title">{{ props.option }}</span>
+              </div>
             </template>
           </multiselect>
         </div>
@@ -44,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { useUiStore } from "@/pinia/uiStore";
@@ -88,11 +119,7 @@ const selectedCategory1 = computed({
     return [];
   },
   set(value) {
-    if (currentRouteName.value === "Dashboard") {
-      uiStore.dashboardViewCategory1Selected = value;
-    } else if (currentRouteName.value === "Trend") {
-      uiStore.trendViewCategory1Selected = value;
-    }
+    uiStore.setCategory1Selected(value, currentRouteName.value);
   }
 });
 
@@ -106,16 +133,28 @@ const selectedCategory2 = computed({
     return [];
   },
   set(value) {
-    if (currentRouteName.value === "Dashboard") {
-      uiStore.dashboardViewCategory2Selected = value;
-    } else if (currentRouteName.value === "Trend") {
-      uiStore.trendViewCategory2Selected = value;
-    }
+    uiStore.setCategory2Selected(value, currentRouteName.value);
   }
 });
 
 const toggleSidebar = () => {
   uiStore.navbarMinimize();
+};
+
+const isSelected = (currentValue: any, value: any | any[]): string => {
+  // 選択項目が配列の場合
+  if (Array.isArray(value)) {
+    if (Object.values(value).includes(currentValue)) {
+      return "check_box";
+    } else {
+      return "check_box_outline_blank";
+    }
+    // 選択項目が配列でない場合
+  } else if (typeof value === "string") {
+    return currentValue === value ? "check_box" : "check_box_outline_blank";
+  } else {
+    return "";
+  }
 };
 // ルート変更時に選択状態を更新
 watch(currentRouteName, () => {
@@ -124,7 +163,7 @@ watch(currentRouteName, () => {
 
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.css"></style>
+
 <style scoped>
 .multiselect-container {
   width: 30vw;
@@ -140,32 +179,22 @@ watch(currentRouteName, () => {
 :deep(.multiselect__tags) {
   border: none;
   background: white;
-  padding: 0.375rem 0.75rem;
-  min-height: 38px;
+  align-items: center;
+  text-align: center;
 }
 
-:deep(.multiselect__select) {
-  height: 38px;
-}
-
-:deep(.multiselect__content-wrapper) {
-  border: 1px solid #929292;
-  border-top: none;
-}
-
-:deep(.multiselect__option--highlight) {
-  background: #5e72e4;
-}
-
-:deep(.multiselect__option--selected.multiselect__option--highlight) {
-  background: #3a57e0;
-}
 
 :deep(.multiselect--active) {
   box-shadow: none;
 }
 
 :deep(.multiselect-selected) {
-  font-size: 1.0rem;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* シングルラベルを非表示にするスタイルを追加 */
+:deep(.multiselect__single) {
+  display: none !important;
 }
 </style>

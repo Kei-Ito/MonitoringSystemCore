@@ -124,7 +124,7 @@
 }
 
 /*       Fix bug for IE      */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+@media screen and (forced-colors: active), (forced-color-adjust: none) {
   .rotating-card-container .card .back,
   .rotating-card-container .card .front {
     -ms-backface-visibility: visible;

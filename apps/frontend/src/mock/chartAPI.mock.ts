@@ -1,11 +1,15 @@
 import type { MockMethod } from 'vite-plugin-mock';
 import { ChartTypes } from '@monitoring/shared/enum';
-import { createChartForInitialization } from '@monitoring/shared/model';
+import { createChartForInitialization, type ChartConfig } from '@monitoring/shared/model';
 
 function defaultChart() {
-  
+
+
+  const chartList:ChartConfig[] = []
   const chart1 = createChartForInitialization(ChartTypes.HorizontalBarChart);
   chart1.grid_layout.h = 8;
+  chart1.category1 = '照射炉1';
+  chart1.category2 = '液温';
   chart1.chart_title = 'super special very very long text';
   chart1.chart_unit = 'W/cm2';
   chart1.channel_uuids = ['channel_mock_uuid0', 'channel_mock_uuid1', 'channel_mock_uuid2', 'channel_mock_uuid3', 'channel_mock_uuid4', 'channel_mock_uuid5', 'channel_mock_uuid6', 'channel_mock_uuid7', 'channel_mock_uuid8'];
@@ -17,45 +21,47 @@ function defaultChart() {
     y: 0,
   }
 
-  const chart2 = createChartForInitialization(ChartTypes.GaugeChart);
+  const chart2 = createChartForInitialization(ChartTypes.HorizontalBarChart);
+  chart2.grid_layout.h = 8;
+  chart2.category1 = '照射炉1';
+  chart2.category2 = '液温';
+  chart2.chart_title = 'super special very very long text';
+  chart2.chart_unit = 'W/cm2';
+  chart2.channel_uuids = ['channel_mock_uuid0', 'channel_mock_uuid1', 'channel_mock_uuid2', 'channel_mock_uuid3', 'channel_mock_uuid4', 'channel_mock_uuid5', 'channel_mock_uuid6', 'channel_mock_uuid7', 'channel_mock_uuid8'];
   chart2.grid_layout = {
     ...chart2.grid_layout,
     h: 8,
+    w: 12,
     x: 0,
-    y: 8
-
+    y: 0,
   }
-  chart2.chart_title = 'very very very long text';
-  chart2.chart_unit = 'W/cm2';
-  chart2.channel_uuids = ['channel_mock_uuid0', 'channel_mock_uuid1', 'channel_mock_uuid2', 'channel_mock_uuid3', 'channel_mock_uuid4', 'channel_mock_uuid5', 'channel_mock_uuid6', 'channel_mock_uuid7', 'channel_mock_uuid8'];
+  
 
-  const chart3 = createChartForInitialization(ChartTypes.GaugeChart);
-  chart3.channel_uuids = [ 'channel_mock_uuid1' ];
-  chart3.chart_title = '流量';
-  chart3.chart_unit = 'L/min';
-  chart3.grid_layout = {
-    ...chart3.grid_layout,
-    h: 8,
-    x: 4,
-    y:8
+  const category2List = ['液温','UV強度','炉内温度','ランプ電圧','ランプ電流','安定器電流','冷却ファン周波数',null]; 
+  chartList.push(chart1);
+  chartList.push(chart2);
+  for ( let i = 0; i < 8; i++) {
+    let chart = createChartForInitialization(ChartTypes.GaugeChart);
+    chart = {
+      ...chart,
+      chart_title: `title ${i}`,
+      chart_unit : 'unit',
+      channel_uuids:[`channel_mock_uuid${i}`],
+      category1: '照射炉1',
+      category2: category2List[i],
+      grid_layout: {
+        ...chart.grid_layout,
+        h: 8,
+        w: 4,
+        x: (i % 4) * 4,
+        y: Math.floor(i / 4) * 8,
+      }
+    }
+    chartList.push(chart);
   }
-  const chart4 = createChartForInitialization(ChartTypes.GaugeChart);
-  chart4.channel_uuids = [ 'channel_mock_uuid2' ];
-  chart4.chart_title = '照度';
-  chart4.chart_unit = 'mW/cm2';
-  chart4.grid_layout = {
-    ...chart4.grid_layout,
-    h: 8,
-    x: 8,
-    y: 8
-  }
+  
 
-  return [
-    chart1,
-    chart2,
-    chart3,
-    chart4,
-  ]
+  return chartList;
 }
 
 

@@ -85,8 +85,8 @@
             min-height: 100%;
             padding-left: 0;
             padding-right: 0; // Target IE 10 & 11
-            @media all and (-ms-high-contrast: none),
-              (-ms-high-contrast: active) {
+            @media all and (forced-color-adjust: none),
+              (forced-colors: active) {
               min-height: none;
               height: 100%;
             }
