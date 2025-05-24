@@ -59,8 +59,8 @@ export async function registerIOModule(module: IOModule): Promise<IOModule> {
                                specific_channel_setting) VALUES (?, ? ,? ,? ,?, ?, ?, ?, ?, ?, ?,?,?)`,
         [module.module_uuid, inputChannel.channel_name, inputChannel.direction,
         inputChannel.channel_number, inputChannel.unit, inputChannel.decimals,
-        inputChannel.src_min, inputChannel.src_max, inputChannel.dst_min,
-        inputChannel.dst_max,inputChannel.min_threshold,inputChannel.max_threshold ,JSON.stringify(inputChannel.specific_channel_setting)]
+        inputChannel.normalize.src_min, inputChannel.normalize.src_max, inputChannel.normalize.dst_min,
+        inputChannel.normalize.dst_max,inputChannel.threshold.min_threshold,inputChannel.threshold.max_threshold ,JSON.stringify(inputChannel.specific_channel_setting)]
       );
 
       // チャンネルIDを取得
@@ -79,8 +79,8 @@ export async function registerIOModule(module: IOModule): Promise<IOModule> {
                                    specific_channel_setting) VALUES (?, ? ,? ,? ,?, ?, ?, ?, ?, ?,?,?, ?)`,
         [module.module_uuid, outputChannel.channel_name, outputChannel.direction,
         outputChannel.channel_number, outputChannel.unit, outputChannel.decimals,
-        outputChannel.src_min, outputChannel.src_max, outputChannel.dst_min,
-        outputChannel.dst_max,outputChannel.min_threshold,outputChannel.max_threshold, JSON.stringify(outputChannel.specific_channel_setting)]
+        outputChannel.normalize.src_min, outputChannel.normalize.src_max, outputChannel.normalize.dst_min,
+        outputChannel.normalize.dst_max,outputChannel.threshold.min_threshold,outputChannel.threshold.max_threshold, JSON.stringify(outputChannel.specific_channel_setting)]
       );
 
       // チャンネルIDを取得
@@ -111,7 +111,7 @@ export async function addChannel(channel: IChannelSetting): Promise<IChannelSett
     specific_channel_setting) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)`;
     const [result] = await connection.execute(query,
       [channel.module_uuid, channel.channel_name, channel.direction, channel.channel_number,
-      channel.unit, channel.decimals, channel.src_min, channel.src_max, channel.dst_min, channel.dst_max,channel.min_threshold,channel.max_threshold,
+      channel.unit, channel.decimals, channel.normalize.src_min, channel.normalize.src_max, channel.normalize.dst_min, channel.normalize.dst_max,channel.threshold.min_threshold,channel.threshold.max_threshold,
       JSON.stringify(channel.specific_channel_setting)]);
     await connection.commit();
     const channelId = (result as any).insertId;
@@ -194,14 +194,14 @@ export async function updateIOModule(module: IOModule) {
     // 入力チャンネルの更新
     for (let inputChannel of module.input_channels) {
       await connection.execute(updateChannelQuery, [inputChannel.channel_name, inputChannel.unit, inputChannel.decimals,
-      inputChannel.src_min, inputChannel.src_max, inputChannel.dst_min, inputChannel.dst_max,inputChannel.min_threshold,inputChannel.max_threshold,
+      inputChannel.normalize.src_min, inputChannel.normalize.src_max, inputChannel.normalize.dst_min, inputChannel.normalize.dst_max,inputChannel.threshold.min_threshold,inputChannel.threshold.max_threshold,
       JSON.stringify(inputChannel.specific_channel_setting), module.module_uuid, inputChannel.channel_id]);
     }
 
     // 出力チャンネルの更新
     for (let outputChannel of module.output_channels) {
       await connection.execute(updateChannelQuery, [outputChannel.channel_name, outputChannel.unit, outputChannel.decimals,
-      outputChannel.src_min, outputChannel.src_max, outputChannel.dst_min, outputChannel.dst_max,outputChannel.min_threshold,outputChannel.max_threshold,
+      outputChannel.normalize.src_min, outputChannel.normalize.src_max, outputChannel.normalize.dst_min, outputChannel.normalize.dst_max,outputChannel.threshold.min_threshold,outputChannel.threshold.max_threshold,
       JSON.stringify(outputChannel.specific_channel_setting), module.module_uuid, outputChannel.channel_id]);
     }
 

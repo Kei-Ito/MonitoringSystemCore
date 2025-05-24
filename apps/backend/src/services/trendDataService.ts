@@ -19,6 +19,7 @@ export async function getIsDataExist(request: getIsDataExistRequestModel): Promi
     return response;
 }
 
+/*
 function getDateRangeList(startDate:Date, endDate:Date):Date[] {
 
     const start = new Date(startDate);
@@ -36,3 +37,4 @@ function getDateRangeList(startDate:Date, endDate:Date):Date[] {
   
     return dateArray;
   }
+    */

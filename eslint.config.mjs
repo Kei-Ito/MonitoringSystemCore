@@ -1,19 +1,18 @@
-// eslint.config.mjs  (ESM)
+// eslint.config.mjs  ★ESM
 import js           from '@eslint/js'
 import tsPlugin     from '@typescript-eslint/eslint-plugin'
 import tsParser     from '@typescript-eslint/parser'
 import vuePlugin    from 'eslint-plugin-vue'
 import nodePlugin   from 'eslint-plugin-node'
-import globals        from 'globals'                        // ★追加
+import globals      from 'globals'
 
-/* ヘルパー：配列なら 0 番、オブジェクトならそのまま返す */
+/* ヘルパー：プリセットが配列なら 0 番だけ取る */
 const first = cfg => (Array.isArray(cfg) ? cfg[0] : cfg)
 
-/* -------------------------------------------------- */
-/* 1) JS 推奨 */
+/* ───────────────────────────────────────── JS 基本 */
 const baseJs = first(js.configs.recommended)
 
-/* 2) TS 共通 ── recommendedTypeChecked (キャメルケース!!) */
+/* ───────────────────────────────────────── TS 共通 */
 const baseTs = {
   files: ['**/*.{ts,tsx}'],
   ...first(tsPlugin.configs.recommendedTypeChecked),
@@ -22,12 +21,12 @@ const baseTs = {
     parserOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      project: ['./tsconfig.json'],
+      project: ['./tsconfig.json'],        // ルート tsconfig
     },
   },
 }
 
-/* 3) Vue 3 Frontend ── flat/vue3-recommended */
+/* ─────────────────────────────── Vue 3 Front-End */
 const vueFrontend = {
   files: ['apps/frontend/**/*.{ts,vue}'],
   ...first(vuePlugin.configs['flat/vue3-recommended']),
@@ -35,9 +34,13 @@ const vueFrontend = {
     parser: tsParser,
     parserOptions: {
       extraFileExtensions: ['.vue'],
-      project: ['./tsconfig.json'],
+      project: ['./tsconfig.app.json','./tsconfig.json','./tsconfig.node.json'],
     },
     globals: globals.browser,
+  },
+  plugins: {
+    vue: vuePlugin,
+    '@typescript-eslint': tsPlugin,
   },
   processor: vuePlugin.processors['.vue'],
   rules: {
@@ -46,43 +49,67 @@ const vueFrontend = {
       { order: ['defineOptions', 'defineProps', 'defineEmits'] },
     ],
   },
-  
 }
 
-/* 4) Node Backend ── flat/recommended */
+/* ─────────────────────────────── Node Back-End */
 const nodeBackend = {
   files: ['apps/backend/**/*.ts'],
   ...first(nodePlugin.configs['flat/recommended']),
   languageOptions: {
     parser: tsParser,
-    parserOptions: { project: ['./tsconfig.json'] },
-    globals: globals.node,
+    parserOptions: {
+      project: ['./tsconfig.json'],
+    },
+    globals: { ...globals.node, NodeJS: 'readonly' }, // ← ここが no-undef 対策
   },
-  
+  plugins: {
+    node: nodePlugin,
+    '@typescript-eslint': tsPlugin,
+  },
 }
 
-/* 5) Shared Library ── もう一度 TS 推奨を流用 */
+/* ─────────────────────────────── Shared Library */
 const shared = {
   files: ['shared/**/*.ts'],
   ...first(tsPlugin.configs.recommendedTypeChecked),
   languageOptions: {
     parser: tsParser,
-    parserOptions: { project: ['./tsconfig.json'] },
+    parserOptions: {
+      project: ['./tsconfig.json'],
+    },
   },
 }
 
-/* -------------------------------------------------- */
-export default [baseJs, baseTs, vueFrontend, nodeBackend, shared,
+/* ─────────────────────── 追加の共通オーバーライド */
+const commonOverrides = [
+  /* 生成物を完全に無視 */
+  { ignores: ['**/dist/**', '**/*.d.ts'] },
+
+  /* TS ファイルでは core no-undef を無効化 */
   {
-     /* ★ plugins を必ず宣言する！ */
-     plugins: { '@typescript-eslint': tsPlugin },
-     ignores: ['**/dist/**'],
-     rules: {
-       'no-unused-vars': 'off',                       // Core を無効化
-       '@typescript-eslint/no-unused-vars': ['error', {
-         args: 'none',
-         ignoreRestSiblings: true,
-       }],
-     },
-   },
- ]
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: { 'no-undef': 'off' },
+  },
+
+  /* core → TS 版 no-unused-vars へ置き換え */
+  {
+    plugins: { '@typescript-eslint': tsPlugin },
+    rules: {
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { args: 'none', ignoreRestSiblings: true },
+      ],
+    },
+  },
+]
+
+/* ─────────────────────────────── エクスポート */
+export default [
+  baseJs,
+  baseTs,
+  vueFrontend,
+  nodeBackend,
+  shared,
+  ...commonOverrides,
+]

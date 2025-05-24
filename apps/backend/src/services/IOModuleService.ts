@@ -88,7 +88,7 @@ async function getIOModuleInput(broadcast: (data: any) => void){
 };
 
 function NormalizeData(data: number, channel: IChannelSetting): number {
-  return (data-channel.src_min)*(channel.dst_max-channel.dst_min)/(channel.src_max-channel.src_min)+channel.dst_min;
+  return (data-channel.normalize.src_min)*(channel.normalize.dst_max-channel.normalize.dst_min)/(channel.normalize.src_max-channel.normalize.src_min)+channel.normalize.dst_min;
 }
 
 /**
