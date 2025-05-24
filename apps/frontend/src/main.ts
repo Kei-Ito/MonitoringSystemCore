@@ -9,6 +9,7 @@ import "@/assets/css/nucleo-icons.css";
 import "@/assets/css/nucleo-svg.css";
 import "@/assets/css/Material-Icons.css";
 import "@/assets/css/global-style.css";
+import "vue-multiselect/dist/vue-multiselect.css";
 import MaterialDashboard from "@/material-dashboard.ts";
 
 

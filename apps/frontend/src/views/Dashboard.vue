@@ -3,9 +3,9 @@
     <div class="row">
       <div class="col-lg-12 position-relative z-index-2">
         <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="30" :is-draggable="isAdmin"
-          :is-resizable="isAdmin" :vertical-compact="false" :use-css-transforms="true"
+          :is-resizable="isAdmin" :vertical-compact="true" :use-css-transforms="true"
           :class = "isAdmin ? 'vue-grid-layout-style':''">
-          <GridItem v-for="(item, index) in layoutModel" :key="index" :static="item.static" :x="item.x" :y="item.y"
+          <GridItem v-for="(item) in layoutModel" :key="item.i" :static="item.static" :x="item.x" :y="item.y"
             :w="item.w" :h="item.h" :i="item.i" :class = "isAdmin ? 'p-2 vue-grid-item-style':''">
             <ChartHolderCard :chart="dashboardCharts[item.i]"/>
           </GridItem>
@@ -37,14 +37,16 @@ const chartStore = useChartStore();
 const { dashboardCharts, gridLayouts } = storeToRefs(chartStore);
 
 const uiStore = useUiStore();
-const { isAdmin } = storeToRefs(uiStore);
+const { isAdmin,dashboardViewCategory1Selected,dashboardViewCategory2Selected } = storeToRefs(uiStore);
 
 const layoutModel = computed({
-  get: () => gridLayouts.value,
+  get: () => chartStore.gridLayoutsFilteredByCategory(dashboardViewCategory1Selected.value, dashboardViewCategory2Selected.value),
   set: (newLayouts) => {
+    //TODO : 非表示中のグラフのレイアウトを更新しないようにするか検討
     newLayouts.forEach((l) => chartStore.patchGrid(l));
   }
 });
+
 
 function onAddChartButtonClick() {
   const channelRuntimeValuesStore = useChannelRuntimeValuesStore();

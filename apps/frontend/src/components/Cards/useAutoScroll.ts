@@ -49,6 +49,7 @@ import {
       text.value.addEventListener('animationend', () => {
         if (!isOverflow.value) return
         setTimeout(() => {
+          if (text.value===null) return
           text.value!.classList.remove(animClass)
           void text.value!.offsetWidth         // Reflow
           requestAnimationFrame(() => isOverflow.value && text.value!.classList.add(animClass))

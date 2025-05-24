@@ -1,6 +1,15 @@
 import { defineStore } from 'pinia'
 import { loadLocalStorageColor, saveLocalStorageColor } from './localStorageColor'
 
+/**
+ * 配列かどうかを判定し、配列でない場合は配列に変換する関数
+ * @param v オブジェクト（配列または単一の値）
+ * @returns 配列
+ */
+function toArray<T>(v: T | T[]): T[] {
+  return Array.isArray(v) ? v : [v]
+}
+
 export const useUiStore = defineStore('uiStore', {
     state: () => ({
         color: loadLocalStorageColor(),
@@ -18,6 +27,12 @@ export const useUiStore = defineStore('uiStore', {
         isAbsolute: false,
         showConfig: false,
         isAdmin: true,
+        dashboardViewCategory1Selected: ['照射炉1'],// TODO: 将来的にlocalStorageに保存する
+        dashboardViewCategory2Selected: ['液温'],// TODO: 将来的にlocalStorageに保存する
+        trendViewCategory1Selected: ['照射炉1'],// TODO: 将来的にlocalStorageに保存する
+        trendViewCategory2Selected: ['液温'],// TODO: 将来的にlocalStorageに保存する
+        category1List: ['照射炉1', '照射炉2', '照射炉3',],
+        category2List: ['液温','UV強度','炉内温度','ランプ電圧','ランプ電流','安定器電流','冷却ファン周波数'],
         navbarFixed:
             "position-sticky blur shadow-blur left-auto top-1 z-index-sticky px-0 mx-4",
         absolute: "position-absolute px-4 mx-0 w-100 z-index-2",
@@ -53,5 +68,19 @@ export const useUiStore = defineStore('uiStore', {
         toggleSidebar() { this.showSidenav = !this.showSidenav },
         /** ローカルストレージに保存するのでstoreで管理している */
         setColor(c: string) { saveLocalStorageColor(c); this.color = c },
+        setCategory1Selected(selectedCategory1: string[],currentRouteName:string) {
+            if (currentRouteName === 'Dashboard') {
+                this.dashboardViewCategory1Selected = toArray(selectedCategory1);
+            } else if (currentRouteName === 'Trend') {
+                this.trendViewCategory1Selected =  toArray(selectedCategory1);
+            }
+        },
+        setCategory2Selected(selectedCategory2: string[],currentRouteName:string) {
+            if (currentRouteName === 'Dashboard') {
+                this.dashboardViewCategory2Selected = toArray(selectedCategory2);
+            } else if (currentRouteName === 'Trend') {
+                this.trendViewCategory2Selected = toArray(selectedCategory2);
+            }
+        },
     },
 })
