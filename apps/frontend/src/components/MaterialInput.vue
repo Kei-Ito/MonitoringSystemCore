@@ -1,6 +1,6 @@
 <template>
   <div
-    class="input-group"
+    class="input-group input-group-outline"
     :class="`input-group-${variant} ${getStatus(error, success)}`"
   >
     <label :class="variant === 'static' ? '' : 'form-label'">{{ label }}</label>

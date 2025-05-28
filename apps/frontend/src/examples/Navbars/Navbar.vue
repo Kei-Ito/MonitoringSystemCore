@@ -32,7 +32,7 @@
               <div class="option__desc d-flex align-items-center">
                 <span class="material-icons-round me-2 fs-5">
                   {{ isSelected(props.option, selectedCategory1) }}
-                  </span>
+                </span>
                 <span class="option__title">{{ props.option }}</span>
               </div>
             </template>
@@ -66,6 +66,18 @@
         </div>
       </div>
       <ToggleBtn v-model="isAdmin" class="mr-3" />
+
+      <!-- ユーザーログインアイコン -->
+       <router-link :to="{ name: 'SignIn' }" class="px-0 nav-link font-weight-bold lh-1"
+          :class="color ? color : 'text-body'">
+      <a class="btn border-0  bg-transparent">
+        
+          <i class="material-icons me-sm-1">
+            account_circle
+          </i>
+        
+      </a>
+      </router-link>
       <div class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4" :class="isRTL ? 'px-0' : 'me-sm-4'"
         id="navbar">
         <div class="pe-md-3 d-flex align-items-center" :class="isRTL ? 'me-md-auto' : 'ms-md-auto'"></div>

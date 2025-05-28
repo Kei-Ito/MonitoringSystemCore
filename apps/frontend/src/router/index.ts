@@ -7,7 +7,7 @@ import Billing from "../views/Billing.vue";
 import RTL from "../views/Rtl.vue";
 import Notifications from "../views/Notifications.vue";
 import Profile from "../views/Profile.vue";
-import SignIn from "../views/SignIn.vue";
+import SignIn from "../views/Login.vue";
 import SignUp from "../views/SignUp.vue";
 
 const routes:any = [

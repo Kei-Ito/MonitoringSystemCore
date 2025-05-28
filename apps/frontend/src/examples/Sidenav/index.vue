@@ -1,9 +1,9 @@
 <template>
   <aside id="sidenav-main" class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-xl my-3 ms-3 d-flex flex-column flex-nowrap"
     :class="[`${isRTL ? 'me-3 rotate-caret fixed-end' : 'fixed-start ms-3' 
-      } ${sidebarType}`, isDarkMode ? 'dark-version ' : '']" >
+      } ${sidebarType}`, isDarkMode ? 'dark-version ' : '']">
     <!-- header -->
-    <div class="sidenav-header d-flex align-items-center justify-content-between" style="height: 65px;">
+    <div class="sidenav-header d-flex align-items-center justify-content-between" style="height: 65px;" >
       <a class="m-0 navbar-brand ">
         <span class="font-weight-bold text-white " style="font-size: 27px;">UV Monitor</span>
       </a>
