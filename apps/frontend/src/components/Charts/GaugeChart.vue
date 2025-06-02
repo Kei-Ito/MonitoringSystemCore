@@ -78,5 +78,5 @@ const optionBuilder = () => {
 }
 
 // ----- EChartsをマウント -----
-const { el, chart } = useEChart(optionBuilder, [seriesRef])
+const { el,chart } = useEChart(optionBuilder, [seriesRef])
 </script>

@@ -61,7 +61,6 @@ const props = defineProps({
 /* Reactive State */
 const isExpanded = ref(false);
 
-const store = useStore();
 const uiStore = useUiStore();
 const { isRTL , color } = storeToRefs(uiStore);
 

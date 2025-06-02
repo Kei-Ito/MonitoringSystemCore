@@ -10,7 +10,6 @@
 import EChartsGaugeChart from "./CustomEChartsGaugeChart.vue";
 import { storeToRefs } from "pinia";
 import { useMonitoringStore } from "@/pinia/monitoringStore";
-import { computed } from 'vue';
 const props = defineProps({
   value: {
     type: Number,

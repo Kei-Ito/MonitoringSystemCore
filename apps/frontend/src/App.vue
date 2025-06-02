@@ -32,11 +32,7 @@ Coded by www.creative-tim.com
 <script setup lang="ts">
 import { ref,  onMounted, onUnmounted,type Ref } from "vue";
 import { storeToRefs } from 'pinia'
-import { useToast } from "vue-toastification";
-import type { getIOModuleInputResponse } from '@monitoring/shared/api'
 import { useUiStore } from "@/pinia/uiStore";
-import { useMonitoringStore } from "@/pinia/monitoringStore";
-import { useChartStore } from "@/pinia/chartStore";
 import SplashWindow from "@/components/SplashWindow.vue";
 import Sidenav from "@/examples/Sidenav/index.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
@@ -45,11 +41,8 @@ import { getIOModules,fetchSystemSetting } from "@/service/monitoringService";
 import { getDashboardCharts } from "@/service/chartService";
 
 const uiStore = useUiStore()
-const monitoringStore = useMonitoringStore()
-const chartStore = useChartStore()
-const toast = useToast();
 
-let socket: WebSocket | null;
+let socket: WebSocket;
 let retryTimer:  ReturnType<typeof setTimeout> | null = null;
 
 const isLoading: Ref<boolean> = ref(true);
@@ -66,9 +59,6 @@ const {
   showFooter,
 } = storeToRefs(uiStore);
 
-const {
-  dashboardCharts
-} = storeToRefs(chartStore);
 
 onMounted(async () => {
 
@@ -91,7 +81,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  if (socket) {
+  if (socket !== null) {
     socket.close(); // WebSocketのクローズ
   }
   if (retryTimer) {
@@ -103,6 +93,7 @@ function navbarMinimize() {
   uiStore.navbarMinimize();
 }
 
+/**
 function setupWebSocket() {
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   const host = window.location.hostname;
@@ -162,8 +153,9 @@ function setupWebSocket() {
   socket = createWebSocket();
 
 }
+   */
 
-function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
+//function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
   // 受け取ったデータをゲージチャートに反映
   // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
   /**
@@ -186,6 +178,6 @@ function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
     }
   }
     */
-}
+//}
 
 </script>

@@ -84,7 +84,7 @@
   /* --------------------------------------
    * Imports
    * -------------------------------------- */
-  import { ref, computed, watch, onMounted } from 'vue';
+  import { ref, watch, onMounted } from 'vue';
   import { storeToRefs } from 'pinia';
   import { useMonitoringStore } from "@/pinia/monitoringStore";
   import { updateSamplingInterval } from '@/service/monitoringService';
@@ -109,7 +109,7 @@
   const timeSecondsStr = ref('');
   const isError = ref(false);
   
-  const { isSampling,samplingInterval } = storeToRefs(monitoringStore);
+  const { samplingInterval } = storeToRefs(monitoringStore);
   
   /**
    * モーダルを閉じる

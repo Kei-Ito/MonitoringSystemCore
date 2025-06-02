@@ -1,5 +1,4 @@
-import type { ChartConfig } from "@monitoring/shared/model";
-import type { Chart } from "chart.js";
+import type { ChartConfig } from "@monitoring/shared/model";    
 
 export function getDefaultGaugeChartOptions(setting : ChartConfig) {
 

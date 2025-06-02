@@ -28,9 +28,6 @@
 import { storeToRefs } from "pinia";
 import { useUiStore } from "@/pinia/uiStore";
 
-const uiStore = useUiStore();
-const { isRTL } = storeToRefs(uiStore);
-
 const props = defineProps({
   currentPage: {
     type: String,
@@ -41,4 +38,8 @@ const props = defineProps({
     default: "text-dark",
   },
 });
+
+const uiStore = useUiStore();
+const { isRTL } = storeToRefs(uiStore);
+
 </script>

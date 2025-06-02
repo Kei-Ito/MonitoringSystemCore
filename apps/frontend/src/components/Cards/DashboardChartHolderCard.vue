@@ -78,7 +78,6 @@
                     </div>
                 </div>
 
-
             </div>
         </div>
         <div class="card-body pt-2 pb-2">
@@ -109,7 +108,6 @@
                                 $t('modal_window.update')
                             }}</button>
 
-
                             <button type="button" class="btn btn-secondary mx-2 w-80" @click="onCancelClicked">{{
                                 $t('modal_window.cancel')
                             }}</button>
@@ -131,7 +129,6 @@ import { useMonitoringStore } from '@/pinia/monitoringStore';
 import { updateDashboardChart } from '@/service/chartService';
 import IOModuleSelector from '@/components/Selector/IOModuleSelector.vue';
 import ChannelSelector from '@/components/Selector/ChannelSelector.vue';
-
 import type { IOModule, IChannelSetting, ChartConfig } from '@monitoring/shared/model';
 
 const props = defineProps({
@@ -141,6 +138,8 @@ const props = defineProps({
         required: true
     }
 });
+
+const emit = defineEmits(['update']);
 
 const uiStore = useUiStore();
 const monitoringStore = useMonitoringStore();
@@ -162,8 +161,6 @@ const selectedChannel: Ref<IChannelSetting | null> = ref(null);
 const localSetting = ref(JSON.parse(JSON.stringify(props.setting)));
 
 let collapseInstance: Collapse | null = null;
-
-const emit = defineEmits(['update']);
 
 onMounted(() => {
     const el = document.getElementById(uniqueId);

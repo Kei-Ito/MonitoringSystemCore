@@ -68,8 +68,10 @@ const props = defineProps({
   }
 });
 
-const { visible } = toRefs(props)
 const emit = defineEmits(['add', 'close']);
+
+const { visible } = toRefs(props)
+
 
 const module_name: Ref<string> = ref('');
 const module_type: Ref<IOModuleTypes> = ref(IOModuleTypes.Dummy);

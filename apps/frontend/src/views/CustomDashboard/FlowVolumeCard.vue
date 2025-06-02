@@ -20,7 +20,6 @@
 import { ref,computed,watch } from 'vue';
 import { storeToRefs } from "pinia";
 import { useMonitoringStore } from "@/pinia/monitoringStore";
-import type { IOModule } from '@monitoring/shared/model';
 
 const props = defineProps({
   value: {

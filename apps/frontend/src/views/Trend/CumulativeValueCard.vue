@@ -32,18 +32,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref,computed,watch,onMounted,type Ref } from 'vue';
-import { storeToRefs } from "pinia";
-import { useMonitoringStore } from "@/pinia/monitoringStore";
-import { useChartStore } from '@/pinia/chartStore';
+import { ref,type Ref } from 'vue';
 import CumulativeValueBarChart from "./CumulativeValueBarChart.vue";
 import CumulativeValueViewer from './CumulativeValueViewer.vue';
-import * as api from '@/api/';
 
-const monitoringStore = useMonitoringStore();
-const chartStore = useChartStore();
-
-const { trendChartSettings } = storeToRefs(chartStore);
 
 const activeValue = ref('daily');
 const cumulativeValue= ref(0);
@@ -54,12 +46,13 @@ const labelList:Ref<string[]>= ref([]);
 function handleClick(newValue: string) {
   activeValue.value = newValue;
 }
-
+/*
 function formatDateToMMDD(date:Date) :string{
     const month = String(date.getMonth() + 1).padStart(2, '0'); // 月を2桁に
     const day = String(date.getDate()).padStart(2, '0'); // 日を2桁に
     return `${month}/${day}`;
 }
+
 
 async function getCumulativeValue(startDate: Date, endDate: Date) {
   try {    
@@ -100,6 +93,7 @@ async function getCumulativeValue(startDate: Date, endDate: Date) {
   } 
 }
 
+
 function getSelectedDate(date: Date) {
   const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   const endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
@@ -108,7 +102,7 @@ function getSelectedDate(date: Date) {
     endDate:endDate
   };
 }
-
+  */
 // 選択された日付が変更されたらデータを再取得
 //TODO: チャートの修正の影響を一時的に抑制
 /*

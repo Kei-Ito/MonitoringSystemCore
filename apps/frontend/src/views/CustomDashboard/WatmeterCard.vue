@@ -17,7 +17,6 @@
 import { ref, computed, watch } from 'vue';
 import { storeToRefs } from "pinia";
 import { useMonitoringStore } from "@/pinia/monitoringStore";
-import type { IOModule } from '@monitoring/shared/model';
 const props = defineProps({
   value: {
     type: Number,
@@ -40,7 +39,7 @@ const channelSetting = computed(() => {
   return (ioModules.value).find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_uuid === channel_id);
 });
 
-watch(() => props.value, (newVal) => {
+watch(() => props.value, () => {
   if (channelSetting.value) {
     // TODO: チャートの設定変更の影響を受けているので一時的に抑制
     /*

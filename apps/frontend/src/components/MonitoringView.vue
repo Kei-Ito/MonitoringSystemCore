@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, type Ref } from 'vue';
+import { ref, onMounted, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUiStore } from '@/pinia/uiStore';
 import { useMonitoringStore } from '@/pinia/monitoringStore';

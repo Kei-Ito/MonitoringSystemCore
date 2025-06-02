@@ -75,11 +75,6 @@
 
 <script setup lang="ts">
 /* --------------------------------------
- * Imports
- * -------------------------------------- */
-import { ref, watch , type Ref,type PropType,} from 'vue';
-import type { IChannelSetting } from '@monitoring/shared/model';
-/* --------------------------------------
  * Props / Emits
  * -------------------------------------- */
 const props = defineProps({
@@ -89,12 +84,19 @@ const props = defineProps({
         required: true,
     },
 });
+// 親コンポーネントへイベントを送る
+const emit = defineEmits(["update", "close"]);
+/* --------------------------------------
+ * Imports
+ * -------------------------------------- */
+import { ref, watch , type Ref,type PropType,} from 'vue';
+import type { IChannelSetting } from '@monitoring/shared/model';
+
 
 const localChannelSetting: Ref<IChannelSetting> = ref<IChannelSetting>(props.channelSetting);
 const isError = ref(false);
 
-// 親コンポーネントへイベントを送る
-const emit = defineEmits(["update", "close"]);
+
 
 /**
  * モーダルを閉じる

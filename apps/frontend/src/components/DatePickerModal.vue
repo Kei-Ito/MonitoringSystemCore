@@ -33,12 +33,14 @@ const props = defineProps({
   show: Boolean
 });
 
+const emit = defineEmits(['close', 'date-selected']);
+
 const chartStore = useChartStore();
 const { trendChartSettings } = storeToRefs(chartStore);
 
 const selectedDate = ref(new Date());
 
-const emit = defineEmits(['close', 'date-selected']);
+
 
 function closeModal() {
   emit('close');

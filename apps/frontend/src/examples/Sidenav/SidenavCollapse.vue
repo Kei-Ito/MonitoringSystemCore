@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router"; 
-import { ref,computed } from "vue";
+import { ref } from "vue";
 import { useUiStore } from "@/pinia/uiStore";
 
 

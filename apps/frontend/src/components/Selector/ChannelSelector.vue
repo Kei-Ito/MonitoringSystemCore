@@ -19,11 +19,6 @@ import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 
-const monitoringStore = useMonitoringStore();
-const { ioModules } = storeToRefs(monitoringStore);
-
-const emit = defineEmits(['update']);
-
 const props = defineProps({
   selectedChannelUUID: {
     type: String,
@@ -34,6 +29,12 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits(['update']);
+
+
+const monitoringStore = useMonitoringStore();
+const { ioModules } = storeToRefs(monitoringStore);
 
 // 選択中のIOモジュールを常に最新状態で取得
 const selectedIOModule = computed(() => {

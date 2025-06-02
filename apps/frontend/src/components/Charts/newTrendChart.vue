@@ -23,6 +23,19 @@ import {
 } from 'echarts/components'
 import { CanvasRenderer } from 'echarts/renderers'
 
+/* ---------- props ---------- */
+const props = defineProps<{
+  /** data for each line */
+  series: SeriesInput[]
+  /** lower & upper thresholds (for visualMap + markLine) */
+  minThreshold?: number
+  maxThreshold?: number
+  /** chart title (optional) */
+  title?: string
+  /** allow parent to tweak/extend raw ECharts options */
+  optionOverrides?: EChartsCoreOption
+}>()
+
 /* Only register what we need (keeps bundle small) */
 echarts.use([
   CanvasRenderer,
@@ -52,19 +65,6 @@ export interface SeriesInput {
   /** line colour (falls back to ECharts palette) */
   color?: string
 }
-
-/* ---------- props ---------- */
-const props = defineProps<{
-  /** data for each line */
-  series: SeriesInput[]
-  /** lower & upper thresholds (for visualMap + markLine) */
-  minThreshold?: number
-  maxThreshold?: number
-  /** chart title (optional) */
-  title?: string
-  /** allow parent to tweak/extend raw ECharts options */
-  optionOverrides?: EChartsCoreOption
-}>()
 
 const defaultPalette = [
   '#5470c6', '#91cc75', '#fac858',

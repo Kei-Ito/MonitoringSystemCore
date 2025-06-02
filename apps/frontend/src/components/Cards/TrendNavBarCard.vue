@@ -42,8 +42,8 @@ import { useChartStore } from '@/pinia/chartStore';
 import DatePickerModal from '@/components/DatePickerModal.vue';
 import ChannelPickerModal from '@/components/ChannelPickerModal.vue';
 import type { IOModule,IChannelSetting } from '@monitoring/shared/model';
-import { getCsvData } from "@/api/trendDataAPI";
 
+const emit = defineEmits(['date-selected']);
 
 const toast = useToast();
 const monitoringStore = useMonitoringStore();
@@ -69,8 +69,6 @@ const selectedChannelName = computed(() => {
 const selectedDate = computed(() => new Date("2023/10/01"));
 const isModalVisible = ref(false);
 const isModulePickerVisible = ref(false);       
-
-const emit = defineEmits(['date-selected']);
 
 function showModal() {
   isModalVisible.value = true;

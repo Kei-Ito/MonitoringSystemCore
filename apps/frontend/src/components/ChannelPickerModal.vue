@@ -53,13 +53,14 @@ const props = defineProps({
   show: Boolean
 });
 
+const emit = defineEmits(['close-channel-picker']);
+
 const monitoringStore = useMonitoringStore();
 const chartStore = useChartStore();
 
 const {ioModules} = storeToRefs(monitoringStore);
 const {trendChartSettings} = storeToRefs(chartStore);
 
-const emit = defineEmits(['close-channel-picker']);
 //TODO: Trendは複数表示する仕様になったので要変更箇所
 function on_channel_selected(channel_uuid: string) {
   trendChartSettings.value[0].channel_uuids[0] = channel_uuid;

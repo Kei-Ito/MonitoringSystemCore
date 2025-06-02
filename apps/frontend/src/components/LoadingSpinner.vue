@@ -6,16 +6,6 @@
     </div>
 </template>
 <script setup lang="ts">
-const props = defineProps({
-    width: {
-        type: String,
-        default: '100%'
-    },
-    height: {
-        type: String,
-        default: '100%'
-    }
-})
 </script>
 <style scoped>
 .spinner {

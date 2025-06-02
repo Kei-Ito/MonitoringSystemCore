@@ -3,6 +3,7 @@ import js           from '@eslint/js'
 import tsPlugin     from '@typescript-eslint/eslint-plugin'
 import tsParser     from '@typescript-eslint/parser'
 import vuePlugin    from 'eslint-plugin-vue'
+import vueParser    from 'vue-eslint-parser' // Vue 3 用のパーサー
 import nodePlugin   from 'eslint-plugin-node'
 import globals      from 'globals'
 
@@ -31,8 +32,9 @@ const vueFrontend = {
   files: ['apps/frontend/**/*.{ts,vue}'],
   ...first(vuePlugin.configs['flat/vue3-recommended']),
   languageOptions: {
-    parser: tsParser,
+    parser: vueParser, 
     parserOptions: {
+      parser: tsParser,  // Vue ファイル内の TypeScript を解析するためのパーサー
       extraFileExtensions: ['.vue'],
       project: ['./tsconfig.app.json','./tsconfig.json','./tsconfig.node.json'],
     },
@@ -42,7 +44,6 @@ const vueFrontend = {
     vue: vuePlugin,
     '@typescript-eslint': tsPlugin,
   },
-  processor: vuePlugin.processors['.vue'],
   rules: {
     'vue/define-macros-order': [
       'error',

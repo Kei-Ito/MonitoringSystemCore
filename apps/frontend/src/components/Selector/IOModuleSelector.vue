@@ -14,9 +14,6 @@ import { ref,watch} from 'vue';
 import { storeToRefs }  from 'pinia';
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 
-const monitoringStore = useMonitoringStore();
-const { ioModules } = storeToRefs(monitoringStore);
-
 const props = defineProps({
   selectedUUID: {
     type: String,
@@ -24,11 +21,16 @@ const props = defineProps({
   }
 });
 
+const emit=defineEmits(['update']);
+
+const monitoringStore = useMonitoringStore();
+const { ioModules } = storeToRefs(monitoringStore);
+
 watch(() => props.selectedUUID, (newVal) => {
   localSelectedUUID.value = newVal;
 });
 
-const emit=defineEmits(['update']);
+
 
 const localSelectedUUID = ref(props.selectedUUID);
 

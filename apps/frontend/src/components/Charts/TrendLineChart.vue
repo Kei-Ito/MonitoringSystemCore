@@ -1,19 +1,21 @@
 <template>
   <div> 
+    <!--
     <div ref="chartRef" :style="{  height,minHeight }"></div>
     <h1 v-if="error" :style="{  height  ,minHeight}">Error</h1>
+    -->
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, watch, nextTick, computed ,type PropType, } from 'vue';
+//TODO:変更中のためコメントアウト 
+/** 
+import { ref, onMounted, onBeforeUnmount,nextTick, computed ,type PropType, } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 import { useChartStore } from '@/pinia/chartStore';
 import * as echarts from 'echarts';
-import * as api from '@/api/trendDataAPI';
-import { getDefaultTrendLineChartOptions, getTrendLineChartOptions } from './TrendLineChartOption';
-import type { IOModule } from '@monitoring/shared/model';
+import { getDefaultTrendLineChartOptions} from './TrendLineChartOption';
 
 interface SelectedDate {
   startDate: Date;
@@ -131,7 +133,7 @@ watch(() => trendChartSettings.value[0].specific_chart_setting.selected_date, as
   const {startDate, endDate} = getSelectedDate(trendChartSettings.value[0].specific_chart_setting.selected_date);
   fetchData(startDate, endDate);
 });
-*/
+
 
 onMounted(() => {
   initChart();
@@ -141,4 +143,5 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize);
   if (myChart.value) myChart.value.dispose();
 });
+*/
 </script>

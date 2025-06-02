@@ -24,17 +24,14 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { GridLayout, GridItem } from 'vue-grid-layout-v3';
-import { createChartForInitialization } from '@monitoring/shared/model';
-import { ChartTypes } from '@monitoring/shared/enum';
 import { useChartStore } from '@/pinia/chartStore';
 import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
 import { useUiStore } from '@/pinia/uiStore';
-import { addDashboardChart } from '@/service/chartService';
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
 
 
 const chartStore = useChartStore();
-const { dashboardCharts, gridLayouts } = storeToRefs(chartStore);
+const { dashboardCharts } = storeToRefs(chartStore);
 
 const uiStore = useUiStore();
 const { isAdmin,dashboardViewCategory1Selected,dashboardViewCategory2Selected } = storeToRefs(uiStore);

@@ -2,7 +2,7 @@
     <div ref="el" class="w-full h-full" />
 </template>
 <script setup lang="ts">
-import { toRef,computed,watch } from 'vue'
+import { toRef,computed } from 'vue'
 import type { ChartConfig, ChannelSeries } from '@monitoring/shared/model'
 import { useEChart } from '@/components/Charts/useEChart'
 
@@ -12,6 +12,7 @@ const props = defineProps<{
     series: ChannelSeries[]          // ← ここが追加ポイント
 }>()
 
+console.log('HorizontalBarChart', props.chart.chart_uuid, props.series)
 /** スコアの条件と色を 1 つの配列要素にまとめる */
 interface ColorRule {
     /** 閾値上限（以下）──`undefined` なら「上限なし」 */
@@ -72,5 +73,5 @@ const optionBuilder = () => {
     }
 }
 // ----- EChartsをマウント -----
-const { el, chart } = useEChart(optionBuilder, [seriesRef])
+const { el,chart  } = useEChart(optionBuilder, [seriesRef])
 </script>

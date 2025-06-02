@@ -1,6 +1,5 @@
 import { computed} from 'vue';
 import { storeToRefs } from 'pinia';
-import type { ChannelRuntimeValue,IChannelSetting } from '@monitoring/shared/model';
 import { useMonitoringStore} from '@/pinia/monitoringStore';
 import { useChartStore } from '@/pinia/chartStore';
 import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
