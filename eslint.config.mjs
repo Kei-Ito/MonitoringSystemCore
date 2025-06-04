@@ -1,6 +1,8 @@
 // eslint.config.mjs  ★ESM
 import js           from '@eslint/js'
 import tsPlugin     from '@typescript-eslint/eslint-plugin'
+import securityPlugin  from 'eslint-plugin-security';
+import importSort      from 'eslint-plugin-simple-import-sort';
 import tsParser     from '@typescript-eslint/parser'
 import vuePlugin    from 'eslint-plugin-vue'
 import vueParser    from 'vue-eslint-parser' // Vue 3 用のパーサー
@@ -97,6 +99,22 @@ const shared = {
     parserOptions: {
       project: ['./tsconfig.json'],
     },
+  },
+  plugins:{
+    '@typescript-eslint': tsPlugin,
+    'simple-import-sort': importSort,
+    security: securityPlugin, // セキュリティルールを追加
+    
+  },
+  rules: {
+    // import の順番をソートするルール
+    'simple-import-sort/imports': 'error',
+    //var を使わないようにする
+    'no-var': 'error',
+    // 変数宣言は const を優先する
+    'prefer-const': 'error',
+    'security/detect-object-injection': 'warn', // オブジェクトインジェクションの検出
+    
   },
 }
 
