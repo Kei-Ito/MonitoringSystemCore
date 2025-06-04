@@ -8,7 +8,7 @@
     "dev:prod": "cross-env MOCK=false vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "vue-tsc --noEmit && eslint . --ext .ts,.vue"
+    "lint": "vue-tsc -p ./tsconfig.json --noEmit && eslint ."
   },
   "dependencies": {
     "@monitoring/shared": "workspace:*",

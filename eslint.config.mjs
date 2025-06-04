@@ -52,6 +52,25 @@ const vueFrontend = {
   },
 }
 
+/* ─────────────────────────────── Vue 3 Front-End */
+const vueFrontendJs = {
+  files: ['apps/frontend/**/*.{js, jsx}'],
+  languageOptions: {
+    globals: globals.browser,   // window や document を定義
+    parserOptions: { project: null }, // ← これで TypeScript プロジェクトから除外
+  },
+  plugins: {
+    vue: vuePlugin,
+    '@typescript-eslint': tsPlugin,
+  },
+  rules: {
+    //var を使わないようにするルール
+    //'no-var': 'error',
+    // 変数宣言は const を優先する
+    'prefer-const': 'error',
+  },
+}
+
 /* ─────────────────────────────── Node Back-End */
 const nodeBackend = {
   files: ['apps/backend/**/*.ts'],
@@ -110,6 +129,7 @@ export default [
   baseJs,
   baseTs,
   vueFrontend,
+  vueFrontendJs,
   nodeBackend,
   shared,
   ...commonOverrides,

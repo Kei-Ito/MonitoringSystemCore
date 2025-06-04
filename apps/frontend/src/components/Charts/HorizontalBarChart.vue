@@ -39,7 +39,6 @@ const datasetSource = computed(() => [
 const seriesRef = toRef(props, 'series') // props.seriesをrefに変換
 
 const optionBuilder = () => {
-    const s = props.series;
     return {
         dataset: { source: datasetSource.value },
         xAxis: {},
@@ -73,5 +72,5 @@ const optionBuilder = () => {
     }
 }
 // ----- EChartsをマウント -----
-const { el,chart  } = useEChart(optionBuilder, [seriesRef])
+const { el } = useEChart(optionBuilder, [seriesRef])
 </script>

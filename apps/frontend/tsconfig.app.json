@@ -7,6 +7,8 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "baseUrl": ".",
+    "noUnusedParameters": true,//未使用のパラメータを許可しない
+    "noUnusedLocals": true,//未使用のローカル変数を許可しない
     "paths": {
       "@/*": ["src/*"],
       "@monitoring/shared/*": ["../../shared/src/*"],
