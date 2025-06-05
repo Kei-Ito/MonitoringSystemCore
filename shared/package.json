@@ -9,7 +9,7 @@
     "clean": "pnpm exec tsc -b --clean",
     "rebuild": "pnpm run clean && pnpm run build",
     "lint": "pnpm exec tsc --noEmit  && eslint .",
-    "fix": "pnpm exec eslint . --fix"
+    "fix": "eslint . --fix"
   },
   "exports": {
     "./package.json": "./package.json",
