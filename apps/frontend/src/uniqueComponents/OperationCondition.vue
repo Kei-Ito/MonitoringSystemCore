@@ -8,8 +8,9 @@
     </div>
 </template>
 <script setup lang="ts">
-import DeviceHealthCard from './DeviceHealthCard.vue';
  import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum'
+
+import DeviceHealthCard from './DeviceHealthCard.vue';
 
 </script>
 <style scoped></style>

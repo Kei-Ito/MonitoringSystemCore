@@ -133,7 +133,6 @@
 
 <script>
 export default {
-  name: "projectCard",
   props: {
     title: {
       type: String,

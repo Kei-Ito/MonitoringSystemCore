@@ -1,16 +1,19 @@
-import { createApp } from "vue";
-import {createPinia} from 'pinia';
-import Toast, { TYPE } from "vue-toastification";
 import "vue-toastification/dist/index.css";
-import App from "./App.vue";
-import router from "@/router";
-import i18n from "@/i18n.ts";
 import "@/assets/css/nucleo-icons.css";
 import "@/assets/css/nucleo-svg.css";
 import "@/assets/css/Material-Icons.css";
 import "@/assets/css/global-style.css";
 import "vue-multiselect/dist/vue-multiselect.css";
+
+import {createPinia} from 'pinia';
+import { createApp } from "vue";
+import Toast, { TYPE } from "vue-toastification";
+
+import i18n from "@/i18n.ts";
 import MaterialDashboard from "@/material-dashboard.ts";
+import router from "@/router";
+
+import App from "./App.vue";
 
 
 const options = {

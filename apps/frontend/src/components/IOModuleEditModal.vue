@@ -188,12 +188,13 @@
 
 <script lang="ts" setup>
 
-import { ref, watch, toRefs, type Ref } from 'vue'
-import type { IOModule, IChannelSetting } from '@monitoring/shared/model';
+import type { IChannelSetting,IOModule } from '@monitoring/shared/model';
 import { createInputChannelForInitialization, createOutputChannelForInitialization } from '@monitoring/shared/model';
-import { updateIOModule, deleteIOModule, addChannel, deleteChannel } from '@/service/monitoringService';
+import { type Ref,ref, toRefs, watch } from 'vue'
+
 import ChannelSpecificSettingModal from '@/components/ChannelSpecificSettingModal.vue';
 import CheckModal from '@/components/Modal/CheckModal.vue';
+import { addChannel, deleteChannel,deleteIOModule, updateIOModule } from '@/service/monitoringService';
 import InputDataSettingModal from '@/views/Configurations/InputDataSettingModal.vue';
 
 const props = defineProps({

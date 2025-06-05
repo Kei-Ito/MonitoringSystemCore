@@ -35,12 +35,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import type { ChartConfig } from '@monitoring/shared/model'
-import { useSeries } from '@/pinia/useSeries'
+import { computed,ref } from 'vue'
+
+import { useAutoScroll } from '@/components/Cards/useAutoScroll'
 import GaugeChart from '@/components/Charts/GaugeChart.vue'
 import HorizontalBarChart from '@/components/Charts/HorizontalBarChart.vue'
-import { useAutoScroll } from '@/components/Cards/useAutoScroll'
+import { useSeries } from '@/pinia/useSeries'
 
 /* ---------- props & series ---------- */
 const props = defineProps<{ chart: ChartConfig }>()

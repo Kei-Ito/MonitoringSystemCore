@@ -21,13 +21,14 @@
   </div>
 </template>
 <script setup>
-import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { GridLayout, GridItem } from 'vue-grid-layout-v3';
-import { useChartStore } from '@/pinia/chartStore';
-import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
-import { useUiStore } from '@/pinia/uiStore';
+import { computed } from 'vue';
+import { GridItem,GridLayout } from 'vue-grid-layout-v3';
+
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
+import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
+import { useChartStore } from '@/pinia/chartStore';
+import { useUiStore } from '@/pinia/uiStore';
 
 
 const chartStore = useChartStore();

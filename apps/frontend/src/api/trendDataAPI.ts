@@ -1,15 +1,15 @@
-import axios from 'axios';
 import type { getIsDataExistRequestModel,getIsDataExistResponseModel } from '@monitoring/shared/api';
+import axios from 'axios';
 
 const protocol = window.location.protocol;
 const host = window.location.hostname;
 const endpoint = `${protocol}//${host}:2478/api/trend_data/`;
 
-export async function fetchTrendData(channel_id:number,startDate:Date, endDate:Date) {
+export async function fetchTrendData(channelId:number,startDate:Date, endDate:Date) {
   try {
     const response = await axios.get(endpoint, {
       params: {
-        channel_id: channel_id,
+        channel_id: channelId,
         start_time: startDate.toISOString(),
         end_time: endDate.toISOString(),
         span: 'Daily'
@@ -22,11 +22,11 @@ export async function fetchTrendData(channel_id:number,startDate:Date, endDate:D
   }
 };
 
-export async function getCsvData(input_channel_ids:number[], date:Date) {
+export async function getCsvData(inputChannelIds:number[], date:Date) {
   try {
     const response = await axios.get(`${endpoint}export_csv`, {
       params: {
-        input_channel_ids: input_channel_ids,
+        input_channel_ids: inputChannelIds,
         date: date.toISOString()
       },
       responseType: 'blob', // Blob形式でレスポンスを取得
@@ -65,11 +65,11 @@ export async function getIsDataExist(startDate:Date, endDate:Date):Promise<getIs
   }
 }
 
-export async function getCumulativeValue(channel_id:number,startDate:Date, endDate:Date) {
+export async function getCumulativeValue(channelId:number,startDate:Date, endDate:Date) {
   try {
     const response = await axios.get(`${endpoint}get_cumulative_value`, {
       params: {
-        channel_id: channel_id,
+        channel_id: channelId,
         start_time: startDate.toISOString(),
         end_time: endDate.toISOString(),
         span: 'Daily'

@@ -9,7 +9,7 @@
                     </div>
                     <div class="content">
                         <div class="content-inner">
-                            <p class="value">{{ round_value(props.value,1)}}</p>
+                            <p class="value">{{ roundValue(props.value,1)}}</p>
                             <p class="unit">kWh</p>
                         </div>
                     </div>
@@ -23,7 +23,7 @@
                     </div>
                     <div class="content">
                         <div class="content-inner">
-                            <p class="value">{{ round_value(calculateCO2(props.value),2) }}</p>
+                            <p class="value">{{ roundValue(calculateCO2(props.value),2) }}</p>
                             <p class="unit">kg-CO₂</p>
                         </div>
                     </div>
@@ -41,7 +41,7 @@ const props = defineProps({
     }
 });
 
-function round_value(value: number,decimals:number): string {
+function roundValue(value: number,decimals:number): string {
     return value.toFixed(decimals);
 }
 

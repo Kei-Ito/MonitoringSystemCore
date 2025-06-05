@@ -84,8 +84,9 @@
   /* --------------------------------------
    * Imports
    * -------------------------------------- */
-  import { ref, watch, onMounted } from 'vue';
   import { storeToRefs } from 'pinia';
+  import { onMounted,ref, watch } from 'vue';
+
   import { useMonitoringStore } from "@/pinia/monitoringStore";
   import { updateSamplingInterval } from '@/service/monitoringService';
   

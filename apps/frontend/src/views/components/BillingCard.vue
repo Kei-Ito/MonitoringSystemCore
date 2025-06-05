@@ -115,8 +115,5 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "billing-card",
-};
+<script setup lang="ts">
 </script>

@@ -1,6 +1,6 @@
-import type { MockMethod } from 'vite-plugin-mock';
 import { ChartTypes } from '@monitoring/shared/enum';
-import { createChartForInitialization, type ChartConfig } from '@monitoring/shared/model';
+import { type ChartConfig,createChartForInitialization } from '@monitoring/shared/model';
+import type { MockMethod } from 'vite-plugin-mock';
 
 function defaultChart() {
 

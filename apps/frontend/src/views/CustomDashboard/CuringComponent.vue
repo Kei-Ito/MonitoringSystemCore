@@ -50,8 +50,9 @@
   </template>
   
   <script setup lang="ts">
-  import { ref,watch,onMounted } from "vue";
   import { storeToRefs } from "pinia";
+  import { onMounted,ref,watch } from "vue";
+
   import { useMonitoringStore } from "@/pinia/monitoringStore";
 
   const monitoringStore = useMonitoringStore();

@@ -1,6 +1,6 @@
+import type { IChannelSetting,IOModule } from '@monitoring/shared/model'
+import { err,ok  } from '@monitoring/shared/utils';
 import { defineStore } from 'pinia'
-import type { IOModule, IChannelSetting } from '@monitoring/shared/model'
-import { ok , err } from '@monitoring/shared/utils';
 
 export const useMonitoringStore = defineStore('monitoringStore', {
   /** ------------state-------------- */

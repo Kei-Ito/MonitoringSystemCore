@@ -1,11 +1,11 @@
 // src/composables/useAutoScroll.ts
 import {
-    ref,
     computed,
     nextTick,
     onMounted,
-    watch,
     type Ref,
+    ref,
+    watch,
   } from 'vue'
   
   export interface AutoScrollOptions {

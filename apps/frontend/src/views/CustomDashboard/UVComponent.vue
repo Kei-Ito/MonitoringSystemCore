@@ -17,10 +17,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
-import { storeToRefs } from "pinia";
-import { useMonitoringStore } from "@/pinia/monitoringStore";
 import type { IOModule } from '@monitoring/shared/model';
+import { storeToRefs } from "pinia";
+import { computed, ref, watch } from 'vue';
+
+import { useMonitoringStore } from "@/pinia/monitoringStore";
 const props = defineProps({
   value: {
     type: Number,

@@ -3,8 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref, watch} from 'vue';
 import * as echarts from 'echarts';
+import { onBeforeUnmount, onMounted, ref, watch} from 'vue';
+
 import { getDefaultGaugeChartOptions } from './GaugeChartOption';
 
 const props = defineProps({

@@ -23,8 +23,9 @@
 
 <script setup lang="ts">
 
-import newTrendLineChart from '@/components/Charts/newTrendChart.vue';
   import * as echarts from 'echarts/core'
+
+import newTrendLineChart from '@/components/Charts/newTrendChart.vue';
 
 export interface Point {
   /** millisecond UNIX time, Date, or an ISO string */

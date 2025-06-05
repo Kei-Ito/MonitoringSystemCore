@@ -26,11 +26,13 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import TrendLineChartHolderCard from "./Trend/TrendLineChartHolderCard.vue";
-import DatePickerModal from "../components/DatePickerModal.vue";
-import EchartsLineChart from "@/components/Charts/TrendLineChart.vue";
+
 import TrendNavBarCard from "@/components/Cards/TrendNavBarCard.vue";
+import EchartsLineChart from "@/components/Charts/TrendLineChart.vue";
+
+import DatePickerModal from "../components/DatePickerModal.vue";
 import CumulativeValueCard  from "./Trend/CumulativeValueCard.vue";
+import TrendLineChartHolderCard from "./Trend/TrendLineChartHolderCard.vue";
 
 const now = new Date();
 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());

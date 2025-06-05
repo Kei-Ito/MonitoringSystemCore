@@ -101,10 +101,12 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
-import { useUiStore } from "@/pinia/uiStore";
-import LanguageSelector from "@/components/Selector/LanguageSelector.vue";
-import ColorSelector from "@/components/ColorSelector.vue";
+
 import ClockView from "@/components/ClockView.vue";
+import ColorSelector from "@/components/ColorSelector.vue";
+import LanguageSelector from "@/components/Selector/LanguageSelector.vue";
+import { useUiStore } from "@/pinia/uiStore";
+
 import SamplingClockSettingModal from "./SamplingClockSettingModal.vue";
 
 const uiStore = useUiStore();

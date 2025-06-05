@@ -30,15 +30,16 @@ Coded by www.creative-tim.com
 
 </template>
 <script setup lang="ts">
-import { ref,  onMounted, onUnmounted,type Ref } from "vue";
 import { storeToRefs } from 'pinia'
-import { useUiStore } from "@/pinia/uiStore";
+import { onMounted, onUnmounted,type Ref,ref } from "vue";
+
 import SplashWindow from "@/components/SplashWindow.vue";
-import Sidenav from "@/examples/Sidenav/index.vue";
-import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
-import { getIOModules,fetchSystemSetting } from "@/service/monitoringService";
+import Navbar from "@/examples/Navbars/Navbar.vue";
+import Sidenav from "@/examples/Sidenav/index.vue";
+import { useUiStore } from "@/pinia/uiStore";
 import { getDashboardCharts } from "@/service/chartService";
+import { fetchSystemSetting,getIOModules } from "@/service/monitoringService";
 
 const uiStore = useUiStore()
 

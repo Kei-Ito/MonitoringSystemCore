@@ -1,10 +1,11 @@
-import { v4 as uuidv4 } from "uuid";
 import { IOModuleTypes } from "@shared/enum";
 import { IOModule } from "@shared/types/model/IOModule";
-import { IChannelSetting } from "@shared/types/model/IOModule/utils/IChannelSetting";
-import { IModuleHandler } from "./Handlers/IModuleHandler";
 import * as IModules from "@shared/types/model/IOModule/Modules";
+import { IChannelSetting } from "@shared/types/model/IOModule/utils/IChannelSetting";
+import { v4 as uuidv4 } from "uuid";
+
 import * as Handlers from "./Handlers";
+import { IModuleHandler } from "./Handlers/IModuleHandler";
 
 // ハンドラのマッピング
 const handlers: Record<IOModuleTypes, IModuleHandler> = {

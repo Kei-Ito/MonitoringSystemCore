@@ -1,20 +1,21 @@
-import { computed} from 'vue';
 import { storeToRefs } from 'pinia';
-import { useMonitoringStore} from '@/pinia/monitoringStore';
-import { useChartStore } from '@/pinia/chartStore';
+import { computed} from 'vue';
+
 import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
+import { useChartStore } from '@/pinia/chartStore';
+import { useMonitoringStore} from '@/pinia/monitoringStore';
 
 /**
  * chart_uuid を渡すと、ChartConfig.series 用の
  *   [{ ...ChannelSetting, ...ChannelRuntimeValue }][]
  * を返すユーティリティ
  */
-export function useSeries(chart_uuid: string) {
+export function useSeries(chartUuid: string) {
   const { dashboardCharts } = storeToRefs(useChartStore());
   const { channelMap} = storeToRefs(useMonitoringStore());
   const { runtimeValues } = storeToRefs(useChannelRuntimeValuesStore());
 
-  const chart= computed(() => dashboardCharts.value[chart_uuid]);
+  const chart= computed(() => dashboardCharts.value[chartUuid]);
 
   const series = computed(() =>
     chart.value.channel_uuids.map((cu:string) => ({

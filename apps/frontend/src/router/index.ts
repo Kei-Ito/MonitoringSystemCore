@@ -1,14 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import OperationCondition from "@/uniqueComponents/OperationCondition.vue";
-import Dashboard from "../views/Dashboard.vue";
-import Trend from "../views/Trend.vue";
-import Configurations from "../views/Configurations.vue";
+
 import Billing from "../views/Billing.vue";
-import RTL from "../views/Rtl.vue";
+import Configurations from "../views/Configurations.vue";
+import Dashboard from "../views/Dashboard.vue";
+import SignIn from "../views/Login.vue";
 import Notifications from "../views/Notifications.vue";
 import Profile from "../views/Profile.vue";
-import SignIn from "../views/Login.vue";
 import SignUp from "../views/SignUp.vue";
+import Trend from "../views/Trend.vue";
 
 const routes:any = [
   {
@@ -40,11 +41,6 @@ const routes:any = [
     path: "/billing",
     name: "Billing",
     component: Billing,
-  },
-  {
-    path: "/rtl-page",
-    name: "RTL",
-    component: RTL,
   },
   {
     path: "/notifications",

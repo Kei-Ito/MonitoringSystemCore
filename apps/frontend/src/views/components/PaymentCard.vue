@@ -21,7 +21,7 @@
           >
             <img
               class="w-10 me-3 mb-0"
-              src="@/assets/img/logos/mastercard.png"
+              :src="mastercard"
               alt="logo"
             />
             <h6 class="mb-0">
@@ -31,7 +31,6 @@
               class="fas fa-pencil-alt ms-auto text-dark cursor-pointer"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
-              title
               aria-hidden="true"
               data-bs-original-title="Edit Card"
               aria-label="Edit Card"
@@ -45,7 +44,7 @@
           >
             <img
               class="w-10 me-3 mb-0"
-              src="@/assets/img/logos/visa.png"
+              :src="visa"
               alt="logo"
             />
             <h6 class="mb-0">
@@ -55,7 +54,6 @@
               class="fas fa-pencil-alt ms-auto text-dark cursor-pointer"
               data-bs-toggle="tooltip"
               data-bs-placement="top"
-              title
               aria-hidden="true"
               data-bs-original-title="Edit Card"
               aria-label="Edit Card"
@@ -68,21 +66,8 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import mastercard from "@/assets/img/logos/mastercard.png";
+import visa from "@/assets/img/logos/visa.png";
 import MaterialButton from "@/components/MaterialButton.vue";
-import img1 from "@/assets/img/logos/mastercard.png";
-import img2 from "@/assets/img/logos/visa.png";
-
-export default {
-  name: "payment-card",
-  components: {
-    MaterialButton,
-  },
-  data() {
-    return {
-      img1,
-      img2,
-    };
-  },
-};
 </script>

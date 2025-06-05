@@ -2,8 +2,9 @@
     <div ref="el" class="w-full h-full" style="height: 100%;width: 100%" />
 </template>
 <script setup lang="ts">
-import { toRef } from 'vue'
 import type { ChartConfig } from '@monitoring/shared/model'
+import { toRef } from 'vue'
+
 import { useEChart } from '@/components/Charts/useEChart'
 
 // ----- props -----

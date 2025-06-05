@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { createI18n } from 'vue-i18n'
 
 // 言語設定の永続化

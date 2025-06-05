@@ -1,5 +1,5 @@
-import { IOModule } from "@shared/types/model/IOModule";
 import { IOModuleTypes } from "@shared/enum";
+import { IOModule } from "@shared/types/model/IOModule";
 
 
 export interface IModuleHandler {

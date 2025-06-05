@@ -1,4 +1,5 @@
 import { ChartTypes } from '@shared/enum/ChartTypes';
+
 import { GridLayout } from './utils/GridLayout';
 
 export interface ChartConfig {

@@ -23,6 +23,7 @@
   
   <script setup lang="ts">
   import { computed } from 'vue'
+
   import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum'
   
   const props = defineProps<{

@@ -23,10 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref,watch,onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useChartStore } from '@/pinia/chartStore';
+import { onMounted,ref,watch } from 'vue';
+
 import ColorCalendar from "@/components/ColorCalendar.vue";
+import { useChartStore } from '@/pinia/chartStore';
 
 // TODO: トレンドグラフが複数配置される仕様に変更されたので要修正
 const props = defineProps({

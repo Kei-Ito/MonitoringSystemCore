@@ -1,6 +1,7 @@
-import { IOModuleTypes ,IOModuleStatus} from "@shared/enum";
-import { IModuleHandler} from "./IModuleHandler";
+import { IOModuleStatus,IOModuleTypes } from "@shared/enum";
 import { ModbusTCP,ModbusTCP_DeviceSetting ,ModbusTCP_InputChannelSetting,ModbusTCP_OutputChannelSetting} from "@shared/types/model/IOModule/Modules";
+
+import { IModuleHandler} from "./IModuleHandler";
 
 
 export class ModbusTCPHandler implements IModuleHandler {

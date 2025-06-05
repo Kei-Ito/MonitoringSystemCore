@@ -50,23 +50,13 @@
   </div>
 </template>
 
-<script>
-import NavPill from "./components/NavPill.vue";
+<script setup lang="ts">
 import DefaultInfoCard from "@/examples/Cards/DefaultInfoCard.vue";
-import PaymentCard from "./components/PaymentCard.vue";
-import InvoiceCard from "./components/InvoiceCard.vue";
+
 import BillingCard from "./components/BillingCard.vue";
+import InvoiceCard from "./components/InvoiceCard.vue";
+import NavPill from "./components/NavPill.vue";
+import PaymentCard from "./components/PaymentCard.vue";
 import TransactionCard from "./components/TransactionCard.vue";
 
-export default {
-  name: "Billing",
-  components: {
-    NavPill,
-    DefaultInfoCard,
-    PaymentCard,
-    InvoiceCard,
-    BillingCard,
-    TransactionCard,
-  },
-};
 </script>

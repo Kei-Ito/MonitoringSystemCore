@@ -138,8 +138,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted,type PropType } from "vue";
 import { storeToRefs } from "pinia";
+import { onMounted,type PropType } from "vue";
+
 import {
   activateDarkMode,
   deactivateDarkMode,

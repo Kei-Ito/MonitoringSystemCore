@@ -1,9 +1,10 @@
-import { defineConfig ,type ConfigEnv } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import tsconfigPaths from 'vite-tsconfig-paths' 
-import { VitePWA } from 'vite-plugin-pwa'
-import { viteMockServe } from 'vite-plugin-mock';
 import { fileURLToPath, URL } from "node:url";
+
+import vue from '@vitejs/plugin-vue'
+import { type ConfigEnv,defineConfig  } from 'vite'
+import { viteMockServe } from 'vite-plugin-mock';
+import { VitePWA } from 'vite-plugin-pwa'
+import tsconfigPaths from 'vite-tsconfig-paths' 
 
 export default defineConfig(({command }: ConfigEnv) => {
   

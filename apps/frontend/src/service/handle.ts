@@ -1,7 +1,7 @@
 // services/handle.ts
-import { useToast } from 'vue-toastification';
-import { ok, err, type Result } from '@monitoring/shared/utils';
 import type { ApiError } from '@monitoring/shared/api';      // 上で定義した構造体
+import { err, ok, type Result } from '@monitoring/shared/utils';
+import { useToast } from 'vue-toastification';
 
 const toast = useToast();
 

@@ -32,7 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref,type Ref } from 'vue';
+import { type Ref,ref } from 'vue';
+
 import CumulativeValueBarChart from "./CumulativeValueBarChart.vue";
 import CumulativeValueViewer from './CumulativeValueViewer.vue';
 

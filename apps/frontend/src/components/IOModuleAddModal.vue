@@ -12,7 +12,7 @@
           <form @submit.prevent="addModule">
             <div class="form-group">
               <label for="module_type">モジュールタイプ</label>
-              <IOmodule_typeSelector v-model="module_type" />
+              <IOmoduleTypeSelector v-model="module_type" />
             </div>
             <div class="form-group mt-2">
               <label for="module_name">モジュール名</label>
@@ -54,12 +54,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, toRefs, watch, type Ref, } from 'vue';
-import { v4 as uuidv4 } from 'uuid';
-import type { IOModule } from '@monitoring/shared/model';
 import { IOModuleTypes } from '@monitoring/shared/enum';
+import type { IOModule } from '@monitoring/shared/model';
 import { createModuleForInitialization } from '@monitoring/shared/model';
-import IOmodule_typeSelector from '@/components/Selector/IOModuleTypeSelector.vue';
+import { v4 as uuidv4 } from 'uuid';
+import { type Ref,ref, toRefs, watch,  } from 'vue';
+
+import IOmoduleTypeSelector from '@/components/Selector/IOModuleTypeSelector.vue';
 
 const props = defineProps({
   visible: {

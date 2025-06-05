@@ -1,6 +1,7 @@
-import type { IOModule,IChannelSetting } from '@monitoring/shared/model';
 import type { IOModuleStatusResponse } from '@monitoring/shared/api';
 import { IOModuleStatus } from '@monitoring/shared/enum';
+import type { IChannelSetting,IOModule } from '@monitoring/shared/model';
+
 import { request } from '@/api/apiClient';
 
 /**

@@ -68,14 +68,12 @@
 
 <script setup lang="ts">
 /* ---------- imports ---------- */
-import { onMounted, onBeforeUnmount } from 'vue';
-import { useUiStore } from '@/pinia/uiStore';
-import { Images } from '@/enum/LoginImages';
+import { onBeforeUnmount,onMounted } from 'vue';
+
 import MaterialButton from '@/components/MaterialButton.vue';
+import { Images } from '@/enum/LoginImages';
+import { useUiStore } from '@/pinia/uiStore';
 
-
-/* ---------- component meta ---------- */
-defineOptions({ name: 'sign-in' });
 
 /* ---------- store & helpers ---------- */
 const uiStore = useUiStore();

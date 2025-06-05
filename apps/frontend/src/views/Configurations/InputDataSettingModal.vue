@@ -89,8 +89,8 @@ const emit = defineEmits(["update", "close"]);
 /* --------------------------------------
  * Imports
  * -------------------------------------- */
-import { ref, watch , type Ref,type PropType,} from 'vue';
 import type { IChannelSetting } from '@monitoring/shared/model';
+import { type PropType,type Ref,ref, watch , } from 'vue';
 
 
 const localChannelSetting: Ref<IChannelSetting> = ref<IChannelSetting>(props.channelSetting);

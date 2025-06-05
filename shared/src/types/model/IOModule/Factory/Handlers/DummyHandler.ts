@@ -1,7 +1,8 @@
-import { IOModuleTypes ,IOModuleStatus} from "@shared/enum";
+import { IOModuleStatus,IOModuleTypes } from "@shared/enum";
+
 import { Dummy } from "../../Modules/Dummy";
-import { IModuleHandler} from "./IModuleHandler";
 import { createInputChannelForInitialization } from "../ModuleFactory";
+import { IModuleHandler} from "./IModuleHandler";
 
 
 export class DummyHandler implements IModuleHandler {

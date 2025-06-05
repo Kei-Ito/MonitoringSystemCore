@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
 import type { ChannelRuntimeValue } from "@monitoring/shared/model";
+import { defineStore } from "pinia";
 
 /**
  * IOモジュールのランタイム値を管理するストア
@@ -58,9 +58,9 @@ export const useChannelRuntimeValuesStore = defineStore("runtimeValues", {
             })
         },
         /** 単一値だけ更新 (手入力キャリブレーション等) */
-        setValue(channel_uuid: string, value: number) {
-            this.runtimeValues[channel_uuid] = {
-                channel_uuid,
+        setValue(channelUuid: string, value: number) {
+            this.runtimeValues[channelUuid] = {
+                channel_uuid: channelUuid,
                 value,
                 timestamp: new Date(),
             }

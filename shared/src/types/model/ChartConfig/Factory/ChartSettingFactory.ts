@@ -1,9 +1,10 @@
-import { v4 as uuidv4 } from "uuid"
+import { ChartTypes } from "@shared/enum";
 import { ChartConfig } from "@shared/types/model/ChartConfig";
 import { gridLayoutFactory } from "@shared/types/model/ChartConfig";
-import { ChartTypes } from "@shared/enum";
-import * as Handlers from "./Handlers";
 import * as Charts from "@shared/types/model/ChartConfig/Charts"
+import { v4 as uuidv4 } from "uuid"
+
+import * as Handlers from "./Handlers";
 
 
 // ハンドラのマッピング

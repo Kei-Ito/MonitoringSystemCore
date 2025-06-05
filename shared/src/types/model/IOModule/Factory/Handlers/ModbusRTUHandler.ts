@@ -1,5 +1,6 @@
-import { IOModuleTypes ,IOModuleStatus} from "@shared/enum";
+import { IOModuleStatus,IOModuleTypes } from "@shared/enum";
 import { ModbusRTU,ModbusRTU_InputChannelSetting,ModbusRTU_OutputChannelSetting } from "@shared/types/model/IOModule/Modules";
+
 import { IModuleHandler} from "./IModuleHandler";
 
 

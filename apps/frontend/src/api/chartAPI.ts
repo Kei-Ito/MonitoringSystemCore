@@ -1,4 +1,5 @@
 import type { ChartConfig } from '@monitoring/shared/model';
+
 import { request } from '@/api/apiClient';
 
 

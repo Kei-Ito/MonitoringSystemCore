@@ -29,7 +29,7 @@
                 <ChannelView
                   :channel_uuid="channel.channel_uuid"
                   :name="channel.channel_name"
-                  @channel-selected="on_channel_selected"
+                  @channel-selected="onChannelSelected"
                 />
               </div>
             </div>
@@ -45,9 +45,10 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useMonitoringStore } from "@/pinia/monitoringStore";
-import { useChartStore } from "@/pinia/chartStore";
+
 import ChannelView from "@/components/ChannelView.vue";
+import { useChartStore } from "@/pinia/chartStore";
+import { useMonitoringStore } from "@/pinia/monitoringStore";
 
 const props = defineProps({
   show: Boolean
@@ -62,8 +63,8 @@ const {ioModules} = storeToRefs(monitoringStore);
 const {trendChartSettings} = storeToRefs(chartStore);
 
 //TODO: Trendは複数表示する仕様になったので要変更箇所
-function on_channel_selected(channel_uuid: string) {
-  trendChartSettings.value[0].channel_uuids[0] = channel_uuid;
+function onChannelSelected(channelUuid: string) {
+  trendChartSettings.value[0].channel_uuids[0] = channelUuid;
   emit('close-channel-picker');
 }
 

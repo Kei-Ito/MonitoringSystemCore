@@ -3,10 +3,12 @@
   </template>
   
   <script setup lang="ts">
-  import { ref ,onMounted , watch} from "vue";
+  import "color-calendar/dist/css/theme-glass.css";
+
   // @ts-expect-error
   import Calendar from "color-calendar/dist/bundle.js";
-  import "color-calendar/dist/css/theme-glass.css";
+  import { onMounted , ref ,watch} from "vue";
+
   import * as api from "@/api";
 
   const props = defineProps({

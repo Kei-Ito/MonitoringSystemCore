@@ -1,5 +1,5 @@
-import { IOModule } from "@shared/types/model/IOModule";
 import { ModbusFunctionCode } from "@shared/enum/ModbusFunctionCode";
+import { IOModule } from "@shared/types/model/IOModule";
 
 /**
  * ModbusTCPのデバイスに固有の設定

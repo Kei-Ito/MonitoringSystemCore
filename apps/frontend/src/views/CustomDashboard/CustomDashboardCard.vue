@@ -7,9 +7,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import EChartsGaugeChart from "./CustomEChartsGaugeChart.vue";
 import { storeToRefs } from "pinia";
+
 import { useMonitoringStore } from "@/pinia/monitoringStore";
+
+import EChartsGaugeChart from "./CustomEChartsGaugeChart.vue";
 const props = defineProps({
   value: {
     type: Number,

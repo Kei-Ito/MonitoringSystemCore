@@ -30,10 +30,11 @@
 <script setup lang="ts">
 
 import { storeToRefs } from 'pinia';
-import { useUiStore } from "@/pinia/uiStore";
-import { DeviceHealthEnum} from '@/uniqueComponents/DeviceHealthEnum';
+
 import MonitoringView from "@/components/MonitoringView.vue";
 import SidenavList from '@/examples/Sidenav/SidenavList.vue';
+import { useUiStore } from "@/pinia/uiStore";
+import { DeviceHealthEnum} from '@/uniqueComponents/DeviceHealthEnum';
 import DeviceHealthList from "@/uniqueComponents/DeviceHealthList.vue";
 
 interface DeviceInfo {

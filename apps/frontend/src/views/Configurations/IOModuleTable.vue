@@ -76,15 +76,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "vue";
-import { storeToRefs } from 'pinia';
-import IOModuleEditModal from '@/components/IOModuleEditModal.vue';
-import IOModuleAddModal from "@/components/IOModuleAddModal.vue";
-import { IOModuleTypeImages } from "@/enum/IOModuleTypeImages";
 import { IOModuleStatus, IOModuleTypes } from "@monitoring/shared/enum";
 import type { IOModule } from "@monitoring/shared/model";
-import { useUiStore } from '@/pinia/uiStore';
+import { storeToRefs } from 'pinia';
+import { ref } from "vue";
+
+import IOModuleAddModal from "@/components/IOModuleAddModal.vue";
+import IOModuleEditModal from '@/components/IOModuleEditModal.vue';
+import { IOModuleTypeImages } from "@/enum/IOModuleTypeImages";
 import { useMonitoringStore } from '@/pinia/monitoringStore';
+import { useUiStore } from '@/pinia/uiStore';
 import { addIOModule } from "@/service/monitoringService";
 
 

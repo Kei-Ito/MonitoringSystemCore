@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+
 import { loadLocalStorageColor, saveLocalStorageColor } from './localStorageColor'
 
 /**

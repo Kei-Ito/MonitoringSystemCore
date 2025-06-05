@@ -109,16 +109,15 @@
 
 <script setup lang="ts">
 /* ---------- import ---------- */
-import { onMounted, onBeforeUnmount } from 'vue';
-import { useUiStore } from '@/pinia/uiStore';
-import Navbar from '@/examples/PageLayout/Navbar.vue';
-import MaterialInput from '@/components/MaterialInput.vue';
-import MaterialCheckbox from '@/components/MaterialCheckbox.vue';
-import MaterialButton from '@/components/MaterialButton.vue';
-import illustrationSignin from '@/assets/img/illustrations/illustration-signin.jpg';
+import { onBeforeUnmount,onMounted } from 'vue';
 
-/* ---------- component meta ---------- */
-defineOptions({ name: 'sign-up' });
+import illustrationSignin from '@/assets/img/illustrations/illustration-signin.jpg';
+import MaterialButton from '@/components/MaterialButton.vue';
+import MaterialCheckbox from '@/components/MaterialCheckbox.vue';
+import MaterialInput from '@/components/MaterialInput.vue';
+import Navbar from '@/examples/PageLayout/Navbar.vue';
+import { useUiStore } from '@/pinia/uiStore';
+
 
 /* ---------- refs / state ---------- */
 const body = document.body;

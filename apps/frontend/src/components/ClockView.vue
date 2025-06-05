@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed } from "vue";
+
 import { useMonitoringStore } from "@/pinia/monitoringStore";
 
 const monitoringStore = useMonitoringStore();

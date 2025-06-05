@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia'
-import { createChartForInitialization, type ChartConfig, type GridLayout } from '@monitoring/shared/model'
 import { ChartTypes } from '@monitoring/shared/enum'
-import { ok, err } from '@monitoring/shared/utils';
+import { type ChartConfig, createChartForInitialization, type GridLayout } from '@monitoring/shared/model'
+import { err,ok } from '@monitoring/shared/utils';
+import { defineStore } from 'pinia'
 
 // 検証用にデフォルトのチャート設定を追加
 const defaultTrendChartSetting: ChartConfig = createChartForInitialization(ChartTypes.GaugeChart);

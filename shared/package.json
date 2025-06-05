@@ -8,7 +8,8 @@
     "build": "pnpm exec barrelsby -d src --location all --delete && pnpm exec tsc -p ./tsconfig.json && pnpm exec tsc-alias -p ./tsconfig.json",
     "clean": "pnpm exec tsc -b --clean",
     "rebuild": "pnpm run clean && pnpm run build",
-    "lint": "pnpm exec tsc --noEmit  && eslint ."
+    "lint": "pnpm exec tsc --noEmit  && eslint .",
+    "fix": "pnpm exec eslint . --fix"
   },
   "exports": {
     "./package.json": "./package.json",

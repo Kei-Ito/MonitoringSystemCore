@@ -92,8 +92,5 @@
   </footer>
 </template>
 
-<script>
-export default {
-  name: "app-footer",
-};
+<script setup lang="ts">
 </script>

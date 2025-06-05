@@ -13,19 +13,9 @@
 
 </template>
 
-<script>
-
-import SystemSettingTable from "./Configurations/SystemSettingTable.vue";
+<script setup lang="ts">
 import IOModuleTable from "./Configurations/IOModuleTable.vue";
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "configurations",
-  components: {
-    SystemSettingTable,
-    IOModuleTable
-  },
-});
+import SystemSettingTable from "./Configurations/SystemSettingTable.vue";
 </script>
 <style scoped>
 button:focus,

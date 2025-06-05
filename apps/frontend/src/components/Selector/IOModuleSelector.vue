@@ -10,8 +10,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref,watch} from 'vue';
 import { storeToRefs }  from 'pinia';
+import { ref,watch} from 'vue';
+
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 
 const props = defineProps({

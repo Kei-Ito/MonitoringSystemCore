@@ -87,13 +87,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { useRoute } from "vue-router";
-import { useUiStore } from "@/pinia/uiStore";
-import ToggleBtn from "@/components/ToggleBtn.vue";
-import Breadcrumbs from "../Breadcrumbs.vue";
+import { computed, watch } from "vue";
 import Multiselect from 'vue-multiselect';
+import { useRoute } from "vue-router";
+
+import ToggleBtn from "@/components/ToggleBtn.vue";
+import { useUiStore } from "@/pinia/uiStore";
+
+import Breadcrumbs from "../Breadcrumbs.vue";
 
 /* Props */
 const props = defineProps({

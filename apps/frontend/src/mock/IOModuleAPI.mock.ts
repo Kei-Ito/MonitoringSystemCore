@@ -1,6 +1,6 @@
-import type { MockMethod } from 'vite-plugin-mock';
 import { IOModuleTypes } from '@monitoring/shared/enum';
 import { createModuleForInitialization } from '@monitoring/shared/model';
+import type { MockMethod } from 'vite-plugin-mock';
 
 const defaultModule = createModuleForInitialization("module1",'module1',IOModuleTypes.Dummy);
 for (let i = 0; i < defaultModule.input_channel_num; i++) {

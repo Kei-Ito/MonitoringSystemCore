@@ -5,7 +5,7 @@
 </template>
 <script setup>
 import Chart from "chart.js/auto";
-import { watch, onMounted } from "vue";
+import { onMounted,watch } from "vue";
 
 const props = defineProps({
   id: {

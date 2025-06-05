@@ -2,8 +2,9 @@
     <div ref="el" class="w-full h-full" />
 </template>
 <script setup lang="ts">
-import { toRef,computed } from 'vue'
-import type { ChartConfig, ChannelSeries } from '@monitoring/shared/model'
+import type { ChannelSeries,ChartConfig } from '@monitoring/shared/model'
+import { computed,toRef } from 'vue'
+
 import { useEChart } from '@/components/Charts/useEChart'
 
 // ----- props -----

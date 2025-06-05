@@ -17,8 +17,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
 import { storeToRefs } from "pinia";
+import { computed, ref, watch } from 'vue';
+
 import { useMonitoringStore } from "@/pinia/monitoringStore";
 const props = defineProps({
   value: {
@@ -37,12 +38,12 @@ const isError = ref(false);
 
 const channelSetting = computed(() => {
   if (!props.chartSetting) return null; // chartSettingがnullの場合はnullを返す
-  const module_uuid = props.chartSetting.module_uuid;
+  const moduleUuid = props.chartSetting.module_uuid;
   const channel_id = props.chartSetting.channel_id;
-  return (ioModules.value).find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_uuid === channel_id);
+  return (ioModules.value).find((module) => module.module_uuid === moduleUuid)?.input_channels.find((channel) => channel.channel_uuid === channel_id);
 });
 
-watch(() => props.value, (newVal) => {
+watch(() => props.value, () => {
   if (channelSetting.value) {
     //TODO: チャートの修正の影響を一時的に抑制
     /**

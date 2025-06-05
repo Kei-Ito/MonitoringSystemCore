@@ -37,9 +37,10 @@
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
+
 import { useUiStore } from "@/pinia/uiStore";
 
 /* Props */

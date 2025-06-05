@@ -5,23 +5,22 @@
 
 <script setup lang="ts">
 /* ---------- imports ---------- */
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-import * as echarts from 'echarts/core'
-import type { EChartsCoreOption } from 'echarts/core'
 import {
   LineChart
 } from 'echarts/charts'
 import {
-  GridComponent,
-  ToolboxComponent,
   DataZoomComponent,
-  VisualMapComponent,
-  MarkLineComponent,
-  TooltipComponent,
+  GridComponent,
   LegendComponent,
-  TitleComponent
-} from 'echarts/components'
+  MarkLineComponent,
+  TitleComponent,
+  ToolboxComponent,
+  TooltipComponent,
+  VisualMapComponent} from 'echarts/components'
+import type { EChartsCoreOption } from 'echarts/core'
+import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
+import { onBeforeUnmount,onMounted, ref, watch } from 'vue'
 
 /* ---------- props ---------- */
 const props = defineProps<{

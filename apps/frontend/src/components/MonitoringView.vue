@@ -42,11 +42,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, type Ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useUiStore } from '@/pinia/uiStore';
+import { onMounted, type Ref,ref } from 'vue';
+
 import { useMonitoringStore } from '@/pinia/monitoringStore';
+import { useUiStore } from '@/pinia/uiStore';
 import { startSampling,stopSampling } from '@/service/monitoringService';
+
 import toggleBtn from "./ToggleBtn.vue";
 
 const uiStore = useUiStore();

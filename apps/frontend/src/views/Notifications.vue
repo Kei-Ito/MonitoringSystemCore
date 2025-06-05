@@ -115,10 +115,10 @@
 </template>
 
 <script>
+import ColorCalendar from "@/components/ColorCalendar.vue";
 import MaterialAlert from "@/components/MaterialAlert.vue";
 import MaterialSnackbar from "@/components/MaterialSnackbar.vue";
 import SplashWindow from "@/components/SplashWindow.vue";
-import ColorCalendar from "@/components/ColorCalendar.vue";
 
 export default {
   name: "Notifications",

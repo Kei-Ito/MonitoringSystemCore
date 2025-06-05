@@ -121,15 +121,16 @@
 </template>
 
 <script setup lang="ts">
-import { getCurrentInstance, ref, onMounted, type Ref, type PropType } from 'vue';
-import { storeToRefs } from 'pinia';
+import type { ChartConfig,IChannelSetting, IOModule } from '@monitoring/shared/model';
 import { Collapse } from 'bootstrap';
-import { useUiStore } from '@/pinia/uiStore';
-import { useMonitoringStore } from '@/pinia/monitoringStore';
-import { updateDashboardChart } from '@/service/chartService';
-import IOModuleSelector from '@/components/Selector/IOModuleSelector.vue';
+import { storeToRefs } from 'pinia';
+import { getCurrentInstance, onMounted, type PropType,type Ref, ref } from 'vue';
+
 import ChannelSelector from '@/components/Selector/ChannelSelector.vue';
-import type { IOModule, IChannelSetting, ChartConfig } from '@monitoring/shared/model';
+import IOModuleSelector from '@/components/Selector/IOModuleSelector.vue';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
+import { useUiStore } from '@/pinia/uiStore';
+import { updateDashboardChart } from '@/service/chartService';
 
 const props = defineProps({
     color: String,
@@ -180,9 +181,9 @@ onMounted(() => {
 async function updateSelectedChannel() {
     let selectedModule: IOModule | undefined = ioModules.value.find((ioModule) => ioModule.module_uuid === localSetting.value.module_uuid);
     if (selectedModule) {
-        let Channel = selectedModule.input_channels.find((channel) => channel.channel_uuid === localSetting.value.channel_uuid);
-        if (Channel) {
-            selectedChannel.value = Channel;
+        let channel = selectedModule.input_channels.find((channel) => channel.channel_uuid === localSetting.value.channel_uuid);
+        if (channel) {
+            selectedChannel.value = channel;
         }
 
     }

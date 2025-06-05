@@ -13,7 +13,7 @@
                 <div class="col-lg-5 col-md-5 col-sm-10 d-flex align-items-center">
                     <button class="btn flex-btn w-100 d-flex align-items-center m-0" @click="showModal">
                         <i class="material-icons-outlined fs-2 text-black">calendar_month</i>
-                        <h4 class="fs-4 m-0 mx-3 text-black">{{DateToString(selectedDate)}}</h4>
+                        <h4 class="fs-4 m-0 mx-3 text-black">{{dateToString(selectedDate)}}</h4>
                     </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2  d-flex align-items-center justify-content-end">
@@ -34,14 +34,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref,computed } from 'vue';
+import type { IChannelSetting,IOModule } from '@monitoring/shared/model';
 import { storeToRefs } from 'pinia';
+import { computed,ref } from 'vue';
 import { useToast } from "vue-toastification";
-import { useMonitoringStore } from '@/pinia/monitoringStore';
-import { useChartStore } from '@/pinia/chartStore';
-import DatePickerModal from '@/components/DatePickerModal.vue';
+
 import ChannelPickerModal from '@/components/ChannelPickerModal.vue';
-import type { IOModule,IChannelSetting } from '@monitoring/shared/model';
+import DatePickerModal from '@/components/DatePickerModal.vue';
+import { useChartStore } from '@/pinia/chartStore';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
 
 const emit = defineEmits(['date-selected']);
 
@@ -90,7 +91,7 @@ function updateDate(date: any) {
     emit('date-selected', date);
 }
 
-function DateToString(date: Date) {
+function dateToString(date: Date) {
     return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
 }
 

@@ -1,7 +1,8 @@
 /** システム設定関連のapiリクエストとstoreの管理を行うメソッド群 */
-import type { IChannelSetting, IOModule } from '@monitoring/shared/model'
 import type { ApiError } from '@monitoring/shared/api'
+import type { IChannelSetting, IOModule } from '@monitoring/shared/model'
 import { err } from '@monitoring/shared/utils'
+
 import * as api from '@/api'
 import { useMonitoringStore } from '@/pinia/monitoringStore'
 import { handleApiRequest } from '@/service/handle';

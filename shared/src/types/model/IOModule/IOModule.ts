@@ -1,5 +1,5 @@
-import { IOModuleTypes } from '@shared/enum/IOModuleTypes';
 import { IOModuleStatus } from '@shared/enum/IOModuleStatus';
+import { IOModuleTypes } from '@shared/enum/IOModuleTypes';
 import { IChannelSetting} from '@shared/types/model/IOModule/utils/IChannelSetting';
 
 /**

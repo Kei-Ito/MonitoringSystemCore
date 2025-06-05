@@ -55,8 +55,8 @@ export function getDefaultTrendLineChartOptions() {
   return options;
 };
 
-export function getTrendLineChartOptions(input_data: any,min_threshold: number,max_threshold: number) {
-  const processedData = processData(input_data);
+export function getTrendLineChartOptions(inputData: any,minThreshold: number,maxThreshold: number) {
+  const processedData = processData(inputData);
   const options = {
     animation: false,
     grid: { top: 40, left: 10, right: 25, containLabel: true },
@@ -66,10 +66,10 @@ export function getTrendLineChartOptions(input_data: any,min_threshold: number,m
     visualMap: {
       show: false,
       pieces: [
-        {lte: min_threshold, color: '#FD0100' },
+        {lte: minThreshold, color: '#FD0100' },
         //{ gt: 1.5, lte: 3, color: '#FBDB0F' },
-        { gt: min_threshold, lte: max_threshold, color: '#3cb371' },
-        { gt: max_threshold, color: '#FD0100' }
+        { gt: minThreshold, lte: maxThreshold, color: '#3cb371' },
+        { gt: maxThreshold, color: '#FD0100' }
       ],
       outOfRange: { color: '#999' }
     },
@@ -98,7 +98,7 @@ export function getTrendLineChartOptions(input_data: any,min_threshold: number,m
       markLine: {
         silent: true,
         lineStyle: { color: 'red' },
-        data: [{ yAxis: min_threshold }, { yAxis: max_threshold }]
+        data: [{ yAxis: minThreshold }, { yAxis: maxThreshold }]
       }
     }]
   };

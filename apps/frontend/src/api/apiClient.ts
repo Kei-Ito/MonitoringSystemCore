@@ -1,6 +1,6 @@
-import axios, { AxiosError, type Method } from 'axios';
-import { ok, err, type Result } from '@monitoring/shared/utils';
 import type { ApiError } from '@monitoring/shared/api';
+import { err, ok, type Result } from '@monitoring/shared/utils';
+import axios, { AxiosError, type Method } from 'axios';
 
 function toApiError(e: unknown): ApiError {
   if (axios.isAxiosError(e)) {

@@ -18,9 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import { IOModuleTypeImages } from '@/enum/IOModuleTypeImages';
 import { IOModuleTypes } from '@monitoring/shared/enum';
 import { computed } from 'vue';
+
+import { IOModuleTypeImages } from '@/enum/IOModuleTypeImages';
 
 const props = defineProps({
   modelValue: {
