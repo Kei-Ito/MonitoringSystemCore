@@ -2,10 +2,10 @@ import { ChartTypes } from '@monitoring/shared/enum';
 import { type ChartConfig,createChartForInitialization } from '@monitoring/shared/model';
 import type { MockMethod } from 'vite-plugin-mock';
 
-function defaultChart() {
+function getDashboardLayout() {
 
 
-  const chartList:ChartConfig[] = []
+  const dashboardLayout:ChartConfig[] = []
   const chart1 = createChartForInitialization(ChartTypes.HorizontalBarChart);
   chart1.grid_layout.h = 8;
   chart1.category1 = '照射炉1';
@@ -38,8 +38,8 @@ function defaultChart() {
   
 
   const category2List = ['液温','UV強度','炉内温度','ランプ電圧','ランプ電流','安定器電流','冷却ファン周波数',null]; 
-  chartList.push(chart1);
-  chartList.push(chart2);
+  dashboardLayout.push(chart1);
+  dashboardLayout.push(chart2);
   for ( let i = 0; i < 8; i++) {
     let chart = createChartForInitialization(ChartTypes.GaugeChart);
     chart = {
@@ -57,18 +57,18 @@ function defaultChart() {
         y: Math.floor(i / 4) * 8,
       }
     }
-    chartList.push(chart);
+    dashboardLayout.push(chart);
   }
   
 
-  return chartList;
+  return dashboardLayout;
 }
 
 
 export default [
   {
-    url: '/api/chart/get_dashboard_charts/',
+    url: '/api/ui/layouts/',
     method: 'get',
-    response: () => defaultChart(),
+    response: () => getDashboardLayout(),
   },
 ] as MockMethod[];

@@ -1,9 +1,9 @@
 
 import { Request, Response } from 'express';
 import { getDashboardChartList,addDashboardChart ,updateDashboardChart} from "src/services/databaseService";
-import { ChartSetting } from '@monitoring/shared/model';
+import { ChartConfig } from '@monitoring/shared/model';
 
-export async function addChart(req: Request<{},{},ChartSetting>, res: Response) {
+export async function addChart(req: Request<{},{},ChartConfig>, res: Response) {
     try {
         await addDashboardChart(req.body);
         res.status(200).send();
@@ -22,7 +22,7 @@ export async function getDashboardCharts(req: Request<{},{},{}>, res: Response) 
   }
 };
 
-export async function updateDashboardChartController(req: Request<{},{},ChartSetting>, res: Response) {
+export async function updateDashboardChartController(req: Request<{},{},ChartConfig>, res: Response) {
   try {
     await updateDashboardChart(req.body);
     res.status(200).send();

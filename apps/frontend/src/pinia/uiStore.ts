@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { loadLocalStorageColor, saveLocalStorageColor } from './localStorageColor'
+import { loadLocalStorage, saveLocalStorage } from './localStorage'
 
 /**
  * 配列かどうかを判定し、配列でない場合は配列に変換する関数
@@ -13,7 +13,7 @@ function toArray<T>(v: T | T[]): T[] {
 
 export const useUiStore = defineStore('uiStore', {
     state: () => ({
-        color: loadLocalStorageColor(),
+        color: loadLocalStorage('color') || 'info',
         isDarkMode: false,
         sidebarType: 'bg-gradient-dark',
         showSidenav: true,
@@ -68,7 +68,7 @@ export const useUiStore = defineStore('uiStore', {
         },
         toggleSidebar() { this.showSidenav = !this.showSidenav },
         /** ローカルストレージに保存するのでstoreで管理している */
-        setColor(c: string) { saveLocalStorageColor(c); this.color = c },
+        setColor(c: string) { saveLocalStorage('color',c); this.color = c },
         setCategory1Selected(selectedCategory1: string[],currentRouteName:string) {
             if (currentRouteName === 'Dashboard') {
                 this.dashboardViewCategory1Selected = toArray(selectedCategory1);
