@@ -38,8 +38,8 @@ import AppFooter from "@/examples/Footer.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import Sidenav from "@/examples/Sidenav/index.vue";
 import { useUiStore } from "@/pinia/uiStore";
-import { getDashboardCharts } from "@/service/chartService";
-import { fetchSystemSetting,getIOModules } from "@/service/monitoringService";
+import { getUiLayouts } from "@/service/uiService";
+import { fetchSystemSetting, getIOModules } from "@/service/monitoringService";
 
 const uiStore = useUiStore()
 
@@ -65,8 +65,8 @@ onMounted(async () => {
 
   // IOモジュールの一覧を取得
   await getIOModules();
-  // ダッシュボードのチャート情報を取得
-  await getDashboardCharts();
+  // UIレイアウト（ダッシュボードやトレンドなど全ページ）を取得
+  await getUiLayouts();
   // サンプリング間隔を取得
   await fetchSystemSetting();
 

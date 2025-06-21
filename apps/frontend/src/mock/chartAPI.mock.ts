@@ -1,5 +1,5 @@
 import { ChartTypes } from '@monitoring/shared/enum';
-import { type ChartConfig,createChartForInitialization } from '@monitoring/shared/model';
+import { type ChartConfig, createChartForInitialization } from '@monitoring/shared/model';
 import type { MockMethod } from 'vite-plugin-mock';
 
 function getDashboardLayout() {
@@ -69,6 +69,11 @@ export default [
   {
     url: '/api/ui/layouts/',
     method: 'get',
-    response: () => getDashboardLayout(),
+    response: () => {
+      const dashboard = getDashboardLayout();
+      const baseTrend = getDashboardLayout();
+      const trend = baseTrend.map((c) => ({ ...c, chart_type: ChartTypes.LineChart }));
+      return { dashboard, trend, somePage: [] };
+    },
   },
 ] as MockMethod[];

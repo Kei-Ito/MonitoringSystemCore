@@ -1,4 +1,5 @@
 import { ChartTypes } from '@monitoring/shared/enum'
+import type { UiLayout } from '@monitoring/shared/api'
 import { type ChartConfig, createChartForInitialization, type GridLayout } from '@monitoring/shared/model'
 import { err,ok } from '@monitoring/shared/utils';
 import { defineStore } from 'pinia'
@@ -55,14 +56,18 @@ function filerCategory(chartConfigs:ChartConfig[],category1:string[],category2:s
 export const useChartStore = defineStore('chartStore', {
   /** ------------state-------------- */
   state: () => ({
+    uiLayouts: {} as UiLayout,
     dashboardCharts: {} as Record<string, ChartConfig>,
-    trendChartSettings: [defaultTrendChartSetting],
+    trendChartSettings: [defaultTrendChartSetting] as ChartConfig[],
   }),
   /** ------------getters-------------- */
   getters: {
+    /** UIレイアウト全体を取得 */
+    uiLayoutsData: (state) => state.uiLayouts,
     /** グリッドレイアウトを library 用フォーマットに変換 */
     gridLayouts: (state) =>
       Object.values(state.dashboardCharts).map((c) => c.grid_layout),
+    /** カテゴリでフィルタリングしたダッシュボード用グリッドレイアウト */
     gridLayoutsFilteredByCategory:
       (state) =>
         (category1: string[], category2: string[]): GridLayout[] => {
@@ -72,13 +77,29 @@ export const useChartStore = defineStore('chartStore', {
             category2
           ).map((c) => ({ ...c.grid_layout }));
         },
-
+    /** 指定ページとカテゴリでフィルタリングしたグリッドレイアウト */
+    gridLayoutsFilteredByPage:
+      (state) =>
+        (pageName: string, category1: string[], category2: string[]): GridLayout[] => {
+          const charts = state.uiLayouts[pageName] ?? [];
+          return filerCategory(charts, category1, category2).map((c) => ({ ...c.grid_layout }));
+        },
   },
   actions: {
     patchGrid(layout: { i: string; x: number; y: number; w: number; h: number }) {
+      // update dashboardCharts for backwards compatibility
       const c = this.dashboardCharts[layout.i];
-      if (!c) return;
-      c.grid_layout = { ...c.grid_layout, x: layout.x, y: layout.y, w: layout.w, h: layout.h };
+      if (c) {
+        c.grid_layout = { ...c.grid_layout, x: layout.x, y: layout.y, w: layout.w, h: layout.h };
+      }
+      // update uiLayouts for all pages containing this chart_uuid
+      for (const pageName in this.uiLayouts) {
+        this.uiLayouts[pageName] = this.uiLayouts[pageName].map((c) =>
+          c.chart_uuid === layout.i
+            ? { ...c, grid_layout: { ...c.grid_layout, x: layout.x, y: layout.y, w: layout.w, h: layout.h } }
+            : c
+        );
+      }
     },
     updateDashboardChart(chart: ChartConfig) {
       const chart_uuid = chart.chart_uuid;

@@ -11,3 +11,16 @@
   body {
     font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
   }
+
+/* vue-grid-layout styling for Dashboard & Trend pages */
+.vue-grid-layout-style {
+  background: #eee;
+}
+.vue-grid-item-style:not(.vue-grid-placeholder) {
+  background: #ccc;
+  border-style: dotted;
+  border-color: rgba(140, 140, 140, 0.35);
+}
+.vue-grid-item-style.static {
+  background: #cce;
+}
