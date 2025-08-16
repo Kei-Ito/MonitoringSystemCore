@@ -4,12 +4,11 @@ import { gridLayoutFactory } from "@shared/types/model/ChartConfig";
 import * as Charts from "@shared/types/model/ChartConfig/Charts"
 import { v4 as uuidv4 } from "uuid"
 
-import * as Handlers from "./Handlers";
 
 
 // ハンドラのマッピング
 const SpecificChartSetting: Record<ChartTypes, any> = {
-    [ChartTypes.GaugeChart]: Handlers.createGaugeChartSpecificSetting(),
+    [ChartTypes.GaugeChart]: Charts.createGaugeChartSpecificSetting(),
     // TODO: 必要があれば、HorizontalBarChartの固有設定を保存するデータ構造を作成する
     [ChartTypes.HorizontalBarChart]: ()=> {},
     // 新規モジュールタイプを追加するときはここにハンドラを登録
@@ -18,11 +17,6 @@ const SpecificChartSetting: Record<ChartTypes, any> = {
     [ChartTypes.LineChart]: () => {},
 };
 
-export interface ChartTypeMap {
-    [ChartTypes.GaugeChart]: Charts.GaugeChart;
-    // 新規モジュールタイプを追加するときはここにモジュールを登録
-    // 例: [IOModuleTypes.XYZModule]:IModules.XYZModule;
-}
 
 export function createChartForInitialization(chart_type: ChartTypes): ChartConfig {
 

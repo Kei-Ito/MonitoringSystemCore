@@ -20,7 +20,7 @@ export function toArray<T>(v: T | T[]): T[] {
  * ChartConfig配列をカテゴリーでフィルタリングする関数
  * @returns  フィルタリングされたチャート設定の配列
  */
-function filerCategory(chartConfigs:ChartConfig[],category1:string[],category2:string[]):ChartConfig[] {
+function filterCategory(chartConfigs:ChartConfig[],category1:string[],category2:string[]):ChartConfig[] {
   let category1Filtered:ChartConfig[];
   let category2Filtered:ChartConfig[] = [];
   
@@ -71,7 +71,7 @@ export const useChartStore = defineStore('chartStore', {
     gridLayoutsFilteredByCategory:
       (state) =>
         (category1: string[], category2: string[]): GridLayout[] => {
-          return filerCategory(
+          return filterCategory(
             Object.values(state.dashboardCharts),
             category1,
             category2
@@ -82,7 +82,7 @@ export const useChartStore = defineStore('chartStore', {
       (state) =>
         (pageName: string, category1: string[], category2: string[]): GridLayout[] => {
           const charts = state.uiLayouts[pageName] ?? [];
-          return filerCategory(charts, category1, category2).map((c) => ({ ...c.grid_layout }));
+          return filterCategory(charts, category1, category2).map((c) => ({ ...c.grid_layout }));
         },
   },
   actions: {

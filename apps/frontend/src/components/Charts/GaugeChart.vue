@@ -15,6 +15,7 @@ const props = defineProps<{
 
 const seriesRef = toRef(props, 'series') // props.seriesをrefに変換
 
+// ------ 表示設定 -----
 const optionBuilder = () => {
 
     const s = props.series[0] ?? { value: 0, channel_name: '' }

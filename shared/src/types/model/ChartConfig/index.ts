@@ -4,5 +4,4 @@
 
 export * from "./ChartConfig";
 export * from "./Charts/index";
-export * from "./Factory/index";
 export * from "./utils/index";
