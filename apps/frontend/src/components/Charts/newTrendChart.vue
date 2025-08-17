@@ -1,6 +1,6 @@
 <!-- TimeSeriesChart.vue -->
 <template>
-  <div ref="chartEl" class="w-full h-full" style="height: 300px;" />
+  <div ref="el" class="w-full h-full" style="height: 100%; width: 100%;" />
 </template>
 
 <script setup lang="ts">
@@ -20,7 +20,8 @@ import {
 import type { EChartsCoreOption } from 'echarts/core'
 import * as echarts from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { onBeforeUnmount,onMounted, ref, watch } from 'vue'
+import { toRef } from 'vue'
+import { useEChart } from '@/components/Charts/useEChart'
 
 /* ---------- props ---------- */
 const props = defineProps<{
@@ -72,148 +73,95 @@ const defaultPalette = [
 ]
 
 /* ---------- state ---------- */
-const chartEl = ref<HTMLElement>()
-let chart: echarts.ECharts | undefined
 
-/* ---------- helpers ---------- */
-function buildOptions(): EChartsCoreOption {
-  const { series, minThreshold, maxThreshold } = props
-
-  /* transform input to ECharts series */
-  const echartsSeries = series.map(s => ({
-    name: s.name,
-    type: 'line',
-    symbol: 'none',
-    /* ECharts expects [x,y] tuples when using type:'time' */
-    data: s.data.map(p => [p.time, p.value]),
-    sampling: 'lttb',
-    progressive: 2_000,
-    progressiveThreshold: 3_000,
-    emphasis: { disabled: true, focus: 'none' }
-  }))
-
-  /* visualMap splits the y-axis into three colour zones */
-  const visualMaps = series.map((s, idx) => ({
-  show: false,
-  type: 'piecewise',
-  seriesIndex: idx,    // ← ★ このシリーズだけに適用
-  dimension: 1,        // y 値で判定
-  pieces: [
-    // 下限未満：警告色
-    { lte: minThreshold, color: '#FD0100' },
-
-    // 許容レンジ：そのシリーズ本来の色
-    { gt:  minThreshold, lte: maxThreshold,
-      color: defaultPalette[idx % defaultPalette.length]
-    },
-
-    // 上限超過：警告色
-    { gt:  maxThreshold, color: '#FD0100' }
-  ]
-}))
-
-const thresholdLineSeries =
-  minThreshold != null && maxThreshold != null
-    ? {
-        type: 'line',
-        data: [],                // 実データは不要
-        symbol: 'none',          // 余計なプロットを出さない
-        silent: true,            // ホバーしてもツールチップを出さない
-        markLine: {
-          symbol: ['none', 'arrow'],  // ← **線末だけ小さな矢印**
-          symbolSize: 10,
-          label: { show: false },
-          lineStyle: {
-            type: 'dashed',           // 点線
-            width: 1,
-            color: '#FD0100'          // 好みで変更可
-          },
-          data: [
-            { yAxis: minThreshold },  // 下限
-            { yAxis: maxThreshold }   // 上限
-          ]
-        }
-      }
-    : null
-
-  return {
-    animation: false,
-    title: props.title ? { text: props.title } : undefined,
-    grid: { top: 40, left: 10, right: 25, containLabel: true },
-    legend: {
-      top: 0,
-      icon: 'rect',          // ← 円無しの四角アイコン
-      itemWidth: 32,         // 横幅を少し広げて「線らしさ」を残す
-      itemHeight: 3,         // 高さを細くすると “線” の雰囲気に
-      textStyle: {
-        color: 'white'        // ← 背景が白なら濃いグレーが無難
-      },
-    },
-    toolbox: {
-      feature: {
-        dataZoom: { yAxisIndex: 'none' },
-        restore: {},
-        saveAsImage: {}
-      }
-    },
-    tooltip: {
-  trigger: 'axis',              // X 位置でまとめて表示
-  axisPointer: { type: 'line' },// 補助線
-},
-
-    visualMap:visualMaps,
-    xAxis: {
-      type: 'time',
-      boundaryGap: false,
-      axisLabel: { formatter: formatTime }
-    },
-    yAxis: { type: 'value' },
-    dataZoom: [
-      { type: 'inside', start: 0, end: 100 },
-      { start: 0, end: 100 }
-    ],
-    series:[ ...echartsSeries,...(thresholdLineSeries ? [thresholdLineSeries] : [])],
-    /* allow last-minute tweaks from parent */
-    ...props.optionOverrides
-  } as EChartsCoreOption
+function toMillis(t: number | string | Date): number {
+  if (t instanceof Date) return t.getTime()
+  if (typeof t === 'string') return new Date(t).getTime()
+  return t
 }
 
-/* nicely formats the x-axis tick */
 function formatTime(value: string | number): string {
   const d = new Date(value)
   return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`
 }
 
-/* ---------- lifecycle ---------- */
-onMounted(() => {
-  if (!chartEl.value) return
-  chart = echarts.init(chartEl.value)
-  chart.setOption(buildOptions())
-  window.addEventListener('resize', resize)
-})
+const optionBuilder = (): EChartsCoreOption => {
+  const series = props.series ?? []
+  const minT = props.minThreshold
+  const maxT = props.maxThreshold
 
-onBeforeUnmount(() => {
-  chart?.dispose()
-  window.removeEventListener('resize', resize)
-})
+  const echartsSeries = series.map((s) => ({
+    name: s.name,
+    type: 'line',
+    symbol: 'none',
+    data: (s.data ?? []).map(p => [toMillis(p.time), p.value]),
+    sampling: 'lttb',
+    progressive: 2_000,
+    progressiveThreshold: 3_000,
+    lineStyle: s.color ? { color: s.color } : undefined,
+    emphasis: { disabled: true, focus: 'none' }
+  }))
 
-function resize() {
-  chart?.resize()
+  const visualMaps = (minT != null || maxT != null)
+    ? series.map((s, idx) => {
+        const normal = s.color ?? defaultPalette[idx % defaultPalette.length]
+        const pieces: any[] = []
+        if (minT != null && maxT != null) {
+          pieces.push({ lte: minT, color: '#FD0100' })
+          pieces.push({ gt: minT, lte: maxT, color: normal })
+          pieces.push({ gt: maxT, color: '#FD0100' })
+        } else if (minT != null) {
+          pieces.push({ lte: minT, color: '#FD0100' })
+          pieces.push({ gt: minT, color: normal })
+        } else if (maxT != null) {
+          pieces.push({ lte: maxT, color: normal })
+          pieces.push({ gt: maxT, color: '#FD0100' })
+        }
+        return { show: false, type: 'piecewise', seriesIndex: idx, dimension: 1, pieces }
+      })
+    : []
+
+  const markLineData: any[] = []
+  if (minT != null) markLineData.push({ yAxis: minT })
+  if (maxT != null) markLineData.push({ yAxis: maxT })
+
+  const thresholdLineSeries =
+    markLineData.length > 0
+      ? {
+          type: 'line',
+          data: [],
+          symbol: 'none',
+          silent: true,
+          markLine: {
+            symbol: ['none', 'arrow'],
+            symbolSize: 10,
+            label: { show: false },
+            lineStyle: { type: 'dashed', width: 1, color: '#FD0100' },
+            data: markLineData
+          }
+        }
+      : null
+
+  return {
+    animation: false,
+    title: props.title ? { text: props.title } : undefined,
+    grid: { top: 40, left: 10, right: 25, containLabel: true },
+    legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 },
+    toolbox: { feature: { dataZoom: { yAxisIndex: 'none' }, restore: {}, saveAsImage: {} } },
+    tooltip: { trigger: 'axis', axisPointer: { type: 'line' } },
+    visualMap: visualMaps,
+    xAxis: { type: 'time', boundaryGap: false, axisLabel: { formatter: formatTime } },
+    yAxis: { type: 'value' },
+    dataZoom: [{ type: 'inside', start: 0, end: 100 }, { start: 0, end: 100 }],
+    series: [...echartsSeries, ...(thresholdLineSeries ? [thresholdLineSeries] : [])],
+    ...props.optionOverrides
+  } as EChartsCoreOption
 }
 
-/* reactively update when props change */
-watch(
-  () => [props.series, props.minThreshold, props.maxThreshold, props.optionOverrides],
-  () => { chart?.setOption(buildOptions(), true) },
-  { deep: true }
-)
+const seriesRef = toRef(props, 'series')
+const minThresholdRef = toRef(props, 'minThreshold')
+const maxThresholdRef = toRef(props, 'maxThreshold')
+const optionOverridesRef = toRef(props, 'optionOverrides')
+
+const { el } = useEChart(optionBuilder, [seriesRef, minThresholdRef, maxThresholdRef, optionOverridesRef])
 </script>
-
-<style scoped>
-/* Fill the parent container */
-:host,
-div {
-  width: 100%;
-  height: 100%;
-}
-</style>
