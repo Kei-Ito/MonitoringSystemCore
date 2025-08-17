@@ -2,20 +2,8 @@ import type { ChannelValue,ChannelRuntimeValue,RuntimeValue } from "@monitoring/
 import { defineStore } from "pinia";
 
 
-
-function getDummyTimeSeries(){
-    const dummyTimeSeries:RuntimeValue[] = []
-    for (let i = 0; i < 100; i++) (
-        dummyTimeSeries.push({
-        timestamp: new Date(Date.now() + i * 1000),
-        value: Math.floor(Math.random() * 100)
-        })
-    )
-    return dummyTimeSeries;
-}   
-
 /**
- * IOモジュールのランタイム値を管理するストア
+ * IOモジュールのチャンネルごとにランタイム値や時系列データを保持するストア
  */
 export const useChannelValuesStore = defineStore("channelValues", {
     /** ------------state-------------- */
@@ -34,7 +22,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 value:40,
                 timestamp: new Date(),
             },
-            timeSeries: getDummyTimeSeries()
+            timeSeries: []
         },
         "channel_mock_uuid2":{
             channel_uuid: "channel_mock_uuid2",
@@ -42,7 +30,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 value:50,
                 timestamp: new Date(),
             },
-            timeSeries: getDummyTimeSeries()
+            timeSeries: []
         },
         "channel_mock_uuid3":{
             channel_uuid: "channel_mock_uuid3",
@@ -50,7 +38,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 value:70,
                 timestamp: new Date(),
             },
-            timeSeries: getDummyTimeSeries()
+            timeSeries: []
         },
         "channel_mock_uuid4":{
             channel_uuid: "channel_mock_uuid4",
@@ -58,7 +46,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 value:100,
                 timestamp: new Date(),
             },
-            timeSeries: getDummyTimeSeries()
+            timeSeries: []
         },
         "channel_mock_uuid5":{
             channel_uuid: "channel_mock_uuid5",
@@ -66,7 +54,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 value:80,
                 timestamp: new Date(),
             },
-            timeSeries: getDummyTimeSeries()
+            timeSeries: []
         },
         "channel_mock_uuid6":{
             channel_uuid: "channel_mock_uuid6",
@@ -74,7 +62,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 value:40,
                 timestamp: new Date(),
             },
-            timeSeries: getDummyTimeSeries()
+            timeSeries: []
         },
         "channel_mock_uuid7":{
             channel_uuid: "channel_mock_uuid7",
@@ -82,7 +70,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 value:60,
                 timestamp: new Date(),
             },
-            timeSeries: getDummyTimeSeries()
+            timeSeries: []
         },
             } as Record<string, ChannelValue>,
     }),

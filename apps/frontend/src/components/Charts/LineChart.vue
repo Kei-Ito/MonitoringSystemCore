@@ -73,7 +73,7 @@ const optionBuilder = () => {
             show: false,
             type: 'piecewise',
             seriesIndex: idx,  // ← このシリーズだけに適用
-            dimension: 1,      // ← series内の y 次元を指す（x=0, y=1）
+            dimension: 'y',      // ← series内の y 次元を指す（x=0, y=1）
             pieces: [
                 { lte: thresholds.min, color: thresholds.color },
                 { gt: thresholds.min, lte: thresholds.max,

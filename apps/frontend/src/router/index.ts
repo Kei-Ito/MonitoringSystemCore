@@ -2,12 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import OperationCondition from "@/uniqueComponents/OperationCondition.vue";
 
-import Billing from "../views/Billing.vue";
 import Configurations from "../views/Configurations.vue";
 import Dashboard from "../views/Dashboard.vue";
 import SignIn from "../views/Login.vue";
-import Notifications from "../views/Notifications.vue";
-import Profile from "../views/Profile.vue";
 import SignUp from "../views/SignUp.vue";
 import Trend from "../views/Trend.vue";
 
@@ -36,21 +33,6 @@ const routes:any = [
     path: "/configurations",
     name: "Configurations",
     component: Configurations,
-  },
-  {
-    path: "/billing",
-    name: "Billing",
-    component: Billing,
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    component: Notifications,
-  },
-  {
-    path: "/profile",
-    name: "Profile",
-    component: Profile,
   },
   {
     path: "/sign-in",

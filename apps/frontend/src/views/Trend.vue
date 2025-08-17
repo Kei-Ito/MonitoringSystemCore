@@ -1,8 +1,10 @@
 <template>
   <div class="py-4 container-fluid">
+    <!--
     <div class="row mb-4">
       <trend-nav-bar-card />
     </div>
+    -->
 
     <GridLayout
       v-model:layout="layoutModel"
@@ -48,18 +50,22 @@ import type { ChartConfig } from '@monitoring/shared/model';
 
 import { useUiStore } from '@/pinia/uiStore';
 import { useChartStore } from '@/pinia/chartStore';
+import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 
 import TrendNavBarCard from '@/components/Cards/TrendNavBarCard.vue';
 import TrendChartHolderCard from '@/components/Cards/TrendChartHolderCard.vue';
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
-import DatePickerModal from '../components/DatePickerModal.vue';
 import { getTrendData } from '@/service/trendDataService';
+import DatePickerModal from '../components/DatePickerModal.vue';
 
 const chartStore = useChartStore();
 const { trendCharts } = storeToRefs(chartStore);
 
 const uiStore = useUiStore();
 const { isAdmin, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
+
+const channelValuesStore = useChannelValuesStore();
+const { channelValues } = storeToRefs(channelValuesStore);
 
 const layoutModel = computed({
   get: () => chartStore.gridLayoutsFilteredByPage("trend", trendViewCategory1Selected.value, trendViewCategory2Selected.value),
@@ -70,9 +76,14 @@ const layoutModel = computed({
 });
 
 onMounted(async () => {
-
-  // トレンドデータを未取得の状態ならトレンドデータを取得
-  await getTrendData('channel_mock_uuid0', new Date(), new Date());
+  Object.keys(channelValues.value).forEach(async (element) => {
+    const channel = channelValues.value[element];
+    if (channel.timeSeries.length !== 1) {
+      // トレンドデータを未取得の状態ならトレンドデータを取得
+      await getTrendData(channel.channel_uuid, new Date(), new Date());
+      console.log(channel.timeSeries);
+    }
+  });
 });
 
 const now = new Date();
