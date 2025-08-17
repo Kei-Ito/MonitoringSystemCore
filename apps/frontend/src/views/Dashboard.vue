@@ -26,7 +26,7 @@ import { computed } from 'vue';
 import { GridItem,GridLayout } from 'vue-grid-layout-v3';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
-import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
+import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 import { useChartStore } from '@/pinia/chartStore';
 import { useUiStore } from '@/pinia/uiStore';
 
@@ -38,18 +38,18 @@ const uiStore = useUiStore();
 const { isAdmin,dashboardViewCategory1Selected,dashboardViewCategory2Selected } = storeToRefs(uiStore);
 
 const layoutModel = computed({
-  get: () => chartStore.gridLayoutsFilteredByCategory(dashboardViewCategory1Selected.value, dashboardViewCategory2Selected.value),
+  get: () => chartStore.gridLayoutsFilteredByPage("dashboard",dashboardViewCategory1Selected.value, dashboardViewCategory2Selected.value),
   set: (newLayouts) => {
     //TODO : 非表示中のグラフのレイアウトを更新しないようにするか検討
     newLayouts.forEach((l) => chartStore.patchGrid(l));
   }
 });
 
-
+// mock用の関数（本来は必要ない）
 function onAddChartButtonClick() {
-  const channelRuntimeValuesStore = useChannelRuntimeValuesStore();
+  const channelValuesStore = useChannelValuesStore();
   for (let i = 0;i<8;i++){
-    channelRuntimeValuesStore.setValue(`channel_mock_uuid${i}`,Math.floor(Math.random() * 101));
+    channelValuesStore.setRuntimeValue(`channel_mock_uuid${i}`,Math.floor(Math.random() * 101));
   }
   
   /**

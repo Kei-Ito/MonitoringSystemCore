@@ -4,4 +4,4 @@
 
 export * from "./ChartSettingFactory";
 export * from "./GaugeChart";
-export * from "./TimeSeriesChart";
+export * from "./LineChart";

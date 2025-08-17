@@ -37,7 +37,7 @@ const props = defineProps({
 const emit = defineEmits(['close', 'date-selected']);
 
 const chartStore = useChartStore();
-const { trendChartSettings } = storeToRefs(chartStore);
+const { trendCharts } = storeToRefs(chartStore);
 
 const selectedDate = ref(new Date());
 
@@ -59,10 +59,6 @@ onMounted(()=>{
   //selectedDate.value = trendChartSettings.value[0].specific_chart_setting.selected_date;
 })
 
-watch(()=>trendChartSettings.value[0],()=>{
-  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
-  //selectedDate.value = trendChartSettings.value[0].specific_chart_setting.selected_date;
-})
 
 </script>
 

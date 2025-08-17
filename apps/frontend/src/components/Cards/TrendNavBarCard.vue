@@ -51,21 +51,10 @@ const monitoringStore = useMonitoringStore();
 const chartStore = useChartStore();
 
 const { ioModules } = storeToRefs(monitoringStore);
-const { trendChartSettings } = storeToRefs(chartStore);
+const { trendCharts } = storeToRefs(chartStore);
 
 // TODO: トレンドチャートは複数表示する仕様に変更されたので要修正
-const selectedChannelName = computed(() => {
-    const channel_uuid=trendChartSettings.value[0].channel_uuids[0];
-    const module = ioModules.value.find((module:IOModule)=>module.input_channels.some((channel:IChannelSetting)=>channel.channel_uuid===channel_uuid));
-    if(module){
-        const channel = module.input_channels.find((channel:IChannelSetting)=>channel.channel_uuid===channel_uuid);
-        if (channel){
-            return channel.channel_name;
-        }
-        else return '';
-    }
-    else return '';
-});
+const selectedChannelName ="";
 // TODO: チャートの設定の更新影響を受ける箇所のため、一時的に修正。
 const selectedDate = computed(() => new Date("2023/10/01"));
 const isModalVisible = ref(false);

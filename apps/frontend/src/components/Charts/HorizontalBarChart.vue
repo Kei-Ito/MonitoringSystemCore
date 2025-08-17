@@ -13,7 +13,6 @@ const props = defineProps<{
     series: ChannelSeries[]          // ← ここが追加ポイント
 }>()
 
-console.log('HorizontalBarChart', props.chart.chart_uuid, props.series)
 /** スコアの条件と色を 1 つの配列要素にまとめる */
 interface ColorRule {
     /** 閾値上限（以下）──`undefined` なら「上限なし」 */
@@ -24,20 +23,20 @@ interface ColorRule {
     color: string
 }
 
-
 const rules: ColorRule[] = [
-    { lte: 0.2, color: '#FD665F' },
-    { lte: 0.5, gt: 0.2, color: '#FFCE34' },
-    { gt: 0.5, color: '#65B581' },
+    { lte: 20, color: '#FD665F' },
+    { lte: 50, gt: 20, color: '#FFCE34' },
+    { gt: 50, color: '#65B581' },
 ];
 
 const datasetSource = computed(() => [
-    ['label', 'amount', 'score'], // カラム名
-    ...props.series.map((s) => [s.channel_name, s.value]), // データ
+    ['label', 'amount'], // カラム名
+    ...props.series.map((s) => [s.channel_name, s.runtimeValue.value]), // データ
 ]);
 
 
 const seriesRef = toRef(props, 'series') // props.seriesをrefに変換
+const chartRef = toRef(props, 'chart')
 
 const optionBuilder = () => {
     return {
@@ -46,7 +45,7 @@ const optionBuilder = () => {
         yAxis: { type: 'category' },
         tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
         grid: {
-            top: 30,
+            top: 15,
             left: 10,
             right: 30,
             bottom: 10,
@@ -58,7 +57,7 @@ const optionBuilder = () => {
             orient: 'horizontal',
             left: 'center',
             bottom: 0,
-            dimension: 0,            // score カラムで判定
+            dimension: 1,            // valueの値をもとに色を判定
             pieces: rules,
         },
         series: [{
@@ -73,5 +72,5 @@ const optionBuilder = () => {
     }
 }
 // ----- EChartsをマウント -----
-const { el } = useEChart(optionBuilder, [seriesRef])
+const { el } = useEChart(optionBuilder, [seriesRef, chartRef])
 </script>

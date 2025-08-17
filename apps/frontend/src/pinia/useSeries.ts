@@ -2,19 +2,18 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import type { ChartConfig } from '@monitoring/shared/model';
 
-import { useChannelRuntimeValuesStore } from '@/pinia/channelRuntimeValuesStore';
+import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 import { useChartStore } from '@/pinia/chartStore';
 import { useMonitoringStore} from '@/pinia/monitoringStore';
 
 /**
- * chart_uuid を渡すと、ChartConfig.series 用の
- *   [{ ...ChannelSetting, ...ChannelRuntimeValue }][]
- * を返すユーティリティ
+ * chart_uuid を渡すと、ChartConfigにvalueとtimestampを追加して
+ * 表示用の設定オブジェクトを返す
  */
 export function useSeries(chartUuid: string) {
   const chartStore = useChartStore()
   const { channelMap } = storeToRefs(useMonitoringStore())
-  const { runtimeValues } = storeToRefs(useChannelRuntimeValuesStore())
+  const { channelValues } = storeToRefs(useChannelValuesStore())
 
   // ダッシュボード用 dashChart がなければ uiLayouts を横断検索
   const chart = computed(() => {
@@ -28,15 +27,14 @@ export function useSeries(chartUuid: string) {
     }
     return null as ChartConfig | null
   })
-
   // chart が得られなければ空 series
   const series = computed(() => {
     if (!chart.value) return []
     return chart.value.channel_uuids.map((cu: string) => ({
       ...channelMap.value[cu],
-      ...(runtimeValues.value[cu] ?? {}),
+      ...(channelValues.value[cu] ?? {}),
     }))
   })
 
-  return { chart, series }
+  return series
 }

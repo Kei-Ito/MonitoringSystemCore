@@ -1,26 +1,20 @@
-import type { getIsDataExistRequestModel,getIsDataExistResponseModel } from '@monitoring/shared/api';
+import type { getIsDataExistRequestModel,getIsDataExistResponseModel,trendDataRequest } from '@monitoring/shared/api';
+import type { RuntimeValue } from "@monitoring/shared/model";
 import axios from 'axios';
+import { request } from '@/api/apiClient';
 
 const protocol = window.location.protocol;
 const host = window.location.hostname;
 const endpoint = `${protocol}//${host}:2478/api/trend_data/`;
 
-export async function fetchTrendData(channelId:number,startDate:Date, endDate:Date) {
-  try {
-    const response = await axios.get(endpoint, {
-      params: {
-        channel_id: channelId,
-        start_time: startDate.toISOString(),
-        end_time: endDate.toISOString(),
-        span: 'Daily'
-      }
-    });
-    return response;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
+export const getTrendData = (channel_uuid:string,startDate:Date, endDate:Date) => request<RuntimeValue[]>('get', '/trend_data/', {
+  params: {
+    channel_uuid: channel_uuid,
+    start_time: startDate.toISOString(),
+    end_time: endDate.toISOString(),
+    span: 'Daily'
+  } as trendDataRequest
+});
 
 export async function getCsvData(inputChannelIds:number[], date:Date) {
   try {

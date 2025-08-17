@@ -14,11 +14,23 @@ const props = defineProps<{
 }>()
 
 const seriesRef = toRef(props, 'series') // props.seriesをrefに変換
+const chartRef = toRef(props, 'chart')
 
 // ------ 表示設定 -----
 const optionBuilder = () => {
 
-    const s = props.series[0] ?? { value: 0, channel_name: '' }
+    const s = seriesRef.value[0].runtimeValue ?? { value: 0, channel_name: '' }
+
+    /** ゲージの色設定 */
+    const thresholds = chartRef.value.chart_options.thresholds;
+    const colors = chartRef.value.chart_options.colors.map(
+        (color: string, index: number) => {
+            return [
+                thresholds[index]??1.0,
+                color
+            ]
+        }
+    )
 
     return {
         grid: {
@@ -37,12 +49,7 @@ const optionBuilder = () => {
             splitNumber: 8,
             axisLine: {
                 lineStyle: {
-                    color: [
-                        [0.25, '#FF6E76'],
-                        [0.5, '#FDDD60'],
-                        [0.75, '#58D9F9'],
-                        [1, '#7CFFB2']
-                    ]
+                    color: colors
                 }
             },
             pointer: {
@@ -80,5 +87,5 @@ const optionBuilder = () => {
 }
 
 // ----- EChartsをマウント -----
-const { el } = useEChart(optionBuilder, [seriesRef])
+const { el } = useEChart(optionBuilder, [seriesRef, chartRef])
 </script>

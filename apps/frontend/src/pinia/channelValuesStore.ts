@@ -1,0 +1,121 @@
+import type { ChannelValue,ChannelRuntimeValue,RuntimeValue } from "@monitoring/shared/model";
+import { defineStore } from "pinia";
+
+
+
+function getDummyTimeSeries(){
+    const dummyTimeSeries:RuntimeValue[] = []
+    for (let i = 0; i < 100; i++) (
+        dummyTimeSeries.push({
+        timestamp: new Date(Date.now() + i * 1000),
+        value: Math.floor(Math.random() * 100)
+        })
+    )
+    return dummyTimeSeries;
+}   
+
+/**
+ * IOモジュールのランタイム値を管理するストア
+ */
+export const useChannelValuesStore = defineStore("channelValues", {
+    /** ------------state-------------- */
+    state: () => ({
+        channelValues: {"channel_mock_uuid0":{
+            channel_uuid: "channel_mock_uuid0",
+            runtimeValue:{
+                value:20,
+                timestamp: new Date(),
+            },
+            timeSeries: []
+        },
+        "channel_mock_uuid1":{
+            channel_uuid: "channel_mock_uuid1",
+            runtimeValue:{
+                value:40,
+                timestamp: new Date(),
+            },
+            timeSeries: getDummyTimeSeries()
+        },
+        "channel_mock_uuid2":{
+            channel_uuid: "channel_mock_uuid2",
+            runtimeValue:{
+                value:50,
+                timestamp: new Date(),
+            },
+            timeSeries: getDummyTimeSeries()
+        },
+        "channel_mock_uuid3":{
+            channel_uuid: "channel_mock_uuid3",
+            runtimeValue:{
+                value:70,
+                timestamp: new Date(),
+            },
+            timeSeries: getDummyTimeSeries()
+        },
+        "channel_mock_uuid4":{
+            channel_uuid: "channel_mock_uuid4",
+            runtimeValue:{
+                value:100,
+                timestamp: new Date(),
+            },
+            timeSeries: getDummyTimeSeries()
+        },
+        "channel_mock_uuid5":{
+            channel_uuid: "channel_mock_uuid5",
+            runtimeValue:{
+                value:80,
+                timestamp: new Date(),
+            },
+            timeSeries: getDummyTimeSeries()
+        },
+        "channel_mock_uuid6":{
+            channel_uuid: "channel_mock_uuid6",
+            runtimeValue:{
+                value:40,
+                timestamp: new Date(),
+            },
+            timeSeries: getDummyTimeSeries()
+        },
+        "channel_mock_uuid7":{
+            channel_uuid: "channel_mock_uuid7",
+            runtimeValue:{
+                value:60,
+                timestamp: new Date(),
+            },
+            timeSeries: getDummyTimeSeries()
+        },
+            } as Record<string, ChannelValue>,
+    }),
+    /** ------------actions-------------- */
+    actions: {
+        /** サンプリングタスクからまとめて反映 */
+        bulkUpdate(payload: ChannelRuntimeValue[]) {
+            payload.forEach((v) => {
+                this.channelValues[v.channel_uuid]= {
+                    ...this.channelValues[v.channel_uuid],
+                    runtimeValue: {
+                        value: v.value,
+                        timestamp: v.timestamp,
+                    }
+                }
+            })
+        },
+        /** 単一値だけ更新 (手入力キャリブレーション等) */
+        setRuntimeValue(channelUuid: string, value: number) {
+            this.channelValues[channelUuid] = {
+                ...this.channelValues[channelUuid],
+                runtimeValue: {
+                    value,
+                    timestamp: new Date(),
+                },
+            }
+        },
+
+        setTimeSeries(channelUuid: string, timeSeries: RuntimeValue[]) {
+            this.channelValues[channelUuid] = {
+                ...this.channelValues[channelUuid],
+                timeSeries,
+            }
+        },
+    }
+});

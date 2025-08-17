@@ -14,7 +14,7 @@ const SpecificChartSetting: Record<ChartTypes, any> = {
     // 新規モジュールタイプを追加するときはここにハンドラを登録
     // 例: [IOModuleTypes.XYZModule]: new XYZModuleHandler(),
     [ChartTypes.BarChart]: () => {},
-    [ChartTypes.LineChart]: () => {},
+    [ChartTypes.LineChart]: Charts.createLineChartSpecificSetting(),
 };
 
 
@@ -35,7 +35,7 @@ export function createChartForInitialization(chart_type: ChartTypes): ChartConfi
         chart_unit: "",
         grid_layout: gridLayoutFactory(chart_uuid),
         //TODO: 要検討、EChartsの仕様に合わせるか？
-        chart_options: specific_chart_setting.chart_options,
+        chart_options: specific_chart_setting,
         category1:null,
         category2:null,
     }

@@ -1,11 +1,7 @@
-import { ChartTypes } from '@monitoring/shared/enum'
 import type { UiLayout } from '@monitoring/shared/api'
-import { type ChartConfig, createChartForInitialization, type GridLayout } from '@monitoring/shared/model'
+import { type ChartConfig, type GridLayout } from '@monitoring/shared/model'
 import { err,ok } from '@monitoring/shared/utils';
 import { defineStore } from 'pinia'
-
-// 検証用にデフォルトのチャート設定を追加
-const defaultTrendChartSetting: ChartConfig = createChartForInitialization(ChartTypes.GaugeChart);
 
 /**
  * 配列かどうかを判定し、配列でない場合は配列に変換する関数
@@ -58,25 +54,12 @@ export const useChartStore = defineStore('chartStore', {
   state: () => ({
     uiLayouts: {} as UiLayout,
     dashboardCharts: {} as Record<string, ChartConfig>,
-    trendChartSettings: [defaultTrendChartSetting] as ChartConfig[],
+    trendCharts: {} as Record<string, ChartConfig>,
   }),
   /** ------------getters-------------- */
   getters: {
     /** UIレイアウト全体を取得 */
     uiLayoutsData: (state) => state.uiLayouts,
-    /** グリッドレイアウトを library 用フォーマットに変換 */
-    gridLayouts: (state) =>
-      Object.values(state.dashboardCharts).map((c) => c.grid_layout),
-    /** カテゴリでフィルタリングしたダッシュボード用グリッドレイアウト */
-    gridLayoutsFilteredByCategory:
-      (state) =>
-        (category1: string[], category2: string[]): GridLayout[] => {
-          return filterCategory(
-            Object.values(state.dashboardCharts),
-            category1,
-            category2
-          ).map((c) => ({ ...c.grid_layout }));
-        },
     /** 指定ページとカテゴリでフィルタリングしたグリッドレイアウト */
     gridLayoutsFilteredByPage:
       (state) =>
