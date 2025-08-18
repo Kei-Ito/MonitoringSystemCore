@@ -4,7 +4,7 @@
             "chart_uuid": "chart001",
             "chart_type": "GaugeChart",
             "channel_uuids": [
-                "000001_1"
+                "000001_4"
             ],
             "chart_title": "照度センサ",
             "chart_unit": "%",

@@ -28,8 +28,8 @@
                     "dst_max": 160
                 },
                 "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
+                    "min_threshold": 0,
+                    "max_threshold": 1
                 },
                 "specific_channel_setting": {},
                 "created_at": 0,
@@ -51,8 +51,8 @@
                     "dst_max": 225
                 },
                 "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
+                    "min_threshold": 0,
+                    "max_threshold": 1
                 },
                 "specific_channel_setting": {},
                 "created_at": 0,
@@ -74,8 +74,8 @@
                     "dst_max": 6.3805
                 },
                 "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
+                    "min_threshold": 0,
+                    "max_threshold": 1
                 },
                 "specific_channel_setting": {},
                 "created_at": 0,
@@ -97,8 +97,8 @@
                     "dst_max": 225
                 },
                 "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
+                    "min_threshold": 0,
+                    "max_threshold": 1
                 },
                 "specific_channel_setting": {},
                 "created_at": 0,
@@ -121,8 +121,8 @@
                     "dst_max": 10
                 },
                 "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
+                    "min_threshold": 0,
+                    "max_threshold": 1
                 },
                 "specific_channel_setting": {},
                 "created_at": 0,
@@ -144,8 +144,8 @@
                     "dst_max": 10
                 },
                 "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
+                    "min_threshold": 0,
+                    "max_threshold": 1
                 },
                 "specific_channel_setting": {},
                 "created_at": 0,
@@ -167,8 +167,8 @@
                     "dst_max": 10
                 },
                 "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
+                    "min_threshold": 0,
+                    "max_threshold": 1
                 },
                 "specific_channel_setting": {},
                 "created_at": 0,
@@ -190,8 +190,8 @@
                     "dst_max": 10
                 },
                 "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
+                    "min_threshold": 0,
+                    "max_threshold": 1
                 },
                 "specific_channel_setting": {},
                 "created_at": 0,
