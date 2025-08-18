@@ -23,11 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-import { onMounted,ref,watch } from 'vue';
+//import { storeToRefs } from 'pinia';
+import { onMounted,ref } from 'vue';
 
 import ColorCalendar from "@/components/ColorCalendar.vue";
-import { useChartStore } from '@/pinia/chartStore';
+//import { useChartStore } from '@/pinia/chartStore';
 
 // TODO: トレンドグラフが複数配置される仕様に変更されたので要修正
 const props = defineProps({
@@ -36,8 +36,8 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'date-selected']);
 
-const chartStore = useChartStore();
-const { trendCharts } = storeToRefs(chartStore);
+//const chartStore = useChartStore();
+//const { trendCharts } = storeToRefs(chartStore);
 
 const selectedDate = ref(new Date());
 

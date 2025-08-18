@@ -34,24 +34,24 @@
 </template>
 
 <script setup lang="ts">
-import type { IChannelSetting,IOModule } from '@monitoring/shared/model';
-import { storeToRefs } from 'pinia';
+//import type { IChannelSetting,IOModule } from '@monitoring/shared/model';
+//import { storeToRefs } from 'pinia';
 import { computed,ref } from 'vue';
 import { useToast } from "vue-toastification";
 
 import ChannelPickerModal from '@/components/ChannelPickerModal.vue';
 import DatePickerModal from '@/components/DatePickerModal.vue';
-import { useChartStore } from '@/pinia/chartStore';
-import { useMonitoringStore } from '@/pinia/monitoringStore';
+//import { useChartStore } from '@/pinia/chartStore';
+//import { useMonitoringStore } from '@/pinia/monitoringStore';
 
 const emit = defineEmits(['date-selected']);
 
 const toast = useToast();
-const monitoringStore = useMonitoringStore();
-const chartStore = useChartStore();
+//const monitoringStore = useMonitoringStore();
+//const chartStore = useChartStore();
 
-const { ioModules } = storeToRefs(monitoringStore);
-const { trendCharts } = storeToRefs(chartStore);
+//const { ioModules } = storeToRefs(monitoringStore);
+//const { trendCharts } = storeToRefs(chartStore);
 
 // TODO: トレンドチャートは複数表示する仕様に変更されたので要修正
 const selectedChannelName ="";

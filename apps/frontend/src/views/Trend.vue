@@ -45,15 +45,11 @@
 import { ref, computed,onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { GridItem, GridLayout } from 'vue-grid-layout-v3';
-import { ChartTypes } from '@monitoring/shared/enum';
-import type { ChartConfig } from '@monitoring/shared/model';
 
 import { useUiStore } from '@/pinia/uiStore';
 import { useChartStore } from '@/pinia/chartStore';
 import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 
-import TrendNavBarCard from '@/components/Cards/TrendNavBarCard.vue';
-import TrendChartHolderCard from '@/components/Cards/TrendChartHolderCard.vue';
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
 import { getTrendData } from '@/service/trendDataService';
 import DatePickerModal from '../components/DatePickerModal.vue';

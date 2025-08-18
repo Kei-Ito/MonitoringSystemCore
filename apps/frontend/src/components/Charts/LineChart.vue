@@ -55,7 +55,7 @@ const optionBuilder = () => {
     const thresholds = chartRef.value.chart_options.thresholds;
 
     // 折れ線（dataset から列名でマッピング）
-    const lineSeries = props.series.map((s, idx) => ({
+    const lineSeries = props.series.map((s, _) => ({
         name: s.channel_name,
         type: 'line',
         symbol: 'none',

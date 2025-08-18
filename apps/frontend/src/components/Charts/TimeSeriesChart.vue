@@ -110,7 +110,7 @@ const optionBuilder = (): EChartsCoreOption => {
 
   const hasAnyData = series.some(s => (s.data?.length ?? 0) > 0)
 
-  const echartsSeries = series.map((s, idx) => ({
+  const echartsSeries = series.map((s, _) => ({
     name: s.name,
     type: 'line',
     symbol: 'none',

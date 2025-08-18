@@ -45,7 +45,7 @@ const channelSetting = computed(() => {
   return (ioModules.value as IOModule[]).find((module) => module.module_uuid === module_uuid)?.input_channels.find((channel) => channel.channel_uuid === channel_id);
 });
 
-watch(() => props.value, (newVal) => {
+watch(() => props.value, () => {
   if (channelSetting.value) {
     //TODO: チャートの修正の影響を一時的に抑制
     /**

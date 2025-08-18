@@ -60,11 +60,11 @@ const monitoringStore = useMonitoringStore();
 const chartStore = useChartStore();
 
 const {ioModules} = storeToRefs(monitoringStore);
-const {trendChartSettings} = storeToRefs(chartStore);
+const {trendCharts} = storeToRefs(chartStore);
 
 //TODO: Trendは複数表示する仕様になったので要変更箇所
 function onChannelSelected(channelUuid: string) {
-  trendChartSettings.value[0].channel_uuids[0] = channelUuid;
+  trendCharts.value[0].channel_uuids[0] = channelUuid;
   emit('close-channel-picker');
 }
 

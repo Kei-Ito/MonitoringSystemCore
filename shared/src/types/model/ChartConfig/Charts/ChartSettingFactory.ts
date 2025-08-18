@@ -13,7 +13,6 @@ const SpecificChartSetting: Record<ChartTypes, any> = {
     [ChartTypes.HorizontalBarChart]: ()=> {},
     // 新規モジュールタイプを追加するときはここにハンドラを登録
     // 例: [IOModuleTypes.XYZModule]: new XYZModuleHandler(),
-    [ChartTypes.BarChart]: () => {},
     [ChartTypes.LineChart]: Charts.createLineChartSpecificSetting(),
 };
 

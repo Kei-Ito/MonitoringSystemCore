@@ -32,18 +32,22 @@ Coded by www.creative-tim.com
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted,type Ref,ref } from "vue";
+import { useToast } from "vue-toastification";
 
 import SplashWindow from "@/components/SplashWindow.vue";
 import AppFooter from "@/examples/Footer.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import Sidenav from "@/examples/Sidenav/index.vue";
 import { useUiStore } from "@/pinia/uiStore";
+import { useMonitoringStore } from './pinia/monitoringStore';
 import { getUiLayouts } from "@/service/uiService";
 import { fetchSystemSetting, getIOModules } from "@/service/monitoringService";
 
+const toast = useToast();
 const uiStore = useUiStore()
+const monitoringStore = useMonitoringStore();
 
-let socket: WebSocket;
+let socket: WebSocket|null = null;
 let retryTimer:  ReturnType<typeof setTimeout> | null = null;
 
 const isLoading: Ref<boolean> = ref(true);
@@ -60,41 +64,6 @@ const {
   showFooter,
 } = storeToRefs(uiStore);
 
-
-onMounted(async () => {
-
-  // IOモジュールの一覧を取得
-  await getIOModules();
-  // UIレイアウト（ダッシュボードやトレンドなど全ページ）を取得
-  await getUiLayouts();
-  // サンプリング間隔を取得
-  await fetchSystemSetting();
-
-  const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
-
-  if (window.innerWidth > 1200) {
-    sidenav.classList.add("g-sidenav-pinned");
-  }
-  // TODO: デバッグ用に抑制
-  //setupWebSocket();
-  isLoading.value = false;
-
-});
-
-onUnmounted(() => {
-  if (socket !== null) {
-    socket.close(); // WebSocketのクローズ
-  }
-  if (retryTimer) {
-    clearTimeout(retryTimer);
-  }
-});
-
-function navbarMinimize() {
-  uiStore.navbarMinimize();
-}
-
-/**
 function setupWebSocket() {
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   const host = window.location.hostname;
@@ -117,7 +86,7 @@ function setupWebSocket() {
       const message = JSON.parse(event.data);
       switch (message.type) {
         case "IOModuleData":
-          updateGaugeValues(message.data);
+          //updateGaugeValues(message.data);
           break;
         case "StartSampling":
           monitoringStore.isSampling = true;
@@ -154,7 +123,42 @@ function setupWebSocket() {
   socket = createWebSocket();
 
 }
-   */
+
+
+onMounted(async () => {
+
+  // IOモジュールの一覧を取得
+  await getIOModules();
+  // UIレイアウト（ダッシュボードやトレンドなど全ページ）を取得
+  await getUiLayouts();
+  // サンプリング間隔を取得
+  await fetchSystemSetting();
+
+  const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
+
+  if (window.innerWidth > 1200) {
+    sidenav.classList.add("g-sidenav-pinned");
+  }
+  // TODO: デバッグ用に抑制
+  setupWebSocket();
+  isLoading.value = false;
+
+});
+
+onUnmounted(() => {
+  if (socket !== null) {
+    socket?.close(); // WebSocketのクローズ
+  }
+  if (retryTimer) {
+    clearTimeout(retryTimer);
+  }
+});
+
+function navbarMinimize() {
+  uiStore.navbarMinimize();
+}
+
+   
 
 //function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
   // 受け取ったデータをゲージチャートに反映
