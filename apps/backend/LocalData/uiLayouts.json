@@ -46,7 +46,7 @@
             "chart_uuid": "chart002",
             "chart_type": "GaugeChart",
             "channel_uuids": [
-                "000001_2"
+                "000001_3"
             ],
             "chart_title": "風速計",
             "chart_unit": "m/s",
@@ -88,7 +88,7 @@
             "chart_uuid": "chart003",
             "chart_type": "GaugeChart",
             "channel_uuids": [
-                "000001_3"
+                "000001_1"
             ],
             "chart_title": "温度計",
             "chart_unit": "℃",
@@ -130,7 +130,7 @@
             "chart_uuid": "chart004",
             "chart_type": "GaugeChart",
             "channel_uuids": [
-                "000001_4"
+                "000001_2"
             ],
             "chart_title": "湿度計",
             "chart_unit": "%RH",

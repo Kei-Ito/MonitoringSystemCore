@@ -127,7 +127,7 @@ export async function deleteChannel(channel_setting: IChannelSetting) :Promise<R
         const response=await axios.delete(`${API_BASE_URL}/delete_channel/`,
             {params:{
                 module_uuid:channel_setting.module_uuid,
-                channel_id:channel_setting.channel_id,
+                channel_id:channel_setting.channel_uuid,
                 direction:channel_setting.direction}});
         return ok(response.data);
     }

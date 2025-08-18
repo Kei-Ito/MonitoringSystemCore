@@ -31,7 +31,7 @@ Coded by www.creative-tim.com
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, onUnmounted,type Ref,ref } from "vue";
+import { onMounted, onUnmounted, type Ref, ref } from "vue";
 import { useToast } from "vue-toastification";
 
 import SplashWindow from "@/components/SplashWindow.vue";
@@ -40,19 +40,21 @@ import Navbar from "@/examples/Navbars/Navbar.vue";
 import Sidenav from "@/examples/Sidenav/index.vue";
 import { useUiStore } from "@/pinia/uiStore";
 import { useMonitoringStore } from './pinia/monitoringStore';
+import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 import { getUiLayouts } from "@/service/uiService";
 import { fetchSystemSetting, getIOModules } from "@/service/monitoringService";
+import type { getIOModuleInputResponse } from "@monitoring/shared/api";
 
 const toast = useToast();
 const uiStore = useUiStore()
 const monitoringStore = useMonitoringStore();
 
-let socket: WebSocket|null = null;
-let retryTimer:  ReturnType<typeof setTimeout> | null = null;
+let socket: WebSocket | null = null;
+let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
 const isLoading: Ref<boolean> = ref(true);
 
-const { 
+const {
   isRTL,
   color,
   isAbsolute,
@@ -86,7 +88,7 @@ function setupWebSocket() {
       const message = JSON.parse(event.data);
       switch (message.type) {
         case "IOModuleData":
-          //updateGaugeValues(message.data);
+          updateRuntimeValues(message.data);
           break;
         case "StartSampling":
           monitoringStore.isSampling = true;
@@ -159,31 +161,41 @@ function navbarMinimize() {
   uiStore.navbarMinimize();
 }
 
-   
+function updateRuntimeValues(module_datas: getIOModuleInputResponse[]) {
+  // 受け取ったデータをランタイムデータのstoreに反映
+  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+
+  const channelValuesStore = useChannelValuesStore();
+  module_datas.map((module_data) => {
+    module_data.channels.map((channel) => {
+      channelValuesStore.setRuntimeValue(channel.channel_uuid, channel.input_data);
+    });
+  });
+  }
 
 //function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
-  // 受け取ったデータをゲージチャートに反映
-  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
-  /**
-  for (let i = 0; i < dashboardCharts.value.length; i++) {
-    try {
-      const module_uuid = dashboardCharts.value[i].module_uuid;
-      const channel_id = dashboardCharts.value[i].channel_id;
+// 受け取ったデータをゲージチャートに反映
+// TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
+/**
+for (let i = 0; i < dashboardCharts.value.length; i++) {
+  try {
+    const module_uuid = dashboardCharts.value[i].module_uuid;
+    const channel_id = dashboardCharts.value[i].channel_id;
 
-      // モジュールIDとチャンネルIDが一致するデータを取得
-      const module_data = module_datas.find((data) => data.module_uuid === module_uuid);
-      if (module_data) {
-        const channel_data = module_data.channels.find((channel) => channel.channel_id === channel_id);
-        if (channel_data) {
-          dashboardCharts.value[i].specific_chart_setting.lastValue = channel_data.input_data;
-        }
+    // モジュールIDとチャンネルIDが一致するデータを取得
+    const module_data = module_datas.find((data) => data.module_uuid === module_uuid);
+    if (module_data) {
+      const channel_data = module_data.channels.find((channel) => channel.channel_id === channel_id);
+      if (channel_data) {
+        dashboardCharts.value[i].specific_chart_setting.lastValue = channel_data.input_data;
       }
-    } catch {
-      //エラー処理
-      console.log("取得したゲージチャートのデータが不正です");
     }
+  } catch {
+    //エラー処理
+    console.log("取得したゲージチャートのデータが不正です");
   }
-    */
+}
+  */
 //}
 
 </script>

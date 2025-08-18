@@ -1,63 +1,19 @@
 [
     {
         "module_uuid": "000001",
-        "module_type": "dummy",
+        "module_type": "ContecRAI",
         "module_name": "test1",
         "status": "Uninitialized",
         "input_channel_num": 8,
         "output_channel_num": 0,
         "created_at": 0,
         "updated_at": 0,
-        "specific_device_setting": {},
+        "specific_device_setting": {
+            "device_name": "AIO000"
+        },
         "input_channels": [
             {
                 "channel_uuid": "000001_1",
-                "channel_name": "照度センサ",
-                "module_uuid": "000001",
-                "direction": "input",
-                "unit": "W/cm2",
-                "channel_number": 1,
-                "decimals": 2,
-                "normalize": {
-                    "is_enabled": false,
-                    "src_min": 0,
-                    "src_max": 10,
-                    "dst_min": -25,
-                    "dst_max": 225
-                },
-                "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
-                },
-                "specific_channel_setting": {},
-                "created_at": 0,
-                "updated_at": 0
-            },
-            {
-                "channel_uuid": "000001_2",
-                "channel_name": "風速計",
-                "module_uuid": "000001",
-                "direction": "input",
-                "unit": "m/s",
-                "channel_number": 1,
-                "decimals": 2,
-                "normalize": {
-                    "is_enabled": false,
-                    "src_min": 0,
-                    "src_max": 10,
-                    "dst_min": -0.0925,
-                    "dst_max": 6.3805
-                },
-                "threshold": {
-                    "min_threshold": null,
-                    "max_threshold": null
-                },
-                "specific_channel_setting": {},
-                "created_at": 0,
-                "updated_at": 0
-            },
-            {
-                "channel_uuid": "000001_3",
                 "channel_name": "温度計",
                 "module_uuid": "000001",
                 "direction": "input",
@@ -80,7 +36,7 @@
                 "updated_at": 0
             },
             {
-                "channel_uuid": "000001_4",
+                "channel_uuid": "000001_2",
                 "channel_name": "湿度計",
                 "module_uuid": "000001",
                 "direction": "input",
@@ -102,6 +58,53 @@
                 "created_at": 0,
                 "updated_at": 0
             },
+            {
+                "channel_uuid": "000001_3",
+                "channel_name": "風速計",
+                "module_uuid": "000001",
+                "direction": "input",
+                "unit": "m/s",
+                "channel_number": 1,
+                "decimals": 2,
+                "normalize": {
+                    "is_enabled": false,
+                    "src_min": 0,
+                    "src_max": 10,
+                    "dst_min": -0.0925,
+                    "dst_max": 6.3805
+                },
+                "threshold": {
+                    "min_threshold": null,
+                    "max_threshold": null
+                },
+                "specific_channel_setting": {},
+                "created_at": 0,
+                "updated_at": 0
+            },
+            {
+                "channel_uuid": "000001_4",
+                "channel_name": "照度センサ",
+                "module_uuid": "000001",
+                "direction": "input",
+                "unit": "W/cm2",
+                "channel_number": 1,
+                "decimals": 2,
+                "normalize": {
+                    "is_enabled": false,
+                    "src_min": 0,
+                    "src_max": 10,
+                    "dst_min": -25,
+                    "dst_max": 225
+                },
+                "threshold": {
+                    "min_threshold": null,
+                    "max_threshold": null
+                },
+                "specific_channel_setting": {},
+                "created_at": 0,
+                "updated_at": 0
+            },
+            
             {
                 "channel_uuid": "000001_5",
                 "channel_name": "input5",
