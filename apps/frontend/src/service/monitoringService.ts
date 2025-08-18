@@ -125,7 +125,6 @@ export const startSampling = () =>
                 });
             });
         },
-        successMsg: "サンプリングを開始しました",
         errorMsg: "サンプリング開始エラー",
     });
 
@@ -133,7 +132,6 @@ export const startSampling = () =>
 export const stopSampling = () =>
     handleApiRequest({
         apiCall: () => api.stopSampling(),
-        successMsg: "サンプリングを停止しました",
         errorMsg: "サンプリング停止エラー",
     });
 

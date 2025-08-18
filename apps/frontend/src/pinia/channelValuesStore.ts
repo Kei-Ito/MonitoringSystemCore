@@ -72,6 +72,38 @@ export const useChannelValuesStore = defineStore("channelValues", {
             },
             timeSeries: []
         },
+        "000001_1":{
+            channel_uuid: "000001_1",
+            runtimeValue:{
+                value:0,
+                timestamp: new Date(),
+            },
+            timeSeries: []
+        },
+        "000001_2":{
+            channel_uuid: "000001_2",
+            runtimeValue:{
+                value:0,
+                timestamp: new Date(),
+            },
+            timeSeries: []
+        },
+        "000001_3":{
+            channel_uuid: "000001_3",
+            runtimeValue:{
+                value:25,
+                timestamp: new Date(),
+            },
+            timeSeries: []
+        },
+        "000001_4":{
+            channel_uuid: "000001_4",
+            runtimeValue:{
+                value:60,
+                timestamp: new Date(),
+            },
+            timeSeries: []
+        },
             } as Record<string, ChannelValue>,
     }),
     /** ------------actions-------------- */

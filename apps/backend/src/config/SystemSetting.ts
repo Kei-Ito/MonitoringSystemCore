@@ -1,4 +1,4 @@
-import * as database from "src/services/databaseService";
+import * as json from 'src/utils/json';
 import { SystemSettingData } from "@monitoring/shared/model";
 import { Result } from "@monitoring/shared/utils";
 
@@ -37,11 +37,10 @@ export class SystemSettingService {
      * データベースからシステム設定を読み込む
      */
     public async loadSystemSettingFromDatabase(): Promise<void> {
-        const result: Result<SystemSettingData> = await database.getSystemSetting();
+        const result: Result<SystemSettingData> = await json.loadJson<SystemSettingData>('./LocalData/systemSetting.json');
         if (result.ok) {
             this._samplingInterval = result.value.samplingInterval;
         } else {
-            await database.registerSystemSetting(this.createDefaultSystemSetting());
             await this.setSystemSetting(this.createDefaultSystemSetting());
         }
     }
@@ -65,10 +64,10 @@ export class SystemSettingService {
      * システム設定をデータベースに保存する
      */
     private async saveSystemSetting(): Promise<void> {
-        const systemSetting = {
+        const systemSetting: SystemSettingData = {
             samplingInterval: this._samplingInterval
         };
-        await database.setSystemSetting(systemSetting);
+        await json.saveJson('./LocalData/systemSetting.json', systemSetting);
     }
 
     public async setSystemSetting(setting:SystemSettingData): Promise<void> {

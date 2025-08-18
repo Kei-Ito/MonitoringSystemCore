@@ -28,12 +28,12 @@ export const useUiStore = defineStore('uiStore', {
         isAbsolute: false,
         showConfig: false,
         isAdmin: true,
-        dashboardViewCategory1Selected: ['照射炉1'],// TODO: 将来的にlocalStorageに保存する
-        dashboardViewCategory2Selected: ['液温'],// TODO: 将来的にlocalStorageに保存する
-        trendViewCategory1Selected: ['照射炉1'],// TODO: 将来的にlocalStorageに保存する
-        trendViewCategory2Selected: ['液温'],// TODO: 将来的にlocalStorageに保存する
-        category1List: ['照射炉1', '照射炉2', '照射炉3',],
-        category2List: ['液温','UV強度','炉内温度','ランプ電圧','ランプ電流','安定器電流','冷却ファン周波数'],
+        dashboardViewCategory1Selected: ['All'],// TODO: 将来的にlocalStorageに保存する
+        dashboardViewCategory2Selected: ['照度センサ','風速計','温度計','湿度計'],// TODO: 将来的にlocalStorageに保存する
+        trendViewCategory1Selected: ['All'],// TODO: 将来的にlocalStorageに保存する
+        trendViewCategory2Selected: ['照度センサ','風速計','温度計','湿度計'],// TODO: 将来的にlocalStorageに保存する
+        category1List: ['All',],
+        category2List: ['照度センサ','風速計','温度計','湿度計'],
         navbarFixed:
             "position-sticky blur shadow-blur left-auto top-1 z-index-sticky px-0 mx-4",
         absolute: "position-absolute px-4 mx-0 w-100 z-index-2",

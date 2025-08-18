@@ -17,6 +17,7 @@ export const getUiLayouts = () =>
             /** 配列をUUIDキーのRecordに変換 */
             const arrayToRecord = (arr: ChartConfig[] = []): Record<string, ChartConfig> =>
                 Object.fromEntries(arr.map((c) => [c.chart_uuid, c]));
+
             
             chartStore.$patch({
                 uiLayouts: val,

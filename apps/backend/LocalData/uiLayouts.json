@@ -1,0 +1,200 @@
+{
+    "dashboard": [
+        {
+            "chart_uuid": "chart001",
+            "chart_type": "GaugeChart",
+            "channel_uuids": [
+                "000001_1"
+            ],
+            "chart_title": "照度センサ",
+            "chart_unit": "%",
+            "grid_layout": {
+                "i": "chart001",
+                "x": 2,
+                "y": 0,
+                "w": 4,
+                "h": 9,
+                "static": false,
+                "minW": null,
+                "minH": null,
+                "maxW": null,
+                "maxH": null
+            },
+            "chart_options": {
+                "maxValue": 100,
+                "minValue": 0,
+                "colors": [
+                    "#FF6E76",
+                    "#FDDD60",
+                    "#7CFFB2",
+                    "#FDDD60",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    0.10,
+                    0.30,
+                    0.70,
+                    0.90,
+                    1.00
+                ],
+                "lastValue": null
+            },
+            "category1": "All",
+            "category2": "照度センサ"
+        },
+        {
+            "chart_uuid": "chart002",
+            "chart_type": "GaugeChart",
+            "channel_uuids": [
+                "000001_2"
+            ],
+            "chart_title": "風速計",
+            "chart_unit": "m/s",
+            "grid_layout": {
+                "i": "chart002",
+                "x": 6,
+                "y": 0,
+                "w": 4,
+                "h": 9,
+                "static": false,
+                "minW": null,
+                "minH": null,
+                "maxW": null,
+                "maxH": null
+            },
+            "chart_options": {
+                "maxValue": 8,
+                "minValue": 0,
+                "colors": [
+                    "#FF6E76",
+                    "#FDDD60",
+                    "#7CFFB2",
+                    "#FDDD60",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    0.10,
+                    0.30,
+                    0.70,
+                    0.90,
+                    1.00
+                ],
+                "lastValue": null
+            },
+            "category1": "All",
+            "category2": "風速計"
+        },
+        {
+            "chart_uuid": "chart003",
+            "chart_type": "GaugeChart",
+            "channel_uuids": [
+                "000001_3"
+            ],
+            "chart_title": "温度計",
+            "chart_unit": "℃",
+            "grid_layout": {
+                "i": "chart003",
+                "x": 2,
+                "y": 9,
+                "w": 4,
+                "h": 9,
+                "static": false,
+                "minW": null,
+                "minH": null,
+                "maxW": null,
+                "maxH": null
+            },
+            "chart_options": {
+                "maxValue": 60,
+                "minValue": 0,
+                "colors": [
+                    "#FF6E76",
+                    "#FDDD60",
+                    "#7CFFB2",
+                    "#FDDD60",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    0.10,
+                    0.30,
+                    0.70,
+                    0.90,
+                    1.00
+                ],
+                "lastValue": null
+            },
+            "category1": "All",
+            "category2": "温度計"
+        },
+        {
+            "chart_uuid": "chart004",
+            "chart_type": "GaugeChart",
+            "channel_uuids": [
+                "000001_4"
+            ],
+            "chart_title": "湿度計",
+            "chart_unit": "%RH",
+            "grid_layout": {
+                "i": "chart004",
+                "x": 6,
+                "y": 9,
+                "w": 4,
+                "h": 9,
+                "static": false,
+                "minW": null,
+                "minH": null,
+                "maxW": null,
+                "maxH": null
+            },
+            "chart_options": {
+                "maxValue": 100,
+                "minValue": 0,
+                "colors": [
+                    "#FF6E76",
+                    "#FDDD60",
+                    "#7CFFB2",
+                    "#FDDD60",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    0.10,
+                    0.30,
+                    0.70,
+                    0.90,
+                    1.00
+                ],
+                "lastValue": null
+            },
+            "category1": "All",
+            "category2": "湿度計"
+        }
+    ],
+    "trend": [
+        {
+            "chart_uuid": "chart011",
+            "chart_type": "HorizontalBarChart",
+            "channel_uuids": [
+                "000001_1",
+                "000001_2",
+                "000001_3"
+            ],
+            "chart_title": "",
+            "chart_unit": "",
+            "grid_layout": {
+                "i": "chart011",
+                "x": 0,
+                "y": 0,
+                "w": 12,
+                "h": 6,
+                "static": false,
+                "minW": null,
+                "minH": null,
+                "maxW": null,
+                "maxH": null
+            },
+            "chart_options": {},
+            "category1": "All",
+            "category2": "照度センサ"
+        }
+    ]
+}

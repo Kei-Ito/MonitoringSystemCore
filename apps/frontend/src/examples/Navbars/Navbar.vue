@@ -65,9 +65,14 @@
           </multiselect>
         </div>
       </div>
-      <ToggleBtn v-model="isAdmin" class="mr-3" />
+      <div>
+        <a class="nav-link text-body font-weight-bold px-0" >UI編集</a>
+        <ToggleBtn v-model="isAdmin" class="mr-3" />
+      </div>
+      
 
       <!-- ユーザーログインアイコン -->
+       <!--
        <router-link :to="{ name: 'SignIn' }" class="px-0 nav-link font-weight-bold lh-1"
           :class="color ? color : 'text-body'">
       <a class="btn border-0  bg-transparent">
@@ -78,6 +83,7 @@
         
       </a>
       </router-link>
+      -->
       <div class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4" :class="isRTL ? 'px-0' : 'me-sm-4'"
         id="navbar">
         <div class="pe-md-3 d-flex align-items-center" :class="isRTL ? 'me-md-auto' : 'ms-md-auto'"></div>

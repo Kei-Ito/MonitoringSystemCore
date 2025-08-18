@@ -90,11 +90,11 @@ function setupWebSocket() {
           break;
         case "StartSampling":
           monitoringStore.isSampling = true;
-          toast.success("Sampling started");
+          toast.success("モニタリングを開始しました");
           break;
         case "StopSampling":
           monitoringStore.isSampling = false;
-          toast.success("Sampling stoped");
+          toast.success("モニタリングを停止しました");
           break;
         case "samplingStatus":
           // TODO: 不要かも。要確認
@@ -134,6 +134,7 @@ onMounted(async () => {
   // サンプリング間隔を取得
   await fetchSystemSetting();
 
+  console.log(monitoringStore.ioModules)
   const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
 
   if (window.innerWidth > 1200) {

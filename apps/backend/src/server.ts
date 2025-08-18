@@ -7,10 +7,11 @@ import fileRoutes from './routes/fileRoutes.js';
 import IOModuleRoutes from './routes/IOModuleRoutes.js';
 import trendDataRoutes from './routes/trendDataRouters.js';
 import chartRoutes from './routes/chartRouters.js';
+import uiRouters from './routes/uiRouters';
 import systemSettingRoutes from './routes/systemSettingRouters.js';
 import { getIsSamplingIntervalRunning } from './services/IOModuleService.js';
-import { initializeDatabase } from './infra/database/pool.js';
 import { initializeIOModules } from './services/IOModuleService.js';
+import { initializeLayouts } from './services/uiService.js';
 import { SystemSettingService } from './config/SystemSetting.js';
 
 async function bootstrap() {
@@ -21,11 +22,11 @@ async function bootstrap() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname  = dirname(__filename);        // ★ ESM でも __dirname を再現
 
-  // データベースの初期化
-  await initializeDatabase();
-
   // IOモジュールの初期化
   await initializeIOModules();
+
+  // UIレイアウトの初期化
+  await initializeLayouts();
 
   // フロントエンドのビルド済みファイルを静的ファイルとして提供
   app.use(express.static(path.join(__dirname, '../../frontend/dist')));
@@ -65,7 +66,7 @@ async function bootstrap() {
   app.use('/api/trend_data', trendDataRoutes); // トレンドデータ取得API
   app.use('/api/chart', chartRoutes); // グラフ関連のAPI
   app.use('/api/system_setting', systemSettingRoutes); // システム設定関連のAPI
-
+  app.use('/api/ui', uiRouters); // UIレイアウト関連のAPI
 
   // システム設定の初期化
   const configService = SystemSettingService.getInstance();

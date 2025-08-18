@@ -1,11 +1,12 @@
 import * as api from 'src/api/IOModuleAPI';
-import * as database from 'src/services/databaseService';
+import * as json from 'src/utils/json';
 import SystemSettingService from 'src/config/SystemSetting';
 import { IOModule,IChannelSetting } from '@monitoring/shared/model';
 import { IOModuleStatusResponse,getIOModuleInputResponse } from '@monitoring/shared/api';
 import { IOModuleStatus } from '@monitoring/shared/enum';
 import { Result, ok, err } from '@monitoring/shared/utils';
 
+const jsonFilePath: string = './LocalData/ioModuleSetting.json';
 let currentInputDatas: getIOModuleInputResponse[] = []; // 現在のセンサ値
 let io_modules: IOModule[] = []; // 空の配列として初期化
 let intervalId: NodeJS.Timeout | null = null; // インターバルID
@@ -15,7 +16,14 @@ let intervalId: NodeJS.Timeout | null = null; // インターバルID
  * @returns 初期化したIOモジュールのリスト
  */
 export async function initializeIOModules(): Promise<void> {
-  io_modules = await database.getModuleList();
+  const result = await json.loadJson<IOModule[]>(jsonFilePath);
+  if (result.ok) {
+    io_modules = result.value;
+  } else {
+    console.error('IOモジュールの設定ファイルの読み込みに失敗しました:', result.error);
+    // 初期化に失敗した場合は空の配列を使用
+    io_modules = [];
+  }
 
   // IOモジュールの初期化
   await fetchAllIOModules(io_modules);
@@ -62,14 +70,14 @@ async function getIOModuleInput(broadcast: (data: any) => void){
       const input_datas = response.value;
       // センサーデータを正規化
       input_datas.channels.forEach(channel => {
-        const channel_setting = module.input_channels.find(channel_setting => channel_setting.channel_id === channel.channel_id);
+        const channel_setting = module.input_channels.find(channel_setting => channel_setting.channel_uuid === channel.channel_uuid);
         if (channel_setting) {
           channel.input_data = NormalizeData(channel.input_data, channel_setting);
         }
       });
       currentInputDatas.push(input_datas);
       // データベースにセンサーデータを保存
-      database.saveInputDatas(input_datas);
+      //database.saveInputDatas(input_datas);
     } else {
       console.error('Error fetching Input data:', response.error);
     }
@@ -150,28 +158,25 @@ export const getAllModules = (): IOModule[] => {
  * @returns 
  */
 export async function addIOModule(newIOModule: IOModule): Promise<Result<IOModule>> {
-  //データベース登録時に連番でchannel_idがふられるので、それを更新
-  newIOModule = await database.registerIOModule(newIOModule);
+
   const result = await api.addIOModule(newIOModule);
 
   if (result.ok) {
     // モジュールの初期化に成功していたら、IOモジュールのリストに追加し、データベースに登録
     let initialized_module = result.value;
     io_modules.push(initialized_module);
+    await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
     return ok(initialized_module);
   }
   else {
-    console.error('Failed to initialize IOModule');
-    // モジュールの初期化に失敗した場合、データベースから削除
-    await database.deleteIOModule(newIOModule);
-    return err('Failed to initialize IOModule');
+    console.error('Failed to initialize IOModule', result.error);
+    return err(result.error);
   }
 };
 
-export async function addChannel(req: IChannelSetting): Promise<Result<IChannelSetting>> {
+export async function addChannel(channel: IChannelSetting): Promise<Result<IChannelSetting>> {
 
-  let channel = await database.addChannel(req);
-  const result = await api.addChannel(req);
+  const result = await api.addChannel(channel);
 
   if (result.ok) {
     if (channel.direction == "input") {
@@ -181,12 +186,12 @@ export async function addChannel(req: IChannelSetting): Promise<Result<IChannelS
       io_modules.find(module => module.module_uuid === channel.module_uuid)?.output_channels.push(channel);
     }
 
+    await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
+
     return ok(channel);
   }
   else {
-    // チャンネルの追加に失敗した場合、データベースから削除
-    await database.deleteChannel(channel.channel_id);
-    return err("チャンネルの追加に失敗しました。");
+    return err(result.error);
   }
 }
 
@@ -206,8 +211,7 @@ export async function updateIOModule(moduleData: IOModule): Promise<Result<IOMod
 
     io_modules[index] = moduleData;// バックエンド内のIOモジュールのリストを更新
     io_modules[index].status = result.value; // ステータスを更新
-    database.updateIOModule(io_modules[index]); // データベースを更新
-
+    await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
     return ok(result.value);
   } else {
     console.log("failed to update module");
@@ -227,11 +231,11 @@ export const deleteIOModule = async (module_uuid: string): Promise<void> => {
   // センサーの終了処理(APIを呼び出して実際の終了処理を実行)
   api.finalizeIOModule(io_modules[index]);
 
-  // ファイルを更新して保存
-  await database.deleteIOModule(io_modules[index]);
-
   // バックエンド内のIOモジュールのリストから削除
   io_modules.splice(index, 1);
+
+  // JSONファイルに保存
+  await json.saveJson<IOModule[]>(jsonFilePath, io_modules);
 
   return;
 };
@@ -240,8 +244,6 @@ export async function deleteChannel(channel_setting: IChannelSetting): Promise<R
   const result = await api.deleteChannel(channel_setting);
   if (result.ok) {
     console.log("deleted channel");
-    // データベースからチャンネルを削除
-    await database.deleteChannel(channel_setting.channel_id);
 
     let index: number | undefined;
     const io_module_index = io_modules.findIndex(io_module => io_module.module_uuid === channel_setting.module_uuid);
@@ -250,23 +252,27 @@ export async function deleteChannel(channel_setting: IChannelSetting): Promise<R
       return err("指定されたIOモジュールが見つかりません。");
     }
     if (channel_setting.direction === "input") {
-      index = io_modules[io_module_index].input_channels.findIndex((channel:IChannelSetting) => channel.channel_id === channel_setting.channel_id);
+      index = io_modules[io_module_index].input_channels.findIndex((channel:IChannelSetting) => channel.channel_uuid === channel_setting.channel_uuid);
       if (index === -1) {
-        console.log(`Type of channel_id: ${typeof channel_setting.channel_id}`);
+        console.log(`Type of channel_uuid: ${typeof channel_setting.channel_uuid}`);
         console.log("指定された入力チャンネルが見つかりません。");
-        console.log(`APIの指定${channel_setting.channel_id} ： IOモジュールの指定`);
+        console.log(`APIの指定${channel_setting.channel_uuid} ： IOモジュールの指定`);
         console.log(io_modules[io_module_index]);
         return err("チャンネルの削除に失敗しました。");
       }
       io_modules[io_module_index].input_channels.splice(index, 1);
     } else {
-      index = io_modules[io_module_index].output_channels.findIndex((channel:IChannelSetting) => channel.channel_id === channel_setting.channel_id);
+      index = io_modules[io_module_index].output_channels.findIndex((channel:IChannelSetting) => channel.channel_uuid === channel_setting.channel_uuid);
       if (index === -1) {
         console.log("指定された出力チャンネルが見つかりません。");
         return err("チャンネルの削除に失敗しました。");
       }
       io_modules[io_module_index].output_channels.splice(index, 1);
     }
+
+    // JSONファイルに保存
+    await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
+    
     return ok(void 0);
   }
   else {

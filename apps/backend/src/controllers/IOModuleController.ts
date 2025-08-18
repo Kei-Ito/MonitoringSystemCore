@@ -16,12 +16,12 @@ export const stopIOModuleInputSamplingInterval = (req: Request, res: Response) =
   res.json({ message: 'IOModule input data sampling interval stopped.' });
 };
 
-export const getCurrentInputData = (req: Request, res: Response) => {
+export const getCurrentInputData = (_: Request, res: Response) => {
   const inputDatas = IOModuleService.getCurrentInputData();
   res.json({ input_datas: inputDatas });
 };
 
-export const getIOModules = (req: Request, res: Response) => {
+export const getIOModules = (_: Request, res: Response) => {
   const io_modules = IOModuleService.getAllModules();
   res.json(io_modules);
 };

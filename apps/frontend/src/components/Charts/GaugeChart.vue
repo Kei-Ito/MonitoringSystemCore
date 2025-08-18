@@ -20,7 +20,6 @@ const chartRef = toRef(props, 'chart')
 const optionBuilder = () => {
 
     const s = seriesRef.value[0].runtimeValue ?? { value: 0, channel_name: '' }
-
     /** ゲージの色設定 */
     const thresholds = chartRef.value.chart_options.thresholds;
     const colors = chartRef.value.chart_options.colors.map(
@@ -44,7 +43,8 @@ const optionBuilder = () => {
             type: 'gauge',
             radius: '100%',
             center: ['50%', '56%'],
-            max: props.chart.chart_options?.max ?? 100,
+            max: props.chart.chart_options?.maxValue ?? 100,
+            min: props.chart.chart_options?.minValue ?? 0,
             data: [{ value: s.value ?? 0 }],
             splitNumber: 8,
             axisLine: {

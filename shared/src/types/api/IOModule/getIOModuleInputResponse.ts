@@ -1,6 +1,6 @@
 
 interface InputStruct{
-    channel_id:number;
+    channel_uuid:string;
     input_data:number;
 }
 

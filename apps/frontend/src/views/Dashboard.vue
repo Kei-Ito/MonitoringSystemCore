@@ -11,11 +11,7 @@
           </GridItem>
         </GridLayout>
         <!-- ゲージチャート 表示部-->
-        <div class="row mt-4">
-          <div class="col-ultra-wide-2 col-wide-3 col-midium-wide-4 col-midium-6 col-sm-12 mb-4">
-            <button class="btn btn-primary" @click="onAddChartButtonClick">グラフ追加</button>
-          </div>
-        </div>
+
       </div>
     </div>
   </div>
