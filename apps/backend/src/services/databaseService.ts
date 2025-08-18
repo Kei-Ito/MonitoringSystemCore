@@ -65,7 +65,7 @@ export async function registerIOModule(module: IOModule): Promise<IOModule> {
 
       // チャンネルIDを取得
       const channelId = (result as any).insertId;
-      module.input_channels[index].channel_id = channelId;
+      module.input_channels[index].channel_uuid = channelId;
 
     }
 
@@ -85,7 +85,7 @@ export async function registerIOModule(module: IOModule): Promise<IOModule> {
 
       // チャンネルIDを取得
       const channelId = (result as any).insertId;
-      module.output_channels[index].channel_id = channelId;
+      module.output_channels[index].channel_uuid = channelId;
     }
 
     await connection.commit();
@@ -118,7 +118,7 @@ export async function addChannel(channel: IChannelSetting): Promise<IChannelSett
     if (!channelId) {
       throw new Error('チャンネルIDの取得に失敗しました');
     }
-    channel.channel_id = channelId;
+    channel.channel_uuid = channelId;
     return channel;
   } catch (error) {
     await connection.rollback();
@@ -195,14 +195,14 @@ export async function updateIOModule(module: IOModule) {
     for (let inputChannel of module.input_channels) {
       await connection.execute(updateChannelQuery, [inputChannel.channel_name, inputChannel.unit, inputChannel.decimals,
       inputChannel.normalize.src_min, inputChannel.normalize.src_max, inputChannel.normalize.dst_min, inputChannel.normalize.dst_max,inputChannel.threshold.min_threshold,inputChannel.threshold.max_threshold,
-      JSON.stringify(inputChannel.specific_channel_setting), module.module_uuid, inputChannel.channel_id]);
+      JSON.stringify(inputChannel.specific_channel_setting), module.module_uuid, inputChannel.channel_uuid]);
     }
 
     // 出力チャンネルの更新
     for (let outputChannel of module.output_channels) {
       await connection.execute(updateChannelQuery, [outputChannel.channel_name, outputChannel.unit, outputChannel.decimals,
       outputChannel.normalize.src_min, outputChannel.normalize.src_max, outputChannel.normalize.dst_min, outputChannel.normalize.dst_max,outputChannel.threshold.min_threshold,outputChannel.threshold.max_threshold,
-      JSON.stringify(outputChannel.specific_channel_setting), module.module_uuid, outputChannel.channel_id]);
+      JSON.stringify(outputChannel.specific_channel_setting), module.module_uuid, outputChannel.channel_uuid]);
     }
 
     console.log('IOモジュールの更新が完了しました');
@@ -231,7 +231,7 @@ export async function saveInputDatas(input_datas: getIOModuleInputResponse) {
       VALUES (?, ?, ?)
     `;
     for (let i = 0; i < input_datas.channels.length; i++) {
-      await connection.execute(insertQuery, [input_datas.channels[i].channel_id, input_datas.channels[i].input_data, new Date(input_datas.timestamp)]);
+      await connection.execute(insertQuery, [input_datas.channels[i].channel_uuid, input_datas.channels[i].input_data, new Date(input_datas.timestamp)]);
     }
 
     await connection.commit();
@@ -269,7 +269,7 @@ export async function getTrendData(request: trendDataRequest): Promise<Mesuremen
     `;
     // パラメータを使用してクエリを実行
     const [rows] = await connection.execute(query,
-      [ request.channel_id, new Date(request.start_time), new Date(request.end_time)]);
+      [ request.channel_uuid, new Date(request.start_time), new Date(request.end_time)]);
 
      // データを型に適合させて変換
      const trendData: Mesurement[] = (rows as any[]).map(row => ({

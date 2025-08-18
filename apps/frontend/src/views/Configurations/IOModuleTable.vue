@@ -71,7 +71,8 @@
         </div>
       </div>
     </div>
-    <IOModuleEditModal v-if="selectedModule" :visible="isEditModalVisible" :module="selectedModule" @close="closeEditModal" />
+    <IOModuleEditModal v-if="selectedModule" :visible="isEditModalVisible" :module="selectedModule"
+      @close="closeEditModal" />
     <IOModuleAddModal :visible="isAddModalVisible" @close="closeAddModal" @add="handleAdd" />
   </div>
 </template>
@@ -139,17 +140,25 @@ const getModuleImage = (type: IOModuleTypes) => {
   return module ? module.image : '';
 };
 
-const formatDate = (date:Date|string) => {
-  console.log(date);
+const formatDate = (date: Date | string) => {
+
   if (typeof date === 'string') {
     date = new Date(date);
   }
-  
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
+  else if (date instanceof Date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
 
-  return `${year}-${month}-${day}`;
+    return `${year}-${month}-${day}`;
+  }
+  else{
+    // 日付が無効な場合は空文字を返す
+    console.error("Invalid date:", date);
+    return '';
+  }
+
+
 };
 
 // 必要に応じてstore.dispatch('getIOModules')などで初期データ取得可能

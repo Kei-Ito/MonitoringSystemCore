@@ -41,29 +41,6 @@ const layoutModel = computed({
   }
 });
 
-// mock用の関数（本来は必要ない）
-function onAddChartButtonClick() {
-  const channelValuesStore = useChannelValuesStore();
-  for (let i = 0;i<8;i++){
-    channelValuesStore.setRuntimeValue(`channel_mock_uuid${i}`,Math.floor(Math.random() * 101));
-  }
-  
-  /**
-  if (dashboardCharts.value.length >= 10) {
-    alert("最大10個までしか追加できません");
-    return;
-  }
-  else if (dashboardCharts.value.length === 0) {
-    addDashboardChart(createChartForInitialization(0, ChartTypes.GaugeChart))
-    return;
-  }
-  else {
-    const chart_id = Math.max(...dashboardCharts.value.map((chart) => chart.chart_id)) + 1;
-    addDashboardChart(createChartForInitialization(chart_id, ChartTypes.GaugeChart))
-  }
-*/
-}
-
 </script>
 <style scoped>
 @media (min-width: 2000px) {

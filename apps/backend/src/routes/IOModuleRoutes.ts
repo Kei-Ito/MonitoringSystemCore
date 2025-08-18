@@ -11,7 +11,7 @@ router.get('/get_io_modules', sensorController.getIOModules); // センサ一覧
 router.post('/add_io_module', sensorController.addIOModule); // センサの追加
 router.post('/add_channel', sensorController.addChannel); // チャンネルの追加
 router.patch('/update_io_module', sensorController.updateIOModule); // センサの更新
-router.delete('/', sensorController.deleteIOModule); // センサの削除
+router.delete('/delete_io_module', sensorController.deleteIOModule); // センサの削除
 router.post('/delete_channel', sensorController.deleteChannel); // チャンネルの削除
 
 export default router;

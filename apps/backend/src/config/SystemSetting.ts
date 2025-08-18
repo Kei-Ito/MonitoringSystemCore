@@ -2,6 +2,8 @@ import * as json from 'src/utils/json';
 import { SystemSettingData } from "@monitoring/shared/model";
 import { Result } from "@monitoring/shared/utils";
 
+const jsonPath = './LocalData/systemSetting.json';
+
 export class SystemSettingService {
     // シングルトンのインスタンスを保持するための静的プロパティ
     private static _instance: SystemSettingService | null = null;
@@ -37,7 +39,7 @@ export class SystemSettingService {
      * データベースからシステム設定を読み込む
      */
     public async loadSystemSettingFromDatabase(): Promise<void> {
-        const result: Result<SystemSettingData> = await json.loadJson<SystemSettingData>('./LocalData/systemSetting.json');
+        const result: Result<SystemSettingData> = await json.loadJson<SystemSettingData>(jsonPath);
         if (result.ok) {
             this._samplingInterval = result.value.samplingInterval;
         } else {
@@ -67,7 +69,7 @@ export class SystemSettingService {
         const systemSetting: SystemSettingData = {
             samplingInterval: this._samplingInterval
         };
-        await json.saveJson('./LocalData/systemSetting.json', systemSetting);
+        await json.saveJson(jsonPath, systemSetting);
     }
 
     public async setSystemSetting(setting:SystemSettingData): Promise<void> {
