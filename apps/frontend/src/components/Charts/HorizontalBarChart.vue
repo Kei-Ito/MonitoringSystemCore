@@ -2,8 +2,8 @@
     <div ref="el" class="w-full h-full" />
 </template>
 <script setup lang="ts">
-import type { ChannelSeries,ChartConfig } from '@monitoring/shared/model'
-import { computed,toRef } from 'vue'
+import type { ChannelSeries, ChartConfig } from '@monitoring/shared/model'
+import { computed, toRef } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
 
@@ -23,25 +23,41 @@ interface ColorRule {
     color: string
 }
 
-const rules: ColorRule[] = [
-    { lte: 20, color: '#FD665F' },
-    { lte: 50, gt: 20, color: '#FFCE34' },
-    { gt: 50, color: '#65B581' },
-];
 
 const datasetSource = computed(() => [
     ['label', 'amount'], // カラム名
-    ...props.series.map((s) => [s.channel_name, s.runtimeValue.value]), // データ
+    ...props.series.map((s) => [s.channel_name, s.runtimeValue?.value ?? 0]), // データ
 ]);
 
 
-const seriesRef = toRef(props, 'series') // props.seriesをrefに変換
-const chartRef = toRef(props, 'chart')
+const seriesRef = toRef(props, 'series'); // props.seriesをrefに変換
+const chartRef = toRef(props, 'chart');
 
 const optionBuilder = () => {
+    const colors = chartRef.value.chart_options.colors;
+    const thresholds = chartRef.value.chart_options.thresholds;
+    const rules: ColorRule[] = [{
+        lte: thresholds[0], // 最初の色は最小値以下
+        color: colors[0]
+    }];
+    for (let i = 1; i < colors.length - 1; i++) {
+        rules.push({
+            lte: thresholds[i],
+            gt: thresholds[i-1],
+            color: colors[i]
+        });
+    }
+    rules.push({
+        gt: thresholds[thresholds.length-1], // 最後の色は最大値より大きい
+        color: colors[colors.length-1]
+    });
     return {
         dataset: { source: datasetSource.value },
-        xAxis: {},
+        xAxis: {
+            type: 'value',
+            min: chartRef.value.chart_options.minValue ?? 0,
+            max: chartRef.value.chart_options.maxValue ?? 100,
+        },
         yAxis: { type: 'category' },
         tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
         grid: {

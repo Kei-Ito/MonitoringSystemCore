@@ -5,11 +5,20 @@ import { IOModule,IChannelSetting } from '@monitoring/shared/model';
 import { IOModuleStatusResponse,getIOModuleInputResponse } from '@monitoring/shared/api';
 import { IOModuleStatus } from '@monitoring/shared/enum';
 import { Result, ok, err } from '@monitoring/shared/utils';
+import { saveInputDatas } from './dataSaveService';
 
 const jsonFilePath: string = './LocalData/ioModuleSetting.json';
 let currentInputDatas: getIOModuleInputResponse[] = []; // 現在のセンサ値
 let io_modules: IOModule[] = []; // 空の配列として初期化
 let intervalId: NodeJS.Timeout | null = null; // インターバルID
+
+// TODO:仮実装なので、要修正
+enum DeviceHealthEnum {
+    Good = "Good", // 健康
+    Caution= "Caution", // 警告
+    Error = "Error", // エラー
+    Unknown = "Unknown", // 不明
+}
 
 /**
  * IOモジュールの初期化メソッド
@@ -61,18 +70,28 @@ export const fetchAllIOModules = async (current_modules: IOModule[]): Promise<vo
  */
 async function getIOModuleInput(broadcast: (data: any) => void){
   currentInputDatas = [];
+  let is_alert = false;
+  let is_warning = false;
   // 1. すべてのモジュールに対して並行してgetIOModuleInputを呼び出す
   const promises = io_modules.map(async (module) => {
     const response: Result<getIOModuleInputResponse> = await api.getIOModuleInput(module);
     if (response.ok) {
-
-      
       const input_datas = response.value;
-      // センサーデータを正規化
+      
+      // センサーデータを正規化+閾値を基に判定
       input_datas.channels.forEach(channel => {
         const channel_setting = module.input_channels.find(channel_setting => channel_setting.channel_uuid === channel.channel_uuid);
         if (channel_setting) {
           channel.input_data = NormalizeData(channel.input_data, channel_setting);
+          // 閾値を基に判定(nullなら実質的に閾値なし)
+          if (channel.input_data < (channel_setting.threshold.alert_min_threshold ?? Number.MIN_VALUE) || 
+              channel.input_data > (channel_setting.threshold.alert_max_threshold ?? Number.MAX_VALUE)) {
+            is_alert = true;
+          }
+          if (channel.input_data < (channel_setting.threshold.warning_min_threshold ?? Number.MIN_VALUE) || 
+              channel.input_data > (channel_setting.threshold.warning_max_threshold ?? Number.MAX_VALUE)) {
+            is_warning = true;
+          }
         }
       });
       currentInputDatas.push(input_datas);
@@ -83,12 +102,17 @@ async function getIOModuleInput(broadcast: (data: any) => void){
     }
   });
 
+  
   // 2. 全部の処理が完了するまで待つ
   await Promise.all(promises);
+
+  saveInputDatas(currentInputDatas); // データベースに保存
+
 
   const  payload = {
     type: 'IOModuleData',
     data: currentInputDatas,
+    status: is_alert ? DeviceHealthEnum.Error : is_warning ? DeviceHealthEnum.Caution : DeviceHealthEnum.Good
   }
 
   // 3. 全部終わったらまとめてフロントへ送信

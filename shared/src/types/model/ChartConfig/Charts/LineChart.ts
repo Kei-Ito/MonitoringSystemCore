@@ -1,4 +1,4 @@
-export interface LineChart {
+export interface LineChartOption {
     thresholds?:{
         max?: number
         min?: number
@@ -7,9 +7,9 @@ export interface LineChart {
     seriesColors: Record<string, string>
 }
 
-export function createLineChartSpecificSetting(): LineChart {
+export function createLineChartSpecificSetting(): LineChartOption {
     // LineChart固有の初期化処理
-    const lineChart: LineChart = {
+    const lineChart: LineChartOption = {
         thresholds: {
             max: 80,
             min: 20,

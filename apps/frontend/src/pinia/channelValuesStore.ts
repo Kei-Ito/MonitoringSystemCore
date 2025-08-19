@@ -1,5 +1,7 @@
 import type { ChannelValue,ChannelRuntimeValue,RuntimeValue } from "@monitoring/shared/model";
 import { defineStore } from "pinia";
+import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum';
+import { useToast } from "vue-toastification";
 
 
 /**
@@ -8,103 +10,21 @@ import { defineStore } from "pinia";
 export const useChannelValuesStore = defineStore("channelValues", {
     /** ------------state-------------- */
     state: () => ({
-        channelValues: {"channel_mock_uuid0":{
-            channel_uuid: "channel_mock_uuid0",
-            runtimeValue:{
-                value:20,
-                timestamp: new Date(),
+        channelValues: {} as Record<string, ChannelValue>,
+        DeviceHealth:[
+            {
+                name: "照射炉1",
+                status: DeviceHealthEnum.Unknown
             },
-            timeSeries: []
-        },
-        "channel_mock_uuid1":{
-            channel_uuid: "channel_mock_uuid1",
-            runtimeValue:{
-                value:40,
-                timestamp: new Date(),
+            {
+                name: "照射炉2",
+                status: DeviceHealthEnum.Unknown
             },
-            timeSeries: []
-        },
-        "channel_mock_uuid2":{
-            channel_uuid: "channel_mock_uuid2",
-            runtimeValue:{
-                value:50,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "channel_mock_uuid3":{
-            channel_uuid: "channel_mock_uuid3",
-            runtimeValue:{
-                value:70,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "channel_mock_uuid4":{
-            channel_uuid: "channel_mock_uuid4",
-            runtimeValue:{
-                value:100,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "channel_mock_uuid5":{
-            channel_uuid: "channel_mock_uuid5",
-            runtimeValue:{
-                value:80,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "channel_mock_uuid6":{
-            channel_uuid: "channel_mock_uuid6",
-            runtimeValue:{
-                value:40,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "channel_mock_uuid7":{
-            channel_uuid: "channel_mock_uuid7",
-            runtimeValue:{
-                value:60,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "000001_1":{
-            channel_uuid: "000001_1",
-            runtimeValue:{
-                value:40,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "000001_2":{
-            channel_uuid: "000001_2",
-            runtimeValue:{
-                value:50,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "000001_3":{
-            channel_uuid: "000001_3",
-            runtimeValue:{
-                value:25,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-        "000001_4":{
-            channel_uuid: "000001_4",
-            runtimeValue:{
-                value:60,
-                timestamp: new Date(),
-            },
-            timeSeries: []
-        },
-            } as Record<string, ChannelValue>,
+            {
+                name: "照射炉3",
+                status: DeviceHealthEnum.Unknown
+            }
+        ]
     }),
     /** ------------actions-------------- */
     actions: {
@@ -137,5 +57,25 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 timeSeries,
             }
         },
+        setDeviceHealth(deviceName: string, status: DeviceHealthEnum) {
+            
+            const device = this.DeviceHealth.find((d) => d.name === deviceName);
+            if (device) {
+                const last_status = device.status;
+                device.status = status;
+                if (last_status !== DeviceHealthEnum.Error && status === DeviceHealthEnum.Error) {
+                    const toast = useToast();
+
+                    // エラー以外の状態からエラーになった場合にtoastでerrorを通知
+                    toast.error(`${deviceName}で閾値外の値が検出されました`);
+                }
+                else if (last_status !== DeviceHealthEnum.Error && last_status !== DeviceHealthEnum.Caution && status === DeviceHealthEnum.Caution) {
+                    const toast = useToast();
+
+                    // エラーと警告以外の状態から警告になった場合にtoastでwarningを通知
+                    toast.warning(`${deviceName}で警告値が検出されました`);
+                }
+            }
+        }
     }
 });

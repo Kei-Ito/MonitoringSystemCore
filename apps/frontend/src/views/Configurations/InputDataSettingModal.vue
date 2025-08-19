@@ -49,12 +49,12 @@
                         <div class="d-flex align-items-center">
                             <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最大値</label>
                             <input type="number" class="form-control border px-2 fs-5"
-                                v-model="localChannelSetting.threshold.max_threshold" :min="localChannelSetting.threshold.min_threshold??0" />
+                                v-model="localChannelSetting.threshold.alert_max_threshold" :min="localChannelSetting.threshold.alert_min_threshold??0" />
                         </div>
                         <div class="d-flex align-items-center mb-2">
                             <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最小値</label>
                             <input type="number" class="form-control border px-2 fs-5"
-                                v-model="localChannelSetting.threshold.min_threshold" :max="localChannelSetting.threshold.max_threshold??999999" />
+                                v-model="localChannelSetting.threshold.alert_min_threshold" :max="localChannelSetting.threshold.alert_max_threshold??999999" />
                         </div>
                     </div>
 

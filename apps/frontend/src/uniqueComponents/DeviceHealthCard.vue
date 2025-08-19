@@ -42,7 +42,7 @@
         return 'Caution'
       case DeviceHealthEnum.Error:
         return 'Error'
-        default:
+      default:
         return 'Unknown'
     }
   })
@@ -56,7 +56,7 @@
       case DeviceHealthEnum.Error:
         return 'エラーが発生しています。\nダッシュボードからエラー項目を\n確認してください。'
         default:
-        return 'Unknown status'
+        return '装置のモニタリングを停止しています。'
     }
   })
   
@@ -65,7 +65,8 @@
     return {
       "good bg-gradient-success": props.deviceHealth === DeviceHealthEnum.Good,
       "caution bg-gradient-warning": props.deviceHealth === DeviceHealthEnum.Caution,
-      "error bg-gradient-danger": props.deviceHealth === DeviceHealthEnum.Error
+      "error bg-gradient-danger": props.deviceHealth === DeviceHealthEnum.Error,
+      "unknown bg-gradient-secondary": props.deviceHealth === DeviceHealthEnum.Unknown
     }
   })
   </script>

@@ -25,7 +25,10 @@ const options = {
         [TYPE.SUCCESS]: {
             timeout: 2000,
             hideProgressBar: true,
-        }    
+        },
+        [TYPE.WARNING]: {
+            timeout: false,
+        }
     }
 };
 

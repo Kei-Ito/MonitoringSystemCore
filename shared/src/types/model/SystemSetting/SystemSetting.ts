@@ -1,5 +1,6 @@
 export interface SystemSettingData {
     samplingInterval: number;
+    dataRootPath: string;
     category1list: string[];
     category2list: string[];
     dashboardViewCategory1Selected: string[];

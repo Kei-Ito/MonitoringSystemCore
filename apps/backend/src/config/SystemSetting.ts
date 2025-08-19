@@ -32,6 +32,7 @@ export class SystemSettingService {
     private createDefaultSystemSetting(): SystemSettingData {
         return {
             samplingInterval: 1000,
+            dataRootPath: "",
             category1list: [],
             category2list: [],
             dashboardViewCategory1Selected: [],
@@ -80,6 +81,7 @@ export class SystemSettingService {
     private async saveSystemSetting(): Promise<void> {
         const systemSetting: SystemSettingData = {
             samplingInterval: this._systemSetting?.samplingInterval ?? 1000,
+            dataRootPath: this._systemSetting?.dataRootPath ?? "",
             category1list: this._systemSetting?.category1list ?? [],
             category2list: this._systemSetting?.category2list ?? [],
             dashboardViewCategory1Selected: this._systemSetting?.dashboardViewCategory1Selected ?? [],

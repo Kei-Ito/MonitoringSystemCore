@@ -1,226 +1,24 @@
 [
   {
-    "module_uuid": "000001",
-    "module_type": "Dummy",
-    "module_name": "test1",
-    "status": "Active",
-    "input_channel_num": 8,
-    "output_channel_num": 0,
-    "created_at": 0,
-    "updated_at": 0,
-    "specific_device_setting": {
-      "device_name": "AIO000"
-    },
-    "input_channels": [
-      {
-        "channel_uuid": "000001_1",
-        "channel_name": "温度計",
-        "module_uuid": "000001",
-        "direction": "input",
-        "unit": "℃",
-        "channel_number": 1,
-        "decimals": 2,
-        "normalize": {
-          "is_enabled": false,
-          "src_min": 0,
-          "src_max": 10,
-          "dst_min": -40,
-          "dst_max": 160
-        },
-        "threshold": {
-          "min_threshold": 0,
-          "max_threshold": 1
-        },
-        "specific_channel_setting": {},
-        "created_at": 0,
-        "updated_at": 0
-      },
-      {
-        "channel_uuid": "000001_2",
-        "channel_name": "湿度計",
-        "module_uuid": "000001",
-        "direction": "input",
-        "unit": "%",
-        "channel_number": 1,
-        "decimals": 2,
-        "normalize": {
-          "is_enabled": false,
-          "src_min": 0,
-          "src_max": 10,
-          "dst_min": -25,
-          "dst_max": 225
-        },
-        "threshold": {
-          "min_threshold": 0,
-          "max_threshold": 1
-        },
-        "specific_channel_setting": {},
-        "created_at": 0,
-        "updated_at": 0
-      },
-      {
-        "channel_uuid": "000001_3",
-        "channel_name": "風速計",
-        "module_uuid": "000001",
-        "direction": "input",
-        "unit": "m/s",
-        "channel_number": 1,
-        "decimals": 2,
-        "normalize": {
-          "is_enabled": false,
-          "src_min": 0,
-          "src_max": 10,
-          "dst_min": -0.0925,
-          "dst_max": 6.3805
-        },
-        "threshold": {
-          "min_threshold": 0,
-          "max_threshold": 1
-        },
-        "specific_channel_setting": {},
-        "created_at": 0,
-        "updated_at": 0
-      },
-      {
-        "channel_uuid": "000001_4",
-        "channel_name": "照度センサ",
-        "module_uuid": "000001",
-        "direction": "input",
-        "unit": "W/cm2",
-        "channel_number": 1,
-        "decimals": 2,
-        "normalize": {
-          "is_enabled": false,
-          "src_min": 0,
-          "src_max": 10,
-          "dst_min": -25,
-          "dst_max": 225
-        },
-        "threshold": {
-          "min_threshold": 0,
-          "max_threshold": 200
-        },
-        "specific_channel_setting": {},
-        "created_at": 0,
-        "updated_at": 0
-      },
-      {
-        "channel_uuid": "000001_5",
-        "channel_name": "aaaaa",
-        "module_uuid": "000001",
-        "direction": "input",
-        "unit": "",
-        "channel_number": 1,
-        "decimals": 2,
-        "normalize": {
-          "is_enabled": false,
-          "src_min": 0,
-          "src_max": 10,
-          "dst_min": 0,
-          "dst_max": 10
-        },
-        "threshold": {
-          "min_threshold": 0,
-          "max_threshold": 1
-        },
-        "specific_channel_setting": {},
-        "created_at": 0,
-        "updated_at": 0
-      },
-      {
-        "channel_uuid": "000001_6",
-        "channel_name": "input6",
-        "module_uuid": "000001",
-        "direction": "input",
-        "unit": "",
-        "channel_number": 1,
-        "decimals": 2,
-        "normalize": {
-          "is_enabled": false,
-          "src_min": 0,
-          "src_max": 10,
-          "dst_min": 0,
-          "dst_max": 10
-        },
-        "threshold": {
-          "min_threshold": 0,
-          "max_threshold": 1
-        },
-        "specific_channel_setting": {},
-        "created_at": 0,
-        "updated_at": 0
-      },
-      {
-        "channel_uuid": "000001_7",
-        "channel_name": "input7",
-        "module_uuid": "000001",
-        "direction": "input",
-        "unit": "",
-        "channel_number": 1,
-        "decimals": 2,
-        "normalize": {
-          "is_enabled": false,
-          "src_min": 0,
-          "src_max": 10,
-          "dst_min": 0,
-          "dst_max": 10
-        },
-        "threshold": {
-          "min_threshold": 0,
-          "max_threshold": 1
-        },
-        "specific_channel_setting": {},
-        "created_at": 0,
-        "updated_at": 0
-      },
-      {
-        "channel_uuid": "000001_8",
-        "channel_name": "input8",
-        "module_uuid": "000001",
-        "direction": "input",
-        "unit": "",
-        "channel_number": 1,
-        "decimals": 2,
-        "normalize": {
-          "is_enabled": false,
-          "src_min": 0,
-          "src_max": 10,
-          "dst_min": 0,
-          "dst_max": 10
-        },
-        "threshold": {
-          "min_threshold": 0,
-          "max_threshold": 1
-        },
-        "specific_channel_setting": {},
-        "created_at": 0,
-        "updated_at": 0
-      }
-    ],
-    "output_channels": [],
-    "is_editable_input_channel": false,
-    "is_editable_output_channel": false
-  },
-  {
     "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
     "module_type": "ModbusTCP",
-    "module_name": "test",
+    "module_name": "PLC1",
     "status": "Active",
     "input_channel_num": 0,
     "output_channel_num": 0,
     "created_at": "2025-08-19T12:38:28.975Z",
     "updated_at": "2025-08-19T12:38:28.975Z",
     "specific_device_setting": {
-      "host_address": "10.10.10.10",
+      "host_address": "localhost",
       "port": 502
     },
     "input_channels": [
       {
         "channel_uuid": "10030",
-        "channel_name": "temp1",
+        "channel_name": "水温1",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -231,8 +29,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10030,
@@ -245,10 +45,10 @@
       },
       {
         "channel_uuid": "10031",
-        "channel_name": "temp2",
+        "channel_name": "水温2",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -259,8 +59,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10031,
@@ -273,10 +75,10 @@
       },
       {
         "channel_uuid": "10032",
-        "channel_name": "temp3",
+        "channel_name": "水温3",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -287,8 +89,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10032,
@@ -301,10 +105,10 @@
       },
       {
         "channel_uuid": "10033",
-        "channel_name": "temp4",
+        "channel_name": "水温4",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -315,8 +119,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10033,
@@ -329,10 +135,10 @@
       },
       {
         "channel_uuid": "10034",
-        "channel_name": "temp5",
+        "channel_name": "水温5",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -343,8 +149,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10034,
@@ -357,10 +165,10 @@
       },
       {
         "channel_uuid": "10035",
-        "channel_name": "temp6",
+        "channel_name": "水温6",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -371,8 +179,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10035,
@@ -385,10 +195,10 @@
       },
       {
         "channel_uuid": "10036",
-        "channel_name": "temp7",
+        "channel_name": "水温7",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -399,8 +209,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10036,
@@ -413,10 +225,10 @@
       },
       {
         "channel_uuid": "10037",
-        "channel_name": "temp8",
+        "channel_name": "水温8",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -427,8 +239,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10037,
@@ -441,10 +255,10 @@
       },
       {
         "channel_uuid": "10038",
-        "channel_name": "temp9",
+        "channel_name": "水温9",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -455,8 +269,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10038,
@@ -469,7 +285,7 @@
       },
       {
         "channel_uuid": "10012",
-        "channel_name": "UV1",
+        "channel_name": "UV強度1",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "%",
@@ -483,8 +299,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 60,
+          "alert_min_threshold": null,
+          "alert_max_threshold": 70
         },
         "specific_channel_setting": {
           "register_address": 10012,
@@ -497,7 +315,7 @@
       },
       {
         "channel_uuid": "10013",
-        "channel_name": "UV2",
+        "channel_name": "UV強度2",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "%",
@@ -511,8 +329,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 60,
+          "alert_min_threshold": null,
+          "alert_max_threshold": 70
         },
         "specific_channel_setting": {
           "register_address": 10013,
@@ -525,7 +345,7 @@
       },
       {
         "channel_uuid": "10014",
-        "channel_name": "UV3",
+        "channel_name": "UV強度3",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "%",
@@ -539,8 +359,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 60,
+          "alert_min_threshold": null,
+          "alert_max_threshold": 70
         },
         "specific_channel_setting": {
           "register_address": 10014,
@@ -553,7 +375,7 @@
       },
       {
         "channel_uuid": "10015",
-        "channel_name": "UV4",
+        "channel_name": "UV強度4",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "%",
@@ -567,8 +389,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 60,
+          "alert_min_threshold": null,
+          "alert_max_threshold": 70
         },
         "specific_channel_setting": {
           "register_address": 10015,
@@ -581,10 +405,10 @@
       },
       {
         "channel_uuid": "10020",
-        "channel_name": "ronaitemp",
+        "channel_name": "炉内温度",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
-        "unit": "",
+        "unit": "℃",
         "channel_number": -1,
         "decimals": 2,
         "normalize": {
@@ -595,8 +419,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": 75,
+          "alert_min_threshold": null,
+          "alert_max_threshold": 80
         },
         "specific_channel_setting": {
           "register_address": 10020,
@@ -609,7 +435,7 @@
       },
       {
         "channel_uuid": "10002",
- 	"channel_name": "lampV1",
+        "channel_name": "ランプ電圧1",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "V",
@@ -620,11 +446,13 @@
           "src_min": 0,
           "src_max": 4500,
           "dst_min": 0,
-          "dst_max": 450
+          "dst_max": 4500
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
         },
         "specific_channel_setting": {
           "register_address": 10002,
@@ -637,7 +465,7 @@
       },
       {
         "channel_uuid": "10005",
-        "channel_name": "lampV2",
+        "channel_name": "ランプ電圧2",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "V",
@@ -648,11 +476,13 @@
           "src_min": 0,
           "src_max": 4500,
           "dst_min": 0,
-          "dst_max": 450
+          "dst_max": 4500
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
         },
         "specific_channel_setting": {
           "register_address": 10005,
@@ -665,7 +495,7 @@
       },
       {
         "channel_uuid": "10008",
-        "channel_name": "lampV3",
+        "channel_name": "ランプ電圧3",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "V",
@@ -676,11 +506,13 @@
           "src_min": 0,
           "src_max": 4500,
           "dst_min": 0,
-          "dst_max": 450
+          "dst_max": 4500
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
         },
         "specific_channel_setting": {
           "register_address": 10008,
@@ -693,7 +525,7 @@
       },
       {
         "channel_uuid": "10011",
-        "channel_name": "lampV4",
+        "channel_name": "ランプ電圧4",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "V",
@@ -704,11 +536,13 @@
           "src_min": 0,
           "src_max": 4500,
           "dst_min": 0,
-          "dst_max": 450
+          "dst_max": 4500
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
         },
         "specific_channel_setting": {
           "register_address": 10011,
@@ -721,7 +555,7 @@
       },
       {
         "channel_uuid": "10001",
-        "channel_name": "lampA1",
+        "channel_name": "ランプ電流1",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "A",
@@ -735,8 +569,10 @@
           "dst_max": 15
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 4,
+          "warning_max_threshold": 7,
+          "alert_min_threshold": 3,
+          "alert_max_threshold": 8
         },
         "specific_channel_setting": {
           "register_address": 10001,
@@ -749,7 +585,7 @@
       },
       {
         "channel_uuid": "10004",
-        "channel_name": "lampA2",
+        "channel_name": "ランプ電流2",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "A",
@@ -763,8 +599,10 @@
           "dst_max": 15
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 4,
+          "warning_max_threshold": 7,
+          "alert_min_threshold": 3,
+          "alert_max_threshold": 8
         },
         "specific_channel_setting": {
           "register_address": 10004,
@@ -777,7 +615,7 @@
       },
       {
         "channel_uuid": "10007",
-        "channel_name": "lampA3",
+        "channel_name": "ランプ電流3",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "A",
@@ -791,8 +629,10 @@
           "dst_max": 15
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 4,
+          "warning_max_threshold": 7,
+          "alert_min_threshold": 3,
+          "alert_max_threshold": 8
         },
         "specific_channel_setting": {
           "register_address": 10007,
@@ -805,7 +645,7 @@
       },
       {
         "channel_uuid": "10010",
-        "channel_name": "lampA4",
+        "channel_name": "ランプ電流4",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "A",
@@ -819,8 +659,10 @@
           "dst_max": 15
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 4,
+          "warning_max_threshold": 7,
+          "alert_min_threshold": 3,
+          "alert_max_threshold": 8
         },
         "specific_channel_setting": {
           "register_address": 10010,
@@ -833,7 +675,7 @@
       },
       {
         "channel_uuid": "10000",
-        "channel_name": "anteikiV1",
+        "channel_name": "安定器電流1",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "V",
@@ -847,8 +689,10 @@
           "dst_max": 15
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
         },
         "specific_channel_setting": {
           "register_address": 10000,
@@ -861,7 +705,7 @@
       },
       {
         "channel_uuid": "10003",
-        "channel_name": "anteikiV2",
+        "channel_name": "安定器電流2",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "V",
@@ -875,8 +719,10 @@
           "dst_max": 15
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
         },
         "specific_channel_setting": {
           "register_address": 10003,
@@ -889,7 +735,7 @@
       },
       {
         "channel_uuid": "10006",
-        "channel_name": "anteikiV3",
+        "channel_name": "安定器電流3",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "V",
@@ -903,8 +749,10 @@
           "dst_max": 15
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
         },
         "specific_channel_setting": {
           "register_address": 10006,
@@ -917,7 +765,7 @@
       },
       {
         "channel_uuid": "10009",
-        "channel_name": "anteikiV4",
+        "channel_name": "安定器電流4",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "V",
@@ -931,8 +779,10 @@
           "dst_max": 15
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
         },
         "specific_channel_setting": {
           "register_address": 10009,
@@ -945,7 +795,7 @@
       },
       {
         "channel_uuid": "10039",
-        "channel_name": "fan",
+        "channel_name": "冷却ファン周波数",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
         "unit": "Hz",
@@ -959,8 +809,10 @@
           "dst_max": 60
         },
         "threshold": {
-          "min_threshold": null,
-          "max_threshold": null
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10039,

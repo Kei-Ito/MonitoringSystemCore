@@ -8,6 +8,7 @@ export const useMonitoringStore = defineStore('monitoringStore', {
     isSampling: false,
     ioModules: [] as IOModule[],
     samplingInterval: 30000,
+    dataRootPath: ""
   }),
   /** ------------getters-------------- */
   getters: {

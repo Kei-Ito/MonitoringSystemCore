@@ -44,10 +44,12 @@ import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 import { getUiLayouts } from "@/service/uiService";
 import { fetchSystemSetting, getIOModules } from "@/service/monitoringService";
 import type { getIOModuleInputResponse } from "@monitoring/shared/api";
+import { DeviceHealthEnum } from './uniqueComponents/DeviceHealthEnum';
 
 const toast = useToast();
 const uiStore = useUiStore()
 const monitoringStore = useMonitoringStore();
+const channelValuesStore = useChannelValuesStore();
 
 let socket: WebSocket | null = null;
 let retryTimer: ReturnType<typeof setTimeout> | null = null;
@@ -89,6 +91,11 @@ function setupWebSocket() {
       switch (message.type) {
         case "IOModuleData":
           updateRuntimeValues(message.data);
+          if (monitoringStore.isSampling) {
+            //遅れて通知が来てしまい、稼働中表示のままになる可能性があるため
+            channelValuesStore.setDeviceHealth("照射炉1", message.status);
+          }
+          
           break;
         case "StartSampling":
           monitoringStore.isSampling = true;
@@ -97,6 +104,7 @@ function setupWebSocket() {
         case "StopSampling":
           monitoringStore.isSampling = false;
           toast.success("モニタリングを停止しました");
+          channelValuesStore.setDeviceHealth("照射炉1", DeviceHealthEnum.Unknown);
           break;
         case "samplingStatus":
           // TODO: 不要かも。要確認
@@ -164,7 +172,7 @@ function updateRuntimeValues(module_datas: getIOModuleInputResponse[]) {
   // 受け取ったデータをランタイムデータのstoreに反映
   // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
 
-  const channelValuesStore = useChannelValuesStore();
+  
   module_datas.map((module_data) => {
     module_data.channels.map((channel) => {
       channelValuesStore.setRuntimeValue(channel.channel_uuid, channel.input_data);

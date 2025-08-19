@@ -24,3 +24,9 @@
 .vue-grid-item-style.static {
   background: #cce;
 }
+
+/* Vue Toastificationのスタイル　*/
+.Vue-Toastification__toast--warning {
+  background-color: #ff7300 !important; /* 例: オレンジ系 */
+  /* color: #000 !important;                黒文字で視認性UP */
+}

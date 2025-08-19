@@ -10,9 +10,9 @@
                 "10033",
                 "10034",
                 "10035",
-		"10036",
-		"10037",
-		"10038"
+                "10036",
+                "10037",
+                "10038"
             ],
             "chart_title": "液温",
             "chart_unit": "℃",
@@ -21,14 +21,26 @@
                 "x": 2,
                 "y": 0,
                 "w": 12,
-                "h": 9,
+                "h": 15,
                 "static": false,
                 "minW": null,
                 "minH": null,
                 "maxW": null,
                 "maxH": null
             },
-            "chart_options": {},
+            "chart_options": {
+                "maxValue": 70,
+                "minValue": 0,
+                "colors": [
+                    "#65B581",
+                    "#ff7300",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    55,
+                    60
+                ]
+            },
             "category1": "照射炉1",
             "category2": "液温"
         },
@@ -46,9 +58,9 @@
             "grid_layout": {
                 "i": "chart002",
                 "x": 0,
-                "y": 9,
+                "y": 15,
                 "w": 12,
-                "h": 6,
+                "h": 11,
                 "static": false,
                 "minW": null,
                 "minH": null,
@@ -56,23 +68,17 @@
                 "maxH": null
             },
             "chart_options": {
-                "maxValue": 8,
+                "maxValue": 100,
                 "minValue": 0,
                 "colors": [
                     "#FF6E76",
-                    "#FDDD60",
-                    "#7CFFB2",
-                    "#FDDD60",
-                    "#FF6E76"
+                    "#ff7300",
+                    "#65B581"
                 ],
                 "thresholds": [
-                    0.10,
-                    0.30,
-                    0.70,
-                    0.90,
-                    1.00
-                ],
-                "lastValue": null
+                    60,
+                    70
+                ]
             },
             "category1": "照射炉1",
             "category2": "UV強度"
@@ -88,16 +94,28 @@
             "grid_layout": {
                 "i": "chart003",
                 "x": 0,
-                "y": 18,
+                "y": 26,
                 "w": 12,
-                "h": 5,
+                "h": 8,
                 "static": false,
                 "minW": null,
                 "minH": null,
                 "maxW": null,
                 "maxH": null
             },
-            "chart_options": {},
+            "chart_options": {
+                "maxValue": 90,
+                "minValue": 0,
+                "colors": [
+                    "#65B581",
+                    "#ff7300",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    75,
+                    80
+                ]
+            },
             "category1": "照射炉1",
             "category2": "炉内温度"
         },
@@ -115,16 +133,32 @@
             "grid_layout": {
                 "i": "chart004",
                 "x": 0,
-                "y": 27,
+                "y": 34,
                 "w": 12,
-                "h": 9,
+                "h": 11,
                 "static": false,
                 "minW": null,
                 "minH": null,
                 "maxW": null,
                 "maxH": null
             },
-            "chart_options": {},
+            "chart_options": {
+                "maxValue": 1200,
+                "minValue": 0,
+                "colors": [
+                    "#FF6E76",
+                    "#ff7300",
+                    "#65B581",
+                    "#ff7300",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    450,
+                    470,
+                    950,
+                    1000
+                ]
+            },
             "category1": "照射炉1",
             "category2": "ランプ電圧"
         },
@@ -142,16 +176,32 @@
             "grid_layout": {
                 "i": "chart005",
                 "x": 0,
-                "y": 36,
+                "y": 45,
                 "w": 12,
-                "h": 9,
+                "h": 11,
                 "static": false,
                 "minW": null,
                 "minH": null,
                 "maxW": null,
                 "maxH": null
             },
-            "chart_options": {},
+            "chart_options": {
+                "maxValue": 9,
+                "minValue": 0,
+                "colors": [
+                    "#FF6E76",
+                    "#ff7300",
+                    "#65B581",
+                    "#ff7300",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    3,
+                    4,
+                    7,
+                    8
+                ]
+            },
             "category1": "照射炉1",
             "category2": "ランプ電流"
         },
@@ -169,16 +219,32 @@
             "grid_layout": {
                 "i": "chart006",
                 "x": 0,
-                "y": 45,
+                "y": 56,
                 "w": 12,
-                "h": 9,
+                "h": 11,
                 "static": false,
                 "minW": null,
                 "minH": null,
                 "maxW": null,
                 "maxH": null
             },
-            "chart_options": {},
+            "chart_options": {
+                "maxValue": 17,
+                "minValue": 0,
+                "colors": [
+                    "#FF6E76",
+                    "#ff7300",
+                    "#65B581",
+                    "#ff7300",
+                    "#FF6E76"
+                ],
+                "thresholds": [
+                    10,
+                    10.5,
+                    14.5,
+                    15
+                ]
+            },
             "category1": "照射炉1",
             "category2": "安定期電流"
         },
@@ -193,16 +259,26 @@
             "grid_layout": {
                 "i": "chart007",
                 "x": 0,
-                "y": 54,
+                "y": 67,
                 "w": 12,
-                "h": 5,
+                "h": 8,
                 "static": false,
                 "minW": null,
                 "minH": null,
                 "maxW": null,
                 "maxH": null
             },
-            "chart_options": {},
+            "chart_options": {
+                "maxValue": 70,
+                "minValue": 0,
+                "colors": [
+                    "#65B581",
+                    "#65B581"
+                ],
+                "thresholds": [
+                    0
+                ]
+            },
             "category1": "照射炉1",
             "category2": "冷却ファン周波数"
         }

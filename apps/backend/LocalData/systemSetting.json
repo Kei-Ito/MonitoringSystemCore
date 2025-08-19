@@ -1,5 +1,6 @@
 {
   "samplingInterval": 1000,
+  "dataRootPath": "C:\\Users\\110su\\Downloads\\data",
   "category1list": [
     "照射炉1",
     "照射炉2",
@@ -16,10 +17,10 @@
     "冷却ファン周波数",
     "ワーク検出"
   ],
-  "dashboardViewCategory1Selected":[
+  "dashboardViewCategory1Selected": [
     "照射炉1"
   ],
-  "dashboardViewCategory2Selected":[
+  "dashboardViewCategory2Selected": [
     "液温",
     "UV強度",
     "炉内温度",
@@ -30,10 +31,10 @@
     "冷却ファン周波数",
     "ワーク検出"
   ],
-  "trendViewCategory1Selected":[
+  "trendViewCategory1Selected": [
     "照射炉1"
   ],
-  "trendViewCategory2Selected":[
+  "trendViewCategory2Selected": [
     "液温",
     "UV強度",
     "炉内温度",

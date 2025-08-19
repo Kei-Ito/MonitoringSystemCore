@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid"
 const SpecificChartSetting: Record<ChartTypes, any> = {
     [ChartTypes.GaugeChart]: Charts.createGaugeChartSpecificSetting(),
     // TODO: 必要があれば、HorizontalBarChartの固有設定を保存するデータ構造を作成する
-    [ChartTypes.HorizontalBarChart]: ()=> {},
+    [ChartTypes.HorizontalBarChart]: ()=> Charts.createHorizontalBarChartSpecificSetting(),
     // 新規モジュールタイプを追加するときはここにハンドラを登録
     // 例: [IOModuleTypes.XYZModule]: new XYZModuleHandler(),
     [ChartTypes.LineChart]: Charts.createLineChartSpecificSetting(),

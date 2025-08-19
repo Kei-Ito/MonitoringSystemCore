@@ -23,7 +23,6 @@ export const fetchSystemSetting = () =>
             monitoringStore.samplingInterval = val.samplingInterval;
 
             const uiStore = useUiStore();
-            console.log(val);
             uiStore.$patch({
                 category1List: val.category1list,
                 category2List: val.category2list,

@@ -1,5 +1,5 @@
 <template>
-  <div class=" container-fluid">
+  <div class="container-fluid min-vh-70">
     <div class="row">
       <div class="col-lg-12 position-relative z-index-2">
         <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="12" :is-draggable="isAdmin"
@@ -77,6 +77,7 @@ const layoutModel = computed({
 
 .vue-grid-layout-style {
   background: #eee;
+  min-height: 70vh;
 }
 
 .vue-grid-item-style:not(.vue-grid-placeholder) {
