@@ -61,8 +61,8 @@ const optionBuilder = () => {
         symbol: 'none',
         encode: { x: 'time', y: s.channel_name },
         sampling: 'lttb',
-        progressive: 2000,
-        progressiveThreshold: 3000,
+        //progressive: 2000,
+        //progressiveThreshold: 3000,
         emphasis: { disabled: true, focus: 'none' }
     }))
 
@@ -106,7 +106,7 @@ const optionBuilder = () => {
         animation: false,
         dataset: { source: datasetSource.value },
         grid: { top: 40, left: 10, right: 25, containLabel: true },
-        legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 },
+        legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
         tooltip: { trigger: 'axis', axisPointer: { type: 'line' } }, // ← 1箇所に統一
         xAxis: { type: 'time', boundaryGap: false, axisLabel: { formatter: formatTime } },
         yAxis: { type: 'value' },
