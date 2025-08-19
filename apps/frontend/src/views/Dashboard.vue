@@ -2,7 +2,7 @@
   <div class=" container-fluid">
     <div class="row">
       <div class="col-lg-12 position-relative z-index-2">
-        <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="30" :is-draggable="isAdmin"
+        <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="12" :is-draggable="isAdmin"
           :is-resizable="isAdmin" :vertical-compact="true" :use-css-transforms="true"
           :class = "isAdmin ? 'vue-grid-layout-style':''">
           <GridItem v-for="(item) in layoutModel" :key="item.i" :static="item.static" :x="item.x" :y="item.y"

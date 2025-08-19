@@ -82,6 +82,7 @@ const io_module: Ref<IOModule> = ref(createModuleForInitialization(uuidv4(), mod
 watch(module_type, (newVal) => {
   if (newVal) {
     io_module.value = createModuleForInitialization(uuidv4(), module_name.value, newVal);
+    // 特定のデバイス設定がある場合は表示する
     if (Object.keys(io_module.value.specific_device_setting).length > 0) {
       isVisibleSpecificSettingTable.value = true;
     } else {
@@ -102,7 +103,6 @@ watch(visible, (newVal) => {
 function addModule() {
   io_module.value.module_name = module_name.value;
   emit('add', io_module.value);
-  console.log(io_module.value);
   close();
 }
 

@@ -200,5 +200,52 @@
     "output_channels": [],
     "is_editable_input_channel": false,
     "is_editable_output_channel": false
+  },
+  {
+    "module_uuid": "daf89728-7f36-4daf-b42c-e4d45b586bf0",
+    "module_type": "ModbusTCP",
+    "module_name": "",
+    "status": "Active",
+    "input_channel_num": 0,
+    "output_channel_num": 0,
+    "created_at": "2025-08-19T09:12:36.229Z",
+    "updated_at": "2025-08-19T09:12:36.229Z",
+    "specific_device_setting": {
+      "host_address": "localhost",
+      "port": 5020
+    },
+    "input_channels": [
+      {
+        "channel_uuid": "e23ccb90-5e11-46ed-b1f5-2d8125f2dff1",
+        "channel_name": "",
+        "module_uuid": "daf89728-7f36-4daf-b42c-e4d45b586bf0",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 5,
+          "dst_min": 0,
+          "dst_max": 5
+        },
+        "threshold": {
+          "min_threshold": null,
+          "max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 1,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T09:12:50.054Z",
+        "updated_at": "2025-08-19T09:12:50.054Z"
+      }
+    ],
+    "output_channels": [],
+    "is_editable_input_channel": true,
+    "is_editable_output_channel": true
   }
 ]
