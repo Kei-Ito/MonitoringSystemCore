@@ -1,9 +1,10 @@
 <template>
-  <aside id="sidenav-main" class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-xl my-3 ms-3 d-flex flex-column flex-nowrap"
-    :class="[`${isRTL ? 'me-3 rotate-caret fixed-end' : 'fixed-start ms-3' 
+  <aside id="sidenav-main"
+    class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-xl my-3 ms-3 d-flex flex-column flex-nowrap"
+    :class="[`${isRTL ? 'me-3 rotate-caret fixed-end' : 'fixed-start ms-3'
       } ${sidebarType}`, isDarkMode ? 'dark-version ' : '']">
     <!-- header -->
-    <div class="sidenav-header d-flex align-items-center justify-content-between" style="height: 65px;" >
+    <div class="sidenav-header d-flex align-items-center justify-content-between" style="height: 65px;">
       <a class="m-0 navbar-brand ">
         <span class="font-weight-bold text-white " style="font-size: 27px;">UV Monitor</span>
       </a>
@@ -14,16 +15,16 @@
     </div>
 
     <hr class="horizontal light mt-0 mb-2" />
-
+    <DeviceHealthList :devices="deviceInfoList" class="mx-3 mb-2" />
     <hr class="horizontal light mt-0 mb-2 " />
-     <!-- 中身：可変部分をスクロールできるようにする -->
+    <!-- 中身：可変部分をスクロールできるようにする -->
     <div class="flex-grow-1 overflow-auto custom-scrollbar-area w-100">
       <sidenav-list />
     </div>
 
     <!-- フッター：サイドバー下に固定し、必要に応じてスクロール対象外にする -->
     <div class="sidenav-footer w-100 mt-auto">
-      <MonitoringView/>
+      <MonitoringView />
     </div>
   </aside>
 </template>
@@ -34,32 +35,34 @@ import { storeToRefs } from 'pinia';
 import MonitoringView from "@/components/MonitoringView.vue";
 import SidenavList from '@/examples/Sidenav/SidenavList.vue';
 import { useUiStore } from "@/pinia/uiStore";
-//import { DeviceHealthEnum} from '@/uniqueComponents/DeviceHealthEnum';
-//import DeviceHealthList from "@/uniqueComponents/DeviceHealthList.vue";
-/*
-interface DeviceInfo {
-    // 表示名 (例: 照射炉 1) 
-    name: string
-    // normal = 緑, warning = 黄, error = 赤 
-    status: DeviceHealthEnum
-    // （任意）v-for 用の固有 ID 
-    id?: string | number
-  }
-*/
-const uiStore = useUiStore();
+import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum';
+import DeviceHealthList from "@/uniqueComponents/DeviceHealthList.vue";
 
-const{
-  isDarkMode,
-  isRTL,
-  sidebarType,
-} = storeToRefs(uiStore);
-/*
-const deviceInfoList:DeviceInfo[] = [
+interface DeviceInfo {
+  // 表示名 (例: 照射炉 1) 
+  name: string
+  // normal = 緑, warning = 黄, error = 赤 
+  status: DeviceHealthEnum
+  // （任意）v-for 用の固有 ID 
+  id?: string | number
+}
+
+const deviceInfoList: DeviceInfo[] = [
   { name: '照射炉 1', status: DeviceHealthEnum.Good },
   { name: '照射炉 2', status: DeviceHealthEnum.Caution },
   { name: '照射炉 3', status: DeviceHealthEnum.Error },
 ]
-*/
+
+const uiStore = useUiStore();
+
+const {
+  isDarkMode,
+  isRTL,
+  sidebarType,
+} = storeToRefs(uiStore);
+
+
+
 function toggleSidebar() {
   uiStore.navbarMinimize();
 }
@@ -68,7 +71,8 @@ function toggleSidebar() {
 </script>
 <style scoped>
 #sidenav-main {
-  z-index: 1030; /* Bootstrapのモーダルが 1050 なので、それより低く */
+  z-index: 1030;
+  /* Bootstrapのモーダルが 1050 なので、それより低く */
 }
 
 /* 
@@ -77,15 +81,22 @@ function toggleSidebar() {
   フラットで細め、ホバーすると少し色が濃くなる例です。
 */
 .custom-scrollbar-area::-webkit-scrollbar {
-  width: 8px;               /* スクロールバーの太さ */
+  width: 8px;
+  /* スクロールバーの太さ */
 }
+
 .custom-scrollbar-area::-webkit-scrollbar-track {
-  background: transparent;  /* スクロールバーのトラック部分 */
+  background: transparent;
+  /* スクロールバーのトラック部分 */
 }
+
 .custom-scrollbar-area::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3); /* サムのデフォルト色 */
-  border-radius: 4px;                         /* 角丸にする */
-  border: 1px solid transparent;              /* 内側に余白を作る感じ */
+  background-color: rgba(255, 255, 255, 0.3);
+  /* サムのデフォルト色 */
+  border-radius: 4px;
+  /* 角丸にする */
+  border: 1px solid transparent;
+  /* 内側に余白を作る感じ */
 }
 
 /* ホバー時にちょっと濃くする例 */
@@ -93,10 +104,8 @@ function toggleSidebar() {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
-.dark-version{
-  border: 1px solid #ffffff31;   
-    box-shadow: 0 0 10px 3px rgba(58, 178, 255, 0.3) !important;
+.dark-version {
+  border: 1px solid #ffffff31;
+  box-shadow: 0 0 10px 3px rgba(58, 178, 255, 0.3) !important;
 }
-
-
 </style>

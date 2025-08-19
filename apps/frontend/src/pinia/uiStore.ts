@@ -28,12 +28,12 @@ export const useUiStore = defineStore('uiStore', {
         isAbsolute: false,
         showConfig: false,
         isAdmin: true,
-        dashboardViewCategory1Selected: ['All'],// TODO: 将来的にlocalStorageに保存する
-        dashboardViewCategory2Selected: ['照度センサ','風速計','温度計','湿度計'],// TODO: 将来的にlocalStorageに保存する
-        trendViewCategory1Selected: ['All'],// TODO: 将来的にlocalStorageに保存する
-        trendViewCategory2Selected: ['照度センサ','風速計','温度計','湿度計'],// TODO: 将来的にlocalStorageに保存する
-        category1List: ['All',],
-        category2List: ['照度センサ','風速計','温度計','湿度計'],
+        dashboardViewCategory1Selected: ["a","b","c"],// TODO: 将来的にlocalStorageに保存する
+        dashboardViewCategory2Selected: ["d","e","f"],// TODO: 将来的にlocalStorageに保存する
+        trendViewCategory1Selected: ["a"],// TODO: 将来的にlocalStorageに保存する
+        trendViewCategory2Selected: ["d"],// TODO: 将来的にlocalStorageに保存する
+        category1List: ["a"],
+        category2List: ["d"],
         navbarFixed:
             "position-sticky blur shadow-blur left-auto top-1 z-index-sticky px-0 mx-4",
         absolute: "position-absolute px-4 mx-0 w-100 z-index-2",

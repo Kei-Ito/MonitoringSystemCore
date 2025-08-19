@@ -136,7 +136,6 @@ onMounted(async () => {
   // サンプリング間隔を取得
   await fetchSystemSetting();
 
-  console.log(monitoringStore.ioModules)
   const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
 
   if (window.innerWidth > 1200) {

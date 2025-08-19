@@ -45,7 +45,7 @@ const optionBuilder = () => {
         yAxis: { type: 'category' },
         tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
         grid: {
-            top: 15,
+            top: 30,
             left: 10,
             right: 30,
             bottom: 10,

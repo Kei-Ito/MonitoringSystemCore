@@ -16,7 +16,7 @@
         v-if="currentRouteName === 'Dashboard' || currentRouteName === 'Trend'">
         <!-- 照射炉選択（カテゴリ1）のマルチセレクト -->
         <div class="multiselect-container">
-          <multiselect v-model="selectedCategory1" :options="category1List" :multiple="false" :close-on-select="true"
+          <multiselect v-model="selectedCategory1" :options="category1List??[]" :multiple="false" :close-on-select="true"
             :clear-on-select="false" :searchable="false" :allow-empty="false" :preserve-search="false" selectLabel=""
             selectedLabel="" deselectLabel="" placeholder="Category1を選択" :preselect-first="false">
             <!-- マルチセレクト時のテンプレート -->
@@ -41,7 +41,7 @@
 
         <!-- カテゴリ2のマルチセレクト -->
         <div class="multiselect-container">
-          <multiselect v-model="selectedCategory2" :options="category2List" :multiple="true" :close-on-select="false"
+          <multiselect v-model="selectedCategory2" :options="category2List??[]" :multiple="true" :close-on-select="false"
             :clear-on-select="false" :preserve-search="false" placeholder="" :searchable="false" selectLabel=""
             selectedLabel="" deselectLabel="" :preselect-first="false">
             <!-- マルチセレクト時のテンプレート -->

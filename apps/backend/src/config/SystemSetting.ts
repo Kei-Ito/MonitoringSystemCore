@@ -11,7 +11,7 @@ export class SystemSettingService {
     /**
      * サンプリング周期（ミリ秒）
      */
-    private _samplingInterval: number = 1000;
+    private _systemSetting: SystemSettingData | null = null;
 
     /**
      * コンストラクタをprivateにすることで、外部からのインスタンス生成を禁止する
@@ -31,7 +31,13 @@ export class SystemSettingService {
 
     private createDefaultSystemSetting(): SystemSettingData {
         return {
-            samplingInterval: 1000
+            samplingInterval: 1000,
+            category1list: [],
+            category2list: [],
+            dashboardViewCategory1Selected: [],
+            dashboardViewCategory2Selected: [],
+            trendViewCategory1Selected: [],
+            trendViewCategory2Selected: []
         };
     }
 
@@ -41,7 +47,7 @@ export class SystemSettingService {
     public async loadSystemSettingFromDatabase(): Promise<void> {
         const result: Result<SystemSettingData> = await json.loadJson<SystemSettingData>(jsonPath);
         if (result.ok) {
-            this._samplingInterval = result.value.samplingInterval;
+            this._systemSetting = result.value;
         } else {
             await this.setSystemSetting(this.createDefaultSystemSetting());
         }
@@ -51,14 +57,20 @@ export class SystemSettingService {
      * サンプリング周期を取得する
      */
     public get samplingInterval(): number {
-        return this._samplingInterval;
+        return this._systemSetting?.samplingInterval ?? 1000;
     }
 
     /**
      * サンプリング周期を設定し、データベースに保存する
      */
     public set samplingInterval(value: number) {
-        this._samplingInterval = value;
+        if (!this._systemSetting) {
+            this._systemSetting = this.createDefaultSystemSetting();
+        }
+        this._systemSetting = {
+            ...this._systemSetting,
+            samplingInterval: value
+        };
         this.saveSystemSetting();
     }
 
@@ -67,13 +79,19 @@ export class SystemSettingService {
      */
     private async saveSystemSetting(): Promise<void> {
         const systemSetting: SystemSettingData = {
-            samplingInterval: this._samplingInterval
+            samplingInterval: this._systemSetting?.samplingInterval ?? 1000,
+            category1list: this._systemSetting?.category1list ?? [],
+            category2list: this._systemSetting?.category2list ?? [],
+            dashboardViewCategory1Selected: this._systemSetting?.dashboardViewCategory1Selected ?? [],
+            dashboardViewCategory2Selected: this._systemSetting?.dashboardViewCategory2Selected ?? [],
+            trendViewCategory1Selected: this._systemSetting?.trendViewCategory1Selected ?? [],
+            trendViewCategory2Selected: this._systemSetting?.trendViewCategory2Selected ?? []
         };
         await json.saveJson(jsonPath, systemSetting);
     }
 
     public async setSystemSetting(setting:SystemSettingData): Promise<void> {
-        this._samplingInterval = setting.samplingInterval;
+        this._systemSetting = setting;
         this.saveSystemSetting();
     }
 
@@ -81,9 +99,7 @@ export class SystemSettingService {
      * システム設定を取得する
      */
     public getSystemSetting(): SystemSettingData {
-        return {
-            samplingInterval: this._samplingInterval
-        };
+        return this._systemSetting ?? this.createDefaultSystemSetting();
     }
 }
 

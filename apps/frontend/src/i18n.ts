@@ -49,6 +49,12 @@ const translations:any = {
           data_retention: 'データを保持する期間を設定します'
         }
     },
+    io_settings:{
+      title: '入力設定',
+      name: '名称',
+      status: 'ステータス',
+      created: '追加日',
+    },
     modal_window: {
       update: '更新',
       cancel: 'キャンセル',
@@ -98,6 +104,12 @@ const translations:any = {
           sampling_clock: 'Set the data collection interval',
           data_retention: 'Set the period for which data is retained'
         }
+    },
+    io_settings:{
+      title: 'Input Settings',
+      name: 'Name',
+      status: 'Status',
+      created: 'Created',
     },
     modal_window: {
       update: 'Update',
@@ -149,6 +161,12 @@ const translations:any = {
           data_retention: '设置数据保留期限'
         }
     },
+    io_settings: {
+      title: '输入设置',
+      name: '名称',
+      status: '状态',
+      created: '创建时间',
+    },
     modal_window: {
       update: '更新',
       cancel: '取消',
@@ -198,6 +216,12 @@ const translations:any = {
           sampling_clock: '데이터 수집 주기를 설정합니다',
           data_retention: '데이터 보존 기간을 설정합니다'
         }
+    },
+    io_settings: {
+      title: '입력 설정',
+      name: '이름',
+      status: '상태',
+      created: '추가일',
     },
     modal_window: {
       update: '업데이트',

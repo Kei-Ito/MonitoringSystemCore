@@ -11,7 +11,7 @@
         </sidenav-collapse>
       </li>
       -->
-      <!--
+
       <li class="nav-item">
         <sidenav-collapse url="#" :aria-controls="''" v-bind:collapse="false" collapseRef="operation-condition"
         :navText="$t('menu.operation_condition')">
@@ -20,7 +20,7 @@
           </template>
         </sidenav-collapse>
       </li>
-      -->
+
       <li class="nav-item">
         <sidenav-collapse url="#" :aria-controls="''" v-bind:collapse="false" collapseRef="dashboard"
         :navText="$t('menu.dashboard')">

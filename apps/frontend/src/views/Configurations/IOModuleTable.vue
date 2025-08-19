@@ -3,7 +3,7 @@
     <div class="card my-4">
       <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
         <div class="border-radius-lg pt-4 pb-3" :class="`bg-gradient-${color} shadow-${color}`">
-          <h6 class="text-white text-capitalize ps-3">IO Modules</h6>
+          <h6 class="text-white text-capitalize ps-3">{{ $t(('io_settings.title')) }}</h6>
         </div>
       </div>
       <div class="card-body px-0 pb-2">
@@ -12,13 +12,13 @@
             <thead>
               <tr>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                  Name
+                  {{ $t(('io_settings.name')) }}
                 </th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                  Status
+                  {{ $t(('io_settings.status')) }}
                 </th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                  Created
+                  {{ $t(('io_settings.created')) }}
                 </th>
                 <th class="text-secondary opacity-7"></th>
               </tr>
@@ -140,7 +140,7 @@ const getModuleImage = (type: IOModuleTypes) => {
   return module ? module.image : '';
 };
 
-const formatDate = (date: Date | string) => {
+const formatDate = (date: Date | string | any) => {
 
   if (typeof date === 'string') {
     date = new Date(date);

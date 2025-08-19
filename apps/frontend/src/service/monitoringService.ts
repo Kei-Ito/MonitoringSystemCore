@@ -5,6 +5,7 @@ import { err } from '@monitoring/shared/utils'
 
 import * as api from '@/api'
 import { useMonitoringStore } from '@/pinia/monitoringStore'
+import { useUiStore } from '@/pinia/uiStore'
 import { handleApiRequest } from '@/service/handle';
 import { RequestLock } from '@/utils/requestLock';
 
@@ -18,7 +19,19 @@ export const fetchSystemSetting = () =>
         apiCall: () => api.getSystemSetting(),
         onSuccess: (val) => {
             // TODO: 以前の実装の名残。修正が望ましい。
-            useMonitoringStore().samplingInterval=val.samplingInterval;
+            const monitoringStore = useMonitoringStore();
+            monitoringStore.samplingInterval = val.samplingInterval;
+
+            const uiStore = useUiStore();
+            console.log(val);
+            uiStore.$patch({
+                category1List: val.category1list,
+                category2List: val.category2list,
+                dashboardViewCategory1Selected: val.dashboardViewCategory1Selected,
+                dashboardViewCategory2Selected: val.dashboardViewCategory2Selected,
+                trendViewCategory1Selected: val.trendViewCategory1Selected,
+                trendViewCategory2Selected: val.trendViewCategory2Selected,
+            });
         },
         errorMsg: "システム設定の取得に失敗しました",
     });
@@ -41,7 +54,7 @@ export const getIOModules = () =>
         onSuccess: (val) => {
             useMonitoringStore().setIOModules(val);
         },
-        errorMsg: "IOモジュールの取得に失敗しました",
+        errorMsg: "入出力モジュールの取得に失敗しました",
     });
 
 /** IOModuleを追加し、backendへ変更をpushするメソッド */
@@ -51,8 +64,8 @@ export const addIOModule = (module: IOModule) =>
         onSuccess: (val) => {
             useMonitoringStore().ioModules.push(val);
         },
-        successMsg: "IOモジュールの追加に成功しました",
-        errorMsg: "IOモジュールの追加に失敗しました",
+        successMsg: "入出力モジュールの追加に成功しました",
+        errorMsg: "入出力モジュールの追加に失敗しました",
     });
 
 /** IOModuleを更新し、backendへ変更をpushするメソッド */
@@ -64,8 +77,8 @@ export const updateIOModule = (updatedModule: IOModule) =>
             updatedModule.status = val;
             useMonitoringStore().updateIOModule(updatedModule);
         },
-        successMsg: "IOモジュールの設定を更新しました",
-        errorMsg: "IOモジュールの更新に失敗しました",
+        successMsg: "入出力モジュールの設定を更新しました",
+        errorMsg: "入出力モジュールの更新に失敗しました",
     });
 
 /** IOModuleを削除し、backendへ変更をpushするメソッド */
@@ -75,8 +88,8 @@ export const deleteIOModule = (moduleUUID: string) =>
         onSuccess: () => {
             useMonitoringStore().deleteIOModule(moduleUUID);
         },
-        successMsg: "IOモジュールの削除に成功しました",
-        errorMsg: "IOモジュールの削除に失敗しました",
+        successMsg: "入出力モジュールの削除に成功しました",
+        errorMsg: "入出力モジュールの削除に失敗しました",
     });
 
 /** IOModuleにチャンネルを追加し、backendへ変更をpushするメソッド */
@@ -98,7 +111,7 @@ export const addChannel = (channel: IChannelSetting) =>
         onSuccess: (val) => {
             useMonitoringStore().addChannel(val);
         },
-        errorMsg: "IOモジュールのチャンネルの追加に失敗しました",
+        errorMsg: "入出力モジュールのチャンネルの追加に失敗しました",
     });
 
 /** IOModuleのチャンネルを削除し、backendへ変更をpushするメソッド */
@@ -108,10 +121,10 @@ export const deleteChannel = (channel: IChannelSetting) =>
         onSuccess: () => {
             useMonitoringStore().deleteChannel(channel);
         },
-        errorMsg: "IOモジュールのチャンネルの削除に失敗しました",
+        errorMsg: "入出力モジュールのチャンネルの削除に失敗しました",
     });
 
-/** IOモジュールのサンプリング開始をbackendに通知するメソッド */
+/** 入出力モジュールのサンプリング開始をbackendに通知するメソッド */
 export const startSampling = () =>
     handleApiRequest({
         apiCall: () => api.startSampling(),
@@ -128,7 +141,7 @@ export const startSampling = () =>
         errorMsg: "サンプリング開始エラー",
     });
 
-/** IOモジュールのサンプリング停止をbackendに通知するメソッド */
+/** 入出力モジュールのサンプリング停止をbackendに通知するメソッド */
 export const stopSampling = () =>
     handleApiRequest({
         apiCall: () => api.stopSampling(),
