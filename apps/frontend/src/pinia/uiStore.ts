@@ -27,7 +27,7 @@ export const useUiStore = defineStore('uiStore', {
         isNavFixed: false,
         isAbsolute: false,
         showConfig: false,
-        isAdmin: true,
+        isAdmin: false,
         dashboardViewCategory1Selected: ["a","b","c"],// TODO: 将来的にlocalStorageに保存する
         dashboardViewCategory2Selected: ["d","e","f"],// TODO: 将来的にlocalStorageに保存する
         trendViewCategory1Selected: ["a"],// TODO: 将来的にlocalStorageに保存する
