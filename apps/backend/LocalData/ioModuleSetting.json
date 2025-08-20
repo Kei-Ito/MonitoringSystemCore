@@ -9,7 +9,7 @@
     "created_at": "2025-08-19T12:38:28.975Z",
     "updated_at": "2025-08-19T12:38:28.975Z",
     "specific_device_setting": {
-      "host_address": "localhost",
+      "host_address": "10.10.10.10",
       "port": 502
     },
     "input_channels": [
@@ -569,7 +569,7 @@
           "dst_max": 15
         },
         "threshold": {
-          "warning_min_threshold": 4,
+          "warning_min_threshold": 1.5,
           "warning_max_threshold": 7,
           "alert_min_threshold": 3,
           "alert_max_threshold": 8

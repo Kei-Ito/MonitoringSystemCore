@@ -196,10 +196,10 @@
                     "#FF6E76"
                 ],
                 "thresholds": [
-                    3,
-                    4,
-                    7,
-                    8
+                    1.5,
+                    2,
+                    5,
+                    5.5
                 ]
             },
             "category1": "照射炉1",
@@ -246,7 +246,7 @@
                 ]
             },
             "category1": "照射炉1",
-            "category2": "安定期電流"
+            "category2": "安定電流"
         },
         {
             "chart_uuid": "chart007",
