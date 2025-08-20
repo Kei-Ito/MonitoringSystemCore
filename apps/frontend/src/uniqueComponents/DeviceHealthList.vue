@@ -24,9 +24,15 @@ function getColor(status: DeviceHealthEnum): string {
     case DeviceHealthEnum.Good:
       return 'bg-gradient-success'
     case DeviceHealthEnum.Caution:
-      return 'bg-gradient-warning'
+      return 'bg-warning'
     case DeviceHealthEnum.Error:
       return 'bg-gradient-danger'
+    case DeviceHealthEnum.Stop:
+      return 'bg-gradient-secondary'
+    case DeviceHealthEnum.WarmingUp:
+      return 'bg-success-strong'
+    case DeviceHealthEnum.CoolingDown:
+      return 'bg-gradient-info'
     default:
       // gray
       return 'bg-gradient-secondary'
@@ -113,4 +119,16 @@ function getColor(status: DeviceHealthEnum): string {
   pointer-events: none;
   /* クリック透過 */
 }
+
+
+.bg-success-strong {
+  background-color: #c08300 !important; /* Bootstrapの濃い系トーン */
+  color: #fff !important;
+}
+
+.bg-warning {
+  background-color: #db6027 !important; /* Bootstrapの濃い系トーン */
+  color: #fff !important;
+}
+
 </style>

@@ -17,6 +17,9 @@ enum DeviceHealthEnum {
     Good = "Good", // 健康
     Caution= "Caution", // 警告
     Error = "Error", // エラー
+    Stop = "Stop" ,//消灯中
+    WarmingUp = "WarmingUp",//安定待ち
+    CoolingDown = "CoolingDown",//冷却中
     Unknown = "Unknown", // 不明
 }
 
@@ -70,8 +73,10 @@ export const fetchAllIOModules = async (current_modules: IOModule[]): Promise<vo
  */
 async function getIOModuleInput(broadcast: (data: any) => void){
   currentInputDatas = [];
+  let status :DeviceHealthEnum = DeviceHealthEnum.Unknown; // 初期状態は不明
   let is_alert = false;
   let is_warning = false;
+
   // 1. すべてのモジュールに対して並行してgetIOModuleInputを呼び出す
   const promises = io_modules.map(async (module) => {
     const response: Result<getIOModuleInputResponse> = await api.getIOModuleInput(module);
@@ -82,16 +87,35 @@ async function getIOModuleInput(broadcast: (data: any) => void){
       input_datas.channels.forEach(channel => {
         const channel_setting = module.input_channels.find(channel_setting => channel_setting.channel_uuid === channel.channel_uuid);
         if (channel_setting) {
+          if (channel.channel_uuid=="10041") {
+            switch (channel.input_data) {
+              case 0:
+                status = DeviceHealthEnum.Stop;
+                break;
+              case 1:
+                status = DeviceHealthEnum.WarmingUp;
+                break;
+              case 2:
+                status = DeviceHealthEnum.Good;
+                break;
+              case 3:
+                status = DeviceHealthEnum.CoolingDown;
+                break;
+              default:
+                status = DeviceHealthEnum.Unknown;
+            }
+          }
           channel.input_data = NormalizeData(channel.input_data, channel_setting);
           // 閾値を基に判定(nullなら実質的に閾値なし)
-          if (channel.input_data < (channel_setting.threshold.alert_min_threshold ?? Number.MIN_VALUE) || 
-              channel.input_data > (channel_setting.threshold.alert_max_threshold ?? Number.MAX_VALUE)) {
+          if (channel.input_data < (channel_setting.threshold.alert_min_threshold ?? -Infinity) || 
+              channel.input_data > (channel_setting.threshold.alert_max_threshold ?? +Infinity)) {
             is_alert = true;
           }
-          if (channel.input_data < (channel_setting.threshold.warning_min_threshold ?? Number.MIN_VALUE) || 
-              channel.input_data > (channel_setting.threshold.warning_max_threshold ?? Number.MAX_VALUE)) {
+          if (channel.input_data < (channel_setting.threshold.warning_min_threshold ?? -Infinity) || 
+              channel.input_data > (channel_setting.threshold.warning_max_threshold ?? +Infinity)) {
             is_warning = true;
           }
+          
         }
       });
       currentInputDatas.push(input_datas);
@@ -107,12 +131,20 @@ async function getIOModuleInput(broadcast: (data: any) => void){
   await Promise.all(promises);
 
   saveInputDatas(currentInputDatas); // データベースに保存
-
+  
+  //ステータスを更新
+  if (status &&status==DeviceHealthEnum.Good){
+    if (is_alert) {
+      status = DeviceHealthEnum.Error;
+    } else if (is_warning) {
+      status = DeviceHealthEnum.Caution;
+    }
+  }
 
   const  payload = {
     type: 'IOModuleData',
     data: currentInputDatas,
-    status: is_alert ? DeviceHealthEnum.Error : is_warning ? DeviceHealthEnum.Caution : DeviceHealthEnum.Good
+    status: status
   }
 
   // 3. 全部終わったらまとめてフロントへ送信

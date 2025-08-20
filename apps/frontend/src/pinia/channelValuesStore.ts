@@ -14,15 +14,15 @@ export const useChannelValuesStore = defineStore("channelValues", {
         DeviceHealth:[
             {
                 name: "照射炉1",
-                status: DeviceHealthEnum.Unknown
+                status: DeviceHealthEnum.Stop
             },
             {
                 name: "照射炉2",
-                status: DeviceHealthEnum.Unknown
+                status: DeviceHealthEnum.Caution
             },
             {
                 name: "照射炉3",
-                status: DeviceHealthEnum.Unknown
+                status:     DeviceHealthEnum.Good
             }
         ]
     }),

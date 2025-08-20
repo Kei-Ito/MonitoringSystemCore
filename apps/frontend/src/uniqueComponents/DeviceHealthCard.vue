@@ -8,7 +8,7 @@
       <div class="card device-card mb-5" >
         <div class="card-body text-center p-3">
           <!-- ステータス・バッジ -->
-          <div :class="['status-pill', statusClass]">
+          <div :class="['status-pill', statusClass]" >
             {{ statusLabel }}
           </div>
   
@@ -42,6 +42,12 @@
         return 'Caution'
       case DeviceHealthEnum.Error:
         return 'Error'
+      case DeviceHealthEnum.Stop:
+        return 'Stop'
+      case DeviceHealthEnum.WarmingUp:
+        return 'WarmingUp'
+      case DeviceHealthEnum.CoolingDown:
+        return 'CoolingDown'
       default:
         return 'Unknown'
     }
@@ -52,10 +58,16 @@
       case DeviceHealthEnum.Good:
         return '装置は正常に稼働しています。'
       case DeviceHealthEnum.Caution:
-        return '注意が必要な項目があります。\nダッシュボードから注意項目を\n確認してください。'
+        return '確認が必要な項目があります。\nダッシュボードから\n状態を確認してください。'
       case DeviceHealthEnum.Error:
-        return 'エラーが発生しています。\nダッシュボードからエラー項目を\n確認してください。'
-        default:
+        return 'エラーが発生しています。\nダッシュボードから\nエラー項目を\n確認してください。'
+      case DeviceHealthEnum.Stop:
+        return '装置は消灯中です。'
+      case DeviceHealthEnum.WarmingUp:
+        return '装置は安定待ちです。'
+      case DeviceHealthEnum.CoolingDown:
+        return '装置は冷却中です。'
+      default:
         return '装置のモニタリングを停止しています。'
     }
   })
@@ -64,8 +76,11 @@
   const statusClass = computed(() => {
     return {
       "good bg-gradient-success": props.deviceHealth === DeviceHealthEnum.Good,
-      "caution bg-gradient-warning": props.deviceHealth === DeviceHealthEnum.Caution,
+      "caution bg-warning": props.deviceHealth === DeviceHealthEnum.Caution,
       "error bg-gradient-danger": props.deviceHealth === DeviceHealthEnum.Error,
+      "stop bg-gradient-secondary": props.deviceHealth === DeviceHealthEnum.Stop,
+      "warming-up bg-success-strong": props.deviceHealth === DeviceHealthEnum.WarmingUp,
+      "cooling-down bg-gradient-info": props.deviceHealth === DeviceHealthEnum.CoolingDown,
       "unknown bg-gradient-secondary": props.deviceHealth === DeviceHealthEnum.Unknown
     }
   })
@@ -135,6 +150,17 @@
   animation: pulseErrorBadge 1.6s ease-out infinite;
   pointer-events: none;                   /* UI 操作を邪魔しない */
 }
+
+.bg-success-strong {
+  background-color: #c08300 !important; /* Bootstrapの濃い系トーン */
+  color: #fff !important;
+}
+
+.bg-warning {
+  background-color: #db6027 !important; /* Bootstrapの濃い系トーン */
+  color: #fff !important;
+}
+
 
   </style>
   

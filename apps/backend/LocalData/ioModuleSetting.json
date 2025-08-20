@@ -822,6 +822,36 @@
         },
         "created_at": "2025-08-19T13:58:02.750Z",
         "updated_at": "2025-08-19T13:58:02.750Z"
+      },
+      {
+        "channel_uuid": "10041",
+        "channel_name": "装置の状態",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 5,
+          "dst_min": 0,
+          "dst_max": 5
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10041,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:58:02.750Z",
+        "updated_at": "2025-08-19T13:58:02.750Z"
       }
     ],
     "output_channels": [],
