@@ -6,7 +6,7 @@
   
       <!-- 本体カード -->
       <div class="card device-card mb-5" >
-        <div class="card-body text-center p-3">
+        <div class="card-body text-center p-2">
           <!-- ステータス・バッジ -->
           <div :class="['status-pill', statusClass]" >
             {{ statusLabel }}
@@ -105,10 +105,10 @@
   /* ステータス・ピル */
   .status-pill {
     /* pill の幅・高さはお好みで調整 */
-    width: 95%;
+    width: 100%;
     height: 70px;
     margin: 0 auto;
-    border-radius: 9999px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,7 +144,7 @@
   left: 50%;
   width: 100%;
   height: 100%;
-  border-radius: 9999px;                  /* pill と同じ丸角 */
+  border-radius: 20px;                  /* pill と同じ丸角 */
   background: rgba(217, 54, 54, 0.55);    /* 元色 #d93636 の半透明 */
   transform: translate(-50%, -50%) scale(1);
   animation: pulseErrorBadge 1.6s ease-out infinite;
