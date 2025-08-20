@@ -68,24 +68,19 @@ const layoutModel = computed({
 });
 
 onMounted(async () => {
+  const channel_uuid_list = new Set<string>();
+  // チャートで使用しているチャンネルの一覧を取得
+  Object.keys(trendCharts.value).forEach((key) => {
+    const chart = trendCharts.value[key];
+    if (chart.channel_uuids && chart.channel_uuids.length > 0) {
+      chart.channel_uuids.map((uuid) => channel_uuid_list.add(uuid));
+    }
+  });
 
-  
-  await getTrendData("10030", new Date(), new Date());
-  await getTrendData("10031", new Date(), new Date());
-  await getTrendData("10032", new Date(), new Date());
-  await getTrendData("10033", new Date(), new Date());
-  await getTrendData("10034", new Date(), new Date());
-  await getTrendData("10035", new Date(), new Date());
-  await getTrendData("10036", new Date(), new Date());
-  await getTrendData("10037", new Date(), new Date());
-  await getTrendData("10038", new Date(), new Date());
-
-  await getTrendData("10012", new Date(), new Date());
-  await getTrendData("10013", new Date(), new Date());
-  await getTrendData("10014", new Date(), new Date());
-  await getTrendData("10015", new Date(), new Date());
-
-  await getTrendData("10020", new Date(), new Date());
+  for (const uuid of channel_uuid_list) {
+    // チャンネルのUUIDを使ってトレンドデータを取得
+    await getTrendData(uuid, new Date(), new Date());
+  }
   
 });
 
