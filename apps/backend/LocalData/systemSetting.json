@@ -1,6 +1,6 @@
 {
   "samplingInterval": 1000,
-  "dataRootPath": "C:\\Users\\110su\\Downloads\\data",
+  "dataRootPath": "/mnt/usb",
   "category1list": [
     "照射炉1",
     "照射炉2",
