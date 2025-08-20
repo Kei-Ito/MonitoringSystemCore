@@ -214,7 +214,7 @@
                 "10006",
                 "10009"
             ],
-            "chart_title": "安定期電流",
+            "chart_title": "安定器電流",
             "chart_unit": "A",
             "grid_layout": {
                 "i": "chart006",
@@ -246,7 +246,7 @@
                 ]
             },
             "category1": "照射炉1",
-            "category2": "安定電流"
+            "category2": "安定器電流"
         },
         {
             "chart_uuid": "chart007",
