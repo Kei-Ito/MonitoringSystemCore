@@ -14,13 +14,14 @@ const props = defineProps<{
 }>()
 
 const datasetSource = computed(() => {
+  console.log(props.series[0])
   const names = props.series.map(s => s.channel_name)
 
   // 各シリーズの (ms) 時刻→値 マップと全時刻集合を作成
   const timeSet = new Set<number>()
   const maps = props.series.map(s => {
     const m = new Map<number, number>();
-    const len = s.timeSeries.length;
+    const len = s.timeSeries?.length ?? 0;
     for (let i = 0; i < len; i++) {
       const t = s.timeSeries[i].timestamp
       const ms = typeof t === 'number' ? t : new Date(t as any).getTime()
@@ -45,13 +46,14 @@ const defaultPalette = [
 const seriesRef = toRef(props, 'series')
 const chartRef = toRef(props, 'chart')
 
+
 function formatTime(value: string | number): string {
   const d = new Date(value)
   return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`
 }
 
 const optionBuilder = () => {
-    
+      console.log("ugoku")
     const thresholds = chartRef.value.chart_options.thresholds;
 
     // 折れ線（dataset から列名でマッピング）

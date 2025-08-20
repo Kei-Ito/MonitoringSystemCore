@@ -48,7 +48,6 @@ import { GridItem, GridLayout } from 'vue-grid-layout-v3';
 
 import { useUiStore } from '@/pinia/uiStore';
 import { useChartStore } from '@/pinia/chartStore';
-import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
 import { getTrendData } from '@/service/trendDataService';
@@ -60,9 +59,6 @@ const { trendCharts } = storeToRefs(chartStore);
 const uiStore = useUiStore();
 const { isAdmin, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
 
-const channelValuesStore = useChannelValuesStore();
-const { channelValues } = storeToRefs(channelValuesStore);
-
 const layoutModel = computed({
   get: () => chartStore.gridLayoutsFilteredByPage("trend", trendViewCategory1Selected.value, trendViewCategory2Selected.value),
   set: (newLayouts) => {
@@ -72,14 +68,25 @@ const layoutModel = computed({
 });
 
 onMounted(async () => {
-  Object.keys(channelValues.value).forEach(async (element) => {
-    const channel = channelValues.value[element];
-    if (channel.timeSeries.length !== 1) {
-      // トレンドデータを未取得の状態ならトレンドデータを取得
-      await getTrendData(channel.channel_uuid, new Date(), new Date());
-      console.log(channel.timeSeries);
-    }
-  });
+
+  
+  await getTrendData("10030", new Date(), new Date());
+  await getTrendData("10031", new Date(), new Date());
+  await getTrendData("10032", new Date(), new Date());
+  await getTrendData("10033", new Date(), new Date());
+  await getTrendData("10034", new Date(), new Date());
+  await getTrendData("10035", new Date(), new Date());
+  await getTrendData("10036", new Date(), new Date());
+  await getTrendData("10037", new Date(), new Date());
+  await getTrendData("10038", new Date(), new Date());
+
+  await getTrendData("10012", new Date(), new Date());
+  await getTrendData("10013", new Date(), new Date());
+  await getTrendData("10014", new Date(), new Date());
+  await getTrendData("10015", new Date(), new Date());
+
+  await getTrendData("10020", new Date(), new Date());
+  
 });
 
 const now = new Date();

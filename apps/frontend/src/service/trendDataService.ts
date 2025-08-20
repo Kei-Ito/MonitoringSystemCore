@@ -11,7 +11,6 @@ export const getTrendData = (channel_uuid:string,startDate:Date, endDate:Date) =
     handleApiRequest({
         apiCall: () => api.getTrendData(channel_uuid,startDate,endDate),
         onSuccess: (val) => {
-
             const channelValuesStore = useChannelValuesStore();
             channelValuesStore.setTimeSeries(channel_uuid, val);
         },

@@ -30,10 +30,11 @@ export async function request<T>(
   method: Method,
   url: string,
   data?: unknown,
+  params?: Record<string, unknown>,
   signal?: AbortSignal,
 ): Promise<Result<T,ApiError>> {
   try {
-    const res = await api.request<T>({ method, url, data, signal });
+    const res = await api.request<T>({ method, url, data, params, signal });
     return ok(res.data);
   } catch (e) {
     // responseに届かない場合に備えてインターセプターではなくここでcatchする

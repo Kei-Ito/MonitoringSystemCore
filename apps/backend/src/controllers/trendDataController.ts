@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as database from 'src/services/databaseService';
+import * as dataSaveService from 'src/services/dataSaveService';
 import { getIsDataExist } from 'src/services/trendDataService';
 import { getCumulativeValue } from 'src/services/AnalysisService';
 import { trendSpan } from '@monitoring/shared/enum';
@@ -7,22 +8,24 @@ import { csvDataRequest ,trendDataRequest,getIsDataExistRequestModel } from '@mo
 
 
 export async function getTrendData(req: Request, res: Response) {
-    const {channel_id , start_time, end_time, span } = req.query;
+    const {channel_uuid , start_time, end_time, span } = req.query;
+
     // バリデーション
-    if (!channel_id || !start_time || !end_time) {
+    if (!channel_uuid || !start_time || !end_time) {
         res.status(400).json({ error: 'Missing required parameters' });
         return;
     }
-
+    
     const trendDataRequest: trendDataRequest= {
-        channel_id: Number(channel_id),
+        channel_uuid: String(channel_uuid),
         start_time: String(start_time),
         end_time: String(end_time),
         span: span as trendSpan,
     };
 
     // トレンドデータ取得処理
-    const trendData = await database.getTrendData(trendDataRequest);
+    const trendData = await dataSaveService.getTrendData(trendDataRequest);
+    console.log('Trend data fetched successfully:', trendData);
     res.json(trendData);
     return;
 };
@@ -76,14 +79,14 @@ export async function exportCsv(req: Request, res: Response) {
 
 export async function  getCumulativeValueController(req: Request, res: Response) {
     
-    const { channel_id, start_time, end_time } = req.query;
+    const { channel_uuid, start_time, end_time } = req.query;
     // バリデーション
-    if (!channel_id || !start_time || !end_time) {
+    if (!channel_uuid || !start_time || !end_time) {
         res.status(400).json({ error: 'Missing required parameters' });
         return;
     }
-    const cumulativeValueRequest = {
-        channel_id: Number(channel_id),
+    const cumulativeValueRequest: trendDataRequest = {
+        channel_uuid: String(channel_uuid),
         start_time: String(start_time),
         end_time: String(end_time),
         span: trendSpan.Dayly,

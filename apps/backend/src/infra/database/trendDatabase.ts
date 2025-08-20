@@ -9,11 +9,11 @@ import { Result ,ok,err} from 'src/utils/result';
  * @param cumulativeValue 集計データ
  * @returns Result
  */
-export async function saveDailyCumulativeValue(date:Date,channel_id:number,cumulativeValue:number): Promise<Result<void>> {
+export async function saveDailyCumulativeValue(date:Date,channel_uuid:string,cumulativeValue:number): Promise<Result<void>> {
     const connection = await pool.getConnection();
     try {
         const registerDate = new Date(date.getFullYear(),date.getMonth(),date.getDate());
-        await connection.query('INSERT INTO CumulativeData (date,channel_id,value) VALUES (?,?,?)',[registerDate,channel_id,cumulativeValue]);
+        await connection.query('INSERT INTO CumulativeData (date,channel_uuid,value) VALUES (?,?,?)',[registerDate,channel_uuid,cumulativeValue]);
         return ok(void 0);
     } catch (e:any) {
         return err(e.message);
@@ -29,11 +29,11 @@ export async function saveDailyCumulativeValue(date:Date,channel_id:number,cumul
  * @param channel_id チャンネルID
  * @returns 集計データ、データが存在しない場合はerrを返す
  */
-export async function findCumulativeValueForDate(date:Date,channel_id:number): Promise<Result<number>> {
+export async function findCumulativeValueForDate(date:Date,channel_uuid:string): Promise<Result<number>> {
     const connection = await pool.getConnection();
     try {
         const searchDate = new Date(date.getFullYear(),date.getMonth(),date.getDate());
-        const [rows] = await connection.query('SELECT value FROM CumulativeData WHERE date = ? AND channel_id = ?',[searchDate,channel_id]) as any[];
+        const [rows] = await connection.query('SELECT value FROM CumulativeData WHERE date = ? AND channel_uuid = ?',[searchDate,channel_uuid]) as any[];
         if (rows.length === 0) {
             return err('No data');
         }

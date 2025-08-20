@@ -1,4 +1,5 @@
 import { getIOModuleInputResponse } from '@monitoring/shared/api';
+import { csvDataRequest ,trendDataRequest,getIsDataExistRequestModel } from '@monitoring/shared/api';
 import { SystemSettingService } from 'src/config/SystemSetting';
 import readline from 'readline';
 
@@ -76,4 +77,34 @@ export async function saveInputDatas(data_list: getIOModuleInputResponse[]): Pro
     // ヘッダーに従って並び替え
     const sortedValues = existingHeader.slice(1).map(uuid => value_map.get(uuid) ?? 0);
     await fs.promises.appendFile(data_path, [timestamp, ...sortedValues].join(',') + '\n');
+}
+
+import csv from "csv-parser";
+
+async function loadCsvColumn(
+  filePath: string,
+  targetColumn: string
+): Promise<{ timestamp: Date; value: number }[]> {
+  return new Promise((resolve, reject) => {
+    const results: { timestamp: Date; value: number }[] = [];
+
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on("data", (row) => {
+        if (row[targetColumn] !== undefined) {
+          results.push({
+            timestamp: new Date(row.timestamp),
+            value: Number(row[targetColumn]),
+          });
+        }
+      })
+      .on("end", () => resolve(results))
+      .on("error", reject);
+  });
+}
+
+export function getTrendData(trendDataRequest: trendDataRequest): Promise<{ timestamp: Date; value: number }[]> {
+    console.log('Fetching trend data from file...');
+  const filePath = generatePathfromDate(new Date(trendDataRequest.start_time));
+  return loadCsvColumn(filePath, trendDataRequest.channel_uuid);
 }

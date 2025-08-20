@@ -16,7 +16,7 @@ export async function getCumulativeValue(dataRequest: trendDataRequest): Promise
   const today = new Date();
 
   // 既にデータベースに集計データが存在するか確認
-  const cumulativeValueResult = await findCumulativeValueForDate(end_time_date, dataRequest.channel_id);
+  const cumulativeValueResult = await findCumulativeValueForDate(end_time_date, dataRequest.channel_uuid);
 
   // すでに集計されている場合はその値を返す
   if (cumulativeValueResult.ok) {
@@ -31,7 +31,7 @@ export async function getCumulativeValue(dataRequest: trendDataRequest): Promise
   // 当日のデータでなければ、集計データを保存
   if (end_time_date.getFullYear() !== today.getFullYear() || end_time_date.getMonth() !== today.getMonth() || end_time_date.getDate() !== today.getDate()) {
     // 集計データを保存(終了を待たない)
-    saveDailyCumulativeValue(end_time_date, dataRequest.channel_id, cumulativeValue);
+    saveDailyCumulativeValue(end_time_date, dataRequest.channel_uuid, cumulativeValue);
   }
   return cumulativeValue;
 }
