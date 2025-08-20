@@ -299,10 +299,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "warning_min_threshold": null,
-          "warning_max_threshold": 60,
-          "alert_min_threshold": null,
-          "alert_max_threshold": 70
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10012,
@@ -329,10 +329,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "warning_min_threshold": null,
-          "warning_max_threshold": 60,
-          "alert_min_threshold": null,
-          "alert_max_threshold": 70
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10013,
@@ -359,10 +359,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "warning_min_threshold": null,
-          "warning_max_threshold": 60,
-          "alert_min_threshold": null,
-          "alert_max_threshold": 70
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10014,
@@ -389,10 +389,10 @@
           "dst_max": 100
         },
         "threshold": {
-          "warning_min_threshold": null,
-          "warning_max_threshold": 60,
-          "alert_min_threshold": null,
-          "alert_max_threshold": 70
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
         },
         "specific_channel_setting": {
           "register_address": 10015,

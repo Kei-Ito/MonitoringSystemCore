@@ -105,14 +105,14 @@
   /* ステータス・ピル */
   .status-pill {
     /* pill の幅・高さはお好みで調整 */
-    width: 90%;
+    width: 95%;
     height: 70px;
     margin: 0 auto;
     border-radius: 9999px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.7rem;
+    font-size: 2.5rem;
     font-weight: 400;
     color: #ffffff;
     position: relative;   /* ← 追加（重要） */

@@ -65,12 +65,13 @@
           </multiselect>
         </div>
       </div>
+      <!--
       <div>
         <a class="nav-link text-body font-weight-bold px-0" >UI編集</a>
         <ToggleBtn v-model="isAdmin" class="mr-3" />
       </div>
-      
-
+      -->
+    
       <!-- ユーザーログインアイコン -->
        <!--
        <router-link :to="{ name: 'SignIn' }" class="px-0 nav-link font-weight-bold lh-1"
@@ -98,7 +99,7 @@ import { computed, watch } from "vue";
 import Multiselect from 'vue-multiselect';
 import { useRoute } from "vue-router";
 
-import ToggleBtn from "@/components/ToggleBtn.vue";
+//import ToggleBtn from "@/components/ToggleBtn.vue";
 import { useUiStore } from "@/pinia/uiStore";
 
 import Breadcrumbs from "../Breadcrumbs.vue";
@@ -117,7 +118,7 @@ const route = useRoute();
 const {
   isRTL,
   isAbsolute,
-  isAdmin,
+  //isAdmin,
   category1List,
   category2List,
   dashboardViewCategory1Selected,
