@@ -54,7 +54,7 @@
                 "10015"
             ],
             "chart_title": "UV強度",
-            "chart_unit": "mW/cm²",
+            "chart_unit": "%",
             "grid_layout": {
                 "i": "chart002",
                 "x": 0,
@@ -68,7 +68,7 @@
                 "maxH": null
             },
             "chart_options": {
-                "maxValue": 100,
+                "maxValue": 150,
                 "minValue": 0,
                 "colors": [
                     "#FF6E76",
@@ -332,7 +332,7 @@
                 "10015"
             ],
             "chart_title": "UV強度",
-            "chart_unit": "mW/cm²",
+            "chart_unit": "%",
             "grid_layout": {
                 "i": "chart012",
                 "x": 0,
