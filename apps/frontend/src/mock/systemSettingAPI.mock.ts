@@ -1,13 +1,58 @@
 import type { MockMethod } from 'vite-plugin-mock';
 
 export default [
-    {
-      url: '/api/system_setting/get_system_setting/',
-      method: 'get',
-      response: () => {
-        return {
-            samplingInterval:3000,
-        }
-      },
+  {
+    url: '/api/system_setting/get_system_setting/',
+    method: 'get',
+    response: () => {
+      return {
+        samplingInterval: 3000,
+        "dataRootPath": "/mnt/usb",
+        "category1list": [
+          "照射炉1",
+          "照射炉2",
+          "照射炉3"
+        ],
+        "category2list": [
+          "液温",
+          "UV強度",
+          "炉内温度",
+          "ランプ電圧",
+          "ランプ電流",
+          "安定器電流",
+          "消費電力",
+          "冷却ファン周波数",
+          "ワーク検出"
+        ],
+        "dashboardViewCategory1Selected": [
+          "照射炉1"
+        ],
+        "dashboardViewCategory2Selected": [
+          "液温",
+          "UV強度",
+          "炉内温度",
+          "ランプ電圧",
+          "ランプ電流",
+          "安定器電流",
+          "消費電力",
+          "冷却ファン周波数",
+          "ワーク検出"
+        ],
+        "trendViewCategory1Selected": [
+          "照射炉1"
+        ],
+        "trendViewCategory2Selected": [
+          "液温",
+          "UV強度",
+          "炉内温度",
+          "ランプ電圧",
+          "ランプ電流",
+          "安定器電流",
+          "消費電力",
+          "冷却ファン周波数",
+          "ワーク検出"
+        ]
+      }
     },
-  ] as MockMethod[];
+  },
+] as MockMethod[];
