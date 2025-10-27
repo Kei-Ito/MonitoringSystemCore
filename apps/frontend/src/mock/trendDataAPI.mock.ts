@@ -4,7 +4,9 @@ import type { MockMethod } from 'vite-plugin-mock';
 import { CHANNEL_UUIDS, computeChannelValue, hasMockChannel } from './channelMockData';
 
 const DEFAULT_STEP_MINUTES = 10;
-const DEFAULT_POINT_COUNT = 48;
+const DAILY_COVERAGE_MINUTES = 24 * 60;
+const WEEKLY_COVERAGE_MINUTES = 7 * 24 * 60;
+const MONTHLY_COVERAGE_MINUTES = 31 * 24 * 60;
 const MAX_POINT_COUNT = 240;
 
 function parseDate(value: unknown): Date | undefined {
@@ -28,16 +30,34 @@ function resolveStepMinutes(span?: string): number {
   }
 }
 
-function buildTrendSeries(channelUuid: string, start?: Date, end?: Date, stepMinutes = DEFAULT_STEP_MINUTES): RuntimeValue[] {
+function resolveCoverageMinutes(span?: string): number {
+  switch (span) {
+    case 'Weekly':
+      return WEEKLY_COVERAGE_MINUTES;
+    case 'Monthly':
+      return MONTHLY_COVERAGE_MINUTES;
+    default:
+      return DAILY_COVERAGE_MINUTES;
+  }
+}
+
+function buildTrendSeries(
+  channelUuid: string,
+  start: Date | undefined,
+  end: Date | undefined,
+  stepMinutes: number,
+  span: string | undefined,
+): RuntimeValue[] {
   const stepMs = stepMinutes * 60 * 1000;
   const endMs = (end ?? new Date()).getTime();
 
   let startMs = start?.getTime();
   if (typeof startMs !== 'number' || Number.isNaN(startMs) || startMs >= endMs) {
-    startMs = endMs - stepMs * (DEFAULT_POINT_COUNT - 1);
+    const coverageMinutes = resolveCoverageMinutes(span);
+    startMs = endMs - coverageMinutes * 60 * 1000;
   }
 
-  const rawPoints = Math.max(2, Math.round((endMs - startMs) / stepMs) + 1);
+  const rawPoints = Math.max(2, Math.floor((endMs - startMs) / stepMs) + 1);
   const totalPoints = Math.min(rawPoints, MAX_POINT_COUNT);
   const baseStartMs = endMs - stepMs * (totalPoints - 1);
 
@@ -65,9 +85,10 @@ export default [
 
       const start = parseDate(params.start_time);
       const end = parseDate(params.end_time);
-      const stepMinutes = resolveStepMinutes(typeof params.span === 'string' ? params.span : undefined);
+      const span = typeof params.span === 'string' ? params.span : undefined;
+      const stepMinutes = resolveStepMinutes(span);
 
-      return buildTrendSeries(requestedUuid, start, end, stepMinutes);
+      return buildTrendSeries(requestedUuid, start, end, stepMinutes, span);
     },
   },
 ] as MockMethod[];
