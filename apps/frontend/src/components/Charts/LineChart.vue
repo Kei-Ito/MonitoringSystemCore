@@ -53,7 +53,6 @@ function formatTime(value: string | number): string {
 }
 
 const optionBuilder = () => {
-      console.log("ugoku")
     const thresholds = chartRef.value.chart_options.thresholds;
 
     // 折れ線（dataset から列名でマッピング）

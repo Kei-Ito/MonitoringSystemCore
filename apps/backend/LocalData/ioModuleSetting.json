@@ -9,7 +9,7 @@
     "created_at": "2025-08-19T12:38:28.975Z",
     "updated_at": "2025-08-19T12:38:28.975Z",
     "specific_device_setting": {
-      "host_address": "10.10.10.10",
+      "host_address": "localhost",
       "port": 502
     },
     "input_channels": [
