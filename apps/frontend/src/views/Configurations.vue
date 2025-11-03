@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import IOModuleTable from "./Configurations/IOModuleTable.vue";
-import SystemSettingTable from "./Configurations/SystemSettingTable.vue";
+import IOModuleTable from "@/views/components/Configurations/IOModuleTable.vue";
+import SystemSettingTable from "@/views/components/Configurations/SystemSettingTable.vue";
 </script>
 <style scoped>
 button:focus,

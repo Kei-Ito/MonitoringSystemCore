@@ -46,8 +46,9 @@
                     {{ io_module.status }}</span>
                 </td>
                 <td class="align-middle text-center">
-                  <span class="text-secondary text-xs font-weight-bold">{{ formatDate(io_module.created_at)
-                  }}</span>
+                  <span class="text-secondary text-xs font-weight-bold">
+                    {{ formatDate(io_module.created_at)}}
+                  </span>
                 </td>
                 <td class="align-middle text-center">
                   <a class="btn btn-link text-dark px-3 mb-0 " @click="openIOModuleEditModal(io_module)">
@@ -82,8 +83,8 @@ import type { IOModule } from "@monitoring/shared/model";
 import { storeToRefs } from 'pinia';
 import { ref } from "vue";
 
-import IOModuleAddModal from "@/components/IOModuleAddModal.vue";
-import IOModuleEditModal from '@/components/IOModuleEditModal.vue';
+import IOModuleAddModal from "@/views/components/Configurations/IOModuleAddModal.vue";
+import IOModuleEditModal from '@/views/components/Configurations/IOModuleEditModal.vue';
 import { IOModuleTypeImages } from "@/enum/IOModuleTypeImages";
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 import { useUiStore } from '@/pinia/uiStore';

@@ -195,7 +195,7 @@ import { type Ref,ref, toRefs, watch } from 'vue'
 import ChannelSpecificSettingModal from '@/components/ChannelSpecificSettingModal.vue';
 import CheckModal from '@/components/Modal/CheckModal.vue';
 import { addChannel, deleteChannel,deleteIOModule, updateIOModule } from '@/service/monitoringService';
-import InputDataSettingModal from '@/views/Configurations/InputDataSettingModal.vue';
+import InputDataSettingModal from '@/views/components/Configurations/InputDataSettingModal.vue';
 
 const props = defineProps({
   visible: {
