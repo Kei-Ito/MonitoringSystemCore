@@ -317,6 +317,10 @@
                     "max": 60,
                     "min": -10,
                     "color": "#FF0000"
+                },
+                "visibility": {
+                    "maxY": 80,
+                    "minY": 0
                 }
             },
             "category1": "照射炉1",
@@ -350,6 +354,10 @@
                     "max": 200,
                     "min": 50,
                     "color": "#FF0000"
+                },
+                "visibility": {
+                    "maxY": 120,
+                    "minY": 0
                 }
             },
             "category1": "照射炉1",
@@ -380,6 +388,10 @@
                     "max": 80,
                     "min": 0,
                     "color": "#FF0000"
+                },
+                "visibility": {
+                    "maxY": 80,
+                    "minY": 0
                 }
             },
             "category1": "照射炉1",

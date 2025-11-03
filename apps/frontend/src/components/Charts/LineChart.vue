@@ -43,6 +43,10 @@ function formatTime(value: string | number): string {
 
 const optionBuilder = () => {
     const thresholds = chartRef.value.chart_options.thresholds;
+    const minY = chartRef.value.chart_options.visibility?.minY;
+    const maxY = chartRef.value.chart_options.visibility?.maxY;
+
+    console.log(chartRef.value);
 
     // 折れ線（dataset から列名でマッピング）
     const lineSeries = props.series.map((s, idx) => ({
@@ -95,8 +99,8 @@ const optionBuilder = () => {
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
         tooltip: { trigger: 'axis', axisPointer: { type: 'line' } }, // ← 1箇所に統一
-        xAxis: { type: 'time', boundaryGap: false, axisLabel: { formatter: formatTime } },
-        yAxis: { type: 'value' },
+        xAxis: { type: 'time', boundaryGap: false, axisLabel: { formatter: formatTime }},
+        yAxis: { type: 'value' ,min:minY??undefined,max:maxY??undefined},
         dataZoom: [{ type: 'inside', start: 0, end: 100 }, { start: 0, end: 100 }],
         visualMap: visualMaps,                                    // ← 配列で渡す
         series: [...lineSeries, ...(thresholdLineSeries ? [thresholdLineSeries] : [])] // ← 上書きしない

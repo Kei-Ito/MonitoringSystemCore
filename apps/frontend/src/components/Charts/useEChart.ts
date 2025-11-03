@@ -1,5 +1,5 @@
 import * as echarts from 'echarts'
-import { nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch,unref } from 'vue'
 
 export function useEChart(
   optionBuilder: () => echarts.EChartsCoreOption,
