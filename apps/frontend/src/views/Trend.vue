@@ -42,19 +42,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed,onMounted } from 'vue';
+import { ref, computed,onMounted,onBeforeUnmount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { GridItem, GridLayout } from 'vue-grid-layout-v3';
 
 import { useUiStore } from '@/pinia/uiStore';
 import { useChartStore } from '@/pinia/chartStore';
+import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
-import { getTrendData } from '@/service/trendDataService';
-import DatePickerModal from '../components/DatePickerModal.vue';
+import { getTrendData,cancelTrendDataRequests } from '@/service/trendDataService';
+import DatePickerModal from '@/components/DatePickerModal.vue';
 
 const chartStore = useChartStore();
 const { trendCharts } = storeToRefs(chartStore);
+const channelValuesStore = useChannelValuesStore();
 
 const uiStore = useUiStore();
 const { isAdmin, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
@@ -73,9 +75,11 @@ onMounted(async () => {
   Object.keys(trendCharts.value).forEach((key) => {
     const chart = trendCharts.value[key];
     if (chart.channel_uuids && chart.channel_uuids.length > 0) {
-      chart.channel_uuids.map((uuid) => channel_uuid_list.add(uuid));
+      chart.channel_uuids.forEach((uuid) => channel_uuid_list.add(uuid));
     }
   });
+
+  channelValuesStore.prune(channel_uuid_list);
 
   for (const uuid of channel_uuid_list) {
     // チャンネルのUUIDを使ってトレンドデータを取得
@@ -103,6 +107,12 @@ function updateDate(date: any) {
   end.setDate(end.getDate() + 1);
   selectedDate.value = { startDate: start, endDate: end };
 }
+
+onBeforeUnmount(()=>{
+  cancelTrendDataRequests();
+  channelValuesStore.prune(new Set());
+})
+
 </script>
 <style scoped>
 @media (min-width: 2000px) {

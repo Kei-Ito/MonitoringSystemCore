@@ -2,6 +2,14 @@ import type { ApiError } from '@monitoring/shared/api';
 import { err, ok, type Result } from '@monitoring/shared/utils';
 import axios, { AxiosError, type Method } from 'axios';
 
+export interface requestParams {
+  method: Method;
+  url: string;
+  data?: unknown;
+  params?: Record<string, unknown>;
+  signal?: AbortSignal;
+}
+
 function toApiError(e: unknown): ApiError {
   if (axios.isAxiosError(e)) {
     return {
@@ -27,11 +35,7 @@ api.interceptors.response.use(
 
 /** apiリクエストを一括管理するメソッド */
 export async function request<T>(
-  method: Method,
-  url: string,
-  data?: unknown,
-  params?: Record<string, unknown>,
-  signal?: AbortSignal,
+  { method, url, data, params, signal }: requestParams
 ): Promise<Result<T,ApiError>> {
   try {
     const res = await api.request<T>({ method, url, data, params, signal });

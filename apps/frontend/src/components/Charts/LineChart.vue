@@ -13,30 +13,19 @@ const props = defineProps<{
     series: ChannelSeries[]
 }>()
 
-const datasetSource = computed(() => {
-  console.log(props.series[0])
-  const names = props.series.map(s => s.channel_name)
-
-  // 各シリーズの (ms) 時刻→値 マップと全時刻集合を作成
-  const timeSet = new Set<number>()
-  const maps = props.series.map(s => {
-    const m = new Map<number, number>();
-    const len = s.timeSeries?.length ?? 0;
-    for (let i = 0; i < len; i++) {
-      const t = s.timeSeries[i].timestamp
-      const ms = typeof t === 'number' ? t : new Date(t as any).getTime()
-      m.set(ms, s.timeSeries[i].value)
-      timeSet.add(ms)
-    }
-    return m
-  })
-
-  const times = Array.from(timeSet).sort((a,b)=>a-b)
-  const header = ['time', ...names]
-  const rows = times.map(ms => [ms, ...maps.map(m => (m.get(ms) ?? null))]) // 欠損は null
-
-  return [header, ...rows]
-})
+const seriesData = computed(() =>
+  props.series.map((s) => {
+    const data = s.timeSeries ?? [];
+    if (!data.length) return [];
+    return [...data]
+      .map((point) => {
+        const t = point.timestamp;
+        const ms = typeof t === 'number' ? t : new Date(t as any).getTime();
+        return [ms, point.value] as [number, number];
+      })
+      .sort((a, b) => a[0] - b[0]);
+  }),
+);
 
 const defaultPalette = [
   '#5470c6','#91cc75','#fac858','#ee6666',
@@ -56,15 +45,13 @@ const optionBuilder = () => {
     const thresholds = chartRef.value.chart_options.thresholds;
 
     // 折れ線（dataset から列名でマッピング）
-    const lineSeries = props.series.map((s, _) => ({
+    const lineSeries = props.series.map((s, idx) => ({
         name: s.channel_name,
         type: 'line',
-        symbol: 'none',
-        encode: { x: 'time', y: s.channel_name },
+        showSymbol: false,
         sampling: 'lttb',
-        //progressive: 2000,
-        //progressiveThreshold: 3000,
-        emphasis: { disabled: true, focus: 'none' }
+        emphasis: { disabled: true, focus: 'none' },
+        data: seriesData.value[idx] ?? []
     }))
 
     // しきい値で色分け（シリーズごと）
@@ -74,7 +61,7 @@ const optionBuilder = () => {
             show: false,
             type: 'piecewise',
             seriesIndex: idx,  // ← このシリーズだけに適用
-            dimension: 'y',      // ← series内の y 次元を指す（x=0, y=1）
+            dimension: 1,      // ← series内の y 次元を指す（x=0, y=1）
             pieces: [
                 { lte: thresholds.min, color: thresholds.color },
                 { gt: thresholds.min, lte: thresholds.max,
@@ -105,7 +92,6 @@ const optionBuilder = () => {
 
      return {
         animation: false,
-        dataset: { source: datasetSource.value },
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
         tooltip: { trigger: 'axis', axisPointer: { type: 'line' } }, // ← 1箇所に統一

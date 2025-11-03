@@ -7,11 +7,18 @@ import { request } from '@/api/apiClient';
  *
  * @returns システム設定データを含むPromiseオブジェクト
  */
-export const getSystemSetting = () => request<SystemSettingData>('get', '/system_setting/get_system_setting/');
+export const getSystemSetting = () => request<SystemSettingData>({
+    method: 'get',
+    url: '/system_setting/get_system_setting/',
+});
 
 /**
  * サンプリング間隔を設定するAPI関数
  * 
  * @param samplingInterval - 設定するサンプリング間隔（単位：ミリ秒）
  */
-export const setSamplingInterval = (samplingInterval: number) => request<void>('post', '/system_setting/set_sampling_interval/', { samplingInterval });
+export const setSamplingInterval = (samplingInterval: number) => request<void>({
+    method: 'post',
+    url: '/system_setting/set_sampling_interval/',
+    data: { samplingInterval }
+});

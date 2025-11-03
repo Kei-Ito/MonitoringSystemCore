@@ -1,5 +1,5 @@
-import * as echarts from 'echarts'  
-import { nextTick,onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
+import * as echarts from 'echarts'
+import { nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 
 export function useEChart(
   optionBuilder: () => echarts.EChartsCoreOption,
@@ -8,43 +8,61 @@ export function useEChart(
   const el = ref<HTMLDivElement | null>(null)
   const chart = shallowRef<echarts.ECharts | null>(null)
 
+  let raf = 0
+  let ro: ResizeObserver | null = null
+
+  function applyOptions() {
+    if (!chart.value) return
+    chart.value.setOption(optionBuilder(), false, true)
+  }
+
+  function scheduleUpdate() {
+    if (raf) cancelAnimationFrame(raf)
+    raf = requestAnimationFrame(() => {
+      raf = 0
+      applyOptions()
+    })
+  }
+
   /** コンテナサイズが 0×0 でなければ init */
   async function initWhenReady() {
     await nextTick()
     if (!el.value || chart.value) return
     if (!el.value.clientWidth || !el.value.clientHeight) return
     chart.value = echarts.init(el.value)
-    update()
+    scheduleUpdate();
   }
 
-  /** option の適用 */
-  function update() {
-    chart.value?.setOption(optionBuilder(), true)
-  }
+  watch(
+    deps,
+    () => {
+      if (chart.value) scheduleUpdate()
+      else initWhenReady()
+    },
+    { deep: false, immediate: true },
+  )
 
   /* ---------- mount / unmount ---------- */
   onMounted(() => {
     initWhenReady()
 
-    // サイズ変化を監視 → chart.resize()
-    const ro = new ResizeObserver(() => {
+    if (!el.value) return;
+    ro = new ResizeObserver(() => {
       if (chart.value) chart.value.resize()
       else initWhenReady()
     })
     ro.observe(el.value!)
+  })
 
-    // マウント外で watch を張る
-    watch(
-      deps,
-      () => { if (chart.value) update() },
-      { deep: true, immediate: true },
-    )
 
-    // クリーンアップ
-    onBeforeUnmount(() => {
-      ro.disconnect()
-      chart.value?.dispose()
-    })
+  // クリーンアップ
+  onBeforeUnmount(() => {
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+    ro?.disconnect();
+    ro = null;
+    chart.value?.dispose()
+    chart.value = null;
   })
 
   return { el, chart }

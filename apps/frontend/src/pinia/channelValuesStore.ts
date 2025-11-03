@@ -57,6 +57,17 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 timeSeries,
             }
         },
+        /**
+         * 
+         * @param activeChannelUuids aaa
+         */
+        prune(activeChannelUuids: Set<string>) {
+            Object.keys(this.channelValues).forEach((key) => {
+                if (!activeChannelUuids.has(key)) {
+                    delete this.channelValues[key];
+                }
+            });
+        },
         setDeviceHealth(deviceName: string, status: DeviceHealthEnum) {
             
             const device = this.DeviceHealth.find((d) => d.name === deviceName);

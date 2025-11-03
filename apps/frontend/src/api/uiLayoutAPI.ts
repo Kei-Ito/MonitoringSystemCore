@@ -7,7 +7,10 @@ import { request } from '@/api/apiClient';
  * 
  * @returns UIのレイアウト
  */
-export const getUiLayouts = () => request<UiLayout>('get', '/ui/layouts/');
+export const getUiLayouts = () => request<UiLayout>({
+    method: 'get',
+    url: '/ui/layouts/',
+});
 
 /**
  * UIレイアウトを更新するAPI関数
@@ -15,4 +18,8 @@ export const getUiLayouts = () => request<UiLayout>('get', '/ui/layouts/');
  * 
  * @param layout - 更新後のレイアウト
  */
-export const updateUiLayouts = (layout: UiLayout) => request<void>('post', '/ui/layouts/', layout);
+export const updateUiLayouts = (layout: UiLayout) => request<void>({
+    method: 'post',
+    url: '/ui/layouts/',
+    data: layout
+});

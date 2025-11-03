@@ -1,4 +1,4 @@
-import type { getIsDataExistRequestModel,getIsDataExistResponseModel } from '@monitoring/shared/api';
+import type { getIsDataExistRequestModel, getIsDataExistResponseModel } from '@monitoring/shared/api';
 import type { RuntimeValue } from "@monitoring/shared/model";
 import axios from 'axios';
 import { request } from '@/api/apiClient';
@@ -7,14 +7,20 @@ const protocol = window.location.protocol;
 const host = window.location.hostname;
 const endpoint = `${protocol}//${host}:2478/api/trend_data/`;
 
-export const getTrendData = (channel_uuid:string,startDate:Date, endDate:Date) => request<RuntimeValue[]>('get', '/trend_data/',undefined, {
+export const getTrendData = (channel_uuid: string, startDate: Date, endDate: Date, options?: { signal?: AbortSignal },) =>
+  request<RuntimeValue[]>({
+    method: 'get',
+    url: '/trend_data/',
+    params: {
       channel_uuid,
       start_time: startDate.toISOString(),
       end_time: endDate.toISOString(),
       span: 'Daily',
-    } );
+    },
+    signal: options?.signal,
+  });
 
-export async function getCsvData(inputChannelIds:number[], date:Date) {
+export async function getCsvData(inputChannelIds: number[], date: Date) {
   try {
     const response = await axios.get(`${endpoint}export_csv`, {
       params: {
@@ -42,7 +48,7 @@ export async function getCsvData(inputChannelIds:number[], date:Date) {
   }
 }
 
-export async function getIsDataExist(startDate:Date, endDate:Date):Promise<getIsDataExistResponseModel[]> {
+export async function getIsDataExist(startDate: Date, endDate: Date): Promise<getIsDataExistResponseModel[]> {
   try {
     const response = await axios.get(`${endpoint}is_data_exist`, {
       params: {
@@ -57,7 +63,7 @@ export async function getIsDataExist(startDate:Date, endDate:Date):Promise<getIs
   }
 }
 
-export async function getCumulativeValue(channel_uuid:string,startDate:Date, endDate:Date) {
+export async function getCumulativeValue(channel_uuid: string, startDate: Date, endDate: Date) {
   try {
     const response = await axios.get(`${endpoint}get_cumulative_value`, {
       params: {
