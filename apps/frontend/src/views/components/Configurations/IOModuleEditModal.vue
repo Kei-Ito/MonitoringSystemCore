@@ -23,7 +23,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(value, key) in localModule.specific_device_setting" :key="key">
+              <tr v-for="(value, key) in localModule.specific_device_setting" :key="localModule.module_uuid">
                 <td>
                   <label class="form-label fs-6" :for="key">{{ key }}</label>
                 </td>
@@ -32,7 +32,6 @@
                     v-model="localModule.specific_device_setting[key]" />
                 </td>
               </tr>
-              <tr />
             </tbody>
           </table>
           <table class="table container mt-3">
@@ -53,7 +52,7 @@
                   class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
                   詳細設定
                 </th>
-                <th v-if="isAdditableInputChannel"
+                <th v-if="isAddableInputChannel"
                   class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
                   style="width: 15px;">
                   削除
@@ -61,7 +60,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(channel, index) in localModule.input_channels" :key="index">
+              <tr v-for="(channel, index) in localModule.input_channels" :key="channel.channel_uuid">
                 <td>チャンネル {{ index + 1 }}</td>
                 <td>
                   <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
@@ -85,14 +84,13 @@
                     <i class="material-icons-round" aria-hidden="true">edit</i>
                   </a>
                 </td>
-                <td v-if="isAdditableInputChannel" class="align-middle text-center">
+                <td v-if="isAddableInputChannel" class="align-middle text-center">
                   <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannelButtonClick(channel)">
                     <i class="material-icons-round" aria-hidden="true">delete</i>
                   </a>
                 </td>
               </tr>
-              <tr /><!-- v-ifで隠れている場合、一番下の縦線が表示されないので空の行を一つ追加している-->
-              <tr v-if="isAdditableInputChannel">
+              <tr v-if="isAddableInputChannel">
                 <td colspan="4" class="text-start">
                   <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
                     @click="addInputChannel">
@@ -106,7 +104,7 @@
             </tbody>
           </table>
           <table class="table  container mt-3"
-            v-if="isAdditableOutputChannel || localModule.output_channels.length !== 0">
+            v-if="isAddableOutputChannel || localModule.output_channels.length !== 0">
             <thead>
               <tr>
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
@@ -120,7 +118,7 @@
                   class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
                   詳細設定
                 </th>
-                <th v-if="isAdditableOutputChannel"
+                <th v-if="isAddableOutputChannel"
                   class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
                   style="width: 15px;">
                   削除
@@ -128,7 +126,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(channel, index) in localModule.output_channels" :key="index">
+              <tr v-for="(channel, index) in localModule.output_channels" :key="channel.channel_uuid">
                 <td>チャンネル {{ index + 1 }}</td>
                 <td>
                   <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
@@ -146,14 +144,13 @@
                     <i class="material-icons-round" aria-hidden="true">edit</i>
                   </a>
                 </td>
-                <td v-if="isAdditableOutputChannel" class="align-middle text-center">
+                <td v-if="isAddableOutputChannel" class="align-middle text-center">
                   <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannel(channel)">
                     <i class="material-icons-round" aria-hidden="true">delete</i>
                   </a>
                 </td>
               </tr>
-              <tr /><!-- v-ifで隠れている場合、一番下の縦線が表示されないので空の行を一つ追加している-->
-              <tr v-if="isAdditableOutputChannel">
+              <tr v-if="isAddableOutputChannel">
                 <td colspan="4" class="text-start">
                   <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
                     @click="addOutputChannel">
@@ -188,13 +185,13 @@
 
 <script lang="ts" setup>
 
-import type { IChannelSetting,IOModule } from '@monitoring/shared/model';
+import type { IChannelSetting, IOModule } from '@monitoring/shared/model';
 import { createInputChannelForInitialization, createOutputChannelForInitialization } from '@monitoring/shared/model';
-import { type Ref,ref, toRefs, watch } from 'vue'
+import { type Ref, ref, toRefs, watch } from 'vue'
 
 import ChannelSpecificSettingModal from '@/components/ChannelSpecificSettingModal.vue';
 import CheckModal from '@/components/Modal/CheckModal.vue';
-import { addChannel, deleteChannel,deleteIOModule, updateIOModule } from '@/service/monitoringService';
+import { addChannel, deleteChannel, deleteIOModule, updateIOModule } from '@/service/monitoringService';
 import InputDataSettingModal from '@/views/components/Configurations/InputDataSettingModal.vue';
 
 const props = defineProps({
@@ -215,9 +212,9 @@ const { visible, module } = toRefs(props);
 // propsで受け取ったmoduleをlocalModuleにディープコピー
 const localModule: Ref<IOModule> = ref(JSON.parse(JSON.stringify(module.value)))
 
-// isAdditableの状態をrefで管理
-const isAdditableInputChannel = ref(false);
-const isAdditableOutputChannel = ref(false);
+// isAddableの状態をrefで管理
+const isAddableInputChannel = ref(false);
+const isAddableOutputChannel = ref(false);
 
 const isEditableSpecificInputChannelSetting = ref(false);
 const isEditableSpecificOutputChannelSetting = ref(false);
@@ -243,8 +240,8 @@ function syncModuleState(newModule: IOModule) {
   }
   const clonedModule = JSON.parse(JSON.stringify(newModule)) as IOModule;
   localModule.value = clonedModule;
-  isAdditableInputChannel.value = clonedModule.is_editable_input_channel;
-  isAdditableOutputChannel.value = clonedModule.is_editable_output_channel;
+  isAddableInputChannel.value = clonedModule.is_editable_input_channel;
+  isAddableOutputChannel.value = clonedModule.is_editable_output_channel;
   isEditableSpecificInputChannelSetting.value = clonedModule.input_channels.some(channel => Object.keys(channel.specific_channel_setting ?? {}).length !== 0);
   isEditableSpecificOutputChannelSetting.value = clonedModule.output_channels.some(channel => Object.keys(channel.specific_channel_setting ?? {}).length !== 0);
   isVisibleSpecificSettingTable.value = hasSpecificDeviceSetting(clonedModule);
@@ -266,6 +263,9 @@ function hasSpecificDeviceSetting(ioModule: IOModule): boolean {
   return true;
 }
 
+/**
+ * このModalで使用するmoduleのデータを編集前の状態に戻す
+ */
 function refresh() {
   localModule.value = JSON.parse(JSON.stringify(module.value));
 }
@@ -288,6 +288,9 @@ async function updateBtnClicked() {
   }
 }
 
+/**
+ * キャンセルボタンを押してモーダルを閉じるメソッド
+ */
 function cancelBtnClicked() {
   refresh();
   close();
@@ -357,8 +360,6 @@ function determineInputType(value: any): string {
 }
 
 </script>
-
-
 <style scoped>
 .modal {
   display: flex;

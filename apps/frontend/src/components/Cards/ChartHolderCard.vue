@@ -1,7 +1,7 @@
 <template>
   <div class="card z-index-2 mb-1 h-100 d-flex flex-column">
     <!-- グラフ本体 -->
-    <div class="card-body flex-grow-1 p-2 border-radius-lg overflow-hidden bg-gradient-dark shadow-dark m-2">
+    <div class="card-body flex-grow-1 p-2 border-radius-lg bg-gradient-dark shadow-dark m-2">
       <component :is="resolved" :chart="chart" :series="series" class="h-100 w-100 m-0"/>
     </div>
 
