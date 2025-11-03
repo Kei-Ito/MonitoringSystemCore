@@ -231,20 +231,40 @@ const isError = ref(false);
 // ConfirmModal の参照を保持する
 const checkModal = ref<InstanceType<typeof CheckModal> | null>(null)
 
-// moduleが変更されたらlocalModuleを更新し、isAdditableを制御
+// moduleが変更されたらlocalModuleを更新し、表示制御フラグを同期
 watch(module, (newModule) => {
-  localModule.value = JSON.parse(JSON.stringify(newModule))
-  isAdditableInputChannel.value = localModule.value.is_editable_input_channel;
-  isAdditableOutputChannel.value = localModule.value.is_editable_output_channel;
-  isEditableSpecificInputChannelSetting.value = localModule.value.input_channels.some(channel => Object.keys(channel.specific_channel_setting).length !== 0);
-  isEditableSpecificOutputChannelSetting.value = localModule.value.output_channels.some(channel => Object.keys(channel.specific_channel_setting).length !== 0);
-  if (Object.keys(module.value.specific_device_setting).length > 0) {
-    isVisibleSpecificSettingTable.value = true;
-  } else {
-    isVisibleSpecificSettingTable.value = false;
+  syncModuleState(newModule);
+  // 即時実行されるので、初期表示時にもlocalModuleがpropsのmoduleと同期される
+}, { deep: true, immediate: true });
+
+function syncModuleState(newModule: IOModule) {
+  if (!newModule) {
+    return;
   }
+  const clonedModule = JSON.parse(JSON.stringify(newModule)) as IOModule;
+  localModule.value = clonedModule;
+  isAdditableInputChannel.value = clonedModule.is_editable_input_channel;
+  isAdditableOutputChannel.value = clonedModule.is_editable_output_channel;
+  isEditableSpecificInputChannelSetting.value = clonedModule.input_channels.some(channel => Object.keys(channel.specific_channel_setting ?? {}).length !== 0);
+  isEditableSpecificOutputChannelSetting.value = clonedModule.output_channels.some(channel => Object.keys(channel.specific_channel_setting ?? {}).length !== 0);
+  isVisibleSpecificSettingTable.value = hasSpecificDeviceSetting(clonedModule);
   isError.value = false;
-}, { deep: true });
+}
+
+// デバイス固有設定が描画対象かどうかを判定
+function hasSpecificDeviceSetting(ioModule: IOModule): boolean {
+  const setting = ioModule.specific_device_setting as unknown;
+  if (setting === null || setting === undefined) {
+    return false;
+  }
+  if (Array.isArray(setting)) {
+    return setting.length > 0;
+  }
+  if (typeof setting === 'object') {
+    return Object.keys(setting as Record<string, unknown>).length > 0;
+  }
+  return true;
+}
 
 function refresh() {
   localModule.value = JSON.parse(JSON.stringify(module.value));
