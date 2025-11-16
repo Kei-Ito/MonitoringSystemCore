@@ -50,12 +50,6 @@ export const useChannelValuesStore = defineStore("channelValues", {
          * 全デバイスの健康状態を取得
          */
         allDeviceHealthStatuses: (state) => state.deviceHealthStatuses,
-        
-        /**
-         * 後方互換性のため: DeviceHealth
-         * @deprecated allDeviceHealthStatuses を使用してください
-         */
-        DeviceHealth: (state) => state.deviceHealthStatuses,
     },
     
     /** ------------actions-------------- */

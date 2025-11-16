@@ -33,8 +33,6 @@ export function useEChart(
     scheduleUpdate();
   }
 
-  const names = ['series', 'chart'] as const
-
  watch(
   () => deps.map(d => unref(d)), // 値を監視
   (nv, ov) => {
@@ -43,12 +41,6 @@ export function useEChart(
       const prev = ov?.[i]
       if (v !== prev) {
         changed = true
-        // ざっくり概要
-        if (Array.isArray(v) && Array.isArray(prev)) {
-          console.log(`[dep] ${names[i]}: ref changed, len ${prev.length} → ${v.length}`)
-        } else {
-          console.log(`[dep] ${names[i]}: ref changed`)
-        }
       }
     })
     if (!changed) return

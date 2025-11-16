@@ -46,8 +46,6 @@ const optionBuilder = () => {
     const minY = chartRef.value.chart_options.visibility?.minY;
     const maxY = chartRef.value.chart_options.visibility?.maxY;
 
-    console.log(chartRef.value);
-
     // 折れ線（dataset から列名でマッピング）
     const lineSeries = props.series.map((s, idx) => ({
         name: s.channel_name,

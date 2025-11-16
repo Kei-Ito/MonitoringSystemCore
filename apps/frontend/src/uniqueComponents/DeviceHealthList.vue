@@ -2,7 +2,7 @@
 <template>
   <div class="device-list">
 
-    <div v-for="device in DeviceHealth" :key="device.name"
+    <div v-for="device in allDeviceHealthStatuses" :key="device.name"
       class="text-center d-flex align-items-center justify-content-center">
       <span class="label mx-4 ">{{ device.name }}</span>
       <span class="lamp mx-4" :class="['lamp-' + device.status, getColor(device.status)]" />
@@ -17,7 +17,7 @@ import { useChannelValuesStore } from '@/pinia/channelValuesStore'
 
 
 const channelValuesStore = useChannelValuesStore()
-const { DeviceHealth } = storeToRefs(channelValuesStore)
+const { allDeviceHealthStatuses } = storeToRefs(channelValuesStore)
 
 function getColor(status: DeviceHealthEnum): string {
   switch (status) {

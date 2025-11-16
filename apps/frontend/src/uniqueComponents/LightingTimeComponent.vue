@@ -23,14 +23,14 @@ const moderateThreshold: number = 5000;
 const props = defineProps({
     value: {
         type: Number,
-        default: 23
+        default: 0
     },
     title: {
         type: String,
         required: true
     },
     status: {
-        type: Object as () => DeviceHealthEnum,
+        type: Number,
         required: true
     }
 });

@@ -33,7 +33,7 @@ const props = defineProps<{
   /** タイトル (例: 照射炉 1) */
   title: string
   /** 装置の状態 */
-  deviceHealth: DeviceHealthEnum
+  deviceHealth: number
 }>()
 
 /* ---------- 表示テキスト ---------- */

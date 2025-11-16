@@ -3,15 +3,15 @@
         <div class="mt-4 row  device-health-row">
             <!-- 照射炉1の状態表示 -->
             <div class="col-sm-4">
-                <DeviceHealthCard :title="DeviceHealth[0].name" :deviceHealth="DeviceHealth[0].status" />
+                <DeviceHealthCard :title="allDeviceHealthStatuses[0].name" :deviceHealth="allDeviceHealthStatuses[0].status" />
             </div>
             <!-- 照射炉2の状態表示 -->
             <div class="col-sm-4">
-                <DeviceHealthCard :title="DeviceHealth[1].name" :deviceHealth="DeviceHealth[1].status" />
+                <DeviceHealthCard :title="allDeviceHealthStatuses[1].name" :deviceHealth="allDeviceHealthStatuses[1].status" />
             </div>
             <!-- 照射炉3の状態表示 -->
             <div class="col-sm-4">
-                <DeviceHealthCard :title="DeviceHealth[2].name" :deviceHealth="DeviceHealth[2].status" />
+                <DeviceHealthCard :title="allDeviceHealthStatuses[2].name" :deviceHealth="allDeviceHealthStatuses[2].status" />
             </div>
         </div>
     </div>
@@ -22,8 +22,7 @@ import { useChannelValuesStore } from '@/pinia/channelValuesStore'
 import DeviceHealthCard from './DeviceHealthCard.vue';
 
 const channelValuesStore = useChannelValuesStore()
-const { DeviceHealth } = storeToRefs(channelValuesStore)
-
+const { allDeviceHealthStatuses } = storeToRefs(channelValuesStore)
 </script>
 <style scoped>
 .device-health-row {

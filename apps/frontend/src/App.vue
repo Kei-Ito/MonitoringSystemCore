@@ -93,7 +93,10 @@ function setupWebSocket() {
           updateRuntimeValues(message.data);
           if (monitoringStore.isSampling) {
             //遅れて通知が来てしまい、稼働中表示のままになる可能性があるため
-            channelValuesStore.setDeviceHealth("照射炉1", message.status);
+            const deviceStatus = typeof message.status === 'string' 
+              ? DeviceHealthEnum[message.status as keyof typeof DeviceHealthEnum] 
+              : message.status;
+            channelValuesStore.setDeviceHealth("照射炉1", deviceStatus);
           }
           
           break;
