@@ -40,15 +40,15 @@ import Navbar from "@/examples/Navbars/Navbar.vue";
 import Sidenav from "@/examples/Sidenav/index.vue";
 import { useUiStore } from "@/pinia/uiStore";
 import { useMonitoringStore } from './pinia/monitoringStore';
+import { useChartStore } from './pinia/chartStore';
 import { useChannelValuesStore } from '@/pinia/channelValuesStore';
-import { getUiLayouts } from "@/service/uiService";
-import { fetchSystemSetting, getIOModules } from "@/service/monitoringService";
 import type { getIOModuleInputResponse } from "@monitoring/shared/api";
 import { DeviceHealthEnum } from './uniqueComponents/DeviceHealthEnum';
 
 const toast = useToast();
 const uiStore = useUiStore()
 const monitoringStore = useMonitoringStore();
+const chartStore = useChartStore();
 const channelValuesStore = useChannelValuesStore();
 
 let socket: WebSocket | null = null;
@@ -137,12 +137,18 @@ function setupWebSocket() {
 
 onMounted(async () => {
 
-  // IOモジュールの一覧を取得
-  await getIOModules();
-  // UIレイアウト（ダッシュボードやトレンドなど全ページ）を取得
-  await getUiLayouts();
-  // サンプリング間隔を取得
-  await fetchSystemSetting();
+  // 各Storeを並列初期化で高速化
+  await Promise.all([
+    monitoringStore.initialize(),
+    chartStore.initialize(),
+  ]);
+
+  // デバイス健康状態を初期化
+  channelValuesStore.initializeDeviceHealth([
+    { name: "照射炉1", status: DeviceHealthEnum.Stop },
+    { name: "照射炉2", status: DeviceHealthEnum.Unknown },
+    { name: "照射炉3", status: DeviceHealthEnum.Unknown },
+  ]);
 
   const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
 

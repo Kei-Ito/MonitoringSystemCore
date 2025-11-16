@@ -3,6 +3,8 @@ import { type ChartConfig, type GridLayout } from '@monitoring/shared/model'
 import { err,ok } from '@monitoring/shared/utils';
 import { defineStore } from 'pinia'
 
+import * as uiService from '@/service/uiService'
+
 /**
  * 配列かどうかを判定し、配列でない場合は配列に変換する関数
  * @param v オブジェクト（配列または単一の値）
@@ -53,13 +55,30 @@ export const useChartStore = defineStore('chartStore', {
   /** ------------state-------------- */
   state: () => ({
     uiLayouts: {} as UiLayout,
-    dashboardCharts: {} as Record<string, ChartConfig>,
-    trendCharts: {} as Record<string, ChartConfig>,
+    isInitialized: false,
   }),
   /** ------------getters-------------- */
   getters: {
     /** UIレイアウト全体を取得 */
     uiLayoutsData: (state) => state.uiLayouts,
+    /** ダッシュボードチャートをRecord形式で取得 */
+    dashboardCharts: (state): Record<string, ChartConfig> => {
+      const arr = state.uiLayouts.dashboard ?? [];
+      return Object.fromEntries(arr.map((c) => [c.chart_uuid, c]));
+    },
+    /** トレンドチャートをRecord形式で取得 */
+    trendCharts: (state): Record<string, ChartConfig> => {
+      const arr = state.uiLayouts.trend ?? [];
+      return Object.fromEntries(arr.map((c) => [c.chart_uuid, c]));
+    },
+    /** 全ページのチャートをRecord形式で取得（高速検索用） */
+    allChartsRecord: (state): Record<string, ChartConfig> => {
+      const allCharts: ChartConfig[] = [];
+      for (const pageName in state.uiLayouts) {
+        allCharts.push(...state.uiLayouts[pageName]);
+      }
+      return Object.fromEntries(allCharts.map((c) => [c.chart_uuid, c]));
+    },
     /** 指定ページとカテゴリでフィルタリングしたグリッドレイアウト */
     gridLayoutsFilteredByPage:
       (state) =>
@@ -69,13 +88,27 @@ export const useChartStore = defineStore('chartStore', {
         },
   },
   actions: {
-    patchGrid(layout: { i: string; x: number; y: number; w: number; h: number }) {
-      // update dashboardCharts for backwards compatibility
-      const c = this.dashboardCharts[layout.i];
-      if (c) {
-        c.grid_layout = { ...c.grid_layout, x: layout.x, y: layout.y, w: layout.w, h: layout.h };
+    /**
+     * UIレイアウトを初期化
+     * Service層を経由してAPI呼び出し、取得したデータでStoreを更新する
+     */
+    async initialize() {
+      if (this.isInitialized) return; // 二重初期化防止
+      
+      const result = await uiService.fetchUiLayouts();
+      if (result.ok) {
+        this.setUiLayouts(result.value); // Store側でデータを更新
+        this.isInitialized = true;
       }
-      // update uiLayouts for all pages containing this chart_uuid
+      return result;
+    },
+    /** UIレイアウトをセット（Service層から呼ばれる） */
+    setUiLayouts(layouts: UiLayout) {
+      this.uiLayouts = layouts;
+    },
+    /** グリッドレイアウトを更新（uiLayoutsのみ更新、getterが自動的に最新のRecordを返す） */
+    patchGrid(layout: { i: string; x: number; y: number; w: number; h: number }) {
+      // uiLayouts内の該当チャートを検索して更新
       for (const pageName in this.uiLayouts) {
         this.uiLayouts[pageName] = this.uiLayouts[pageName].map((c) =>
           c.chart_uuid === layout.i
@@ -84,10 +117,14 @@ export const useChartStore = defineStore('chartStore', {
         );
       }
     },
+    /** ダッシュボードチャートを更新 */
     updateDashboardChart(chart: ChartConfig) {
       const chart_uuid = chart.chart_uuid;
-      if (this.dashboardCharts[chart_uuid]) {
-        this.dashboardCharts[chart_uuid] = chart;
+      const dashboardCharts = this.uiLayouts.dashboard ?? [];
+      const index = dashboardCharts.findIndex((c) => c.chart_uuid === chart_uuid);
+      
+      if (index !== -1) {
+        this.uiLayouts.dashboard[index] = chart;
         return ok(chart);
       } else {
         return err(`Chart with UUID ${chart_uuid} not found`);

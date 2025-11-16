@@ -1,29 +1,14 @@
-import type { ChartConfig } from '@monitoring/shared/model'
-
 import * as api from '@/api'
-import { useChartStore } from '@/pinia/chartStore';
 import { handleApiRequest } from '@/service/handle';
 
 
 /**
- * UIレイアウトを取得し、ストアへ反映する
+ * UIレイアウトを取得する（純粋API呼び出し）
+ * データの更新はStore側が責任を持つ
  */
-export const getUiLayouts = () =>
+export const fetchUiLayouts = () =>
     handleApiRequest({
         apiCall: () => api.getUiLayouts(),
-        onSuccess: (val) => {
-
-            const chartStore = useChartStore();
-            /** 配列をUUIDキーのRecordに変換 */
-            const arrayToRecord = (arr: ChartConfig[] = []): Record<string, ChartConfig> =>
-                Object.fromEntries(arr.map((c) => [c.chart_uuid, c]));
-
-            
-            chartStore.$patch({
-                uiLayouts: val,
-                dashboardCharts: arrayToRecord(val.dashboard),
-                trendCharts: arrayToRecord(val.trend),
-            });
-        },
+        onSuccess: (val) => val, // データをそのまま返す
         errorMsg: "UIレイアウトの取得に失敗しました",
     });

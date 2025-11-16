@@ -2,13 +2,17 @@ import type { IChannelSetting,IOModule } from '@monitoring/shared/model'
 import { err,ok  } from '@monitoring/shared/utils';
 import { defineStore } from 'pinia'
 
+import * as monitoringService from '@/service/monitoringService'
+import { useUiStore } from '@/pinia/uiStore'
+
 export const useMonitoringStore = defineStore('monitoringStore', {
   /** ------------state-------------- */
   state: () => ({
     isSampling: false,
     ioModules: [] as IOModule[],
     samplingInterval: 30000,
-    dataRootPath: ""
+    dataRootPath: "",
+    isInitialized: false,
   }),
   /** ------------getters-------------- */
   getters: {
@@ -34,6 +38,46 @@ export const useMonitoringStore = defineStore('monitoringStore', {
   },
   /** ------------actions-------------- */
   actions: {
+    /**
+     * モニタリングシステムを初期化
+     * IOモジュールとシステム設定を取得し、Storeを更新する
+     */
+    async initialize() {
+      if (this.isInitialized) return; // 二重初期化防止
+      
+      // 並列実行で高速化
+      const [ioModulesResult, systemSettingResult] = await Promise.all([
+        monitoringService.getIOModules(),
+        monitoringService.fetchSystemSetting(),
+      ]);
+      
+      // Store側でデータを更新
+      if (ioModulesResult.ok) {
+        this.setIOModules(ioModulesResult.value);
+      }
+      
+      if (systemSettingResult.ok) {
+        this.samplingInterval = systemSettingResult.value.samplingInterval;
+        
+        // uiStoreにカテゴリ設定を反映
+        const uiStore = useUiStore();
+        uiStore.$patch({
+          category1List: systemSettingResult.value.category1list,
+          category2List: systemSettingResult.value.category2list,
+          dashboardViewCategory1Selected: systemSettingResult.value.dashboardViewCategory1Selected,
+          dashboardViewCategory2Selected: systemSettingResult.value.dashboardViewCategory2Selected,
+          trendViewCategory1Selected: systemSettingResult.value.trendViewCategory1Selected,
+          trendViewCategory2Selected: systemSettingResult.value.trendViewCategory2Selected,
+        });
+      }
+      
+      if (ioModulesResult.ok && systemSettingResult.ok) {
+        this.isInitialized = true;
+      }
+      
+      // 最初に失敗した結果を返す（両方成功なら最初の成功結果）
+      return ioModulesResult.ok ? systemSettingResult : ioModulesResult;
+    },
     setSamplingInterval(clock: number) {
       this.samplingInterval = clock;
     },

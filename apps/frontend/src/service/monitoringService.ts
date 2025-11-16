@@ -5,7 +5,6 @@ import { err } from '@monitoring/shared/utils'
 
 import * as api from '@/api'
 import { useMonitoringStore } from '@/pinia/monitoringStore'
-import { useUiStore } from '@/pinia/uiStore'
 import { handleApiRequest } from '@/service/handle';
 import { RequestLock } from '@/utils/requestLock';
 
@@ -13,25 +12,11 @@ import { RequestLock } from '@/utils/requestLock';
 const channelLock = new RequestLock<string>(); // key = channelUUID など
 
 
-/** システム設定をbackendから取得してstoreを更新するメソッド */
+/** システム設定を取得する（純粋API呼び出し） */
 export const fetchSystemSetting = () =>
     handleApiRequest({
         apiCall: () => api.getSystemSetting(),
-        onSuccess: (val) => {
-            // TODO: 以前の実装の名残。修正が望ましい。
-            const monitoringStore = useMonitoringStore();
-            monitoringStore.samplingInterval = val.samplingInterval;
-
-            const uiStore = useUiStore();
-            uiStore.$patch({
-                category1List: val.category1list,
-                category2List: val.category2list,
-                dashboardViewCategory1Selected: val.dashboardViewCategory1Selected,
-                dashboardViewCategory2Selected: val.dashboardViewCategory2Selected,
-                trendViewCategory1Selected: val.trendViewCategory1Selected,
-                trendViewCategory2Selected: val.trendViewCategory2Selected,
-            });
-        },
+        onSuccess: (val) => val, // データをそのまま返す
         errorMsg: "システム設定の取得に失敗しました",
     });
 
@@ -46,13 +31,11 @@ export const updateSamplingInterval = (samplingInterval: number) =>
         errorMsg: "サンプリング周期の更新に失敗しました",
     });
 
-/** IOModulesを取得し、backendへ変更をpushするメソッド */
+/** IOモジュール一覧を取得する（純粋API呼び出し） */
 export const getIOModules = () =>
     handleApiRequest({
         apiCall: () => api.getIOModules(),
-        onSuccess: (val) => {
-            useMonitoringStore().setIOModules(val);
-        },
+        onSuccess: (val) => val, // データをそのまま返す
         errorMsg: "入出力モジュールの取得に失敗しました",
     });
 

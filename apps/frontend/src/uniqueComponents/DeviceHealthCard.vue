@@ -1,11 +1,10 @@
 <!-- DeviceHealthCard.vue -->
 <template>
   <div>
-    <!-- タイトル -->
-    <h5 class="device-title">{{ title }}</h5>
-
     <!-- 本体カード -->
     <div class="card device-card mb-2">
+      <!-- タイトル -->
+    <h5 class="device-title">{{ title }}</h5>
       <div class="card-body p-2 text-center">
         <!-- ステータス・バッジ -->
         <div :class="['status-pill', statusClass]">
@@ -17,7 +16,7 @@
           {{ statusMessage }}
         </p>
         <div class="lighting-grid">
-          <LightingTimeComponent v-for="n in 4" :key="n" :title="`${lightTimeTitlePrefix}-${n}`" :value="9999" />
+          <LightingTimeComponent v-for="n in 4" :key="n" :title="`${lightTimeTitlePrefix}-${n}`" :value="6000" :status="deviceHealth" />
         </div>
       </div>
     </div>
@@ -108,8 +107,8 @@ const lightTimeTitlePrefix = computed(() => {
 .device-title {
   text-align: center;
   font-weight: 700;
-  margin-bottom: 6px;
-  font-size: x-large;
+  margin-top: 6px;
+  font-size: 2rem;
 }
 
 /* 外枠カード */

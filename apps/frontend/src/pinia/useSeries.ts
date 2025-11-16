@@ -15,17 +15,9 @@ export function useSeries(chartUuid: string) {
   const { channelMap } = storeToRefs(useMonitoringStore())
   const { channelValues } = storeToRefs(useChannelValuesStore())
 
-  // ダッシュボード用 dashChart がなければ uiLayouts を横断検索
+  // 全チャートから高速検索（O(1)）
   const chart = computed(() => {
-    const dash = chartStore.dashboardCharts[chartUuid]
-    if (dash) return dash
-    // uiLayoutsData[pageName] 配列内を検索
-    const uiLayouts = chartStore.uiLayoutsData
-    for (const page in uiLayouts) {
-      const found = uiLayouts[page].find((c) => c.chart_uuid === chartUuid)
-      if (found) return found
-    }
-    return null as ChartConfig | null
+    return chartStore.allChartsRecord[chartUuid] ?? null as ChartConfig | null
   })
   // chart が得られなければ空 series
   const series = computed(() => {
