@@ -10,8 +10,6 @@
             <ChartHolderCard :chart="dashboardCharts[item.i]"/>
           </GridItem>
         </GridLayout>
-        <!-- ゲージチャート 表示部-->
-
       </div>
     </div>
   </div>

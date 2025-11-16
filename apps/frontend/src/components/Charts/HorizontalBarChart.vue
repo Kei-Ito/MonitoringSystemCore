@@ -10,7 +10,7 @@ import { useEChart } from '@/components/Charts/useEChart'
 // ----- props -----
 const props = defineProps<{
     chart: ChartConfig
-    series: ChannelSeries[]          // ← ここが追加ポイント
+    series: ChannelSeries[]         
 }>()
 
 /** スコアの条件と色を 1 つの配列要素にまとめる */
