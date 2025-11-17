@@ -1,17 +1,3 @@
-<!--
-=========================================================
-* Vue Material Dashboard 2 - v3.1.0
-=========================================================
-
-* Product Page: https://creative-tim.com/product/vue-material-dashboard-2
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 <template>
   <!-- ローディング画面 -->
   <div v-if="isLoading" class="loading-container">
@@ -148,9 +134,9 @@ onMounted(async () => {
 
   // デバイス健康状態を初期化
   channelValuesStore.initializeDeviceHealth([
-    { name: "照射炉1", status: DeviceHealthEnum.Stop },
-    { name: "照射炉2", status: DeviceHealthEnum.Unknown },
-    { name: "照射炉3", status: DeviceHealthEnum.Unknown },
+    { name: "照射炉1", status: DeviceHealthEnum.Good },
+    { name: "照射炉2", status: DeviceHealthEnum.Good },
+    { name: "照射炉3", status: DeviceHealthEnum.Good },
   ]);
 
   const sidenav = document.getElementsByClassName("g-sidenav-show")[0];

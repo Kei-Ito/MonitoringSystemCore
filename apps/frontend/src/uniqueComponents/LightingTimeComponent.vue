@@ -64,7 +64,7 @@ const icon: ComputedRef<string> = computed(() => {
 const color: ComputedRef<string> = computed(() => {
     // 照射炉が稼働中の場合はタイトルに色を付ける
     if (props.status === DeviceHealthEnum.Good ||
-        props.status === DeviceHealthEnum.WarmingUp ||
+        props.status === DeviceHealthEnum.Caution ||
         props.status === DeviceHealthEnum.Error) {
         if (props.value > warningThreshold) {
             return 'bg-warning';

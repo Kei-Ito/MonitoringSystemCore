@@ -12,7 +12,7 @@ const routes:any = [
   {
     path: "/",
     name: "/",
-    redirect: "/dashboard",
+    redirect: "/operation-condition",
   },
   {
     path: "/operation-condition",

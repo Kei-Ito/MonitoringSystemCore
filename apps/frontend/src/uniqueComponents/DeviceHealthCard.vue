@@ -16,7 +16,7 @@
           {{ statusMessage }}
         </p>
         <div class="lighting-grid">
-          <LightingTimeComponent v-for="n in 4" :key="n" :title="`${lightTimeTitlePrefix}-${n}`" :value="6000" :status="deviceHealth" />
+          <LightingTimeComponent v-for="n in 4" :key="n" :title="`${lightTimeTitlePrefix}-${n}`" :value=" 0" :status="deviceHealth" />
         </div>
       </div>
     </div>

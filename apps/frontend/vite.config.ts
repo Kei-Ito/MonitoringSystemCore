@@ -26,13 +26,34 @@ export default defineConfig(({command }: ConfigEnv) => {
       }),
       VitePWA({
         registerType: 'autoUpdate',
+        includeAssets: ['favicon.png'],
         manifest: {
-          name: 'UV Monitoring System',
-          short_name: 'Monitoring System',
+          name: 'UV Monitoring App',
+          short_name: 'Monitoring App',
           start_url: '/',
           display: 'standalone',
           background_color: '#ffffff',
           theme_color: '#1e90ff',
+          icons: [
+            {
+              src: '/favicon.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: '/favicon.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: '/favicon.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'maskable'
+            }
+          ]
         },
       }),
     ],           // ← falsy を除去
