@@ -1,10 +1,10 @@
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, type ComputedRef } from 'vue';
 import type { ChartConfig } from '@monitoring/shared/model';
 
 import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 import { useChartStore } from '@/pinia/chartStore';
-import { useMonitoringStore} from '@/pinia/monitoringStore';
+import { useMonitoringStore } from '@/pinia/monitoringStore';
 
 /**
  * chart_uuid を渡すと、ChartConfigにvalueとtimestampを追加して
@@ -16,7 +16,7 @@ export function useSeries(chartUuid: string) {
   const { channelValues } = storeToRefs(useChannelValuesStore())
 
   // 全チャートから高速検索（O(1)）
-  const chart = computed(() => {
+  const chart: ComputedRef<ChartConfig | null> = computed(() => {
     return chartStore.allChartsRecord[chartUuid] ?? null as ChartConfig | null
   })
   // chart が得られなければ空 series

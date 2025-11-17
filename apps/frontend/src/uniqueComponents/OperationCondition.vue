@@ -21,8 +21,8 @@ import { storeToRefs } from 'pinia'
 import { useChannelValuesStore } from '@/pinia/channelValuesStore'
 import DeviceHealthCard from './DeviceHealthCard.vue';
 
-const channelValuesStore = useChannelValuesStore()
-const { allDeviceHealthStatuses } = storeToRefs(channelValuesStore)
+const { allDeviceHealthStatuses } = storeToRefs(useChannelValuesStore());
+
 </script>
 <style scoped>
 .device-health-row {
