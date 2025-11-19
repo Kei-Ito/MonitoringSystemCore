@@ -10,7 +10,15 @@ import { saveInputDatas } from './dataSaveService';
 const jsonFilePath: string = './LocalData/ioModuleSetting.json';
 let currentInputDatas: getIOModuleInputResponse[] = []; // 現在のセンサ値
 let io_modules: IOModule[] = []; // 空の配列として初期化
-let intervalId: NodeJS.Timeout | null = null; // インターバルID
+const intervalIds: Map<string, NodeJS.Timeout> = new Map(); // インターバルID（sampling_interval_uuid -> タイマー）
+let isSamplingStopped: boolean = false; // サンプリング停止フラグ
+
+// インターバルごとのチャンネルマッピングキャッシュ
+interface IntervalChannelMapping {
+  modules: IOModule[]; // このインターバルを使用するモジュールのリスト
+  channelUuidsByModule: Map<string, Set<string>>; // module_uuid -> channel_uuids
+}
+const intervalChannelMap: Map<string, IntervalChannelMapping> = new Map();
 
 // TODO:仮実装なので、要修正
 enum DeviceHealthEnum {
@@ -68,22 +76,76 @@ export const fetchAllIOModules = async (current_modules: IOModule[]): Promise<vo
 }
 
 /**
+ * インターバルとチャンネルのマッピングを構築
+ */
+function buildIntervalChannelMapping(): void {
+  intervalChannelMap.clear();
+  
+  // 各モジュールの入力チャンネルをインターバルごとに分類
+  for (const module of io_modules) {
+    for (const channel of module.input_channels) {
+      const intervalUuid = channel.sampling_interval_uuid;
+      if (!intervalUuid) continue; // 空文字列の場合はスキップ
+      
+      if (!intervalChannelMap.has(intervalUuid)) {
+        intervalChannelMap.set(intervalUuid, {
+          modules: [],
+          channelUuidsByModule: new Map()
+        });
+      }
+      
+      const mapping = intervalChannelMap.get(intervalUuid)!;
+      
+      // モジュールをリストに追加（重複を防ぐ）
+      if (!mapping.modules.find(m => m.module_uuid === module.module_uuid)) {
+        mapping.modules.push(module);
+      }
+      
+      // チャンネルUUIDを記録
+      if (!mapping.channelUuidsByModule.has(module.module_uuid)) {
+        mapping.channelUuidsByModule.set(module.module_uuid, new Set());
+      }
+      mapping.channelUuidsByModule.get(module.module_uuid)!.add(channel.channel_uuid);
+    }
+  }
+  
+  console.log(`インターバルマッピングを構築: ${intervalChannelMap.size}個のインターバル`);
+}
+
+/**
  * インターバル処理の中で実行されるセンサーデータ取得メソッド
  * @param broadcast 
+ * @param samplingIntervalUuid サンプリングインターバルのUUID
  */
-async function getIOModuleInput(broadcast: (data: any) => void){
-  currentInputDatas = [];
+async function getIOModuleInput(broadcast: (data: any) => void, samplingIntervalUuid: string){
+  // 停止フラグがtrueの場合は処理をスキップ
+  if (isSamplingStopped) {
+    return;
+  }
+  
   let status :DeviceHealthEnum = DeviceHealthEnum.Unknown; // 初期状態は不明
   let is_alert = false;
   let is_warning = false;
 
-  // 1. すべてのモジュールに対して並行してgetIOModuleInputを呼び出す
-  const promises = io_modules.map(async (module) => {
+  // キャッシュからマッピングを取得
+  const mapping = intervalChannelMap.get(samplingIntervalUuid);
+  if (!mapping || mapping.modules.length === 0) {
+    // このインターバルに属するチャンネルがない
+    return;
+  }
+
+  const targetModules = mapping.modules;
+  const promises = targetModules.map(async (module) => {
     const response: Result<getIOModuleInputResponse> = await api.getIOModuleInput(module);
     if (response.ok) {
       const input_datas = response.value;
       
+      // キャッシュからチャンネルUUIDのセットを取得
+      const targetChannelUuids = mapping.channelUuidsByModule.get(module.module_uuid);
+      if (!targetChannelUuids) return;
+      
       // センサーデータを正規化+閾値を基に判定
+      input_datas.channels = input_datas.channels.filter(channel => targetChannelUuids.has(channel.channel_uuid));
       input_datas.channels.forEach(channel => {
         const channel_setting = module.input_channels.find(channel_setting => channel_setting.channel_uuid === channel.channel_uuid);
         if (channel_setting) {
@@ -118,9 +180,27 @@ async function getIOModuleInput(broadcast: (data: any) => void){
           
         }
       });
-      currentInputDatas.push(input_datas);
-      // データベースにセンサーデータを保存
-      //database.saveInputDatas(input_datas);
+      
+      // このインターバルで取得したチャンネルがある場合のみ保存
+      if (input_datas.channels.length > 0) {
+        // 全体キャッシュを更新（モジュール単位でマージ）
+        const cacheIndex = currentInputDatas.findIndex(data => data.module_uuid === module.module_uuid);
+        if (cacheIndex === -1) {
+          currentInputDatas.push(input_datas);
+        } else {
+          // 既存のチャンネルデータを更新
+          input_datas.channels.forEach(newChannel => {
+            const existingChannelIndex = currentInputDatas[cacheIndex].channels.findIndex(
+              ch => ch.channel_uuid === newChannel.channel_uuid
+            );
+            if (existingChannelIndex === -1) {
+              currentInputDatas[cacheIndex].channels.push(newChannel);
+            } else {
+              currentInputDatas[cacheIndex].channels[existingChannelIndex] = newChannel;
+            }
+          });
+        }
+      }
     } else {
       console.error('Error fetching Input data:', response.error);
     }
@@ -130,10 +210,31 @@ async function getIOModuleInput(broadcast: (data: any) => void){
   // 2. 全部の処理が完了するまで待つ
   await Promise.all(promises);
 
-  saveInputDatas(currentInputDatas); // データベースに保存
+  // 3. 今回収集したデータを抽出（フィルタリング済み）
+  const intervalInputDatas: getIOModuleInputResponse[] = [];
+  for (const module of targetModules) {
+    const cachedData = currentInputDatas.find(data => data.module_uuid === module.module_uuid);
+    if (cachedData) {
+      // キャッシュからチャンネルUUIDのセットを取得
+      const targetChannelUuids = mapping.channelUuidsByModule.get(module.module_uuid);
+      if (!targetChannelUuids) continue;
+      
+      const filteredChannels = cachedData.channels.filter(ch => targetChannelUuids.has(ch.channel_uuid));
+      
+      if (filteredChannels.length > 0) {
+        intervalInputDatas.push({
+          ...cachedData,
+          channels: filteredChannels
+        });
+      }
+    }
+  }
+
+  saveInputDatas(intervalInputDatas); // このインターバルで収集したデータのみ保存
   
   //ステータスを更新
-  if (status &&status==DeviceHealthEnum.Good){
+  // statusはチャンネルデータの処理中に更新される可能性がある
+  if ((status as DeviceHealthEnum) === DeviceHealthEnum.Good){
     if (is_alert) {
       status = DeviceHealthEnum.Error;
     } else if (is_warning) {
@@ -143,11 +244,12 @@ async function getIOModuleInput(broadcast: (data: any) => void){
 
   const  payload = {
     type: 'IOModuleData',
-    data: currentInputDatas,
-    status: status
+    data: intervalInputDatas,
+    status: status,
+    samplingIntervalUuid: samplingIntervalUuid
   }
 
-  // 3. 全部終わったらまとめてフロントへ送信
+  // 4. 全部終わったらまとめてフロントへ送信
   broadcast(payload);
 };
 
@@ -160,12 +262,38 @@ function NormalizeData(data: number, channel: IChannelSetting): number {
  * @param broadcast 
  */
 export async function startIOModuleInputSamplingInterval(broadcast: (data: any) => void): Promise<IOModuleStatusResponse[]> {
-  if (!intervalId) {
-    // IOモジュールの状態を同期(ハードウェア側のエラー等で、マイクロサービス側がリスタートしていた場合に状態を同期する必要がある)
-    await fetchAllIOModules(io_modules);
-    intervalId = setInterval(() => getIOModuleInput(broadcast), SystemSettingService.samplingInterval); // 1秒ごとにデータを取得
-    broadcast({ type: 'StartSampling' });
+  // 停止フラグをリセット
+  isSamplingStopped = false;
+  
+  // IOモジュールの状態を同期(ハードウェア側のエラー等で、マイクロサービス側がリスタートしていた場合に状態を同期する必要がある)
+  await fetchAllIOModules(io_modules);
+  
+  // インターバルとチャンネルのマッピングを構築
+  buildIntervalChannelMapping();
+  
+  // システム設定からサンプリングインターバル設定を取得
+  const systemSetting = SystemSettingService.getSystemSetting();
+  const samplingIntervals = systemSetting.samplingIntervals;
+  
+  if (!samplingIntervals) {
+    console.error('サンプリングインターバルが設定されていません');
+    return [];
   }
+  
+  // 各サンプリングインターバルに対してタイマーを設定
+  for (const interval of samplingIntervals) {
+    if (!intervalIds.has(interval.uuid)) {
+      const timerId = setInterval(
+        () => getIOModuleInput(broadcast, interval.uuid),
+        interval.period
+      );
+      intervalIds.set(interval.uuid, timerId);
+      console.log(`サンプリング開始: ${interval.name} (${interval.period}ms)`);
+    }
+  }
+  
+  broadcast({ type: 'StartSampling' });
+  
   const response: IOModuleStatusResponse[] = io_modules.map(module => { return { module_uuid: module.module_uuid, status: module.status } });
   return response;
 };
@@ -174,26 +302,27 @@ export async function startIOModuleInputSamplingInterval(broadcast: (data: any) 
  * インターバル処理の停止メソッド
  */
 export function stopIOModuleInputSamplingInterval(broadcast: (data: any) => void): void {
-  if (intervalId) {
-    clearInterval(intervalId);
-    intervalId = null;
-    broadcast({ type: 'StopSampling' });
+  // 停止フラグを立てる（実行中の処理も停止させる）
+  isSamplingStopped = true;
+  
+  // すべてのインターバルを停止
+  for (const [uuid, timerId] of intervalIds.entries()) {
+    clearInterval(timerId);
+    console.log(`サンプリング停止: ${uuid}`);
   }
+  intervalIds.clear();
+  broadcast({ type: 'StopSampling' });
 };
 
 export function getIsSamplingIntervalRunning(): boolean {
-  if (intervalId) {
-    return true;
-  } else {
-    return false;
-  }
+  return intervalIds.size > 0;
 }
-export function setSamplingInterval(broadcast: (data: any) => void, value: number) {
-  if (intervalId) {
-    clearInterval(intervalId);
-    intervalId = null;
+export function setSamplingInterval(broadcast: (data: any) => void) {
+  // 現在動作中の場合は、一度停止して再開
+  if (intervalIds.size > 0) {
+    stopIOModuleInputSamplingInterval(broadcast);
+    startIOModuleInputSamplingInterval(broadcast);
   }
-  intervalId = setInterval(() => getIOModuleInput(broadcast), value);
 }
 
 // 最新のセンサーデータを返す関数
@@ -222,6 +351,12 @@ export async function addIOModule(newIOModule: IOModule): Promise<Result<IOModul
     let initialized_module = result.value;
     io_modules.push(initialized_module);
     await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
+    
+    // サンプリング中の場合はマッピングを再構築
+    if (intervalIds.size > 0) {
+      buildIntervalChannelMapping();
+    }
+    
     return ok(initialized_module);
   }
   else {
@@ -243,6 +378,11 @@ export async function addChannel(channel: IChannelSetting): Promise<Result<IChan
     }
 
     await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
+    
+    // 入力チャンネルでサンプリング中の場合はマッピングを再構築
+    if (channel.direction === "input" && intervalIds.size > 0) {
+      buildIntervalChannelMapping();
+    }
 
     return ok(channel);
   }
@@ -268,6 +408,12 @@ export async function updateIOModule(moduleData: IOModule): Promise<Result<IOMod
     io_modules[index] = moduleData;// バックエンド内のIOモジュールのリストを更新
     io_modules[index].status = result.value; // ステータスを更新
     await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
+    
+    // サンプリング中の場合はマッピングを再構築
+    if (intervalIds.size > 0) {
+      buildIntervalChannelMapping();
+    }
+    
     return ok(result.value);
   } else {
     console.log("failed to update module");
@@ -292,6 +438,11 @@ export const deleteIOModule = async (module_uuid: string): Promise<void> => {
 
   // JSONファイルに保存
   await json.saveJson<IOModule[]>(jsonFilePath, io_modules);
+  
+  // サンプリング中の場合はマッピングを再構築
+  if (intervalIds.size > 0) {
+    buildIntervalChannelMapping();
+  }
 
   return;
 };
@@ -328,6 +479,11 @@ export async function deleteChannel(channel_setting: IChannelSetting): Promise<R
 
     // JSONファイルに保存
     await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
+    
+    // 入力チャンネルでサンプリング中の場合はマッピングを再構築
+    if (channel_setting.direction === "input" && intervalIds.size > 0) {
+      buildIntervalChannelMapping();
+    }
     
     return ok(void 0);
   }

@@ -31,6 +31,10 @@ const translations:any = {
         data_retention: 'データ保持期間',
         data_retention_unit: 'データ保持期間の単位',
         input_data_setting: '入力データ設定',
+        interval: {
+          name: '名前',
+          add: '新しいサンプリング周期を追加'
+        },
         clock:{
           second: '秒',
           minute: '分',
@@ -58,6 +62,8 @@ const translations:any = {
     modal_window: {
       update: '更新',
       cancel: 'キャンセル',
+      delete: '削除',
+      close: '閉じる',
     }
   },
   en: {
@@ -87,6 +93,10 @@ const translations:any = {
         data_retention: 'Data Retention Period',
         data_retention_unit: 'Data Retention Unit',
         input_data_setting: 'Input Data Setting',
+        interval: {
+          name: 'Name',
+          add: 'Add New Sampling Interval'
+        },
         clock:{
           second: 'sec',
           minute: 'min',
@@ -114,6 +124,8 @@ const translations:any = {
     modal_window: {
       update: 'Update',
       cancel: 'Cancel',
+      delete: 'Delete',
+      close: 'Close',
     }
   },
   zh: {
@@ -143,6 +155,10 @@ const translations:any = {
         data_retention: '数据保留期',
         data_retention_unit: '数据保留期单位',
         input_data_setting: '输入数据设置',
+        interval: {
+          name: '名称',
+          add: '添加新采样周期'
+        },
         clock:{
           second: '秒',
           minute: '分钟',
@@ -170,6 +186,8 @@ const translations:any = {
     modal_window: {
       update: '更新',
       cancel: '取消',
+      delete: '删除',
+      close: '关闭',
     }
   },
   ko: {
@@ -199,6 +217,10 @@ const translations:any = {
         data_retention: '데이터 보존 기간',
         data_retention_unit: '데이터 보존 기간 단위',
         input_data_setting: '입력 데이터 설정',
+        interval: {
+          name: '이름',
+          add: '새 샘플링 주기 추가'
+        },
         clock:{
           second: '초',
           minute: '분',
@@ -226,6 +248,8 @@ const translations:any = {
     modal_window: {
       update: '업데이트',
       cancel: '취소',
+      delete: '삭제',
+      close: '닫기',
     }
   }
 }

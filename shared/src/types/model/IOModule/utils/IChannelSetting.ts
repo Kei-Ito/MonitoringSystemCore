@@ -10,6 +10,7 @@ export interface IChannelSetting<T={}> {
     channel_number: number; //所属するモジュール内でのチャンネルの番号  
     unit: string; //チャンネルの単位
     decimals: number; //チャンネルの小数点以下桁数
+    sampling_interval_uuid: string; //サンプリングインターバルのUUID
     normalize: NormalizeConfig; //正規化設定
     threshold: ThresholdConfig; //閾値設定
     created_at: Date; //チャンネルの作成日時

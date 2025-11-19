@@ -3,6 +3,7 @@
  */
 
 export * from "./IOModule/index";
+export * from "./SystemSetting/index";
 export * from "./Trend/index";
 export * from "./Ui/index";
 export * from "./utils/index";

@@ -1,5 +1,8 @@
+import { SamplingInterval } from './samplingInterval';
+
 export interface SystemSettingData {
-    samplingInterval: number;
+    samplingInterval: number; // 既存の設定(後方互換性のため保持)
+    samplingIntervals: [SamplingInterval, SamplingInterval]; // 2種類のインターバル設定
     dataRootPath: string;
     category1list: string[];
     category2list: string[];

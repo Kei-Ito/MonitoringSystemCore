@@ -44,6 +44,8 @@
                 </th>
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
                   少数点以下表示</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">
+                  サンプリング周期</th>
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
                   style="width: 15px;">
                   入力値設定
@@ -72,6 +74,13 @@
                   <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
                     class="w-100" />
                 </td>
+                <td>
+                  <select v-model="channel.sampling_interval_uuid" class="form-select form-select-sm">
+                    <option v-for="interval in samplingIntervals" :key="interval.uuid" :value="interval.uuid">
+                      {{ interval.name }}
+                    </option>
+                  </select>
+                </td>
                 <td class="align-middle text-center">
                   <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0">
                     <i class="material-icons-round" aria-hidden="true"
@@ -91,7 +100,7 @@
                 </td>
               </tr>
               <tr v-if="isAddableInputChannel">
-                <td colspan="4" class="text-start">
+                <td colspan="5" class="text-start">
                   <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
                     @click="addInputChannel">
                     <div class="d-flex items-center justify-center  items-center">
@@ -187,12 +196,13 @@
 
 import type { IChannelSetting, IOModule } from '@monitoring/shared/model';
 import { createInputChannelForInitialization, createOutputChannelForInitialization } from '@monitoring/shared/model';
-import { type Ref, ref, toRefs, watch } from 'vue'
+import { type Ref, ref, toRefs, watch, computed, onMounted } from 'vue'
 
 import ChannelSpecificSettingModal from '@/components/ChannelSpecificSettingModal.vue';
 import CheckModal from '@/components/Modal/CheckModal.vue';
 import { addChannel, deleteChannel, deleteIOModule, updateIOModule } from '@/service/monitoringService';
 import InputDataSettingModal from '@/views/components/Configurations/InputDataSettingModal.vue';
+import { useSystemSettingStore } from '@/pinia/systemSettingStore';
 
 const props = defineProps({
   visible: {
@@ -227,6 +237,17 @@ const selectedChannel = ref<IChannelSetting<any> | null>(null);
 const isError = ref(false);
 // ConfirmModal の参照を保持する
 const checkModal = ref<InstanceType<typeof CheckModal> | null>(null)
+
+// システム設定ストアからサンプリングインターバルを取得
+const systemSettingStore = useSystemSettingStore();
+const samplingIntervals = computed(() => systemSettingStore.samplingIntervals);
+
+// コンポーネントマウント時にサンプリングインターバルを読み込む
+onMounted(async () => {
+  if (!systemSettingStore.isLoaded) {
+    await systemSettingStore.loadSamplingIntervals();
+  }
+});
 
 // moduleが変更されたらlocalModuleを更新し、表示制御フラグを同期
 watch(module, (newModule) => {

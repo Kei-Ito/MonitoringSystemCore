@@ -1,6 +1,7 @@
 import * as json from 'src/utils/json';
-import { SystemSettingData } from "@monitoring/shared/model";
+import { SystemSettingData, SamplingInterval } from "@monitoring/shared/model";
 import { Result } from "@monitoring/shared/utils";
+import { v4 as uuidv4 } from 'uuid';
 
 const jsonPath = './LocalData/systemSetting.json';
 
@@ -30,8 +31,19 @@ export class SystemSettingService {
     }
 
     private createDefaultSystemSetting(): SystemSettingData {
+        const interval1: SamplingInterval = {
+            uuid: uuidv4(),
+            name: '高速サンプリング',
+            period: 1000
+        };
+        const interval2: SamplingInterval = {
+            uuid: uuidv4(),
+            name: '低速サンプリング',
+            period: 5000
+        };
         return {
             samplingInterval: 1000,
+            samplingIntervals: [interval1, interval2],
             dataRootPath: "",
             category1list: [],
             category2list: [],
@@ -49,6 +61,12 @@ export class SystemSettingService {
         const result: Result<SystemSettingData> = await json.loadJson<SystemSettingData>(jsonPath);
         if (result.ok) {
             this._systemSetting = result.value;
+            // samplingIntervalsがない場合はデフォルトを設定
+            if (!this._systemSetting.samplingIntervals) {
+                const defaultSetting = this.createDefaultSystemSetting();
+                this._systemSetting.samplingIntervals = defaultSetting.samplingIntervals;
+                await this.saveSystemSetting();
+            }
         } else {
             await this.setSystemSetting(this.createDefaultSystemSetting());
         }
@@ -79,8 +97,10 @@ export class SystemSettingService {
      * システム設定をデータベースに保存する
      */
     private async saveSystemSetting(): Promise<void> {
+        const defaultSetting = this.createDefaultSystemSetting();
         const systemSetting: SystemSettingData = {
             samplingInterval: this._systemSetting?.samplingInterval ?? 1000,
+            samplingIntervals: this._systemSetting?.samplingIntervals ?? defaultSetting.samplingIntervals,
             dataRootPath: this._systemSetting?.dataRootPath ?? "",
             category1list: this._systemSetting?.category1list ?? [],
             category2list: this._systemSetting?.category2list ?? [],

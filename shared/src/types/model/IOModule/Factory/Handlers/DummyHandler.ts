@@ -13,7 +13,7 @@ export class DummyHandler implements IModuleHandler {
             module_type: module_type,
             module_name: module_name,
             status: IOModuleStatus.Uninitialized,
-            input_channel_num: 8,
+            input_channel_num: 0,
             output_channel_num: 0,
             created_at: new Date(),
             updated_at: new Date(),
