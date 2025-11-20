@@ -83,7 +83,6 @@ export async function saveInputDatas(data_list: getIOModuleInputResponse[]): Pro
     
     await acquireLock();
     try {
-        console.log("Saving input data to database...");
         const timestamp = data_list[0].timestamp;
         const data_path = generatePathfromDate(new Date(timestamp));
         const dir = path.dirname(data_path);
