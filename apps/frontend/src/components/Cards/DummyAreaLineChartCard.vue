@@ -48,9 +48,9 @@ const dummyChartConfig: ChartConfig = {
   chart_title: 'ワーク検出センサ',
   chart_unit: '回',
   channel_uuids: ['dummy-channel-1'],
-  grid_layout: { i: 'dummy', x: 0, y: 0, w: 12, h: 10 },
+  grid_layout: { i: 'dummy', x: 0, y: 0, w: 12, h: 10, static: false, minW: null, minH: null, maxW: null, maxH: null },
   chart_options: {
-    thresholds: { min: -20, max: 3, color: '#ff0000' },
+    thresholds: { min: -20, max: 80, color: '#ff0000' },
     visibility: { minY: 0, maxY: 20 },
     seriesColors: {}
   },
@@ -67,10 +67,10 @@ const generateDummyData = () => {
   for (let t = startDate; t <= endDate; t += interval) {
     let value = 0;
     // 5%の確率で0以外の値 (例: 1 ~ 10)
-    if (Math.random() < 0.02) {
+    if (Math.random() < 0.05) {
       value = Math.floor(1 + Math.random() * 10);
     }
-    data.push({ timestamp: t, value });
+    data.push({ timestamp: new Date(t), value });
   }
   return data;
 };
@@ -80,7 +80,7 @@ const dummySeries: ChannelSeries[] = [
     channel_uuid: 'dummy-channel-1',
     channel_name: '詰まり発生回数',
     timeSeries: generateDummyData()
-  }
+  } as any
 ];
 
 /* ---------- DOM refs ---------- */

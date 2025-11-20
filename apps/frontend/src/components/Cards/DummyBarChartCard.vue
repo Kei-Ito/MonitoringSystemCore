@@ -48,7 +48,7 @@ const dummyChartConfig: ChartConfig = {
   chart_title: '消費電力',
   chart_unit: 'kWh',
   channel_uuids: ['dummy-channel-1'],
-  grid_layout: { i: 'dummy', x: 0, y: 0, w: 12, h: 10 },
+  grid_layout: { i: 'dummy', x: 0, y: 0, w: 12, h: 10, static: false, minW: null, minH: null, maxW: null, maxH: null },
   chart_options: {
     thresholds: { min: -20, max: 80, color: '#ff0000' },
     visibility: { minY: 0, maxY: 20 },
@@ -75,7 +75,7 @@ const generateDummyData = () => {
     if (currentValue < 0) currentValue = 0;
     if (currentValue > 25) currentValue = 25;
 
-    data.push({ timestamp: t, value: currentValue });
+    data.push({ timestamp: new Date(t), value: currentValue });
   }
   return data;
 };
@@ -85,7 +85,7 @@ const dummySeries: ChannelSeries[] = [
     channel_uuid: 'dummy-channel-1',
     channel_name: '消費電力',
     timeSeries: generateDummyData()
-  }
+  } as any
 ];
 
 /* ---------- DOM refs ---------- */

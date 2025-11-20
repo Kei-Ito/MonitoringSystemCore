@@ -62,8 +62,6 @@ import DummyAreaLineChartCard from '@/components/Cards/DummyAreaLineChartCard.vu
 import { getTrendData, cancelTrendDataRequests } from '@/service/trendDataService';
 import DateRangePickerModal from '@/components/DateRangePickerModal.vue';
 
-import { ChartTypes } from '@monitoring/shared/enum';
-import type { ChartConfig, ChannelSeries } from '@monitoring/shared/model';
 
 const emit = defineEmits<{
   'update-navbar-date-range': [{ text: string; callback: () => void }];
