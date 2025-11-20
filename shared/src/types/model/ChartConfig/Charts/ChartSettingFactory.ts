@@ -14,6 +14,7 @@ const SpecificChartSetting: Record<ChartTypes, any> = {
     // 新規モジュールタイプを追加するときはここにハンドラを登録
     // 例: [IOModuleTypes.XYZModule]: new XYZModuleHandler(),
     [ChartTypes.LineChart]: Charts.createLineChartSpecificSetting(),
+    [ChartTypes.BarChart]: Charts.createBarChartSpecificSetting(),
 };
 
 
