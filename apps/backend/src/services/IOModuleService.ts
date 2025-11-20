@@ -213,6 +213,8 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
               currentInputDatas[cacheIndex].channels[existingChannelIndex] = newChannel;
             }
           });
+          // タイムスタンプを更新
+          currentInputDatas[cacheIndex].timestamp = input_datas.timestamp;
         }
       }
     } else {

@@ -41,42 +41,107 @@ function getChannel_UUIDs(data_list: getIOModuleInputResponse[]) : [string[], Ma
 
 
 async function readHeaderLine(filePath: string): Promise<string[]> {
-  const fh = await fs.promises.open(filePath, 'r');
-  const buffer = Buffer.alloc(1024); // 先頭1KBだけ読めば大抵は収まる
-  await fh.read(buffer, 0, buffer.length, 0);
-  await fh.close();
+    const fileStream = fs.createReadStream(filePath);
+    const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity
+    });
 
-  const content = buffer.toString('utf-8');
-  const firstLine = content.split(/\r?\n/)[0]; // 最初の1行
-  return firstLine.split(',');
+    for await (const line of rl) {
+        rl.close();
+        fileStream.destroy();
+        return line.split(',');
+    }
+    return [];
+}
+
+// 簡易的なMutex
+let isSaving = false;
+const waitQueue: (() => void)[] = [];
+
+async function acquireLock(): Promise<void> {
+    if (!isSaving) {
+        isSaving = true;
+        return;
+    }
+    return new Promise<void>(resolve => {
+        waitQueue.push(resolve);
+    });
+}
+
+function releaseLock() {
+    if (waitQueue.length > 0) {
+        const next = waitQueue.shift();
+        next!();
+    } else {
+        isSaving = false;
+    }
 }
 
 export async function saveInputDatas(data_list: getIOModuleInputResponse[]): Promise<void> {
-    console.log("Saving input data to database...");
     if (data_list.length === 0) return;
     
-    const timestamp = data_list[0].timestamp;
-    const data_path = generatePathfromDate(new Date(timestamp));
-    const dir = path.dirname(data_path);
-
-    await fs.promises.mkdir(dir, { recursive: true });
-
-    const [channel_uuids, value_map] = getChannel_UUIDs(data_list);
-
-    const header = ['timestamp', ...channel_uuids];
-    let existingHeader: string[];
-
+    await acquireLock();
     try {
-        existingHeader = await readHeaderLine(data_path);
-    } catch {
-        // ファイルがなければ新規作成
-        await fs.promises.writeFile(data_path, header.join(',') + '\n');
-        existingHeader = header;
-    }
+        console.log("Saving input data to database...");
+        const timestamp = data_list[0].timestamp;
+        const data_path = generatePathfromDate(new Date(timestamp));
+        const dir = path.dirname(data_path);
 
-    // ヘッダーに従って並び替え
-    const sortedValues = existingHeader.slice(1).map(uuid => value_map.get(uuid) ?? 0);
-    await fs.promises.appendFile(data_path, [timestamp, ...sortedValues].join(',') + '\n');
+        await fs.promises.mkdir(dir, { recursive: true });
+
+        const [channel_uuids, value_map] = getChannel_UUIDs(data_list);
+
+        let existingHeader: string[] = [];
+        let fileExists = false;
+
+        try {
+            existingHeader = await readHeaderLine(data_path);
+            if (existingHeader.length > 0) {
+                fileExists = true;
+            }
+        } catch {
+            fileExists = false;
+        }
+
+        if (!fileExists) {
+            // 新規作成
+            const header = ['timestamp', ...channel_uuids];
+            await fs.promises.writeFile(data_path, header.join(',') + '\n');
+            existingHeader = header;
+        } else {
+            // ヘッダー更新チェック
+            const missingChannels = channel_uuids.filter(uuid => !existingHeader.includes(uuid));
+            
+            if (missingChannels.length > 0) {
+                console.log(`Adding missing channels to CSV: ${missingChannels.join(', ')}`);
+                const content = await fs.promises.readFile(data_path, 'utf-8');
+                const lines = content.split(/\r?\n/);
+                
+                // ヘッダー更新
+                const newHeader = [...existingHeader, ...missingChannels];
+                
+                // データ行更新
+                const updatedLines = lines.map((line, index) => {
+                    if (index === 0) return newHeader.join(',');
+                    if (line.trim() === '') return line;
+                    return line + ','.repeat(missingChannels.length);
+                });
+
+                await fs.promises.writeFile(data_path, updatedLines.join('\n'));
+                existingHeader = newHeader;
+            }
+        }
+
+        // ヘッダーに従って並び替え
+        // 値がない場合は空文字にする
+        const sortedValues = existingHeader.slice(1).map(uuid => value_map.get(uuid) ?? '');
+        await fs.promises.appendFile(data_path, [timestamp, ...sortedValues].join(',') + '\n');
+    } catch (error) {
+        console.error('Error saving input data:', error);
+    } finally {
+        releaseLock();
+    }
 }
 
 import csv from "csv-parser";
