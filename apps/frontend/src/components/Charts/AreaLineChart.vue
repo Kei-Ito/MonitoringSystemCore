@@ -1,9 +1,9 @@
 <template>
-    <div ref="el" class="w-100 h-100" />
+    <div ref="el" class="w-100 h-100"/>
 </template>
 <script setup lang="ts">
-import type { ChannelSeries, ChartConfig } from '@monitoring/shared/model'
-import { computed, toRef } from 'vue'
+import type { ChannelSeries,ChartConfig } from '@monitoring/shared/model'
+import { computed,toRef } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
 
@@ -36,42 +36,25 @@ const seriesRef = toRef(props, 'series')
 const chartRef = toRef(props, 'chart')
 
 
+function formatTime(value: string | number): string {
+  const d = new Date(value)
+  return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`
+}
+
 const optionBuilder = () => {
     const thresholds = chartRef.value.chart_options.thresholds;
     const minY = chartRef.value.chart_options.visibility?.minY;
     const maxY = chartRef.value.chart_options.visibility?.maxY;
 
-    // データ範囲の計算
-    let minTime = Infinity;
-    let maxTime = -Infinity;
-    let hasData = false;
-
-    seriesData.value.forEach(series => {
-        series.forEach(point => {
-            const t = point[0];
-            if (t < minTime) minTime = t;
-            if (t > maxTime) maxTime = t;
-            hasData = true;
-        });
-    });
-
-    const isLongSpan = hasData && (maxTime - minTime) >= 24 * 60 * 60 * 1000;
-
-    const dateFormatter = (value: number) => {
-        const d = new Date(value);
-        if (isLongSpan) {
-             return `${d.getMonth() + 1}/${d.getDate()}`;
-        }
-        return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
-    };
-
-    // 棒グラフ
-    const barSeries = props.series.map((s, idx) => ({
+    // 折れ線（dataset から列名でマッピング）
+    const lineSeries = props.series.map((s, idx) => ({
         name: s.channel_name,
-        type: 'bar',
+        type: 'line',
+        showSymbol: false,
+        areaStyle: {},
+        sampling: 'lttb',
         emphasis: { disabled: true, focus: 'none' },
-        data: seriesData.value[idx] ?? [],
-        barMaxWidth: 50,
+        data: seriesData.value[idx] ?? []
     }))
 
     // しきい値で色分け（シリーズごと）
@@ -114,12 +97,12 @@ const optionBuilder = () => {
         animation: false,
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
-        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        xAxis: { type: 'time', boundaryGap: true, axisLabel: { formatter: dateFormatter }},
+        tooltip: { trigger: 'axis', axisPointer: { type: 'line' } }, // ← 1箇所に統一
+        xAxis: { type: 'time', boundaryGap: false, axisLabel: { formatter: formatTime }},
         yAxis: { type: 'value' ,min:minY??undefined,max:maxY??undefined},
         dataZoom: [{ type: 'inside', start: 0, end: 100 }, { start: 0, end: 100 }],
         visualMap: visualMaps,                                    // ← 配列で渡す
-        series: [...barSeries, ...(thresholdLineSeries ? [thresholdLineSeries] : [])] // ← 上書きしない
+        series: [...lineSeries, ...(thresholdLineSeries ? [thresholdLineSeries] : [])] // ← 上書きしない
     }
 }
 // ----- EChartsをマウント -----
