@@ -12,7 +12,7 @@
       "period": 5000
     }
   ],
-  "dataRootPath": "/mnt/usb",
+  "dataRootPath": "/media/linaro/HD-WHAU3",
   "category1list": [
     "照射炉1",
     "照射炉2",
