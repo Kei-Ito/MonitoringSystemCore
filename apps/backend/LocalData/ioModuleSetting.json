@@ -417,6 +417,130 @@
         "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
       },
       {
+        "channel_uuid": "675b0ed1-127a-4b07-ab54-f789080a6367",
+        "channel_name": "UV1-1UV点灯時間(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10016,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:48.055Z",
+        "updated_at": "2025-11-20T16:28:48.055Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "f5e773e0-31c9-4e81-af6b-bbe89eb59544",
+        "channel_name": "UV1-2UV点灯時間(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10017,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:50.276Z",
+        "updated_at": "2025-11-20T16:28:50.276Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "430a8962-5c5e-4459-acc0-043d60343c0b",
+        "channel_name": "UV1-3UV点灯時間(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10018,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:54.694Z",
+        "updated_at": "2025-11-20T16:28:54.694Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "097ce82a-985d-45a8-b501-cb193650a2a9",
+        "channel_name": "UV1-4UV点灯時間(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10019,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:57.596Z",
+        "updated_at": "2025-11-20T16:28:57.596Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
         "channel_uuid": "10020",
         "channel_name": "炉内温度(照射炉1)",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
@@ -1285,6 +1409,130 @@
         "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
       },
       {
+        "channel_uuid": "675b0ed2-127a-4b07-ab54-f789080a6367",
+        "channel_name": "UV2-1UV点灯時間(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10066,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:48.055Z",
+        "updated_at": "2025-11-20T16:28:48.055Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "f5e773e2-31c9-4e81-af6b-bbe89eb59544",
+        "channel_name": "UV2-2UV点灯時間(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10067,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:50.276Z",
+        "updated_at": "2025-11-20T16:28:50.276Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "430a8962-5c5e-4459-acc2-043d60343c0b",
+        "channel_name": "UV2-3UV点灯時間(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10068,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:54.694Z",
+        "updated_at": "2025-11-20T16:28:54.694Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "097ce822-985d-45a8-b501-cb193650a2a9",
+        "channel_name": "UV2-4UV点灯時間(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10069,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:57.596Z",
+        "updated_at": "2025-11-20T16:28:57.596Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
         "channel_uuid": "10070",
         "channel_name": "炉内温度(照射炉2)",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
@@ -2150,6 +2398,130 @@
         },
         "created_at": "2025-08-19T13:17:41.249Z",
         "updated_at": "2025-08-19T13:17:41.249Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "675b0ed3-127a-4b07-ab54-f789080a6367",
+        "channel_name": "UV3-1UV点灯時間(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10116,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:48.055Z",
+        "updated_at": "2025-11-20T16:28:48.055Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "f5e773e3-31c9-4e81-af6b-bbe89eb59544",
+        "channel_name": "UV3-2UV点灯時間(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10117,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:50.276Z",
+        "updated_at": "2025-11-20T16:28:50.276Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "430a8963-5c5e-4459-acc3-043d60343c0b",
+        "channel_name": "UV3-3UV点灯時間(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10118,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:54.694Z",
+        "updated_at": "2025-11-20T16:28:54.694Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "097ce823-985d-45a8-b501-cb193650a2a9",
+        "channel_name": "UV3-4UV点灯時間(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "h",
+        "channel_number": -1,
+        "decimals": 1,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10119,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-20T16:28:57.596Z",
+        "updated_at": "2025-11-20T16:28:57.596Z",
         "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
       },
       {
