@@ -1,5 +1,5 @@
 import { Mesurement } from 'src/models/MesurementModel';
-import * as database from 'src/services/databaseService';
+import * as dataSaveService from 'src/services/dataSaveService';
 import { saveDailyCumulativeValue, findCumulativeValueForDate } from 'src/infra/database/trendDatabase';
 import { trendDataRequest } from '@monitoring/shared/api';
 
@@ -25,7 +25,7 @@ export async function getCumulativeValue(dataRequest: trendDataRequest): Promise
   }
 
   // 集計されていない場合や、当日のデータの場合はデータを取得して集計する
-  const dataList = await database.getTrendData(dataRequest);
+  const dataList = await dataSaveService.getTrendData(dataRequest);
   const cumulativeValue = calculateCumulativeValue(dataList);
 
   // 当日のデータでなければ、集計データを保存

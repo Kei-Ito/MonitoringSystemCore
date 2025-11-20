@@ -16,7 +16,7 @@
                       <i class="material-icons align-middle me-2 edit-icon">edit</i>
                       <input
                         type="text"
-                        class="form-control form-control-lg form-control-prominent editable-name-input"
+                        class="form-control form-control-lg form-control-prominent editable-name-input fs-4"
                         v-model="interval.name"
                         placeholder="サンプリング設定の名前を入力"
                       />

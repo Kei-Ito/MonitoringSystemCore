@@ -88,6 +88,12 @@ async function loadCsvColumn(
   return new Promise((resolve, reject) => {
     const results: { timestamp: Date; value: number }[] = [];
 
+    // ファイルが存在しない場合は空配列を返す
+    if (!fs.existsSync(filePath)) {
+      resolve([]);
+      return;
+    }
+
     fs.createReadStream(filePath)
       .pipe(csv())
       .on("data", (row) => {
@@ -103,8 +109,56 @@ async function loadCsvColumn(
   });
 }
 
-export function getTrendData(trendDataRequest: trendDataRequest): Promise<{ timestamp: Date; value: number }[]> {
-    console.log('Fetching trend data from file...');
-  const filePath = generatePathfromDate(new Date(trendDataRequest.start_time));
-  return loadCsvColumn(filePath, trendDataRequest.channel_uuid);
+/**
+ * 指定された日付範囲の全日付リストを生成
+ * @param startDate 開始日
+ * @param endDate 終了日
+ * @returns 日付の配列
+ */
+function getDateRangeList(startDate: Date, endDate: Date): Date[] {
+    const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+    const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+    
+    const dateArray: Date[] = [];
+    let current = new Date(start);
+    
+    while (current <= end) {
+        dateArray.push(new Date(current));
+        current.setDate(current.getDate() + 1);
+    }
+    
+    return dateArray;
+}
+
+/**
+ * 複数日のトレンドデータを取得
+ * @param trendDataRequest トレンドデータリクエスト
+ * @returns タイムスタンプと値の配列
+ */
+export async function getTrendData(trendDataRequest: trendDataRequest): Promise<{ timestamp: Date; value: number }[]> {
+    console.log('Fetching trend data from files...');
+    
+    const startDate = new Date(trendDataRequest.start_time);
+    const endDate = new Date(trendDataRequest.end_time);
+    const dateList = getDateRangeList(startDate, endDate);
+    
+    // 各日付のデータを並列で取得
+    const dataPromises = dateList.map(date => {
+        const filePath = generatePathfromDate(date);
+        return loadCsvColumn(filePath, trendDataRequest.channel_uuid);
+    });
+    
+    const dataArrays = await Promise.all(dataPromises);
+    
+    // 全データを結合し、時刻でフィルタリング
+    const allData = dataArrays.flat();
+    const filteredData = allData.filter(item => {
+        const timestamp = item.timestamp.getTime();
+        return timestamp >= startDate.getTime() && timestamp <= endDate.getTime();
+    });
+    
+    // タイムスタンプでソート
+    filteredData.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    
+    return filteredData;
 }

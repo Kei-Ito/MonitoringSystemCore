@@ -9,7 +9,7 @@
     {
       "uuid": "88d1c596-48e4-4245-9bf9-480f0257eda4",
       "name": "低速サンプリング",
-      "period": 67000
+      "period": 5000
     }
   ],
   "dataRootPath": "/mnt/usb",

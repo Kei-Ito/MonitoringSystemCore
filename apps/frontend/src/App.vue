@@ -7,9 +7,15 @@
     <sidenav :custom_class="color" :class="[isRTL ? 'fixed-end' : 'fixed-start']" v-if="showSidenav" />
     <main class="main-content position-relative max-height-vh-100 h-100 overflow-x-hidden">
       <!-- nav -->
-      <navbar :class="[isNavFixed ? navbarFixed : '', isAbsolute ? absolute : '']"
-        :color="isAbsolute ? 'text-white opacity-8' : ''" :minNav="navbarMinimize" v-if="showNavbar" />
-      <router-view />
+      <navbar 
+        ref="navbarRef"
+        :class="[isNavFixed ? navbarFixed : '', isAbsolute ? absolute : '']"
+        :color="isAbsolute ? 'text-white opacity-8' : ''" 
+        :minNav="navbarMinimize" 
+        v-if="showNavbar"
+        @show-date-range-picker="handleShowDateRangePicker" 
+      />
+      <router-view @update-navbar-date-range="updateNavbarDateRange" />
       <app-footer v-show="showFooter" />
     </main>
   </div>
@@ -37,6 +43,9 @@ const monitoringStore = useMonitoringStore();
 const chartStore = useChartStore();
 const channelValuesStore = useChannelValuesStore();
 
+const navbarRef = ref<InstanceType<typeof Navbar> | null>(null);
+let dateRangePickerCallback: (() => void) | null = null;
+
 let socket: WebSocket | null = null;
 let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -53,6 +62,23 @@ const {
   showNavbar,
   showFooter,
 } = storeToRefs(uiStore);
+
+// Navbarから日付範囲選択ボタンがクリックされたときの処理
+function handleShowDateRangePicker() {
+  if (dateRangePickerCallback) {
+    dateRangePickerCallback();
+  }
+}
+
+// Trendページから日付範囲テキスト更新のリクエストを受け取る
+function updateNavbarDateRange(payload: { text: string; callback?: () => void }) {
+  if (navbarRef.value) {
+    navbarRef.value.setDateRangeText(payload.text);
+  }
+  if (payload.callback) {
+    dateRangePickerCallback = payload.callback;
+  }
+}
 
 function setupWebSocket() {
   const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';

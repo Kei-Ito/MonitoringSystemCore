@@ -20,12 +20,13 @@ export const getTrendData = (channel_uuid: string, startDate: Date, endDate: Dat
     signal: options?.signal,
   });
 
-export async function getCsvData(inputChannelIds: number[], date: Date) {
+export async function getCsvData(inputChannelIds: number[], startDate: Date, endDate: Date) {
   try {
     const response = await axios.get(`${endpoint}export_csv`, {
       params: {
         input_channel_ids: inputChannelIds,
-        date: date.toISOString()
+        start_date: startDate.toISOString(),
+        end_date: endDate.toISOString()
       },
       responseType: 'blob', // Blob形式でレスポンスを取得
     });

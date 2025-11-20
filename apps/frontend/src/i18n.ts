@@ -31,6 +31,7 @@ const translations:any = {
         data_retention: 'データ保持期間',
         data_retention_unit: 'データ保持期間の単位',
         input_data_setting: '入力データ設定',
+        edit_sampling_intervals: 'サンプリング周期を編集',
         interval: {
           name: '名前',
           add: '新しいサンプリング周期を追加'
@@ -64,6 +65,9 @@ const translations:any = {
       cancel: 'キャンセル',
       delete: '削除',
       close: '閉じる',
+    },
+    trend: {
+      select_date_range: '表示期間を選択',
     }
   },
   en: {
@@ -93,6 +97,7 @@ const translations:any = {
         data_retention: 'Data Retention Period',
         data_retention_unit: 'Data Retention Unit',
         input_data_setting: 'Input Data Setting',
+        edit_sampling_intervals: 'Edit Sampling Intervals',
         interval: {
           name: 'Name',
           add: 'Add New Sampling Interval'
@@ -126,6 +131,9 @@ const translations:any = {
       cancel: 'Cancel',
       delete: 'Delete',
       close: 'Close',
+    },
+    trend: {
+      select_date_range: 'Select Date Range',
     }
   },
   zh: {
@@ -155,6 +163,7 @@ const translations:any = {
         data_retention: '数据保留期',
         data_retention_unit: '数据保留期单位',
         input_data_setting: '输入数据设置',
+        edit_sampling_intervals: '编辑采样周期',
         interval: {
           name: '名称',
           add: '添加新采样周期'
@@ -188,6 +197,9 @@ const translations:any = {
       cancel: '取消',
       delete: '删除',
       close: '关闭',
+    },
+    trend: {
+      select_date_range: '选择日期范围',
     }
   },
   ko: {
@@ -217,6 +229,7 @@ const translations:any = {
         data_retention: '데이터 보존 기간',
         data_retention_unit: '데이터 보존 기간 단위',
         input_data_setting: '입력 데이터 설정',
+        edit_sampling_intervals: '샘플링 주기 편집',
         interval: {
           name: '이름',
           add: '새 샘플링 주기 추가'
@@ -250,6 +263,9 @@ const translations:any = {
       cancel: '취소',
       delete: '삭제',
       close: '닫기',
+    },
+    trend: {
+      select_date_range: '날짜 범위 선택',
     }
   }
 }

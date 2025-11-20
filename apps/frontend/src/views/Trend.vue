@@ -1,11 +1,5 @@
 <template>
   <div class="py-4 container-fluid  min-vh-70">
-    <!--
-    <div class="row mb-4">
-      <trend-nav-bar-card />
-    </div>
-    -->
-
     <GridLayout
       v-model:layout="layoutModel"
       :col-num="12"
@@ -33,16 +27,18 @@
       </GridItem>
     </GridLayout>
 
-    <date-picker-modal
-      :show="isModalVisible"
-      @close="hideModal"
-      @date-selected="updateDate"
+    <date-range-picker-modal
+      :show="isDateRangeModalVisible"
+      :start-date="selectedDateRange.startDate"
+      :end-date="selectedDateRange.endDate"
+      @close="hideDateRangePicker"
+      @date-range-selected="updateDateRange"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed,onMounted,onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { GridItem, GridLayout } from 'vue-grid-layout-v3';
 
@@ -51,8 +47,12 @@ import { useChartStore } from '@/pinia/chartStore';
 import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
-import { getTrendData,cancelTrendDataRequests } from '@/service/trendDataService';
-import DatePickerModal from '@/components/DatePickerModal.vue';
+import { getTrendData, cancelTrendDataRequests } from '@/service/trendDataService';
+import DateRangePickerModal from '@/components/DateRangePickerModal.vue';
+
+const emit = defineEmits<{
+  'update-navbar-date-range': [{ text: string; callback: () => void }];
+}>();
 
 const chartStore = useChartStore();
 const { trendCharts } = storeToRefs(chartStore);
@@ -69,8 +69,57 @@ const layoutModel = computed({
   },
 });
 
-onMounted(async () => {
+// 日付範囲の状態管理
+const now = new Date();
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+
+const selectedDateRange = ref({
+  startDate: today,
+  endDate: endOfToday
+});
+
+const isDateRangeModalVisible = ref(false);
+
+// 日付範囲のテキスト表示
+const dateRangeText = computed(() => {
+  const start = selectedDateRange.value.startDate;
+  const end = selectedDateRange.value.endDate;
+  
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}/${month}/${day}`;
+  };
+  
+  const startStr = formatDate(start);
+  const endStr = formatDate(end);
+  
+  // 同じ日の場合は1つだけ表示
+  if (startStr === endStr) {
+    return startStr;
+  }
+  
+  return `${startStr} - ${endStr}`;
+});
+
+function showDateRangePicker() {
+  isDateRangeModalVisible.value = true;
+}
+
+function hideDateRangePicker() {
+  isDateRangeModalVisible.value = false;
+}
+
+function updateDateRange(range: { startDate: Date; endDate: Date }) {
+  selectedDateRange.value = range;
+  refreshTrendData();
+}
+
+async function refreshTrendData() {
   const channel_uuid_list = new Set<string>();
+  
   // チャートで使用しているチャンネルの一覧を取得
   Object.keys(trendCharts.value).forEach((key) => {
     const chart = trendCharts.value[key];
@@ -83,35 +132,37 @@ onMounted(async () => {
 
   for (const uuid of channel_uuid_list) {
     // チャンネルのUUIDを使ってトレンドデータを取得
-    await getTrendData(uuid, new Date(), new Date());
+    await getTrendData(
+      uuid, 
+      selectedDateRange.value.startDate, 
+      selectedDateRange.value.endDate
+    );
   }
-  
+}
+
+// Navbarに日付範囲テキストとコールバックを通知
+function updateNavbarDateRange() {
+  emit('update-navbar-date-range', {
+    text: dateRangeText.value,
+    callback: showDateRangePicker
+  });
+}
+
+onMounted(async () => {
+  // Navbarに初期状態を通知
+  updateNavbarDateRange();
+  await refreshTrendData();
 });
 
-const now = new Date();
-const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-const nextDay = new Date(today);
-nextDay.setDate(nextDay.getDate() + 1);
+// 日付範囲が変更されたらNavbarに通知
+watch(dateRangeText, () => {
+  updateNavbarDateRange();
+});
 
-const isModalVisible = ref(false);
-const selectedDate = ref({ startDate: today, endDate: nextDay });
-
-function hideModal() {
-  isModalVisible.value = false;
-}
-
-function updateDate(date: any) {
-  const d = new Date(date);
-  const start = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  selectedDate.value = { startDate: start, endDate: end };
-}
-
-onBeforeUnmount(()=>{
+onBeforeUnmount(() => {
   cancelTrendDataRequests();
   channelValuesStore.prune(new Set());
-})
+});
 
 </script>
 <style scoped>

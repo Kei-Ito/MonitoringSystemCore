@@ -64,6 +64,14 @@
             </template>
           </multiselect>
         </div>
+
+        <!-- Trendページ専用: 日付範囲選択 -->
+        <div v-if="currentRouteName === 'Trend'" class="date-range-container d-flex align-items-center">
+          <button class="btn btn-outline-primary btn-date-range d-flex align-items-center justify-content-center" @click="showDateRangePicker">
+            <i class="material-icons me-1" style="font-size: 1.2rem;">calendar_month</i>
+            <span class="date-range-text">{{ dateRangeText }}</span>
+          </button>
+        </div>
       </div>
       <!--
       <div>
@@ -95,7 +103,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import Multiselect from 'vue-multiselect';
 import { useRoute } from "vue-router";
 
@@ -108,6 +116,12 @@ import Breadcrumbs from "../Breadcrumbs.vue";
 const props = defineProps({
   color: String,
 });
+
+/* Emits */
+const emit = defineEmits<{
+  'show-date-range-picker': [];
+  'date-range-text': [string];
+}>();
 
 const uiStore = useUiStore();
 
@@ -128,6 +142,9 @@ const {
 } = storeToRefs(uiStore);
 
 const currentRouteName = computed<string>(() => String(route.name ?? ""));
+
+// 日付範囲テキスト（親コンポーネントから受け取る）
+const dateRangeText = ref("今日");
 
 // 現在のルートに基づいて適切なカテゴリ選択を取得する computed プロパティ
 const selectedCategory1 = computed({
@@ -177,6 +194,21 @@ const isSelected = (currentValue: any, value: any | any[]): string => {
     return "";
   }
 };
+
+const showDateRangePicker = () => {
+  emit('show-date-range-picker');
+};
+
+// 外部から日付範囲テキストを設定できるようにする
+const setDateRangeText = (text: string) => {
+  dateRangeText.value = text;
+};
+
+// コンポーネント外から呼び出せるようにする
+defineExpose({
+  setDateRangeText
+});
+
 // ルート変更時に選択状態を更新
 watch(currentRouteName, () => {
   // selectedCategory1 と selectedCategory2 は computed プロパティなので自動的に更新される
@@ -189,6 +221,30 @@ watch(currentRouteName, () => {
 .multiselect-container {
   width: 30vw;
   max-width: 200px;
+}
+
+.date-range-container {
+  min-width: 180px;
+  max-width: 250px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-date-range {
+  width: 100%;
+  min-height: 38px;
+  padding: 0.375rem 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.date-range-text {
+  font-size: 0.875rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
 }
 
 /* Vue-Multiselect のスタイルカスタマイズ */

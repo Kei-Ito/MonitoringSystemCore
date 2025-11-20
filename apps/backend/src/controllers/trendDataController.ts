@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import * as database from 'src/services/databaseService';
 import * as dataSaveService from 'src/services/dataSaveService';
 import { getIsDataExist } from 'src/services/trendDataService';
 import { getCumulativeValue } from 'src/services/AnalysisService';
@@ -49,31 +48,16 @@ export async function getIsDataExistController(req: Request, res: Response) {
 }
 
 export async function exportCsv(req: Request, res: Response) {
-    const { input_channel_ids, date } = req.query;
+    // TODO: databaseServiceが削除されたため、CSV エクスポート機能の実装が必要
+    // CSVファイルから直接データを読み取ってエクスポートする実装を追加する
+    const { input_channel_ids, start_date, end_date } = req.query;
     // バリデーション
-    if (!input_channel_ids || !date) {
+    if (!input_channel_ids || !start_date || !end_date) {
         res.status(400).json({ error: 'Missing required parameters' });
         return;
     }
-    const channelIds = String(input_channel_ids)
-        //.slice(1,-1)//配列の[]を削除
-        .split(',')
-        .map(id => parseInt(id,10))
-        .filter(id => !isNaN(id));
-
-    const csvDataRequest:csvDataRequest = {
-        input_channel_ids: channelIds,
-        date: String(date),
-    };
-    // CSVデータ取得処理
-    const csvData = await database.getCsvData(csvDataRequest.input_channel_ids,new Date(csvDataRequest.date));
-
-    // レスポンスヘッダをCSVダウンロード用に設定
-    res.setHeader('Content-Type', 'text/csv; charset=UTF-8');
-    res.setHeader('Content-Disposition', 'attachment; filename="data.csv"');
-
-    // CSV文字列をレスポンスとして送信
-    res.send(csvData);
+    
+    res.status(501).json({ error: 'CSV export feature is not implemented yet' });
     return;
 }
 
