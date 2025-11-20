@@ -124,8 +124,22 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
   }
   
   let status :DeviceHealthEnum = DeviceHealthEnum.Unknown; // 初期状態は不明
-  let is_alert = false;
-  let is_warning = false;
+  const deviceStatuses: Record<string, DeviceHealthEnum> = {
+    "照射炉1": DeviceHealthEnum.Unknown,
+    "照射炉2": DeviceHealthEnum.Unknown,
+    "照射炉3": DeviceHealthEnum.Unknown
+  };
+  // 各デバイスごとのアラート・警告フラグ
+  const deviceAlerts: Record<string, boolean> = {
+    "照射炉1": false,
+    "照射炉2": false,
+    "照射炉3": false
+  };
+  const deviceWarnings: Record<string, boolean> = {
+    "照射炉1": false,
+    "照射炉2": false,
+    "照射炉3": false
+  };
 
   // キャッシュからマッピングを取得
   const mapping = intervalChannelMap.get(samplingIntervalUuid);
@@ -151,32 +165,31 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
         const channel_setting = module.input_channels.find(channel_setting => channel_setting.channel_uuid === channel.channel_uuid);
         if (channel_setting) {
           if (channel.channel_uuid=="10041") {
-            switch (channel.input_data) {
-              case 0:
-                status = DeviceHealthEnum.Stop;
-                break;
-              case 1:
-                status = DeviceHealthEnum.WarmingUp;
-                break;
-              case 2:
-                status = DeviceHealthEnum.Good;
-                break;
-              case 3:
-                status = DeviceHealthEnum.CoolingDown;
-                break;
-              default:
-                status = DeviceHealthEnum.Unknown;
-            }
+            deviceStatuses["照射炉1"] = convertStatus(channel.input_data);
+            status = deviceStatuses["照射炉1"];
+          } else if (channel.channel_uuid=="10091") {
+            deviceStatuses["照射炉2"] = convertStatus(channel.input_data);
+          } else if (channel.channel_uuid=="10141") {
+            deviceStatuses["照射炉3"] = convertStatus(channel.input_data);
           }
+
+          // デバイス名の特定
+          let deviceName = "";
+          if (channel_setting.channel_name.includes("照射炉1")) deviceName = "照射炉1";
+          else if (channel_setting.channel_name.includes("照射炉2")) deviceName = "照射炉2";
+          else if (channel_setting.channel_name.includes("照射炉3")) deviceName = "照射炉3";
+
           channel.input_data = NormalizeData(channel.input_data, channel_setting);
           // 閾値を基に判定(nullなら実質的に閾値なし)
-          if (channel.input_data < (channel_setting.threshold.alert_min_threshold ?? -Infinity) || 
-              channel.input_data > (channel_setting.threshold.alert_max_threshold ?? +Infinity)) {
-            is_alert = true;
-          }
-          if (channel.input_data < (channel_setting.threshold.warning_min_threshold ?? -Infinity) || 
-              channel.input_data > (channel_setting.threshold.warning_max_threshold ?? +Infinity)) {
-            is_warning = true;
+          if (deviceName) {
+            if (channel.input_data < (channel_setting.threshold.alert_min_threshold ?? -Infinity) || 
+                channel.input_data > (channel_setting.threshold.alert_max_threshold ?? +Infinity)) {
+              deviceAlerts[deviceName] = true;
+            }
+            if (channel.input_data < (channel_setting.threshold.warning_min_threshold ?? -Infinity) || 
+                channel.input_data > (channel_setting.threshold.warning_max_threshold ?? +Infinity)) {
+              deviceWarnings[deviceName] = true;
+            }
           }
           
         }
@@ -235,18 +248,22 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
   
   //ステータスを更新
   // statusはチャンネルデータの処理中に更新される可能性がある
-  if ((status as DeviceHealthEnum) === DeviceHealthEnum.Good){
-    if (is_alert) {
-      status = DeviceHealthEnum.Error;
-    } else if (is_warning) {
-      status = DeviceHealthEnum.Caution;
+  for (const deviceName of Object.keys(deviceStatuses)) {
+    if (deviceStatuses[deviceName] === DeviceHealthEnum.Good) {
+      if (deviceAlerts[deviceName]) {
+        deviceStatuses[deviceName] = DeviceHealthEnum.Error;
+      } else if (deviceWarnings[deviceName]) {
+        deviceStatuses[deviceName] = DeviceHealthEnum.Caution;
+      }
     }
   }
+  status = deviceStatuses["照射炉1"];
 
   const  payload = {
     type: 'IOModuleData',
     data: intervalInputDatas,
     status: status,
+    deviceStatuses: deviceStatuses,
     samplingIntervalUuid: samplingIntervalUuid
   }
 
@@ -256,6 +273,16 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
 
 function NormalizeData(data: number, channel: IChannelSetting): number {
   return (data-channel.normalize.src_min)*(channel.normalize.dst_max-channel.normalize.dst_min)/(channel.normalize.src_max-channel.normalize.src_min)+channel.normalize.dst_min;
+}
+
+function convertStatus(inputData: number): DeviceHealthEnum {
+  switch (inputData) {
+    case 0: return DeviceHealthEnum.Stop;
+    case 1: return DeviceHealthEnum.WarmingUp;
+    case 2: return DeviceHealthEnum.Good;
+    case 3: return DeviceHealthEnum.CoolingDown;
+    default: return DeviceHealthEnum.Unknown;
+  }
 }
 
 /**

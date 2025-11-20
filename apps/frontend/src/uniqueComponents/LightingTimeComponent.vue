@@ -17,8 +17,8 @@
 import { computed, type ComputedRef } from 'vue';
 import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum'
 
-const warningThreshold: number = 8000;
-const moderateThreshold: number = 5000;
+const warningThreshold: number = 700;
+const moderateThreshold: number = 500;
 
 const props = defineProps({
     value: {

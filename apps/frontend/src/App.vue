@@ -105,10 +105,19 @@ function setupWebSocket() {
           updateRuntimeValues(message.data);
           if (monitoringStore.isSampling) {
             //遅れて通知が来てしまい、稼働中表示のままになる可能性があるため
-            const deviceStatus = typeof message.status === 'string' 
-              ? DeviceHealthEnum[message.status as keyof typeof DeviceHealthEnum] 
-              : message.status;
-            channelValuesStore.setDeviceHealth("照射炉1", deviceStatus);
+            if (message.deviceStatuses) {
+              for (const [deviceName, status] of Object.entries(message.deviceStatuses)) {
+                const deviceStatus = typeof status === 'string'
+                  ? DeviceHealthEnum[status as keyof typeof DeviceHealthEnum]
+                  : status as DeviceHealthEnum;
+                channelValuesStore.setDeviceHealth(deviceName, deviceStatus);
+              }
+            } else {
+              const deviceStatus = typeof message.status === 'string'
+                ? DeviceHealthEnum[message.status as keyof typeof DeviceHealthEnum]
+                : message.status;
+              channelValuesStore.setDeviceHealth("照射炉1", deviceStatus);
+            }
           }
           
           break;
@@ -120,6 +129,8 @@ function setupWebSocket() {
           monitoringStore.isSampling = false;
           toast.success("モニタリングを停止しました");
           channelValuesStore.setDeviceHealth("照射炉1", DeviceHealthEnum.Unknown);
+          channelValuesStore.setDeviceHealth("照射炉2", DeviceHealthEnum.Unknown);
+          channelValuesStore.setDeviceHealth("照射炉3", DeviceHealthEnum.Unknown);
           break;
         case "samplingStatus":
           // TODO: 不要かも。要確認
@@ -160,9 +171,9 @@ onMounted(async () => {
 
   // デバイス健康状態を初期化
   channelValuesStore.initializeDeviceHealth([
-    { name: "照射炉1", status: DeviceHealthEnum.Good },
-    { name: "照射炉2", status: DeviceHealthEnum.Good },
-    { name: "照射炉3", status: DeviceHealthEnum.Good },
+    { name: "照射炉1", status: DeviceHealthEnum.Unknown },
+    { name: "照射炉2", status: DeviceHealthEnum.Unknown },
+    { name: "照射炉3", status: DeviceHealthEnum.Unknown },
   ]);
 
   const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
