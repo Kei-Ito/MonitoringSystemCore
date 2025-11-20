@@ -880,6 +880,1742 @@
         "created_at": "2025-08-19T13:58:02.750Z",
         "updated_at": "2025-08-19T13:58:02.750Z",
         "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10080",
+        "channel_name": "水温1(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10080,
+          "data_length": 10,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T12:41:05.117Z",
+        "updated_at": "2025-08-19T12:41:05.117Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10081",
+        "channel_name": "水温2(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10081,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:01:45.063Z",
+        "updated_at": "2025-08-19T13:01:45.063Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10082",
+        "channel_name": "水温3(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10082,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:05.223Z",
+        "updated_at": "2025-08-19T13:02:05.223Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10083",
+        "channel_name": "水温4(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10083,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:33.287Z",
+        "updated_at": "2025-08-19T13:02:33.287Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10084",
+        "channel_name": "水温5(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10084,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:41.380Z",
+        "updated_at": "2025-08-19T13:02:41.380Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10085",
+        "channel_name": "水温6(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10085,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:42.255Z",
+        "updated_at": "2025-08-19T13:02:42.255Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10086",
+        "channel_name": "水温7(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10086,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:43.714Z",
+        "updated_at": "2025-08-19T13:02:43.714Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10087",
+        "channel_name": "水温8(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10087,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:03:01.186Z",
+        "updated_at": "2025-08-19T13:03:01.186Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10088",
+        "channel_name": "水温9(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10088,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:03:02.830Z",
+        "updated_at": "2025-08-19T13:03:02.830Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10062",
+        "channel_name": "UV強度1(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "%",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10062,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:17:37.693Z",
+        "updated_at": "2025-08-19T13:17:37.693Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10063",
+        "channel_name": "UV強度2(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "%",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10063,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:17:38.806Z",
+        "updated_at": "2025-08-19T13:17:38.806Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10064",
+        "channel_name": "UV強度3(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "%",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10064,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:17:40.219Z",
+        "updated_at": "2025-08-19T13:17:40.219Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10065",
+        "channel_name": "UV強度4(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "%",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10065,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:17:41.249Z",
+        "updated_at": "2025-08-19T13:17:41.249Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10070",
+        "channel_name": "炉内温度(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 75,
+          "alert_min_threshold": null,
+          "alert_max_threshold": 80
+        },
+        "specific_channel_setting": {
+          "register_address": 10070,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:35:48.038Z",
+        "updated_at": "2025-08-19T13:35:48.038Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10052",
+        "channel_name": "ランプ電圧1(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 4500,
+          "dst_min": 0,
+          "dst_max": 4500
+        },
+        "threshold": {
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
+        },
+        "specific_channel_setting": {
+          "register_address": 10052,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:37:59.064Z",
+        "updated_at": "2025-08-19T13:37:59.064Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10055",
+        "channel_name": "ランプ電圧2(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 4500,
+          "dst_min": 0,
+          "dst_max": 4500
+        },
+        "threshold": {
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
+        },
+        "specific_channel_setting": {
+          "register_address": 10055,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:39:48.241Z",
+        "updated_at": "2025-08-19T13:39:48.241Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10058",
+        "channel_name": "ランプ電圧3(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 4500,
+          "dst_min": 0,
+          "dst_max": 4500
+        },
+        "threshold": {
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
+        },
+        "specific_channel_setting": {
+          "register_address": 10058,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:42:02.856Z",
+        "updated_at": "2025-08-19T13:42:02.856Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10061",
+        "channel_name": "ランプ電圧4(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 4500,
+          "dst_min": 0,
+          "dst_max": 4500
+        },
+        "threshold": {
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
+        },
+        "specific_channel_setting": {
+          "register_address": 10061,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:42:04.625Z",
+        "updated_at": "2025-08-19T13:42:04.625Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10051",
+        "channel_name": "ランプ電流1(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "A",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 2,
+          "warning_max_threshold": 5,
+          "alert_min_threshold": 1.5,
+          "alert_max_threshold": 5.5
+        },
+        "specific_channel_setting": {
+          "register_address": 10051,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:48:40.599Z",
+        "updated_at": "2025-08-19T13:48:40.599Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10054",
+        "channel_name": "ランプ電流2(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "A",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 2,
+          "warning_max_threshold": 5,
+          "alert_min_threshold": 1.5,
+          "alert_max_threshold": 5.5
+        },
+        "specific_channel_setting": {
+          "register_address": 10054,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:48:45.268Z",
+        "updated_at": "2025-08-19T13:48:45.268Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10057",
+        "channel_name": "ランプ電流3(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "A",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 2,
+          "warning_max_threshold": 5,
+          "alert_min_threshold": 1.5,
+          "alert_max_threshold": 5.5
+        },
+        "specific_channel_setting": {
+          "register_address": 10057,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:48:46.574Z",
+        "updated_at": "2025-08-19T13:48:46.574Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10060",
+        "channel_name": "ランプ電流4(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "A",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 2,
+          "warning_max_threshold": 5,
+          "alert_min_threshold": 1.5,
+          "alert_max_threshold": 5.5
+        },
+        "specific_channel_setting": {
+          "register_address": 10060,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:48:47.999Z",
+        "updated_at": "2025-08-19T13:48:47.999Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10050",
+        "channel_name": "安定器電流1(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
+        },
+        "specific_channel_setting": {
+          "register_address": 10050,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:51:44.339Z",
+        "updated_at": "2025-08-19T13:51:44.339Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10053",
+        "channel_name": "安定器電流2(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
+        },
+        "specific_channel_setting": {
+          "register_address": 10053,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:51:47.574Z",
+        "updated_at": "2025-08-19T13:51:47.574Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10056",
+        "channel_name": "安定器電流3(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
+        },
+        "specific_channel_setting": {
+          "register_address": 10056,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:51:49.051Z",
+        "updated_at": "2025-08-19T13:51:49.051Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10059",
+        "channel_name": "安定器電流4(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
+        },
+        "specific_channel_setting": {
+          "register_address": 10059,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:51:54.540Z",
+        "updated_at": "2025-08-19T13:51:54.540Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10089",
+        "channel_name": "冷却ファン周波数(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "Hz",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 600,
+          "dst_min": 0,
+          "dst_max": 60
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10089,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:58:02.750Z",
+        "updated_at": "2025-08-19T13:58:02.750Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10091",
+        "channel_name": "装置の状態(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 5,
+          "dst_min": 0,
+          "dst_max": 5
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10091,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:58:02.750Z",
+        "updated_at": "2025-08-19T13:58:02.750Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10130",
+        "channel_name": "水温1(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10130,
+          "data_length": 10,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T12:41:05.117Z",
+        "updated_at": "2025-08-19T12:41:05.117Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10131",
+        "channel_name": "水温2(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10131,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:01:45.063Z",
+        "updated_at": "2025-08-19T13:01:45.063Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10132",
+        "channel_name": "水温3(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10132,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:05.223Z",
+        "updated_at": "2025-08-19T13:02:05.223Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10133",
+        "channel_name": "水温4(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10133,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:33.287Z",
+        "updated_at": "2025-08-19T13:02:33.287Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10134",
+        "channel_name": "水温5(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10134,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:41.380Z",
+        "updated_at": "2025-08-19T13:02:41.380Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10135",
+        "channel_name": "水温6(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10135,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:42.255Z",
+        "updated_at": "2025-08-19T13:02:42.255Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10136",
+        "channel_name": "水温7(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10136,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:02:43.714Z",
+        "updated_at": "2025-08-19T13:02:43.714Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10137",
+        "channel_name": "水温8(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10137,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:03:01.186Z",
+        "updated_at": "2025-08-19T13:03:01.186Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10138",
+        "channel_name": "水温9(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 55,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10138,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:03:02.830Z",
+        "updated_at": "2025-08-19T13:03:02.830Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10112",
+        "channel_name": "UV強度1(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "%",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10112,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:17:37.693Z",
+        "updated_at": "2025-08-19T13:17:37.693Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10113",
+        "channel_name": "UV強度2(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "%",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10113,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:17:38.806Z",
+        "updated_at": "2025-08-19T13:17:38.806Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10114",
+        "channel_name": "UV強度3(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "%",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10114,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:17:40.219Z",
+        "updated_at": "2025-08-19T13:17:40.219Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10115",
+        "channel_name": "UV強度4(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "%",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": 60,
+          "warning_max_threshold": null,
+          "alert_min_threshold": 70,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10115,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:17:41.249Z",
+        "updated_at": "2025-08-19T13:17:41.249Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10120",
+        "channel_name": "炉内温度(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "℃",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 100
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": 75,
+          "alert_min_threshold": null,
+          "alert_max_threshold": 80
+        },
+        "specific_channel_setting": {
+          "register_address": 10120,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:35:48.038Z",
+        "updated_at": "2025-08-19T13:35:48.038Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10102",
+        "channel_name": "ランプ電圧1(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 4500,
+          "dst_min": 0,
+          "dst_max": 4500
+        },
+        "threshold": {
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
+        },
+        "specific_channel_setting": {
+          "register_address": 10102,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:37:59.064Z",
+        "updated_at": "2025-08-19T13:37:59.064Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10105",
+        "channel_name": "ランプ電圧2(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 4500,
+          "dst_min": 0,
+          "dst_max": 4500
+        },
+        "threshold": {
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
+        },
+        "specific_channel_setting": {
+          "register_address": 10105,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:39:48.241Z",
+        "updated_at": "2025-08-19T13:39:48.241Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10108",
+        "channel_name": "ランプ電圧3(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 4500,
+          "dst_min": 0,
+          "dst_max": 4500
+        },
+        "threshold": {
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
+        },
+        "specific_channel_setting": {
+          "register_address": 10108,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:42:02.856Z",
+        "updated_at": "2025-08-19T13:42:02.856Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10111",
+        "channel_name": "ランプ電圧4(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 4500,
+          "dst_min": 0,
+          "dst_max": 4500
+        },
+        "threshold": {
+          "warning_min_threshold": 470,
+          "warning_max_threshold": 950,
+          "alert_min_threshold": 450,
+          "alert_max_threshold": 1000
+        },
+        "specific_channel_setting": {
+          "register_address": 10111,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:42:04.625Z",
+        "updated_at": "2025-08-19T13:42:04.625Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10101",
+        "channel_name": "ランプ電流1(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "A",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 2,
+          "warning_max_threshold": 5,
+          "alert_min_threshold": 1.5,
+          "alert_max_threshold": 5.5
+        },
+        "specific_channel_setting": {
+          "register_address": 10101,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:48:40.599Z",
+        "updated_at": "2025-08-19T13:48:40.599Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10104",
+        "channel_name": "ランプ電流2(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "A",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 2,
+          "warning_max_threshold": 5,
+          "alert_min_threshold": 1.5,
+          "alert_max_threshold": 5.5
+        },
+        "specific_channel_setting": {
+          "register_address": 10104,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:48:45.268Z",
+        "updated_at": "2025-08-19T13:48:45.268Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10107",
+        "channel_name": "ランプ電流3(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "A",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 2,
+          "warning_max_threshold": 5,
+          "alert_min_threshold": 1.5,
+          "alert_max_threshold": 5.5
+        },
+        "specific_channel_setting": {
+          "register_address": 10107,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:48:46.574Z",
+        "updated_at": "2025-08-19T13:48:46.574Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10110",
+        "channel_name": "ランプ電流4(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "A",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 2,
+          "warning_max_threshold": 5,
+          "alert_min_threshold": 1.5,
+          "alert_max_threshold": 5.5
+        },
+        "specific_channel_setting": {
+          "register_address": 10110,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:48:47.999Z",
+        "updated_at": "2025-08-19T13:48:47.999Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10100",
+        "channel_name": "安定器電流1(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
+        },
+        "specific_channel_setting": {
+          "register_address": 10100,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:51:44.339Z",
+        "updated_at": "2025-08-19T13:51:44.339Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10103",
+        "channel_name": "安定器電流2(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
+        },
+        "specific_channel_setting": {
+          "register_address": 10103,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:51:47.574Z",
+        "updated_at": "2025-08-19T13:51:47.574Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10106",
+        "channel_name": "安定器電流3(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
+        },
+        "specific_channel_setting": {
+          "register_address": 10106,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:51:49.051Z",
+        "updated_at": "2025-08-19T13:51:49.051Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10109",
+        "channel_name": "安定器電流4(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "V",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 150,
+          "dst_min": 0,
+          "dst_max": 15
+        },
+        "threshold": {
+          "warning_min_threshold": 10.5,
+          "warning_max_threshold": 14.5,
+          "alert_min_threshold": 10,
+          "alert_max_threshold": 15
+        },
+        "specific_channel_setting": {
+          "register_address": 10109,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:51:54.540Z",
+        "updated_at": "2025-08-19T13:51:54.540Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10139",
+        "channel_name": "冷却ファン周波数(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "Hz",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 600,
+          "dst_min": 0,
+          "dst_max": 60
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10139,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:58:02.750Z",
+        "updated_at": "2025-08-19T13:58:02.750Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
+      },
+      {
+        "channel_uuid": "10141",
+        "channel_name": "装置の状態(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 5,
+          "dst_min": 0,
+          "dst_max": 5
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10141,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-08-19T13:58:02.750Z",
+        "updated_at": "2025-08-19T13:58:02.750Z",
+        "sampling_interval_uuid": "2efef4ad-574d-4033-b849-b9035835f917"
       }
     ],
     "output_channels": [],

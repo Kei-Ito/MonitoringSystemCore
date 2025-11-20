@@ -136,6 +136,7 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
 
   const targetModules = mapping.modules;
   const promises = targetModules.map(async (module) => {
+
     const response: Result<getIOModuleInputResponse> = await api.getIOModuleInput(module);
     if (response.ok) {
       const input_datas = response.value;
