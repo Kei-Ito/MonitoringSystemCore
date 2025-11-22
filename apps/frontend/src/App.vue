@@ -23,33 +23,20 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, onUnmounted, type Ref, ref } from "vue";
-import { useToast } from "vue-toastification";
+import { onMounted, ref } from "vue";
 
 import SplashWindow from "@/components/SplashWindow.vue";
 import AppFooter from "@/examples/Footer.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import Sidenav from "@/examples/Sidenav/index.vue";
 import { useUiStore } from "@/pinia/uiStore";
-import { useMonitoringStore } from './pinia/monitoringStore';
-import { useChartStore } from './pinia/chartStore';
-import { useChannelValuesStore } from '@/pinia/channelValuesStore';
-import type { getIOModuleInputResponse } from "@monitoring/shared/api";
-import { DeviceHealthEnum } from './uniqueComponents/DeviceHealthEnum';
+import { useAppInitializer } from '@/composables/useAppInitializer';
 
-const toast = useToast();
 const uiStore = useUiStore()
-const monitoringStore = useMonitoringStore();
-const chartStore = useChartStore();
-const channelValuesStore = useChannelValuesStore();
+const { isLoading } = useAppInitializer();
 
 const navbarRef = ref<InstanceType<typeof Navbar> | null>(null);
 let dateRangePickerCallback: (() => void) | null = null;
-
-let socket: WebSocket | null = null;
-let retryTimer: ReturnType<typeof setTimeout> | null = null;
-
-const isLoading: Ref<boolean> = ref(true);
 
 const {
   isRTL,
@@ -80,161 +67,16 @@ function updateNavbarDateRange(payload: { text: string; callback?: () => void })
   }
 }
 
-function setupWebSocket() {
-  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  const host = window.location.hostname;
-  const endpoint = `${protocol}//${host}:2479/ws`; // 相対URLを使用
-
-
-
-  function createWebSocket() {
-    const ws = new WebSocket(endpoint);
-
-    ws.onopen = () => {
-      if (retryTimer) {
-        clearTimeout(retryTimer);
-        retryTimer = null;
-      }
-    };
-
-    // WebSocketのメッセージ受信時の処理
-    ws.onmessage = (event: MessageEvent) => {
-      const message = JSON.parse(event.data);
-      switch (message.type) {
-        case "IOModuleData":
-          updateRuntimeValues(message.data);
-          if (monitoringStore.isSampling) {
-            //遅れて通知が来てしまい、稼働中表示のままになる可能性があるため
-            if (message.deviceStatuses) {
-              for (const [deviceName, status] of Object.entries(message.deviceStatuses)) {
-                const deviceStatus = typeof status === 'string'
-                  ? DeviceHealthEnum[status as keyof typeof DeviceHealthEnum]
-                  : status as DeviceHealthEnum;
-                channelValuesStore.setDeviceHealth(deviceName, deviceStatus);
-              }
-            } else {
-              const deviceStatus = typeof message.status === 'string'
-                ? DeviceHealthEnum[message.status as keyof typeof DeviceHealthEnum]
-                : message.status;
-              channelValuesStore.setDeviceHealth("照射炉1", deviceStatus);
-            }
-          }
-          
-          break;
-        case "StartSampling":
-          monitoringStore.isSampling = true;
-          toast.success("モニタリングを開始しました");
-          break;
-        case "StopSampling":
-          monitoringStore.isSampling = false;
-          toast.success("モニタリングを停止しました");
-          channelValuesStore.setDeviceHealth("照射炉1", DeviceHealthEnum.Unknown);
-          channelValuesStore.setDeviceHealth("照射炉2", DeviceHealthEnum.Unknown);
-          channelValuesStore.setDeviceHealth("照射炉3", DeviceHealthEnum.Unknown);
-          break;
-        case "samplingStatus":
-          // TODO: 不要かも。要確認
-          monitoringStore.isSampling = message.data;
-          break;
-        default:
-          console.error("Unknown message type:", message.type);
-      }
-    };
-
-    // WebSocketが閉じられたときの処理
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
-      monitoringStore.isSampling = false;
-      // 数秒待って再接続
-      retryTimer = setTimeout(() => {
-        socket = createWebSocket();
-      }, 5000);
-    };
-
-    ws.onerror = (error: Event) => {
-      console.error("WebSocket error:", error);
-    };
-    return ws;
-  }
-  socket = createWebSocket();
-
-}
-
-
 onMounted(async () => {
-
-  // 各Storeを並列初期化で高速化
-  await Promise.all([
-    monitoringStore.initialize(),
-    chartStore.initialize(),
-  ]);
-
-  // デバイス健康状態を初期化
-  channelValuesStore.initializeDeviceHealth([
-    { name: "照射炉1", status: DeviceHealthEnum.Unknown },
-    { name: "照射炉2", status: DeviceHealthEnum.Unknown },
-    { name: "照射炉3", status: DeviceHealthEnum.Unknown },
-  ]);
-
   const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
 
   if (window.innerWidth > 1200) {
     sidenav.classList.add("g-sidenav-pinned");
-  }
-  // TODO: デバッグ用に抑制
-  setupWebSocket();
-  isLoading.value = false;
-
-});
-
-onUnmounted(() => {
-  if (socket !== null) {
-    socket?.close(); // WebSocketのクローズ
-  }
-  if (retryTimer) {
-    clearTimeout(retryTimer);
   }
 });
 
 function navbarMinimize() {
   uiStore.navbarMinimize();
 }
-
-function updateRuntimeValues(module_datas: getIOModuleInputResponse[]) {
-  // 受け取ったデータをランタイムデータのstoreに反映
-  // TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
-
-  
-  module_datas.map((module_data) => {
-    module_data.channels.map((channel) => {
-      channelValuesStore.setRuntimeValue(channel.channel_uuid, channel.input_data);
-    });
-  });
-  }
-
-//function updateGaugeValues(module_datas: getIOModuleInputResponse[]) {
-// 受け取ったデータをゲージチャートに反映
-// TODO: チャートの設定の更新影響を受ける箇所のため、一時的にコメントアウト
-/**
-for (let i = 0; i < dashboardCharts.value.length; i++) {
-  try {
-    const module_uuid = dashboardCharts.value[i].module_uuid;
-    const channel_id = dashboardCharts.value[i].channel_id;
-
-    // モジュールIDとチャンネルIDが一致するデータを取得
-    const module_data = module_datas.find((data) => data.module_uuid === module_uuid);
-    if (module_data) {
-      const channel_data = module_data.channels.find((channel) => channel.channel_id === channel_id);
-      if (channel_data) {
-        dashboardCharts.value[i].specific_chart_setting.lastValue = channel_data.input_data;
-      }
-    }
-  } catch {
-    //エラー処理
-    console.log("取得したゲージチャートのデータが不正です");
-  }
-}
-  */
-//}
 
 </script>
