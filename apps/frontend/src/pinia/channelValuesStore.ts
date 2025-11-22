@@ -9,6 +9,11 @@ interface DeviceHealthStatus {
     status: DeviceHealthEnum;
 }
 
+/** フロントエンド用に拡張したChannelValue型 */
+interface StoreChannelValue extends ChannelValue {
+    realtimeSeries: RuntimeValue[];
+}
+
 /**
  * IOモジュールのチャンネルごとにランタイム値や時系列データを保持するストア
  */
@@ -16,7 +21,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
     /** ------------state-------------- */
     state: () => ({
         /** チャンネルUUID → 値のマッピング */
-        channelValues: {} as Record<string, ChannelValue>,
+        channelValues: {} as Record<string, StoreChannelValue>,
         /** デバイス健康状態の配列 */
         deviceHealthStatuses: [] as DeviceHealthStatus[],
         /** 初期化済みフラグ */
@@ -70,10 +75,12 @@ export const useChannelValuesStore = defineStore("channelValues", {
          */
         bulkUpdate(payload: ChannelRuntimeValue[]) {
             payload.forEach((v) => {
-                this._updateChannelValue(v.channel_uuid, {
+                const rv = {
                     value: v.value,
                     timestamp: v.timestamp,
-                });
+                };
+                this._updateChannelValue(v.channel_uuid, rv);
+                this._appendRealtimeSeries(v.channel_uuid, rv);
             });
         },
         
@@ -96,6 +103,7 @@ export const useChannelValuesStore = defineStore("channelValues", {
                     channel_uuid: channelUuid,
                     runtimeValue: { value: 0, timestamp: new Date() },
                     timeSeries: [],
+                    realtimeSeries: [],
                 };
             }
             this.channelValues[channelUuid].timeSeries = timeSeries;
@@ -156,12 +164,34 @@ export const useChannelValuesStore = defineStore("channelValues", {
                     channel_uuid: channelUuid,
                     runtimeValue,
                     timeSeries: [],
+                    realtimeSeries: [],
                 };
             } else {
                 this.channelValues[channelUuid].runtimeValue = runtimeValue;
             }
         },
         
+        /**
+         * リアルタイム時系列データに追加（最大点数制限あり）
+         * @private
+         */
+        _appendRealtimeSeries(channelUuid: string, runtimeValue: RuntimeValue) {
+            // _updateChannelValueで初期化されているはずだが念のため
+            if (!this.channelValues[channelUuid]) {
+                this._updateChannelValue(channelUuid, runtimeValue);
+            }
+            
+            const series = this.channelValues[channelUuid].realtimeSeries;
+            series.push(runtimeValue);
+            
+            // 最大点数を制限（例: 300点）
+            // サンプリング周期によるが、1秒1回なら5分、100msなら30秒程度
+            const MAX_POINTS = 300;
+            if (series.length > MAX_POINTS) {
+                series.shift();
+            }
+        },
+
         /**
          * 健康状態変化時の通知処理（UI副作用を分離）
          * @private

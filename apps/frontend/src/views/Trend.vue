@@ -23,6 +23,7 @@
       >
         <ChartHolderCard
           :chart="trendCharts[item.i]"
+          mode="trend"
         />
       </GridItem>
     </GridLayout>
@@ -48,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, watch, nextTick, onActivated, onDeactivated } from 'vue';
 import { storeToRefs } from 'pinia';
 import { GridItem, GridLayout } from 'vue-grid-layout-v3';
 import type { GridLayout as GridLayoutType } from '@monitoring/shared/model';
@@ -62,6 +63,10 @@ import DummyBarChartCard from '@/components/Cards/DummyBarChartCard.vue';
 import DummyAreaLineChartCard from '@/components/Cards/DummyAreaLineChartCard.vue';
 import DateRangePickerModal from '@/components/DateRangePickerModal.vue';
 
+// KeepAliveのinclude="Trend"と一致させるために明示的に名前を定義
+defineOptions({
+  name: 'Trend'
+});
 
 const emit = defineEmits<{
   'update-navbar-date-range': [{ text: string; callback: () => void }];
@@ -77,11 +82,15 @@ const { selectedDateRange } = storeToRefs(trendStore);
 
 const layoutModel = ref<GridLayoutType[]>([]);
 const isUpdatingFromStore = ref(false);
+const isPageActive = ref(true);
 
 // ストアのデータ変更を監視してローカルのlayoutModelに反映
 watch(
   () => chartStore.gridLayoutsFilteredByPage("trend", trendViewCategory1Selected.value, trendViewCategory2Selected.value),
   (newVal) => {
+    // ページが非表示の間はレイアウト更新処理をスキップしてメモリ/CPUを節約
+    if (!isPageActive.value) return;
+
     isUpdatingFromStore.value = true;
     layoutModel.value = JSON.parse(JSON.stringify(newVal));
     nextTick(() => {
@@ -157,12 +166,30 @@ onMounted(async () => {
   updateNavbarDateRange();
 });
 
+onActivated(() => {
+  isPageActive.value = true;
+  // KeepAliveでキャッシュから復帰した際にもNavbarを更新
+  updateNavbarDateRange();
+
+  // 復帰時に最新のレイアウト情報をストアから強制的に同期
+  // (非表示中にスキップしていた更新をここで反映)
+  const currentLayout = chartStore.gridLayoutsFilteredByPage("trend", trendViewCategory1Selected.value, trendViewCategory2Selected.value);
+  if (currentLayout) {
+    isUpdatingFromStore.value = true;
+    layoutModel.value = JSON.parse(JSON.stringify(currentLayout));
+    nextTick(() => {
+      isUpdatingFromStore.value = false;
+    });
+  }
+});
+
+onDeactivated(() => {
+  isPageActive.value = false;
+});
+
 // 日付範囲が変更されたらNavbarに通知
 watch(dateRangeText, () => {
   updateNavbarDateRange();
-});
-
-onBeforeUnmount(() => {
 });
 
 </script>

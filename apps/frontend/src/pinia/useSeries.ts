@@ -22,10 +22,14 @@ export function useSeries(chartUuid: string) {
   // chart が得られなければ空 series
   const series = computed(() => {
     if (!chart.value) return []
-    return chart.value.channel_uuids.map((cu: string) => ({
-      ...channelMap.value[cu],
-      ...(channelValues.value[cu] ?? {}),
-    }))
+    return chart.value.channel_uuids.map((cu: string) => {
+      const cv = channelValues.value[cu] ?? {};
+      
+      return {
+        ...channelMap.value[cu],
+        ...cv,
+      };
+    })
   })
 
   return series

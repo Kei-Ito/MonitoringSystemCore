@@ -46,7 +46,9 @@ import LineChart from '@/components/Charts/LineChart.vue'
 import { useSeries } from '@/pinia/useSeries'
 
 /* ---------- props & series ---------- */
-const props = defineProps<{ chart: ChartConfig }>()
+const props = defineProps<{ 
+  chart: ChartConfig
+}>()
 const series  = useSeries(props.chart.chart_uuid)
 
 /* ---------- DOM refs ---------- */

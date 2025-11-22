@@ -15,7 +15,11 @@
         v-if="showNavbar"
         @show-date-range-picker="handleShowDateRangePicker" 
       />
-      <router-view @update-navbar-date-range="updateNavbarDateRange" />
+      <router-view v-slot="{ Component }">
+        <keep-alive include="Trend,Dashboard">
+          <component :is="Component" @update-navbar-date-range="updateNavbarDateRange" />
+        </keep-alive>
+      </router-view>
       <app-footer v-show="showFooter" />
     </main>
   </div>

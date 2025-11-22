@@ -1390,7 +1390,7 @@
           "src_min": 0,
           "src_max": 1000,
           "dst_min": 0,
-          "dst_max": 1000
+          "dst_max": 100
         },
         "threshold": {
           "warning_min_threshold": 60,

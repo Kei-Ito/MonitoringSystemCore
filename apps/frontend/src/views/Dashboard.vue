@@ -7,7 +7,7 @@
           :class = "isLayoutEditMode ? 'vue-grid-layout-style':''">
           <GridItem v-for="(item) in layoutModel" :key="item.i" :static="item.static" :x="item.x" :y="item.y"
             :w="item.w" :h="item.h" :i="item.i" :class = "isLayoutEditMode ? 'p-2 vue-grid-item-style':''">
-            <ChartHolderCard :chart="dashboardCharts[item.i]"/>
+            <ChartHolderCard :chart="dashboardCharts[item.i]" mode="realtime"/>
           </GridItem>
         </GridLayout>
       </div>
@@ -16,7 +16,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, nextTick, onActivated, onDeactivated } from 'vue';
 import { GridItem,GridLayout } from 'vue-grid-layout-v3';
 import type { GridLayout as GridLayoutType } from '@monitoring/shared/model';
 
@@ -24,6 +24,9 @@ import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
 import { useChartStore } from '@/pinia/chartStore';
 import { useUiStore } from '@/pinia/uiStore';
 
+defineOptions({
+  name: 'Dashboard'
+});
 
 const chartStore = useChartStore();
 const { dashboardCharts } = storeToRefs(chartStore);
@@ -33,11 +36,15 @@ const { isLayoutEditMode, dashboardViewCategory1Selected, dashboardViewCategory2
 
 const layoutModel = ref<GridLayoutType[]>([]);
 const isUpdatingFromStore = ref(false);
+const isPageActive = ref(true);
 
 // ストアのデータ変更を監視してローカルのlayoutModelに反映
 watch(
   () => chartStore.gridLayoutsFilteredByPage("dashboard", dashboardViewCategory1Selected.value, dashboardViewCategory2Selected.value),
   (newVal) => {
+    // ページが非表示の間はレイアウト更新処理をスキップしてメモリ/CPUを節約
+    if (!isPageActive.value) return;
+
     isUpdatingFromStore.value = true;
     layoutModel.value = JSON.parse(JSON.stringify(newVal));
     nextTick(() => {
@@ -59,6 +66,23 @@ watch(
   },
   { deep: true }
 );
+
+onActivated(() => {
+  isPageActive.value = true;
+  // 復帰時に最新のレイアウト情報をストアから強制的に同期
+  const currentLayout = chartStore.gridLayoutsFilteredByPage("dashboard", dashboardViewCategory1Selected.value, dashboardViewCategory2Selected.value);
+  if (currentLayout) {
+    isUpdatingFromStore.value = true;
+    layoutModel.value = JSON.parse(JSON.stringify(currentLayout));
+    nextTick(() => {
+      isUpdatingFromStore.value = false;
+    });
+  }
+});
+
+onDeactivated(() => {
+  isPageActive.value = false;
+});
 
 </script>
 <style scoped>
