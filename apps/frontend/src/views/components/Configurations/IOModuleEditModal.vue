@@ -1,195 +1,199 @@
 <template>
-  <div class="modal" tabindex="-1" role="dialog" v-if="visible">
-    <div class="modal-dialog" role="document" style="max-width: 80%;min-width: 40%">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">入出力モジュール設定</h5>
-          <button type="button" class="btn btn-secondary" @click="deleteModuleBtnClicked">モジュールを削除</button>
-          <button type="button" class="close" @click="close" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-
-          <label for="name" class="mx-3">モジュール名</label>
-          <input type="text" v-model="localModule.module_name" id="name" style="width: 60%;" />
-
-
-          <table v-if="isVisibleSpecificSettingTable" class="table mx-0 container mt-2">
-            <thead>
-              <tr>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">項目</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">内容</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(value, key) in localModule.specific_device_setting" :key="localModule.module_uuid">
-                <td>
-                  <label class="form-label fs-6" :for="key">{{ key }}</label>
-                </td>
-                <td>
-                  <input class="w-100" :type="determineInputType(value)" :id="key"
-                    v-model="localModule.specific_device_setting[key]" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <table class="table container mt-3">
-            <thead>
-              <tr>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
-                  入力チャンネル</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">入力チャンネル名</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">単位
-                </th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
-                  少数点以下表示</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">
-                  サンプリング周期</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
-                  style="width: 15px;">
-                  入力値設定
-                </th>
-                <th v-if="isEditableSpecificInputChannelSetting"
-                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
-                  詳細設定
-                </th>
-                <th v-if="isAddableInputChannel"
-                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
-                  style="width: 15px;">
-                  削除
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(channel, index) in localModule.input_channels" :key="channel.channel_uuid">
-                <td>チャンネル {{ index + 1 }}</td>
-                <td>
-                  <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
-                </td>
-                <td>
-                  <input type="text" v-model="channel.unit" :id="'channel-unit-' + index" class="w-100" />
-                </td>
-                <td>
-                  <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
-                    class="w-100" />
-                </td>
-                <td>
-                  <select v-model="channel.sampling_interval_uuid" class="form-select form-select-sm">
-                    <option v-for="interval in samplingIntervals" :key="interval.uuid" :value="interval.uuid">
-                      {{ interval.name }}
-                    </option>
-                  </select>
-                </td>
-                <td class="align-middle text-center">
-                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0">
-                    <i class="material-icons-round" aria-hidden="true"
-                      @click="openNormalizeSettingModal(channel)">tune</i>
-                  </a>
-                </td>
-                <td v-if="isEditableSpecificInputChannelSetting" class="align-middle text-center">
-                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0"
-                    @click="openChannelSpecificSettingModal(channel)">
-                    <i class="material-icons-round" aria-hidden="true">edit</i>
-                  </a>
-                </td>
-                <td v-if="isAddableInputChannel" class="align-middle text-center">
-                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannelButtonClick(channel)">
-                    <i class="material-icons-round" aria-hidden="true">delete</i>
-                  </a>
-                </td>
-              </tr>
-              <tr v-if="isAddableInputChannel">
-                <td colspan="5" class="text-start">
-                  <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
-                    @click="addInputChannel">
-                    <div class="d-flex items-center justify-center  items-center">
-                      <i class="material-icons me-2" style="font-size:25px;">add</i>
-                      <p class="text-muted mb-0 flex" style="font-size: 1.0em;">入力チャンネルを追加</p>
-                    </div>
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <table class="table  container mt-3"
-            v-if="isAddableOutputChannel || localModule.output_channels.length !== 0">
-            <thead>
-              <tr>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
-                  出力チャンネル</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">出力チャンネル名</th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">単位
-                </th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
-                  少数点以下表示</th>
-                <th v-if="isEditableSpecificOutputChannelSetting"
-                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
-                  詳細設定
-                </th>
-                <th v-if="isAddableOutputChannel"
-                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
-                  style="width: 15px;">
-                  削除
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(channel, index) in localModule.output_channels" :key="channel.channel_uuid">
-                <td>チャンネル {{ index + 1 }}</td>
-                <td>
-                  <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
-                </td>
-                <td>
-                  <input type="text" v-model="channel.unit" :id="'channel-unit-' + index" class="w-100" />
-                </td>
-                <td>
-                  <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
-                    class="w-100" />
-                </td>
-                <td v-if="isEditableSpecificOutputChannelSetting" class="align-middle text-center">
-                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0"
-                    @click="openChannelSpecificSettingModal(channel)">
-                    <i class="material-icons-round" aria-hidden="true">edit</i>
-                  </a>
-                </td>
-                <td v-if="isAddableOutputChannel" class="align-middle text-center">
-                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannel(channel)">
-                    <i class="material-icons-round" aria-hidden="true">delete</i>
-                  </a>
-                </td>
-              </tr>
-              <tr v-if="isAddableOutputChannel">
-                <td colspan="4" class="text-start">
-                  <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
-                    @click="addOutputChannel">
-                    <div class="d-flex items-center justify-center  items-center">
-                      <i class="material-icons me-2" style="font-size:25px;">add</i>
-                      <p class="text-muted mb-0 flex" style="font-size: 1.0em;">出力チャンネルを追加</p>
-                    </div>
-                  </a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <span v-if="isError" class="error-message">更新に失敗しました。</span>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" style="width: 110px;" @click="updateBtnClicked">{{
-            $t('modal_window.update') }}</button>
-          <button type="button" class="btn btn-secondary" style="width: 110px;" @click="cancelBtnClicked">{{
-            $t('modal_window.cancel') }}</button>
-        </div>
+  <BaseModal
+    :show="visible"
+    title="入出力モジュール設定"
+    size="modal-xl"
+    maxWidth="80%"
+    @close="close"
+  >
+    <template #header>
+      <div class="d-flex align-items-center w-100">
+        <h5 class="modal-title fw-bold text-white mb-0">入出力モジュール設定</h5>
+        <button type="button" class="btn btn-secondary btn-sm ms-auto me-3 mb-0" @click="deleteModuleBtnClicked">モジュールを削除</button>
       </div>
-    </div>
-    <ChannelSpecificSettingModal v-if="selectedChannel" :visible="isChannelSpecificSettingVisible"
-      :channel="selectedChannel!" @close="isChannelSpecificSettingVisible = false" @update="updateChannelSetting" />
+    </template>
 
-    <InputDataSettingModal v-if="selectedChannel" :visible="isNormalizeSettingModalVisible"
-      :channelSetting="selectedChannel!" @close="isNormalizeSettingModalVisible = false"
-      @update="updateChannelSetting" />
-    <CheckModal ref="checkModal" />
-  </div>
+    <!-- Body -->
+    <div>
+      <label for="name" class="mx-3">モジュール名</label>
+      <input type="text" v-model="localModule.module_name" id="name" style="width: 60%;" />
+
+      <table v-if="isVisibleSpecificSettingTable" class="table mx-0 container mt-2">
+        <thead>
+          <tr>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">項目</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(value, key) in localModule.specific_device_setting" :key="localModule.module_uuid">
+            <td>
+              <label class="form-label fs-6" :for="key">{{ key }}</label>
+            </td>
+            <td>
+              <input class="w-100" :type="determineInputType(value)" :id="key"
+                v-model="localModule.specific_device_setting[key]" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table container mt-3">
+        <thead>
+          <tr>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
+              入力チャンネル</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">入力チャンネル名</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">単位
+            </th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
+              少数点以下表示</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">
+              サンプリング周期</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
+              style="width: 15px;">
+              入力値設定
+            </th>
+            <th v-if="isEditableSpecificInputChannelSetting"
+              class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
+              詳細設定
+            </th>
+            <th v-if="isAddableInputChannel"
+              class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
+              style="width: 15px;">
+              削除
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(channel, index) in localModule.input_channels" :key="channel.channel_uuid">
+            <td>チャンネル {{ index + 1 }}</td>
+            <td>
+              <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
+            </td>
+            <td>
+              <input type="text" v-model="channel.unit" :id="'channel-unit-' + index" class="w-100" />
+            </td>
+            <td>
+              <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
+                class="w-100" />
+            </td>
+            <td>
+              <select v-model="channel.sampling_interval_uuid" class="form-select form-select-sm">
+                <option v-for="interval in samplingIntervals" :key="interval.uuid" :value="interval.uuid">
+                  {{ interval.name }}
+                </option>
+              </select>
+            </td>
+            <td class="align-middle text-center">
+              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0">
+                <i class="material-icons-round" aria-hidden="true"
+                  @click="openNormalizeSettingModal(channel)">tune</i>
+              </a>
+            </td>
+            <td v-if="isEditableSpecificInputChannelSetting" class="align-middle text-center">
+              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0"
+                @click="openChannelSpecificSettingModal(channel)">
+                <i class="material-icons-round" aria-hidden="true">edit</i>
+              </a>
+            </td>
+            <td v-if="isAddableInputChannel" class="align-middle text-center">
+              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannelButtonClick(channel)">
+                <i class="material-icons-round" aria-hidden="true">delete</i>
+              </a>
+            </td>
+          </tr>
+          <tr v-if="isAddableInputChannel">
+            <td colspan="5" class="text-start">
+              <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
+                @click="addInputChannel">
+                <div class="d-flex items-center justify-center  items-center">
+                  <i class="material-icons me-2" style="font-size:25px;">add</i>
+                  <p class="text-muted mb-0 flex" style="font-size: 1.0em;">入力チャンネルを追加</p>
+                </div>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table  container mt-3"
+        v-if="isAddableOutputChannel || localModule.output_channels.length !== 0">
+        <thead>
+          <tr>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
+              出力チャンネル</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">出力チャンネル名</th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">単位
+            </th>
+            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
+              少数点以下表示</th>
+            <th v-if="isEditableSpecificOutputChannelSetting"
+              class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
+              詳細設定
+            </th>
+            <th v-if="isAddableOutputChannel"
+              class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
+              style="width: 15px;">
+              削除
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(channel, index) in localModule.output_channels" :key="channel.channel_uuid">
+            <td>チャンネル {{ index + 1 }}</td>
+            <td>
+              <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
+            </td>
+            <td>
+              <input type="text" v-model="channel.unit" :id="'channel-unit-' + index" class="w-100" />
+            </td>
+            <td>
+              <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
+                class="w-100" />
+            </td>
+            <td v-if="isEditableSpecificOutputChannelSetting" class="align-middle text-center">
+              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0"
+                @click="openChannelSpecificSettingModal(channel)">
+                <i class="material-icons-round" aria-hidden="true">edit</i>
+              </a>
+            </td>
+            <td v-if="isAddableOutputChannel" class="align-middle text-center">
+              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannel(channel)">
+                <i class="material-icons-round" aria-hidden="true">delete</i>
+              </a>
+            </td>
+          </tr>
+          <tr v-if="isAddableOutputChannel">
+            <td colspan="4" class="text-start">
+              <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
+                @click="addOutputChannel">
+                <div class="d-flex items-center justify-center  items-center">
+                  <i class="material-icons me-2" style="font-size:25px;">add</i>
+                  <p class="text-muted mb-0 flex" style="font-size: 1.0em;">出力チャンネルを追加</p>
+                </div>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <span v-if="isError" class="error-message">更新に失敗しました。</span>
+    </div>
+
+    <!-- Footer -->
+    <template #footer>
+      <button type="button" class="btn btn-primary" style="width: 110px;" @click="updateBtnClicked">{{
+        $t('modal_window.update') }}</button>
+      <button type="button" class="btn btn-secondary" style="width: 110px;" @click="cancelBtnClicked">{{
+        $t('modal_window.cancel') }}</button>
+    </template>
+  </BaseModal>
+
+  <ChannelSpecificSettingModal v-if="selectedChannel" :visible="isChannelSpecificSettingVisible"
+    :channel="selectedChannel!" @close="isChannelSpecificSettingVisible = false" @update="updateChannelSetting" />
+
+  <InputDataSettingModal v-if="selectedChannel" :visible="isNormalizeSettingModalVisible"
+    :channelSetting="selectedChannel!" @close="isNormalizeSettingModalVisible = false" maxWidth="450px"
+    @update="updateChannelSetting" />
+  <CheckModal ref="checkModal" />
 </template>
 
 <script lang="ts" setup>
@@ -198,6 +202,7 @@ import type { IChannelSetting, IOModule } from '@monitoring/shared/model';
 import { createInputChannelForInitialization, createOutputChannelForInitialization } from '@monitoring/shared/model';
 import { type Ref, ref, toRefs, watch, computed, onMounted } from 'vue'
 
+import BaseModal from "@/components/BaseModal.vue";
 import ChannelSpecificSettingModal from '@/components/ChannelSpecificSettingModal.vue';
 import CheckModal from '@/components/Modal/CheckModal.vue';
 import { addChannel, deleteChannel, deleteIOModule, updateIOModule } from '@/service/monitoringService';
@@ -382,22 +387,6 @@ function determineInputType(value: any): string {
 
 </script>
 <style scoped>
-.modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.modal-dialog {
-  margin: 0;
-}
-
 .channel-settings {
   margin-top: 15px;
   padding: 10px;

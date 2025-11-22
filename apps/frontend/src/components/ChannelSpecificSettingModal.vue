@@ -1,58 +1,50 @@
 <template>
-    <div class="modal" tabindex="-1" role="dialog" v-if="visible">
-        <div class="modal-dialog" role="document" style="max-width: 80%;min-width: 300px">
-            <div class="modal-content">
-                <!-- ヘッダー -->
-                <div class="modal-header">
-                    <h5 class="modal-title">入力 詳細設定</h5>
-                    <button type="button" class="close" @click="close" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <!-- ボディ -->
-                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-                    <!-- specific_channel_settingが存在する場合のみ表示 -->
-
-                    <div >
-                        <table class="table table-bordered mt-3">
-                            <thead class="custom-light-blue">
-                                <tr>
-                                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">項目
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">内容
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(value, key) in localSetting" :key="key">
-                                    <td>
-                                        <label class="form-label" :for="key">{{ key }}</label>
-                                    </td>
-                                    <td>
-                                        <input :type="determineInputType(value)" :id="key"
-                                            v-model="localSetting[key]" />
-                                    </td>
-                                </tr>
-                                <tr/>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" style="width: 110px;" @click="update">{{ $t('modal_window.update')
-                        }}</button>
-                    <button type="button" class="btn btn-secondary" style="width: 110px;" @click="close">{{ $t('modal_window.cancel')
-                        }}</button>
-                </div>
-            </div>
+    <BaseModal
+        :show="visible"
+        title="入力 詳細設定"
+        size="modal-lg"
+        maxWidth="80%"
+        @close="close"
+    >
+        <!-- ボディ -->
+        <div >
+            <table class="table table-bordered mt-3">
+                <thead class="custom-light-blue">
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">項目
+                        </th>
+                        <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">内容
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(value, key) in localSetting" :key="key">
+                        <td>
+                            <label class="form-label" :for="key">{{ key }}</label>
+                        </td>
+                        <td>
+                            <input :type="determineInputType(value)" :id="key"
+                                v-model="localSetting[key]" />
+                        </td>
+                    </tr>
+                    <tr/>
+                </tbody>
+            </table>
         </div>
-    </div>
+
+        <template #footer>
+            <button type="button" class="btn btn-primary" style="width: 110px;" @click="update">{{ $t('modal_window.update')
+                }}</button>
+            <button type="button" class="btn btn-secondary" style="width: 110px;" @click="close">{{ $t('modal_window.cancel')
+                }}</button>
+        </template>
+    </BaseModal>
 </template>
 
 <script lang="ts" setup>
 import { ref, toRefs,watch } from 'vue'
+
+import BaseModal from "@/components/BaseModal.vue";
 
 const props = defineProps({
     visible: {
@@ -112,18 +104,6 @@ function determineInputType(value: any): string {
 </script>
 
 <style scoped>
-.modal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
 .custom-light-blue {
   background-color: #e3f2fd; /* とても薄い青色 */
   color: #212529; /* Bootstrapデフォルトテキストカラー(黒っぽい) */

@@ -1,31 +1,29 @@
 <template>
-  <teleport to="body">
-    <div class="modal" role="dialog" v-if="props.show">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Select Date</h5>
-            <button type="button" class="close" @click="closeModal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <ColorCalendar v-model="selectedDate" />
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" style="width: 110px;" @click="confirmDate">{{ $t('modal_window.update') }}</button>
-            <button type="button" class="btn btn-secondary" style="width: 110px;" @click="closeModal">{{ $t('modal_window.cancel') }}</button>
-          </div>
-        </div>
-      </div>
+  <BaseModal
+    :show="props.show"
+    title="Select Date"
+    size="modal-md"
+    maxWidth="400px"
+    @close="closeModal"
+  >
+    <!-- Body -->
+    <div>
+      <ColorCalendar v-model="selectedDate" />
     </div>
-  </teleport>
+
+    <!-- Footer -->
+    <template #footer>
+      <button type="button" class="btn btn-primary" style="width: 110px;" @click="confirmDate">{{ $t('modal_window.update') }}</button>
+      <button type="button" class="btn btn-secondary" style="width: 110px;" @click="closeModal">{{ $t('modal_window.cancel') }}</button>
+    </template>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
 //import { storeToRefs } from 'pinia';
 import { onMounted,ref } from 'vue';
 
+import BaseModal from "@/components/BaseModal.vue";
 import ColorCalendar from "@/components/ColorCalendar.vue";
 //import { useChartStore } from '@/pinia/chartStore';
 
@@ -63,18 +61,5 @@ onMounted(()=>{
 </script>
 
 <style scoped>
-.modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-.modal-dialog {
-  margin: 0;
-}
+/* BaseModalを使用するため、独自のモーダルスタイルは不要 */
 </style>

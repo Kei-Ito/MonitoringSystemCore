@@ -1,86 +1,85 @@
 <template>
-  <teleport to="body">
-    <div class="modal" role="dialog" v-if="props.show">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ $t('trend.select_date_range') || '表示期間を選択' }}</h5>
-            <button type="button" class="close" @click="closeModal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
+  <BaseModal
+    :show="props.show"
+    :title="$t('trend.select_date_range') || '表示期間を選択'"
+    size="modal-lg"
+    maxWidth="800px"
+    @close="closeModal"
+  >
+    <!-- Body -->
+    <div>
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label">開始日</label>
+          <input 
+            type="date" 
+            class="form-control" 
+            v-model="startDateStr"
+            :max="endDateStr"
+          />
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">終了日</label>
+          <input 
+            type="date" 
+            class="form-control" 
+            v-model="endDateStr"
+            :min="startDateStr"
+          />
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-12">
+          <div class="btn-group w-100" role="group">
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary" 
+              @click="setToday"
+            >
+              今日
             </button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-6">
-                <label class="form-label">開始日</label>
-                <input 
-                  type="date" 
-                  class="form-control" 
-                  v-model="startDateStr"
-                  :max="endDateStr"
-                />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">終了日</label>
-                <input 
-                  type="date" 
-                  class="form-control" 
-                  v-model="endDateStr"
-                  :min="startDateStr"
-                />
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-12">
-                <div class="btn-group w-100" role="group">
-                  <button 
-                    type="button" 
-                    class="btn btn-outline-secondary" 
-                    @click="setToday"
-                  >
-                    今日
-                  </button>
-                  <button 
-                    type="button" 
-                    class="btn btn-outline-secondary" 
-                    @click="setYesterday"
-                  >
-                    昨日
-                  </button>
-                  <button 
-                    type="button" 
-                    class="btn btn-outline-secondary" 
-                    @click="setLastWeek"
-                  >
-                    過去7日間
-                  </button>
-                  <button 
-                    type="button" 
-                    class="btn btn-outline-secondary" 
-                    @click="setLastMonth"
-                  >
-                    過去30日間
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" style="width: 110px;" @click="confirmDateRange">
-              {{ $t('modal_window.update') || '更新' }}
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary" 
+              @click="setYesterday"
+            >
+              昨日
             </button>
-            <button type="button" class="btn btn-secondary" style="width: 110px;" @click="closeModal">
-              {{ $t('modal_window.cancel') || 'キャンセル' }}
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary" 
+              @click="setLastWeek"
+            >
+              過去7日間
+            </button>
+            <button 
+              type="button" 
+              class="btn btn-outline-secondary" 
+              @click="setLastMonth"
+            >
+              過去30日間
             </button>
           </div>
         </div>
       </div>
     </div>
-  </teleport>
+
+    <!-- Footer -->
+    <template #footer>
+      <button type="button" class="btn btn-primary" style="width: 110px;" @click="confirmDateRange">
+        {{ $t('modal_window.update') || '更新' }}
+      </button>
+      <button type="button" class="btn btn-secondary" style="width: 110px;" @click="closeModal">
+        {{ $t('modal_window.cancel') || 'キャンセル' }}
+      </button>
+    </template>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+
+import BaseModal from "@/components/BaseModal.vue";
 
 const props = defineProps<{
   show: boolean;
@@ -168,23 +167,6 @@ function setLastMonth() {
 </script>
 
 <style scoped>
-.modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1050;
-}
-
-.modal-dialog {
-  margin: 0;
-}
-
 .form-label {
   font-weight: 600;
   margin-bottom: 0.5rem;

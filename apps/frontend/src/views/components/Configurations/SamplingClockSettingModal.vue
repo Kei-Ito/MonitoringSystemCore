@@ -1,127 +1,128 @@
 <template>
-  <div class="modal" tabindex="-1" role="dialog" v-if="visible">
-    <div class="modal-dialog" role="document" style="max-width: 80%;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5>{{ $t('system_settings.sampling_clock') }}</h5>
-        </div>
-        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-          <!-- サンプリングインターバル一覧 -->
-          <div class="row">
-            <div v-for="interval in intervals" :key="interval.uuid" class="col-12 col-xl-6 mb-4">
-              <div class="interval-item h-100">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <div class="flex-grow-1 me-3">
-                    <div class="editable-name-wrapper">
-                      <i class="material-icons align-middle me-2 edit-icon">edit</i>
-                      <input
-                        type="text"
-                        class="form-control form-control-lg form-control-prominent editable-name-input fs-4"
-                        v-model="interval.name"
-                        placeholder="サンプリング設定の名前を入力"
-                      />
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    class="btn btn-sm btn-danger flex-shrink-0"
-                    @click="deleteInterval(interval.uuid)"
-                    :disabled="intervals.length <= 1"
-                  >
-                    <i class="material-icons">delete</i>
-                    {{ $t('modal_window.delete') }}
-                  </button>
-                </div>
-                
-                <!-- 時間入力 -->
-                <div class="mb-2">
-                  <label class="form-label fw-bold">
-                    <i class="material-icons align-middle me-1" style="font-size: 18px;">schedule</i>
-                    サンプリング周期
-                  </label>
-                </div>
-                <div class="d-flex justify-content-center align-items-center mx-4 time-inputs">
-                  <div class="time-input-group">
-                    <label class="time-label">{{ $t('system_settings.clock.hour') }}</label>
-                    <input
-                      type="number"
-                      class="form-control form-control-lg text-center"
-                      v-model.number="interval.hours"
-                      min="0"
-                      max="24"
-                      required
-                    />
-                  </div>
-                  <span class="time-separator">:</span>
-                  <div class="time-input-group">
-                    <label class="time-label">{{ $t('system_settings.clock.minute') }}</label>
-                    <input
-                      type="number"
-                      class="form-control form-control-lg text-center"
-                      v-model.number="interval.minutes"
-                      min="0"
-                      max="60"
-                      required
-                    />
-                  </div>
-                  <span class="time-separator">:</span>
-                  <div class="time-input-group">
-                    <label class="time-label">{{ $t('system_settings.clock.second') }}</label>
-                    <input
-                      type="number"
-                      class="form-control form-control-lg text-center"
-                      v-model.number="interval.seconds"
-                      min="0"
-                      max="60"
-                      required
-                    />
-                  </div>
-                </div>
-                <div v-if="interval.error" class="alert alert-danger mt-2" role="alert">
-                  <i class="material-icons align-middle me-1" style="font-size: 18px;">error</i>
-                  サンプリング周期は1秒以上に設定してください。
+  <BaseModal
+    :show="visible"
+    :title="$t('system_settings.sampling_clock')"
+    size="modal-xl"
+    maxWidth="80%"
+    @close="close"
+  >
+    <!-- Body -->
+    <div>
+      <!-- サンプリングインターバル一覧 -->
+      <div class="row">
+        <div v-for="interval in intervals" :key="interval.uuid" class="col-12 col-xl-6 mb-4">
+          <div class="interval-item h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="flex-grow-1 me-3">
+                <div class="editable-name-wrapper">
+                  <i class="material-icons align-middle me-2 edit-icon">edit</i>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg form-control-prominent editable-name-input fs-4"
+                    v-model="interval.name"
+                    placeholder="サンプリング設定の名前を入力"
+                  />
                 </div>
               </div>
+              <button
+                type="button"
+                class="btn btn-sm btn-danger flex-shrink-0"
+                @click="deleteInterval(interval.uuid)"
+                :disabled="intervals.length <= 1"
+              >
+                <i class="material-icons">delete</i>
+                {{ $t('modal_window.delete') }}
+              </button>
+            </div>
+            
+            <!-- 時間入力 -->
+            <div class="mb-2">
+              <label class="form-label fw-bold">
+                <i class="material-icons align-middle me-1" style="font-size: 18px;">schedule</i>
+                サンプリング周期
+              </label>
+            </div>
+            <div class="d-flex justify-content-center align-items-center mx-4 time-inputs">
+              <div class="time-input-group">
+                <label class="time-label">{{ $t('system_settings.clock.hour') }}</label>
+                <input
+                  type="number"
+                  class="form-control form-control-lg text-center"
+                  v-model.number="interval.hours"
+                  min="0"
+                  max="24"
+                  required
+                />
+              </div>
+              <span class="time-separator">:</span>
+              <div class="time-input-group">
+                <label class="time-label">{{ $t('system_settings.clock.minute') }}</label>
+                <input
+                  type="number"
+                  class="form-control form-control-lg text-center"
+                  v-model.number="interval.minutes"
+                  min="0"
+                  max="60"
+                  required
+                />
+              </div>
+              <span class="time-separator">:</span>
+              <div class="time-input-group">
+                <label class="time-label">{{ $t('system_settings.clock.second') }}</label>
+                <input
+                  type="number"
+                  class="form-control form-control-lg text-center"
+                  v-model.number="interval.seconds"
+                  min="0"
+                  max="60"
+                  required
+                />
+              </div>
+            </div>
+            <div v-if="interval.error" class="alert alert-danger mt-2" role="alert">
+              <i class="material-icons align-middle me-1" style="font-size: 18px;">error</i>
+              サンプリング周期は1秒以上に設定してください。
             </div>
           </div>
-
-          <!-- 新規追加ボタン（最大2個まで） -->
-          <button
-            v-if="intervals.length < 2"
-            type="button"
-            class="btn btn-success btn-lg w-100"
-            @click="addNewInterval"
-          >
-            <i class="material-icons align-middle me-2">add_circle</i>
-            {{ $t('system_settings.interval.add') }}
-          </button>
-          <div v-else class="alert alert-info" role="alert">
-            <i class="material-icons align-middle me-1" style="font-size: 18px;">info</i>
-            最大2つまでのサンプリング設定が可能です。
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-primary"
-            @click="save"
-            style="width: 110px;"
-          >
-            {{ $t('modal_window.update') }}
-          </button>
-          <button
-            type="button"
-            class="btn btn-secondary"
-            @click="close"
-            style="width: 110px;"
-          >
-            {{ $t('modal_window.cancel') }}
-          </button>
         </div>
       </div>
+
+      <!-- 新規追加ボタン（最大2個まで） -->
+      <button
+        v-if="intervals.length < 2"
+        type="button"
+        class="btn btn-success btn-lg w-100"
+        @click="addNewInterval"
+      >
+        <i class="material-icons align-middle me-2">add_circle</i>
+        {{ $t('system_settings.interval.add') }}
+      </button>
+      <div v-else class="alert alert-info" role="alert">
+        <i class="material-icons align-middle me-1" style="font-size: 18px;">info</i>
+        最大2つまでのサンプリング設定が可能です。
+      </div>
     </div>
-  </div>
+
+    <!-- Footer -->
+    <template #footer>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save"
+        style="width: 110px;"
+      >
+        {{ $t('modal_window.update') }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="close"
+        style="width: 110px;"
+      >
+        {{ $t('modal_window.cancel') }}
+      </button>
+    </template>
+  </BaseModal>
 </template>
   
 <script setup lang="ts">
@@ -137,6 +138,8 @@ import {
   deleteSamplingInterval as deleteSamplingIntervalAPI
 } from '@/api/systemSettingAPI';
 import { useSystemSettingStore } from '@/pinia/systemSettingStore';
+
+import BaseModal from "@/components/BaseModal.vue";
 
 /* --------------------------------------
  * Props / Emits
@@ -306,19 +309,6 @@ watch(
 </script>
 
 <style scoped>
-.modal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1050;
-}
-
 .interval-item {
   padding: 1.5rem;
   border: 2px solid #e0e0e0;
