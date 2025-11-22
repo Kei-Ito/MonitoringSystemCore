@@ -14,11 +14,11 @@ function toArray<T>(v: T | T[]): T[] {
 export const useUiStore = defineStore('uiStore', {
     state: () => ({
         color: loadLocalStorage('color') || 'info',
+        /** Dark Modeにするかどうかのフラグ */
         isDarkMode: false,
         sidebarType: 'bg-gradient-dark',
         showSidenav: true,
         showNavbar: true,
-        showNavs: true,
         showMain: true,
         showFooter: true,
         hideConfigButton: false,

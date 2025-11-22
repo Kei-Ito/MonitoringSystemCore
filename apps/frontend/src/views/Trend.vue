@@ -55,12 +55,11 @@ import type { GridLayout as GridLayoutType } from '@monitoring/shared/model';
 
 import { useUiStore } from '@/pinia/uiStore';
 import { useChartStore } from '@/pinia/chartStore';
-import { useChannelValuesStore } from '@/pinia/channelValuesStore';
+import { useTrendStore } from '@/pinia/trendStore';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
 import DummyBarChartCard from '@/components/Cards/DummyBarChartCard.vue';
 import DummyAreaLineChartCard from '@/components/Cards/DummyAreaLineChartCard.vue';
-import { getTrendData, cancelTrendDataRequests } from '@/service/trendDataService';
 import DateRangePickerModal from '@/components/DateRangePickerModal.vue';
 
 
@@ -70,10 +69,11 @@ const emit = defineEmits<{
 
 const chartStore = useChartStore();
 const { trendCharts } = storeToRefs(chartStore);
-const channelValuesStore = useChannelValuesStore();
+const trendStore = useTrendStore();
 
 const uiStore = useUiStore();
 const { isLayoutEditMode, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
+const { selectedDateRange } = storeToRefs(trendStore);
 
 const layoutModel = ref<GridLayoutType[]>([]);
 const isUpdatingFromStore = ref(false);
@@ -105,14 +105,7 @@ watch(
 );
 
 // 日付範囲の状態管理
-const now = new Date();
-const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
-
-const selectedDateRange = ref({
-  startDate: today,
-  endDate: endOfToday
-});
+// selectedDateRangeはtrendStoreで管理
 
 const isDateRangeModalVisible = ref(false);
 
@@ -148,31 +141,7 @@ function hideDateRangePicker() {
 }
 
 function updateDateRange(range: { startDate: Date; endDate: Date }) {
-  selectedDateRange.value = range;
-  refreshTrendData();
-}
-
-async function refreshTrendData() {
-  const channel_uuid_list = new Set<string>();
-  
-  // チャートで使用しているチャンネルの一覧を取得
-  Object.keys(trendCharts.value).forEach((key) => {
-    const chart = trendCharts.value[key];
-    if (chart.channel_uuids && chart.channel_uuids.length > 0) {
-      chart.channel_uuids.forEach((uuid) => channel_uuid_list.add(uuid));
-    }
-  });
-
-  channelValuesStore.prune(channel_uuid_list);
-
-  for (const uuid of channel_uuid_list) {
-    // チャンネルのUUIDを使ってトレンドデータを取得
-    await getTrendData(
-      uuid, 
-      selectedDateRange.value.startDate, 
-      selectedDateRange.value.endDate
-    );
-  }
+  trendStore.setDateRange(range);
 }
 
 // Navbarに日付範囲テキストとコールバックを通知
@@ -186,7 +155,6 @@ function updateNavbarDateRange() {
 onMounted(async () => {
   // Navbarに初期状態を通知
   updateNavbarDateRange();
-  await refreshTrendData();
 });
 
 // 日付範囲が変更されたらNavbarに通知
@@ -195,8 +163,6 @@ watch(dateRangeText, () => {
 });
 
 onBeforeUnmount(() => {
-  cancelTrendDataRequests();
-  channelValuesStore.prune(new Set());
 });
 
 </script>

@@ -4,12 +4,14 @@ import { useChartStore } from '@/pinia/chartStore';
 import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 import { useWebSocket } from './useWebSocket';
 import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum';
+import { useTrendStore } from '@/pinia/trendStore';
 
 export function useAppInitializer() {
   const isLoading = ref(true);
   const monitoringStore = useMonitoringStore();
   const chartStore = useChartStore();
   const channelValuesStore = useChannelValuesStore();
+  const trendStore = useTrendStore();
   const { connect } = useWebSocket();
 
   onMounted(async () => {
@@ -19,6 +21,9 @@ export function useAppInitializer() {
       chartStore.initialize(),
       new Promise(resolve => setTimeout(resolve, 2500))
     ]);
+
+    // トレンドデータの初期読み込み（非同期で実行）
+    trendStore.fetchAllTrendData();
 
     // デバイス健康状態を初期化
     channelValuesStore.initializeDeviceHealth([

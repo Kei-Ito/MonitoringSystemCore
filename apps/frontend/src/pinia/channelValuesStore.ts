@@ -21,6 +21,8 @@ export const useChannelValuesStore = defineStore("channelValues", {
         deviceHealthStatuses: [] as DeviceHealthStatus[],
         /** 初期化済みフラグ */
         isInitialized: false,
+        /** 読み込まれているデータの期間 */
+        loadedDateRange: null as { startDate: Date, endDate: Date } | null,
     }),
     
     /** ------------getters-------------- */
@@ -97,6 +99,13 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 };
             }
             this.channelValues[channelUuid].timeSeries = timeSeries;
+        },
+        
+        /**
+         * 読み込まれているデータの期間を設定
+         */
+        setLoadedDateRange(range: { startDate: Date, endDate: Date }) {
+            this.loadedDateRange = range;
         },
         
         /**
