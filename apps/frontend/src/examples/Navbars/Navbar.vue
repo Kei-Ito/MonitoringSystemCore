@@ -18,7 +18,7 @@
         <div class="multiselect-container">
           <multiselect v-model="selectedCategory1" :options="category1List??[]" :multiple="false" :close-on-select="true"
             :clear-on-select="false" :searchable="false" :allow-empty="false" :preserve-search="false" selectLabel=""
-            selectedLabel="" deselectLabel="" placeholder="Category1を選択" :preselect-first="false">
+            selectedLabel="" deselectLabel="" placeholder="Category1を選択" :preselect-first="false" :disabled="isLayoutEditMode">
             <!-- マルチセレクト時のテンプレート -->
             <template #selection>
               <span class="multiselect-selected">
@@ -43,7 +43,7 @@
         <div class="multiselect-container">
           <multiselect v-model="selectedCategory2" :options="category2List??[]" :multiple="true" :close-on-select="false"
             :clear-on-select="false" :preserve-search="false" placeholder="" :searchable="false" selectLabel=""
-            selectedLabel="" deselectLabel="" :preselect-first="false">
+            selectedLabel="" deselectLabel="" :preselect-first="false" :disabled="isLayoutEditMode">
             <!-- マルチセレクト時のテンプレート -->
             <template #selection="{ values }">
               <span class="multiselect-selected">
@@ -73,12 +73,11 @@
           </button>
         </div>
       </div>
-      <!--
-      <div>
-        <a class="nav-link text-body font-weight-bold px-0" >UI編集</a>
-        <ToggleBtn v-model="isAdmin" class="mr-3" />
+      
+      <div v-if="isAdmin" class="d-flex align-items-center">
+        <span class="nav-link text-body font-weight-bold px-0 me-2">レイアウト編集</span>
+        <ToggleBtn v-model="isLayoutEditModeModel" class="mr-3" />
       </div>
-      -->
     
       <!-- ユーザーログインアイコン -->
        <!--
@@ -107,7 +106,7 @@ import { computed, watch, ref } from "vue";
 import Multiselect from 'vue-multiselect';
 import { useRoute } from "vue-router";
 
-//import ToggleBtn from "@/components/ToggleBtn.vue";
+import ToggleBtn from "@/components/ToggleBtn.vue";
 import { useUiStore } from "@/pinia/uiStore";
 
 import Breadcrumbs from "../Breadcrumbs.vue";
@@ -132,7 +131,8 @@ const route = useRoute();
 const {
   isRTL,
   isAbsolute,
-  //isAdmin,
+  isAdmin,
+  isLayoutEditMode,
   category1List,
   category2List,
   dashboardViewCategory1Selected,
@@ -203,6 +203,11 @@ const showDateRangePicker = () => {
 const setDateRangeText = (text: string) => {
   dateRangeText.value = text;
 };
+
+const isLayoutEditModeModel = computed({
+  get: () => isLayoutEditMode.value,
+  set: () => uiStore.toggleLayoutEditMode()
+});
 
 // コンポーネント外から呼び出せるようにする
 defineExpose({
