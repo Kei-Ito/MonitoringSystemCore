@@ -228,6 +228,8 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
 
   // 3. 今回収集したデータを抽出（フィルタリング済み）
   const intervalInputDatas: getIOModuleInputResponse[] = [];
+  const channelMeta = new Map<string, { name: string, unit: string }>();
+
   for (const module of targetModules) {
     const cachedData = currentInputDatas.find(data => data.module_uuid === module.module_uuid);
     if (cachedData) {
@@ -242,11 +244,22 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
           ...cachedData,
           channels: filteredChannels
         });
+
+        // メタデータを収集
+        filteredChannels.forEach(ch => {
+            const setting = module.input_channels.find(s => String(s.channel_uuid) === String(ch.channel_uuid));
+            if (setting) {
+                channelMeta.set(String(ch.channel_uuid), {
+                    name: setting.channel_name,
+                    unit: setting.unit
+                });
+            }
+        });
       }
     }
   }
 
-  saveInputDatas(intervalInputDatas); // このインターバルで収集したデータのみ保存
+  saveInputDatas(intervalInputDatas, channelMeta); // このインターバルで収集したデータのみ保存
   
   //ステータスを更新
   // statusはチャンネルデータの処理中に更新される可能性がある

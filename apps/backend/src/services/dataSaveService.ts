@@ -1,7 +1,8 @@
 import { getIOModuleInputResponse } from '@monitoring/shared/api';
-import { csvDataRequest ,trendDataRequest,getIsDataExistRequestModel } from '@monitoring/shared/api';
+import { csvDataRequest, trendDataRequest, getIsDataExistRequestModel } from '@monitoring/shared/api';
 import { SystemSettingService } from 'src/config/SystemSetting';
 import readline from 'readline';
+import csv from "csv-parser";
 
 import path from 'path';
 import fs from 'fs';
@@ -17,16 +18,16 @@ function generatePathfromDate(date: Date): string {
     const year = date.getFullYear().toString();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return path.join(configService.getSystemSetting().dataRootPath, year, month, day,'data.csv');
+    return path.join(configService.getSystemSetting().dataRootPath, year, month, day, 'data.csv');
 }
 
 /**
  * チャンネルUUIDのリストを取得する
  */
-function getChannel_UUIDs(data_list: getIOModuleInputResponse[]) : [string[], Map<string, number>] {
+function getChannel_UUIDs(data_list: getIOModuleInputResponse[]): [string[], Map<string, number>] {
     const channel_uuids = [];
     // チャンネルUUIDごとの値のマップ
-    const value_map : Map<string, number > =  new Map<string, number >();
+    const value_map: Map<string, number> = new Map<string, number>();
     for (const data of data_list) {
         for (const channel of data.channels) {
             if (channel.channel_uuid) {
@@ -40,24 +41,38 @@ function getChannel_UUIDs(data_list: getIOModuleInputResponse[]) : [string[], Ma
 }
 
 
-async function readHeaderLine(filePath: string): Promise<string[]> {
+async function readFirstNLines(filePath: string, n: number): Promise<string[]> {
+    if (!fs.existsSync(filePath)) return [];
     const fileStream = fs.createReadStream(filePath);
     const rl = readline.createInterface({
         input: fileStream,
         crlfDelay: Infinity
     });
 
+    const lines: string[] = [];
     for await (const line of rl) {
-        rl.close();
-        fileStream.destroy();
-        return line.split(',');
+        // 1行目の先頭にあるBOMを除去
+        if (lines.length === 0) {
+            lines.push(line.replace(/^\uFEFF/, ''));
+        } else {
+            lines.push(line);
+        }
+
+        if (lines.length >= n) {
+            break;
+        }
     }
-    return [];
+    rl.close();
+    fileStream.destroy();
+    return lines;
 }
 
 // 簡易的なMutex
 let isSaving = false;
 const waitQueue: (() => void)[] = [];
+
+// ヘッダー情報のキャッシュ (ファイルパス -> ヘッダーUUIDリスト)
+const headerCache = new Map<string, string[]>();
 
 async function acquireLock(): Promise<void> {
     if (!isSaving) {
@@ -78,64 +93,155 @@ function releaseLock() {
     }
 }
 
-export async function saveInputDatas(data_list: getIOModuleInputResponse[]): Promise<void> {
+/**
+ * CSVファイルのヘッダーを確認し、必要であれば更新する
+ * @param data_path ファイルパス
+ * @param inputChannelUuids 今回保存するデータのチャンネルUUIDリスト
+ * @param channelMeta チャンネルのメタデータ（名前、単位）
+ * @returns 最新のヘッダーUUIDリスト
+ */
+async function ensureCsvHeader(
+    data_path: string,
+    inputChannelUuids: string[],
+    channelMeta?: Map<string, { name: string, unit: string }>
+): Promise<string[]> {
+    // キャッシュチェック
+    if (headerCache.has(data_path)) {
+        const cachedHeader = headerCache.get(data_path)!;
+        const missingInCache = inputChannelUuids.filter(uuid => !cachedHeader.includes(uuid));
+        if (missingInCache.length === 0) {
+            return cachedHeader;
+        }
+    }
+
+    let existingLines: string[] = [];
+    try {
+        existingLines = await readFirstNLines(data_path, 3);
+    } catch {
+        // ファイルがない場合など
+    }
+
+    // 3行未満なら新規作成扱い
+    const isNewFile = existingLines.length < 3;
+
+    let currentHeaderUuids: string[] = [];
+    const existingMetaMap = new Map<string, { name: string, unit: string }>();
+
+    if (isNewFile) {
+        currentHeaderUuids = ['HEADER'];
+    } else {
+        // 既存ファイル（3行目からUUIDを取得）
+        const line1 = existingLines[0].split(',');
+        const line2 = existingLines[1].split(',');
+        const line3 = existingLines[2].split(',');
+
+        currentHeaderUuids = line3;
+
+        // 既存のメタデータをマップに保存
+        currentHeaderUuids.forEach((uuid, index) => {
+            const key = String(uuid).trim();
+            if (key === 'HEADER') return;
+            const name = index < line1.length ? line1[index] : uuid;
+            const unit = index < line2.length ? line2[index] : '';
+            existingMetaMap.set(key, { name, unit });
+        });
+    }
+
+    // カラム不足チェック
+    const missingChannels = inputChannelUuids.filter(uuid => !currentHeaderUuids.includes(uuid));
+
+    if (missingChannels.length === 0 && !isNewFile) {
+        headerCache.set(data_path, currentHeaderUuids);
+        return currentHeaderUuids;
+    }
+
+    // メタデータ取得ヘルパー
+    const getName = (uuid: string) => {
+        const key = String(uuid).trim();
+        if (channelMeta?.has(key)) return channelMeta.get(key)!.name;
+        if (existingMetaMap.has(key)) return existingMetaMap.get(key)!.name;
+        return uuid;
+    };
+    const getUnit = (uuid: string) => {
+        const key = String(uuid).trim();
+        if (channelMeta?.has(key)) return channelMeta.get(key)!.unit;
+        if (existingMetaMap.has(key)) return existingMetaMap.get(key)!.unit;
+        return '';
+    };
+
+    return await rewriteHeader(data_path, isNewFile, currentHeaderUuids, missingChannels, getName, getUnit);
+}
+
+async function rewriteHeader(data_path: string, isNewFile: boolean, currentHeaderUuids: string[], missingChannels: string[],
+    getName: (uuid: string) => string, getUnit: (uuid: string) => string): Promise<string[]> {
+    let lines: string[] = [];
+
+    if (!isNewFile) {
+        // 既存ファイルを読み込んでカラム追加
+        const content = await fs.promises.readFile(data_path, 'utf-8');
+        // 空行を除去しつつ読み込み
+        lines = content.split(/\r?\n/).filter(l => l.trim() !== '');
+
+        // 既存のヘッダー3行を削除（後で再構築して追加するため）
+        lines.splice(0, 3);
+    }
+
+    // 新しいヘッダーの構成
+    // 既存のUUID順序 + 新規追加分
+    const finalUuids = [...currentHeaderUuids.filter(u => u !== 'HEADER'), ...missingChannels];
+
+    const newHeaderNames = ['HEADER', ...finalUuids.map(u => getName(u))];
+    const newHeaderUnits = ['HEADER', ...finalUuids.map(u => getUnit(u))];
+    const newHeaderUuids = ['HEADER', ...finalUuids];
+
+    // データ行の更新（カラム追加がある場合、カンマを追加）
+    const updatedDataLines = lines.map(line => {
+        if (missingChannels.length > 0) {
+            return line + ','.repeat(missingChannels.length);
+        }
+        return line;
+    });
+
+    const newContent = [
+        newHeaderNames.join(','),
+        newHeaderUnits.join(','),
+        newHeaderUuids.join(','),
+        ...updatedDataLines
+    ].join('\n') + '\n';
+
+    // BOM付きで保存
+    await fs.promises.writeFile(data_path, BOM + newContent);
+
+    headerCache.set(data_path, newHeaderUuids);
+
+    return newHeaderUuids;
+}
+
+const BOM = '\uFEFF';
+
+export async function saveInputDatas(data_list: getIOModuleInputResponse[], channelMeta?: Map<string, { name: string, unit: string }>): Promise<void> {
     if (data_list.length === 0) return;
-    
+
     await acquireLock();
+
     try {
         const timestamp = data_list[0].timestamp;
-        const data_path = generatePathfromDate(new Date(timestamp));
-        const dir = path.dirname(data_path);
 
-        await fs.promises.mkdir(dir, { recursive: true });
+        //　timestampからcsvのパスを生成
+        const data_path = generatePathfromDate(new Date(timestamp));
+
+        // ディレクトリがなければ作成
+        await fs.promises.mkdir(path.dirname(data_path), { recursive: true });
 
         const [channel_uuids, value_map] = getChannel_UUIDs(data_list);
 
-        let existingHeader: string[] = [];
-        let fileExists = false;
+        // ヘッダーの整合性を確保し、最新のUUID順序を取得
+        const currentHeaderUuids = await ensureCsvHeader(data_path, channel_uuids, channelMeta);
 
-        try {
-            existingHeader = await readHeaderLine(data_path);
-            if (existingHeader.length > 0) {
-                fileExists = true;
-            }
-        } catch {
-            fileExists = false;
-        }
-
-        if (!fileExists) {
-            // 新規作成
-            const header = ['timestamp', ...channel_uuids];
-            await fs.promises.writeFile(data_path, header.join(',') + '\n');
-            existingHeader = header;
-        } else {
-            // ヘッダー更新チェック
-            const missingChannels = channel_uuids.filter(uuid => !existingHeader.includes(uuid));
-            
-            if (missingChannels.length > 0) {
-                console.log(`Adding missing channels to CSV: ${missingChannels.join(', ')}`);
-                const content = await fs.promises.readFile(data_path, 'utf-8');
-                const lines = content.split(/\r?\n/);
-                
-                // ヘッダー更新
-                const newHeader = [...existingHeader, ...missingChannels];
-                
-                // データ行更新
-                const updatedLines = lines.map((line, index) => {
-                    if (index === 0) return newHeader.join(',');
-                    if (line.trim() === '') return line;
-                    return line + ','.repeat(missingChannels.length);
-                });
-
-                await fs.promises.writeFile(data_path, updatedLines.join('\n'));
-                existingHeader = newHeader;
-            }
-        }
-
-        // ヘッダーに従って並び替え
-        // 値がない場合は空文字にする
-        const sortedValues = existingHeader.slice(1).map(uuid => value_map.get(uuid) ?? '');
+        // データの追記
+        const sortedValues = currentHeaderUuids.slice(1).map(uuid => value_map.get(uuid) ?? '');
         await fs.promises.appendFile(data_path, [timestamp, ...sortedValues].join(',') + '\n');
+
     } catch (error) {
         console.error('Error saving input data:', error);
     } finally {
@@ -143,35 +249,57 @@ export async function saveInputDatas(data_list: getIOModuleInputResponse[]): Pro
     }
 }
 
-import csv from "csv-parser";
+
 
 async function loadCsvColumn(
-  filePath: string,
-  targetColumn: string
+    filePath: string,
+    targetColumn: string
 ): Promise<{ timestamp: Date; value: number }[]> {
-  return new Promise((resolve, reject) => {
-    const results: { timestamp: Date; value: number }[] = [];
+    // キャッシュまたはファイルからヘッダーを取得して確認
+    let headerUuids = headerCache.get(filePath);
 
-    // ファイルが存在しない場合は空配列を返す
-    if (!fs.existsSync(filePath)) {
-      resolve([]);
-      return;
+    if (!headerUuids) {
+        if (!fs.existsSync(filePath)) {
+            return [];
+        }
+        // ヘッダー読み込み (3行目)
+        const lines = await readFirstNLines(filePath, 3);
+        if (lines.length < 3) {
+            return [];
+        }
+        // BOM除去などはreadFirstNLinesで行われている前提
+        headerUuids = lines[2].split(',').map(s => s.trim());
+        headerCache.set(filePath, headerUuids);
     }
 
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on("data", (row) => {
-        if (row[targetColumn] !== undefined) {
-          results.push({
-            timestamp: new Date(row.timestamp),
-            value: Number(row[targetColumn]),
-          });
-        }
-      })
-      .on("end", () => resolve(results))
-      .on("error", reject);
-  });
+    // ターゲットカラムが存在しない場合は空配列を返す
+    if (!headerUuids.includes(targetColumn)) {
+        return [];
+    }
+
+    return new Promise((resolve, reject) => {
+        const results: { timestamp: Date; value: number }[] = [];
+        const skipLines = 2; // 1,2行目をスキップ、3行目をヘッダーとして使用
+
+        fs.createReadStream(filePath)
+            .pipe(csv({ skipLines: skipLines }))
+            .on("data", (row) => {
+                if (row[targetColumn] !== undefined) {
+                    const val = Number(row[targetColumn]);
+                    // 1列目のヘッダー名は 'HEADER' なので、row['HEADER'] でタイムスタンプを取得
+                    if (!isNaN(val) && row['HEADER']) {
+                        results.push({
+                            timestamp: new Date(row['HEADER']),
+                            value: val,
+                        });
+                    }
+                }
+            })
+            .on("end", () => resolve(results))
+            .on("error", reject);
+    });
 }
+// ...existing code...
 
 /**
  * 指定された日付範囲の全日付リストを生成
@@ -182,15 +310,15 @@ async function loadCsvColumn(
 function getDateRangeList(startDate: Date, endDate: Date): Date[] {
     const start = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
     const end = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-    
+
     const dateArray: Date[] = [];
     let current = new Date(start);
-    
+
     while (current <= end) {
         dateArray.push(new Date(current));
         current.setDate(current.getDate() + 1);
     }
-    
+
     return dateArray;
 }
 
@@ -201,28 +329,28 @@ function getDateRangeList(startDate: Date, endDate: Date): Date[] {
  */
 export async function getTrendData(trendDataRequest: trendDataRequest): Promise<{ timestamp: Date; value: number }[]> {
     console.log('Fetching trend data from files...');
-    
+
     const startDate = new Date(trendDataRequest.start_time);
     const endDate = new Date(trendDataRequest.end_time);
     const dateList = getDateRangeList(startDate, endDate);
-    
+
     // 各日付のデータを並列で取得
     const dataPromises = dateList.map(date => {
         const filePath = generatePathfromDate(date);
         return loadCsvColumn(filePath, trendDataRequest.channel_uuid);
     });
-    
+
     const dataArrays = await Promise.all(dataPromises);
-    
+
     // 全データを結合し、時刻でフィルタリング
     const allData = dataArrays.flat();
     const filteredData = allData.filter(item => {
         const timestamp = item.timestamp.getTime();
         return timestamp >= startDate.getTime() && timestamp <= endDate.getTime();
     });
-    
+
     // タイムスタンプでソート
     filteredData.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-    
+
     return filteredData;
 }
