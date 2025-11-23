@@ -68,7 +68,7 @@ export async function addSamplingInterval(req: Request<{},{},{name: string, peri
 /**
  * サンプリングインターバルを更新
  */
-export async function updateSamplingIntervals(req: Request<{uuid: string},{},{name?: string, period?: number}>, res: Response) {
+export async function updateSamplingInterval(req: Request<{uuid: string},{},{name?: string, period?: number}>, res: Response) {
   try {
     const { uuid } = req.params;
     const { name, period } = req.body;
