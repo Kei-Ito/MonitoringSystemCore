@@ -2,7 +2,7 @@
   <div class="card z-index-2 mb-1 h-100 d-flex flex-column">
     <!-- グラフ本体 -->
     <div class="card-body flex-grow-1 p-2 border-radius-lg bg-gradient-dark shadow-dark m-2">
-      <component :is="resolved" :chart="chart" :series="series" class="h-100 w-100 m-0"/>
+      <component :is="resolved" :chart="chart" :series="series" :loading="isLoading" class="h-100 w-100 m-0"/>
     </div>
 
     <!-- タイトル & 単位 -->
@@ -44,12 +44,19 @@ import GaugeChart from '@/components/Charts/GaugeChart.vue'
 import HorizontalBarChart from '@/components/Charts/HorizontalBarChart.vue'
 import LineChart from '@/components/Charts/LineChart.vue'
 import { useSeries } from '@/pinia/useSeries'
+import { useChannelValuesStore } from '@/pinia/channelValuesStore'
 
 /* ---------- props & series ---------- */
 const props = defineProps<{ 
   chart: ChartConfig
 }>()
 const series  = useSeries(props.chart.chart_uuid)
+const channelValuesStore = useChannelValuesStore()
+
+const isLoading = computed(() => {
+  if (!props.chart.channel_uuids) return false;
+  return props.chart.channel_uuids.some(uuid => channelValuesStore.isChannelLoading(uuid));
+})
 
 /* ---------- DOM refs ---------- */
 const titleBox = ref<HTMLElement | null>(null)

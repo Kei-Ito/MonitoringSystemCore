@@ -28,6 +28,8 @@ export const useChannelValuesStore = defineStore("channelValues", {
         isInitialized: false,
         /** 読み込まれているデータの期間 */
         loadedDateRange: null as { startDate: Date, endDate: Date } | null,
+        /** チャンネルごとのローディング状態 */
+        loadingChannels: {} as Record<string, boolean>,
     }),
     
     /** ------------getters-------------- */
@@ -44,6 +46,13 @@ export const useChannelValuesStore = defineStore("channelValues", {
          */
         getTimeSeries: (state) => (channelUuid: string): RuntimeValue[] => {
             return state.channelValues[channelUuid]?.timeSeries ?? [];
+        },
+
+        /**
+         * 指定チャンネルがローディング中かどうかを取得
+         */
+        isChannelLoading: (state) => (channelUuid: string): boolean => {
+            return !!state.loadingChannels[channelUuid];
         },
         
         /**
@@ -114,6 +123,13 @@ export const useChannelValuesStore = defineStore("channelValues", {
          */
         setLoadedDateRange(range: { startDate: Date, endDate: Date }) {
             this.loadedDateRange = range;
+        },
+
+        /**
+         * 指定チャンネルのローディング状態を設定
+         */
+        setChannelLoading(channelUuid: string, isLoading: boolean) {
+            this.loadingChannels[channelUuid] = isLoading;
         },
         
         /**

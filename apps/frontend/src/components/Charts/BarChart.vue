@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import type { ChannelSeries, ChartConfig } from '@monitoring/shared/model'
-import { computed, toRef } from 'vue'
+import { computed, toRef, watch } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
 
@@ -11,6 +11,7 @@ import { useEChart } from '@/components/Charts/useEChart'
 const props = defineProps<{
     chart: ChartConfig
     series: ChannelSeries[]
+    loading?: boolean
 }>()
 
 const seriesData = computed(() =>
@@ -123,5 +124,21 @@ const optionBuilder = () => {
     }
 }
 // ----- EChartsをマウント -----
-const { el } = useEChart(optionBuilder, [seriesRef, chartRef])
+const { el, chart } = useEChart(optionBuilder, [seriesRef, chartRef])
+
+watch([() => props.loading, chart], ([loading, chartInstance]) => {
+    if (chartInstance) {
+        if (loading) {
+            chartInstance.showLoading({
+                text: 'Loading...',
+                color: '#ffffff',
+                textColor: '#ffffff',
+                maskColor: 'rgba(0, 0, 0, 0.4)',
+                zlevel: 0
+            })
+        } else {
+            chartInstance.hideLoading()
+        }
+    }
+}, { immediate: true })
 </script>

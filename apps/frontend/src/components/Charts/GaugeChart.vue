@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import type { ChartConfig } from '@monitoring/shared/model'
-import { toRef } from 'vue'
+import { toRef, watch } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
 
@@ -11,6 +11,7 @@ import { useEChart } from '@/components/Charts/useEChart'
 const props = defineProps<{
     chart: ChartConfig
     series: any[]          // ← ここが追加ポイント
+    loading?: boolean
 }>()
 
 const seriesRef = toRef(props, 'series') // props.seriesをrefに変換
@@ -87,5 +88,21 @@ const optionBuilder = () => {
 }
 
 // ----- EChartsをマウント -----
-const { el } = useEChart(optionBuilder, [seriesRef, chartRef])
+const { el, chart } = useEChart(optionBuilder, [seriesRef, chartRef])
+
+watch([() => props.loading, chart], ([loading, chartInstance]) => {
+    if (chartInstance) {
+        if (loading) {
+            chartInstance.showLoading({
+                text: 'Loading...',
+                color: '#ffffff',
+                textColor: '#ffffff',
+                maskColor: 'rgba(0, 0, 0, 0.4)',
+                zlevel: 0
+            })
+        } else {
+            chartInstance.hideLoading()
+        }
+    }
+}, { immediate: true })
 </script>

@@ -13,7 +13,8 @@ export const useTrendStore = defineStore('trendStore', {
       selectedDateRange: {
         startDate: today,
         endDate: endOfToday
-      }
+      },
+      isLoading: false
     };
   },
   actions: {
@@ -22,42 +23,59 @@ export const useTrendStore = defineStore('trendStore', {
       this.fetchAllTrendData();
     },
     async fetchAllTrendData() {
-      const chartStore = useChartStore();
-      const channelValuesStore = useChannelValuesStore();
-      const { trendCharts } = chartStore;
-      
-      const channel_uuid_list = new Set<string>();
-      
-      // チャートで使用しているチャンネルの一覧を取得
-      Object.keys(trendCharts).forEach((key) => {
-        const chart = trendCharts[key];
-        if (chart.channel_uuids && chart.channel_uuids.length > 0) {
-          chart.channel_uuids.forEach((uuid) => channel_uuid_list.add(uuid));
+      this.isLoading = true;
+      try {
+        const chartStore = useChartStore();
+        const channelValuesStore = useChannelValuesStore();
+        const { trendCharts } = chartStore;
+        
+        const channel_uuid_list = new Set<string>();
+        
+        // チャートで使用しているチャンネルの一覧を取得
+        Object.keys(trendCharts).forEach((key) => {
+          const chart = trendCharts[key];
+          if (chart.channel_uuids && chart.channel_uuids.length > 0) {
+            chart.channel_uuids.forEach((uuid) => channel_uuid_list.add(uuid));
+          }
+        });
+
+        // 不要なデータを削除
+        channelValuesStore.prune(channel_uuid_list);
+
+        // 期間チェック
+        const isSameRange = channelValuesStore.loadedDateRange && 
+          channelValuesStore.loadedDateRange.startDate.getTime() === this.selectedDateRange.startDate.getTime() &&
+          channelValuesStore.loadedDateRange.endDate.getTime() === this.selectedDateRange.endDate.getTime();
+
+        if (!isSameRange) {
+          channelValuesStore.setLoadedDateRange(this.selectedDateRange);
         }
-      });
 
-      // 不要なデータを削除
-      channelValuesStore.prune(channel_uuid_list);
-
-      // 期間チェック
-      const isSameRange = channelValuesStore.loadedDateRange && 
-        channelValuesStore.loadedDateRange.startDate.getTime() === this.selectedDateRange.startDate.getTime() &&
-        channelValuesStore.loadedDateRange.endDate.getTime() === this.selectedDateRange.endDate.getTime();
-
-      if (!isSameRange) {
-        channelValuesStore.setLoadedDateRange(this.selectedDateRange);
-      }
-
-      for (const uuid of channel_uuid_list) {
-        const hasData = !!channelValuesStore.channelValues[uuid]?.timeSeries;
-        if (isSameRange && hasData) {
-          continue;
+        // 取得が必要なチャンネルを特定
+        const targetUuids: string[] = [];
+        for (const uuid of channel_uuid_list) {
+          const hasData = !!channelValuesStore.channelValues[uuid]?.timeSeries;
+          if (!(isSameRange && hasData)) {
+            targetUuids.push(uuid);
+          }
         }
-        await getTrendData(
-          uuid, 
-          this.selectedDateRange.startDate, 
-          this.selectedDateRange.endDate
-        );
+
+        // 先にすべてローディング状態にする（待機中もローディング表示するため）
+        targetUuids.forEach(uuid => channelValuesStore.setChannelLoading(uuid, true));
+
+        for (const uuid of targetUuids) {
+          try {
+            await getTrendData(
+              uuid, 
+              this.selectedDateRange.startDate, 
+              this.selectedDateRange.endDate
+            );
+          } finally {
+            channelValuesStore.setChannelLoading(uuid, false);
+          }
+        }
+      } finally {
+        this.isLoading = false;
       }
     }
   }
