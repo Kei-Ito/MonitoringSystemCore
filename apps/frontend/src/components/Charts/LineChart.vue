@@ -16,6 +16,12 @@ const props = defineProps<{
 
 const seriesData = computed(() =>
   props.series.map((s) => {
+    // dataVersion にアクセスしてリアクティブな依存関係を作成する
+    // timeSeriesはmarkRawで非リアクティブ化されているため、
+    // このアクセスがないと配列の中身が変わっても再計算が走らない
+    const _version = (s as any).dataVersion;
+    void _version;
+
     const data = s.timeSeries ?? [];
     if (!data.length) return [];
     return [...data]
@@ -33,7 +39,6 @@ const defaultPalette = [
   '#73c0de','#3ba272','#fc8452','#9a60b4','#ea7ccc'
 ]
 
-const seriesRef = toRef(props, 'series')
 const chartRef = toRef(props, 'chart')
 let isDataZoomInitialized = false
 
@@ -113,7 +118,9 @@ const optionBuilder = () => {
     return option
 }
 // ----- EChartsをマウント -----
-const { el, chart } = useEChart(optionBuilder, [seriesRef, chartRef])
+// seriesRef (props.series) の代わりに seriesData (computed) を監視対象にする
+// seriesData は timeSeries の変更(push)を検知して新しい配列を返すため、watch が発火する
+const { el, chart } = useEChart(optionBuilder, [seriesData, chartRef])
 
 watch([() => props.loading, chart], ([loading, chartInstance]) => {
     if (chartInstance) {

@@ -3,6 +3,9 @@ import {
     computed,
     nextTick,
     onMounted,
+    onBeforeUnmount,
+    onActivated,
+    onDeactivated,
     type Ref,
     ref,
     watch,
@@ -34,6 +37,10 @@ import {
     const dist = ref(0)                               // px
     const duration = computed(() => dist.value / SPEED) // 秒
   
+    let resizeObs: ResizeObserver | null = null
+    let timerId: ReturnType<typeof setTimeout> | null = null
+    let animationEndHandler: (() => void) | null = null
+
     /* はみ出し量測定（2px 以下は誤差） */
     function measure() {
       if (!box.value || !text.value) return
@@ -42,32 +49,72 @@ import {
       isOverflow.value = d > 0
       dist.value = d
     }
-  
-    /* アニメ完了 ⇒ 1s 停止 ⇒ 初期化 ⇒ ループ */
+    
+    /**
+     * アニメーションをループさせるイベントを設定
+     * アニメ完了 ⇒ 1s 停止 ⇒ 初期化 ⇒ ループ
+     */
     function attachLoop() {
       if (!text.value) return
-      text.value.addEventListener('animationend', () => {
+      
+      // 既存のリスナーがあれば削除
+      if (animationEndHandler) {
+        text.value.removeEventListener('animationend', animationEndHandler)
+      }
+
+      animationEndHandler = () => {
         if (!isOverflow.value) return
-        setTimeout(() => {
+        timerId = setTimeout(() => {
           if (text.value===null) return
           text.value!.classList.remove(animClass)
           void text.value!.offsetWidth         // Reflow
-          requestAnimationFrame(() => isOverflow.value && text.value!.classList.add(animClass))
+          
+          // 開始前にも停止時間を設ける
+          timerId = setTimeout(() => {
+            requestAnimationFrame(() => isOverflow.value && text.value!.classList.add(animClass))
+          }, PAUSE * 1000)
+          
         }, PAUSE * 1000)
-      })
+      }
+
+      text.value.addEventListener('animationend', animationEndHandler)
+    }
+
+    function cleanup() {
+      if (resizeObs) {
+        resizeObs.disconnect()
+        resizeObs = null
+      }
+      if (timerId) {
+        clearTimeout(timerId)
+        timerId = null
+      }
+      if (text.value && animationEndHandler) {
+        text.value.removeEventListener('animationend', animationEndHandler)
+        animationEndHandler = null
+      }
+    }
+
+    function init() {
+      cleanup() // 安全のため一度クリーンアップ
+      nextTick().then(measure)
+  
+      /* リサイズ・文字列変更で再測定 */
+      resizeObs = new ResizeObserver(measure)
+      if (box.value) resizeObs.observe(box.value)
+      
+      attachLoop()
     }
   
     /* 初期化 */
     onMounted(() => {
-      nextTick().then(measure)
-  
-      /* リサイズ・文字列変更で再測定 */
-      const resizeObs = new ResizeObserver(measure)
-      box.value && resizeObs.observe(box.value)
+      init()
       watch([() => text.value?.textContent], measure)
-  
-      attachLoop()
     })
+
+    onBeforeUnmount(cleanup)
+    onDeactivated(cleanup)
+    onActivated(init)
   
     return { isOverflow, dist, duration }
   }

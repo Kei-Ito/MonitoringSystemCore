@@ -1,5 +1,6 @@
 import type { ChannelValue, ChannelRuntimeValue, RuntimeValue } from "@monitoring/shared/model";
 import { defineStore } from "pinia";
+import { markRaw } from "vue";
 import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum';
 import { useToast } from "vue-toastification";
 
@@ -12,6 +13,12 @@ interface DeviceHealthStatus {
 /** フロントエンド用に拡張したChannelValue型 */
 interface StoreChannelValue extends ChannelValue {
     realtimeSeries: RuntimeValue[];
+    /**
+     * データのバージョン管理用カウンター
+     * timeSeriesをmarkRawで非リアクティブ化しているため、
+     * 変更検知のためにこの値をインクリメントして使用する
+     */
+    dataVersion: number;
 }
 
 /**
@@ -97,25 +104,33 @@ export const useChannelValuesStore = defineStore("channelValues", {
          * 単一チャンネルのランタイム値を更新（手入力キャリブレーション等）
          */
         setRuntimeValue(channelUuid: string, value: number) {
-            this._updateChannelValue(channelUuid, {
+            const runtimeValue = {
                 value,
                 timestamp: new Date(),
-            });
+            };
+            this._updateChannelValue(channelUuid, runtimeValue);
+            this._appendRealtimeSeries(channelUuid, runtimeValue);
+            this._appendTimeSeries(channelUuid, runtimeValue);
         },
         
         /**
          * 指定チャンネルの時系列データを設定
+         * 
+         * メモリ最適化のため、timeSeriesはmarkRawでラップしてVueの監視対象外とする。
+         * 代わりにdataVersionを更新して変更を通知する。
          */
         setTimeSeries(channelUuid: string, timeSeries: RuntimeValue[]) {
             if (!this.channelValues[channelUuid]) {
                 this.channelValues[channelUuid] = {
                     channel_uuid: channelUuid,
                     runtimeValue: { value: 0, timestamp: new Date() },
-                    timeSeries: [],
+                    timeSeries: markRaw([]),
                     realtimeSeries: [],
+                    dataVersion: 0,
                 };
             }
-            this.channelValues[channelUuid].timeSeries = timeSeries;
+            this.channelValues[channelUuid].timeSeries = markRaw(timeSeries);
+            this.channelValues[channelUuid].dataVersion++;
         },
         
         /**
@@ -179,8 +194,9 @@ export const useChannelValuesStore = defineStore("channelValues", {
                 this.channelValues[channelUuid] = {
                     channel_uuid: channelUuid,
                     runtimeValue,
-                    timeSeries: [],
+                    timeSeries: markRaw([]),
                     realtimeSeries: [],
+                    dataVersion: 0,
                 };
             } else {
                 this.channelValues[channelUuid].runtimeValue = runtimeValue;
@@ -205,6 +221,29 @@ export const useChannelValuesStore = defineStore("channelValues", {
             const MAX_POINTS = 300;
             if (series.length > MAX_POINTS) {
                 series.shift();
+            }
+        },
+
+        /**
+         * トレンド用時系列データに追加
+         * @private
+         */
+        _appendTimeSeries(channelUuid: string, runtimeValue: RuntimeValue) {
+            if (!this.channelValues[channelUuid]) return;
+            
+            // loadedDateRange のチェック
+            if (this.loadedDateRange) {
+                const time = runtimeValue.timestamp.getTime();
+                const start = this.loadedDateRange.startDate.getTime();
+                const end = this.loadedDateRange.endDate.getTime();
+                
+                // 範囲内であれば追加
+                if (time >= start && time <= end) {
+                    // markRawされた配列へのpushはリアクティブ更新をトリガーしないため
+                    // dataVersionをインクリメントして変更を通知する
+                    this.channelValues[channelUuid].timeSeries.push(runtimeValue);
+                    this.channelValues[channelUuid].dataVersion++;
+                }
             }
         },
 
