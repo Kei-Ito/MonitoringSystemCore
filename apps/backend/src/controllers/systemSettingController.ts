@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { SystemSettingService } from 'src/config/SystemSetting';
-import { setSamplingInterval } from 'src/services/IOModuleService';
+import { restartSampling } from 'src/services/IOModuleService';
 import { SystemSettingData, SamplingInterval } from '@monitoring/shared/model';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -15,11 +15,6 @@ export async function getSystemSetting(req: Request, res: Response) {
   }
 }
 
-export async function setSamplingIntervalController(req: Request<{},{},{samplingInterval:number}>, res: Response) {
-    systemSettingService.samplingInterval = req.body.samplingInterval;
-    setSamplingInterval(req.app.locals.broadcast);
-    res.json({ message: 'Sampling interval updated.' });
-}
 
 /**
  * サンプリングインターバル一覧を取得
@@ -51,11 +46,6 @@ export async function addSamplingInterval(req: Request<{},{},{name: string, peri
       period
     };
     
-    const updatedIntervals: [SamplingInterval, SamplingInterval] = [
-      systemSetting.samplingIntervals[0],
-      systemSetting.samplingIntervals[1]
-    ];
-    
     // 2つのインターバルが既に存在する場合はエラー
     if (systemSetting.samplingIntervals.length >= 2) {
       return res.status(400).json({ message: 'サンプリングインターバルは最大2個までです' });
@@ -63,11 +53,11 @@ export async function addSamplingInterval(req: Request<{},{},{name: string, peri
     
     await systemSettingService.setSystemSetting({
       ...systemSetting,
-      samplingIntervals: [...systemSetting.samplingIntervals, newInterval] as [SamplingInterval, SamplingInterval]
+      samplingIntervals: [...systemSetting.samplingIntervals, newInterval] 
     });
     
     // サンプリング中の場合は再起動
-    setSamplingInterval(req.app.locals.broadcast);
+    restartSampling(req.app.locals.broadcast);
     
     res.json(newInterval);
   } catch (err) {
@@ -78,7 +68,7 @@ export async function addSamplingInterval(req: Request<{},{},{name: string, peri
 /**
  * サンプリングインターバルを更新
  */
-export async function updateSamplingInterval(req: Request<{uuid: string},{},{name?: string, period?: number}>, res: Response) {
+export async function updateSamplingIntervals(req: Request<{uuid: string},{},{name?: string, period?: number}>, res: Response) {
   try {
     const { uuid } = req.params;
     const { name, period } = req.body;
@@ -104,7 +94,7 @@ export async function updateSamplingInterval(req: Request<{uuid: string},{},{nam
       ...(period && { period })
     };
     
-    const updatedIntervals = [...systemSetting.samplingIntervals] as [SamplingInterval, SamplingInterval];
+    const updatedIntervals = [...systemSetting.samplingIntervals];
     updatedIntervals[intervalIndex] = updatedInterval;
     
     await systemSettingService.setSystemSetting({
@@ -113,7 +103,7 @@ export async function updateSamplingInterval(req: Request<{uuid: string},{},{nam
     });
     
     // サンプリング中の場合は再起動
-    setSamplingInterval(req.app.locals.broadcast);
+    restartSampling(req.app.locals.broadcast);
     
     res.json(updatedInterval);
   } catch (err) {
@@ -144,11 +134,11 @@ export async function deleteSamplingInterval(req: Request<{uuid: string}>, res: 
     
     await systemSettingService.setSystemSetting({
       ...systemSetting,
-      samplingIntervals: filteredIntervals as [SamplingInterval, SamplingInterval]
+      samplingIntervals: filteredIntervals
     });
     
     // サンプリング中の場合は再起動
-    setSamplingInterval(req.app.locals.broadcast);
+    restartSampling(req.app.locals.broadcast);
     
     res.json({ message: 'Sampling interval deleted.' });
   } catch (err) {

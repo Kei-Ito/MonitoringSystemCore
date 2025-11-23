@@ -1,5 +1,4 @@
 {
-  "samplingInterval": 1000,
   "samplingIntervals": [
     {
       "uuid": "2efef4ad-574d-4033-b849-b9035835f917",
@@ -9,7 +8,7 @@
     {
       "uuid": "88d1c596-48e4-4245-9bf9-480f0257eda4",
       "name": "低速サンプリング",
-      "period": 5000
+      "period": 6000
     }
   ],
   "dataRootPath": "/media/linaro/HD-WHAU3",

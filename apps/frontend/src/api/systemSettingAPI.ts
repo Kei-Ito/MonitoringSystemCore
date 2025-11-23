@@ -14,17 +14,6 @@ export const getSystemSetting = () => request<SystemSettingData>({
 });
 
 /**
- * サンプリング間隔を設定するAPI関数
- * 
- * @param samplingInterval - 設定するサンプリング間隔（単位：ミリ秒）
- */
-export const setSamplingInterval = (samplingInterval: number) => request<void>({
-    method: 'post',
-    url: '/system_setting/set_sampling_interval/',
-    data: { samplingInterval }
-});
-
-/**
  * サンプリングインターバル一覧を取得するAPI関数
  * 
  * @returns サンプリングインターバル一覧

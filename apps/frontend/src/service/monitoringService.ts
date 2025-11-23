@@ -20,17 +20,6 @@ export const fetchSystemSetting = () =>
         errorMsg: "システム設定の取得に失敗しました",
     });
 
-/** samplingIntervalを更新し、backendへ変更をpushするメソッド */
-export const updateSamplingInterval = (samplingInterval: number) =>
-    handleApiRequest({
-        apiCall: () => api.setSamplingInterval(samplingInterval),
-        onSuccess: () => {
-            useMonitoringStore().samplingInterval = samplingInterval;
-        },
-        successMsg: "サンプリング周期を更新しました",
-        errorMsg: "サンプリング周期の更新に失敗しました",
-    });
-
 /** IOモジュール一覧を取得する（純粋API呼び出し） */
 export const getIOModules = () =>
     handleApiRequest({

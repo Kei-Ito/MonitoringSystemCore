@@ -360,7 +360,7 @@ export function stopIOModuleInputSamplingInterval(broadcast: (data: any) => void
 export function getIsSamplingIntervalRunning(): boolean {
   return intervalIds.size > 0;
 }
-export function setSamplingInterval(broadcast: (data: any) => void) {
+export function restartSampling(broadcast: (data: any) => void) {
   // 現在動作中の場合は、一度停止して再開
   if (intervalIds.size > 0) {
     stopIOModuleInputSamplingInterval(broadcast);

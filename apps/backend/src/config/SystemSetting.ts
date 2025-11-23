@@ -42,7 +42,6 @@ export class SystemSettingService {
             period: 5000
         };
         return {
-            samplingInterval: 1000,
             samplingIntervals: [interval1, interval2],
             dataRootPath: "",
             category1list: [],
@@ -72,26 +71,6 @@ export class SystemSettingService {
         }
     }
 
-    /**
-     * サンプリング周期を取得する
-     */
-    public get samplingInterval(): number {
-        return this._systemSetting?.samplingInterval ?? 1000;
-    }
-
-    /**
-     * サンプリング周期を設定し、データベースに保存する
-     */
-    public set samplingInterval(value: number) {
-        if (!this._systemSetting) {
-            this._systemSetting = this.createDefaultSystemSetting();
-        }
-        this._systemSetting = {
-            ...this._systemSetting,
-            samplingInterval: value
-        };
-        this.saveSystemSetting();
-    }
 
     /**
      * システム設定をデータベースに保存する
@@ -99,7 +78,6 @@ export class SystemSettingService {
     private async saveSystemSetting(): Promise<void> {
         const defaultSetting = this.createDefaultSystemSetting();
         const systemSetting: SystemSettingData = {
-            samplingInterval: this._systemSetting?.samplingInterval ?? 1000,
             samplingIntervals: this._systemSetting?.samplingIntervals ?? defaultSetting.samplingIntervals,
             dataRootPath: this._systemSetting?.dataRootPath ?? "",
             category1list: this._systemSetting?.category1list ?? [],
