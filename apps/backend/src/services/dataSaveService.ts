@@ -12,13 +12,27 @@ const configService = SystemSettingService.getInstance();
 /**
  * SystemSettingServiceに登録されているルートディレクトリと日付からログデータのパスを生成する
  * @param date 日付
+ * @param suffix ファイル名の接尾辞（サンプリング周期UUIDなど）
  * @returns パス
  */
-function generatePathfromDate(date: Date): string {
+function generatePathfromDate(date: Date, suffix?: string): string {
     const year = date.getFullYear().toString();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return path.join(configService.getSystemSetting().dataRootPath, year, month, day, 'data.csv');
+    const fileName = suffix ? `data_${suffix}.csv` : 'data.csv';
+    return path.join(configService.getSystemSetting().dataRootPath, year, month, day, fileName);
+}
+
+/**
+ * 指定された日付のログディレクトリパスを取得する
+ * @param date 日付
+ * @returns ディレクトリパス
+ */
+function getLogDir(date: Date): string {
+    const year = date.getFullYear().toString();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return path.join(configService.getSystemSetting().dataRootPath, year, month, day);
 }
 
 /**
@@ -236,7 +250,7 @@ async function rewriteHeader(data_path: string, isNewFile: boolean, currentHeade
 
 const BOM = '\uFEFF';
 
-export async function saveInputDatas(data_list: getIOModuleInputResponse[], channelMeta?: Map<string, { name: string, unit: string }>): Promise<void> {
+export async function saveInputDatas(data_list: getIOModuleInputResponse[], channelMeta?: Map<string, { name: string, unit: string }>, suffix?: string): Promise<void> {
     if (data_list.length === 0) return;
 
     await acquireLock();
@@ -245,7 +259,7 @@ export async function saveInputDatas(data_list: getIOModuleInputResponse[], chan
         const timestamp = data_list[0].timestamp;
 
         //　timestampからcsvのパスを生成
-        const data_path = generatePathfromDate(new Date(timestamp));
+        const data_path = generatePathfromDate(new Date(timestamp), suffix);
 
         // ディレクトリがなければ作成
         await fs.promises.mkdir(path.dirname(data_path), { recursive: true });
@@ -351,9 +365,22 @@ export async function getTrendData(trendDataRequest: trendDataRequest): Promise<
     const dateList = getDateRangeList(startDate, endDate);
 
     // 各日付のデータを並列で取得
-    const dataPromises = dateList.map(date => {
-        const filePath = generatePathfromDate(date);
-        return loadCsvColumn(filePath, trendDataRequest.channel_uuid);
+    const dataPromises = dateList.map(async date => {
+        const dirPath = getLogDir(date);
+        if (!fs.existsSync(dirPath)) return [];
+
+        // ディレクトリ内のCSVファイルを検索 (data*.csv)
+        const files = await fs.promises.readdir(dirPath);
+        const csvFiles = files.filter(f => f.startsWith('data') && f.endsWith('.csv'));
+
+        // 各CSVファイルからデータを読み込む
+        const filePromises = csvFiles.map(file => {
+            const filePath = path.join(dirPath, file);
+            return loadCsvColumn(filePath, trendDataRequest.channel_uuid);
+        });
+
+        const results = await Promise.all(filePromises);
+        return results.flat();
     });
 
     const dataArrays = await Promise.all(dataPromises);

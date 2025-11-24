@@ -1,8 +1,8 @@
 import * as api from 'src/api/IOModuleAPI';
 import * as json from 'src/utils/json';
 import SystemSettingService from 'src/config/SystemSetting';
-import { IOModule,IChannelSetting } from '@monitoring/shared/model';
-import { IOModuleStatusResponse,getIOModuleInputResponse } from '@monitoring/shared/api';
+import { IOModule, IChannelSetting } from '@monitoring/shared/model';
+import { IOModuleStatusResponse, getIOModuleInputResponse } from '@monitoring/shared/api';
 import { IOModuleStatus } from '@monitoring/shared/enum';
 import { Result, ok, err } from '@monitoring/shared/utils';
 import { saveInputDatas } from './dataSaveService';
@@ -22,13 +22,13 @@ const intervalChannelMap: Map<string, IntervalChannelMapping> = new Map();
 
 // TODO:仮実装なので、要修正
 enum DeviceHealthEnum {
-    Good = "Good", // 健康
-    Caution= "Caution", // 警告
-    Error = "Error", // エラー
-    Stop = "Stop" ,//消灯中
-    WarmingUp = "WarmingUp",//安定待ち
-    CoolingDown = "CoolingDown",//冷却中
-    Unknown = "Unknown", // 不明
+  Good = "Good", // 健康
+  Caution = "Caution", // 警告
+  Error = "Error", // エラー
+  Stop = "Stop",//消灯中
+  WarmingUp = "WarmingUp",//安定待ち
+  CoolingDown = "CoolingDown",//冷却中
+  Unknown = "Unknown", // 不明
 }
 
 /**
@@ -80,27 +80,27 @@ export const fetchAllIOModules = async (current_modules: IOModule[]): Promise<vo
  */
 function buildIntervalChannelMapping(): void {
   intervalChannelMap.clear();
-  
+
   // 各モジュールの入力チャンネルをインターバルごとに分類
   for (const module of io_modules) {
     for (const channel of module.input_channels) {
       const intervalUuid = channel.sampling_interval_uuid;
       if (!intervalUuid) continue; // 空文字列の場合はスキップ
-      
+
       if (!intervalChannelMap.has(intervalUuid)) {
         intervalChannelMap.set(intervalUuid, {
           modules: [],
           channelUuidsByModule: new Map()
         });
       }
-      
+
       const mapping = intervalChannelMap.get(intervalUuid)!;
-      
+
       // モジュールをリストに追加（重複を防ぐ）
       if (!mapping.modules.find(m => m.module_uuid === module.module_uuid)) {
         mapping.modules.push(module);
       }
-      
+
       // チャンネルUUIDを記録
       if (!mapping.channelUuidsByModule.has(module.module_uuid)) {
         mapping.channelUuidsByModule.set(module.module_uuid, new Set());
@@ -108,7 +108,7 @@ function buildIntervalChannelMapping(): void {
       mapping.channelUuidsByModule.get(module.module_uuid)!.add(channel.channel_uuid);
     }
   }
-  
+
   console.log(`インターバルマッピングを構築: ${intervalChannelMap.size}個のインターバル`);
 }
 
@@ -117,13 +117,13 @@ function buildIntervalChannelMapping(): void {
  * @param broadcast 
  * @param samplingIntervalUuid サンプリングインターバルのUUID
  */
-async function getIOModuleInput(broadcast: (data: any) => void, samplingIntervalUuid: string){
+async function getIOModuleInput(broadcast: (data: any) => void, samplingIntervalUuid: string) {
   // 停止フラグがtrueの場合は処理をスキップ
   if (isSamplingStopped) {
     return;
   }
-  
-  let status :DeviceHealthEnum = DeviceHealthEnum.Unknown; // 初期状態は不明
+
+  let status: DeviceHealthEnum = DeviceHealthEnum.Unknown; // 初期状態は不明
   const deviceStatuses: Record<string, DeviceHealthEnum> = {
     "照射炉1": DeviceHealthEnum.Unknown,
     "照射炉2": DeviceHealthEnum.Unknown,
@@ -154,47 +154,20 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
     const response: Result<getIOModuleInputResponse> = await api.getIOModuleInput(module);
     if (response.ok) {
       const input_datas = response.value;
-      
+
       // キャッシュからチャンネルUUIDのセットを取得
       const targetChannelUuids = mapping.channelUuidsByModule.get(module.module_uuid);
       if (!targetChannelUuids) return;
-      
+
       // センサーデータを正規化+閾値を基に判定
       input_datas.channels = input_datas.channels.filter(channel => targetChannelUuids.has(channel.channel_uuid));
       input_datas.channels.forEach(channel => {
         const channel_setting = module.input_channels.find(channel_setting => channel_setting.channel_uuid === channel.channel_uuid);
         if (channel_setting) {
-          if (channel.channel_uuid=="10041") {
-            deviceStatuses["照射炉1"] = convertStatus(channel.input_data);
-            status = deviceStatuses["照射炉1"];
-          } else if (channel.channel_uuid=="10091") {
-            deviceStatuses["照射炉2"] = convertStatus(channel.input_data);
-          } else if (channel.channel_uuid=="10141") {
-            deviceStatuses["照射炉3"] = convertStatus(channel.input_data);
-          }
-
-          // デバイス名の特定
-          let deviceName = "";
-          if (channel_setting.channel_name.includes("照射炉1")) deviceName = "照射炉1";
-          else if (channel_setting.channel_name.includes("照射炉2")) deviceName = "照射炉2";
-          else if (channel_setting.channel_name.includes("照射炉3")) deviceName = "照射炉3";
-
           channel.input_data = NormalizeData(channel.input_data, channel_setting);
-          // 閾値を基に判定(nullなら実質的に閾値なし)
-          if (deviceName) {
-            if (channel.input_data < (channel_setting.threshold.alert_min_threshold ?? -Infinity) || 
-                channel.input_data > (channel_setting.threshold.alert_max_threshold ?? +Infinity)) {
-              deviceAlerts[deviceName] = true;
-            }
-            if (channel.input_data < (channel_setting.threshold.warning_min_threshold ?? -Infinity) || 
-                channel.input_data > (channel_setting.threshold.warning_max_threshold ?? +Infinity)) {
-              deviceWarnings[deviceName] = true;
-            }
-          }
-          
         }
       });
-      
+
       // このインターバルで取得したチャンネルがある場合のみ保存
       if (input_datas.channels.length > 0) {
         // 全体キャッシュを更新（モジュール単位でマージ）
@@ -222,7 +195,7 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
     }
   });
 
-  
+
   // 2. 全部の処理が完了するまで待つ
   await Promise.all(promises);
 
@@ -235,9 +208,9 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
       // キャッシュからチャンネルUUIDのセットを取得
       const targetChannelUuids = mapping.channelUuidsByModule.get(module.module_uuid);
       if (!targetChannelUuids) continue;
-      
+
       const filteredChannels = cachedData.channels.filter(ch => targetChannelUuids.has(ch.channel_uuid));
-      
+
       if (filteredChannels.length > 0) {
         intervalInputDatas.push({
           ...cachedData,
@@ -259,8 +232,8 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
       const setting = module.input_channels.find(s => s.channel_uuid === ch.channel_uuid);
       if (setting?.save_rawdata === true) {
         channelMeta.set(String(ch.channel_uuid), {
-            name: setting.channel_name,
-            unit: setting.unit
+          name: setting.channel_name,
+          unit: setting.unit
         });
         return true;
       }
@@ -275,10 +248,48 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
     }
   }
 
-  saveInputDatas(dataToSave, channelMeta); // このインターバルで収集したデータのみ保存
-  
+  saveInputDatas(dataToSave, channelMeta, samplingIntervalUuid); // このインターバルで収集したデータのみ保存
+
   //ステータスを更新
   // statusはチャンネルデータの処理中に更新される可能性がある
+  // currentInputDatas (全最新データ) を元に再計算する
+  for (const moduleData of currentInputDatas) {
+    const moduleSetting = io_modules.find(m => m.module_uuid === moduleData.module_uuid);
+    if (!moduleSetting) continue;
+
+    for (const channelData of moduleData.channels) {
+      const channelSetting = moduleSetting.input_channels.find(c => c.channel_uuid === channelData.channel_uuid);
+      if (!channelSetting) continue;
+
+      // デバイス名の特定
+      let deviceName = "";
+      if (channelSetting.channel_name.includes("照射炉1")) deviceName = "照射炉1";
+      else if (channelSetting.channel_name.includes("照射炉2")) deviceName = "照射炉2";
+      else if (channelSetting.channel_name.includes("照射炉3")) deviceName = "照射炉3";
+
+      // ベースステータス判定 (特定のUUID)
+      if (channelData.channel_uuid == "10041") {
+        deviceStatuses["照射炉1"] = convertStatus(channelData.input_data);
+      } else if (channelData.channel_uuid == "10091") {
+        deviceStatuses["照射炉2"] = convertStatus(channelData.input_data);
+      } else if (channelData.channel_uuid == "10141") {
+        deviceStatuses["照射炉3"] = convertStatus(channelData.input_data);
+      }
+
+      // 閾値を基に判定(nullなら実質的に閾値なし)
+      if (deviceName) {
+        if (channelData.input_data < (channelSetting.threshold.alert_min_threshold ?? -Infinity) ||
+          channelData.input_data > (channelSetting.threshold.alert_max_threshold ?? +Infinity)) {
+          deviceAlerts[deviceName] = true;
+        }
+        if (channelData.input_data < (channelSetting.threshold.warning_min_threshold ?? -Infinity) ||
+          channelData.input_data > (channelSetting.threshold.warning_max_threshold ?? +Infinity)) {
+          deviceWarnings[deviceName] = true;
+        }
+      }
+    }
+  }
+
   for (const deviceName of Object.keys(deviceStatuses)) {
     if (deviceStatuses[deviceName] === DeviceHealthEnum.Good) {
       if (deviceAlerts[deviceName]) {
@@ -290,7 +301,7 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
   }
   status = deviceStatuses["照射炉1"];
 
-  const  payload = {
+  const payload = {
     type: 'IOModuleData',
     data: intervalInputDatas,
     status: status,
@@ -303,7 +314,7 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
 };
 
 function NormalizeData(data: number, channel: IChannelSetting): number {
-  return (data-channel.normalize.src_min)*(channel.normalize.dst_max-channel.normalize.dst_min)/(channel.normalize.src_max-channel.normalize.src_min)+channel.normalize.dst_min;
+  return (data - channel.normalize.src_min) * (channel.normalize.dst_max - channel.normalize.dst_min) / (channel.normalize.src_max - channel.normalize.src_min) + channel.normalize.dst_min;
 }
 
 function convertStatus(inputData: number): DeviceHealthEnum {
@@ -323,22 +334,22 @@ function convertStatus(inputData: number): DeviceHealthEnum {
 export async function startIOModuleInputSamplingInterval(broadcast: (data: any) => void): Promise<IOModuleStatusResponse[]> {
   // 停止フラグをリセット
   isSamplingStopped = false;
-  
+
   // IOモジュールの状態を同期(ハードウェア側のエラー等で、マイクロサービス側がリスタートしていた場合に状態を同期する必要がある)
   await fetchAllIOModules(io_modules);
-  
+
   // インターバルとチャンネルのマッピングを構築
   buildIntervalChannelMapping();
-  
+
   // システム設定からサンプリングインターバル設定を取得
   const systemSetting = SystemSettingService.getSystemSetting();
   const samplingIntervals = systemSetting.samplingIntervals;
-  
+
   if (!samplingIntervals) {
     console.error('サンプリングインターバルが設定されていません');
     return [];
   }
-  
+
   // 各サンプリングインターバルに対してタイマーを設定
   for (const interval of samplingIntervals) {
     if (!intervalIds.has(interval.uuid)) {
@@ -350,9 +361,15 @@ export async function startIOModuleInputSamplingInterval(broadcast: (data: any) 
       console.log(`サンプリング開始: ${interval.name} (${interval.period}ms)`);
     }
   }
-  
+
+  // サンプリング開始通知を送信
   broadcast({ type: 'StartSampling' });
-  
+
+  // すぐに一度データ取得を実行
+  for (const interval of samplingIntervals) {
+    getIOModuleInput(broadcast, interval.uuid)
+  }
+
   const response: IOModuleStatusResponse[] = io_modules.map(module => { return { module_uuid: module.module_uuid, status: module.status } });
   return response;
 };
@@ -363,7 +380,7 @@ export async function startIOModuleInputSamplingInterval(broadcast: (data: any) 
 export function stopIOModuleInputSamplingInterval(broadcast: (data: any) => void): void {
   // 停止フラグを立てる（実行中の処理も停止させる）
   isSamplingStopped = true;
-  
+
   // すべてのインターバルを停止
   for (const [uuid, timerId] of intervalIds.entries()) {
     clearInterval(timerId);
@@ -410,12 +427,12 @@ export async function addIOModule(newIOModule: IOModule): Promise<Result<IOModul
     let initialized_module = result.value;
     io_modules.push(initialized_module);
     await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
-    
+
     // サンプリング中の場合はマッピングを再構築
     if (intervalIds.size > 0) {
       buildIntervalChannelMapping();
     }
-    
+
     return ok(initialized_module);
   }
   else {
@@ -437,7 +454,7 @@ export async function addChannel(channel: IChannelSetting): Promise<Result<IChan
     }
 
     await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
-    
+
     // 入力チャンネルでサンプリング中の場合はマッピングを再構築
     if (channel.direction === "input" && intervalIds.size > 0) {
       buildIntervalChannelMapping();
@@ -467,12 +484,12 @@ export async function updateIOModule(moduleData: IOModule): Promise<Result<IOMod
     io_modules[index] = moduleData;// バックエンド内のIOモジュールのリストを更新
     io_modules[index].status = result.value; // ステータスを更新
     await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
-    
+
     // サンプリング中の場合はマッピングを再構築
     if (intervalIds.size > 0) {
       buildIntervalChannelMapping();
     }
-    
+
     return ok(result.value);
   } else {
     console.log("failed to update module");
@@ -497,7 +514,7 @@ export const deleteIOModule = async (module_uuid: string): Promise<void> => {
 
   // JSONファイルに保存
   await json.saveJson<IOModule[]>(jsonFilePath, io_modules);
-  
+
   // サンプリング中の場合はマッピングを再構築
   if (intervalIds.size > 0) {
     buildIntervalChannelMapping();
@@ -518,7 +535,7 @@ export async function deleteChannel(channel_setting: IChannelSetting): Promise<R
       return err("指定されたIOモジュールが見つかりません。");
     }
     if (channel_setting.direction === "input") {
-      index = io_modules[io_module_index].input_channels.findIndex((channel:IChannelSetting) => channel.channel_uuid === channel_setting.channel_uuid);
+      index = io_modules[io_module_index].input_channels.findIndex((channel: IChannelSetting) => channel.channel_uuid === channel_setting.channel_uuid);
       if (index === -1) {
         console.log(`Type of channel_uuid: ${typeof channel_setting.channel_uuid}`);
         console.log("指定された入力チャンネルが見つかりません。");
@@ -528,7 +545,7 @@ export async function deleteChannel(channel_setting: IChannelSetting): Promise<R
       }
       io_modules[io_module_index].input_channels.splice(index, 1);
     } else {
-      index = io_modules[io_module_index].output_channels.findIndex((channel:IChannelSetting) => channel.channel_uuid === channel_setting.channel_uuid);
+      index = io_modules[io_module_index].output_channels.findIndex((channel: IChannelSetting) => channel.channel_uuid === channel_setting.channel_uuid);
       if (index === -1) {
         console.log("指定された出力チャンネルが見つかりません。");
         return err("チャンネルの削除に失敗しました。");
@@ -538,12 +555,12 @@ export async function deleteChannel(channel_setting: IChannelSetting): Promise<R
 
     // JSONファイルに保存
     await json.saveJson<IOModule[]>(jsonFilePath, io_modules); // JSONファイルに保存
-    
+
     // 入力チャンネルでサンプリング中の場合はマッピングを再構築
     if (channel_setting.direction === "input" && intervalIds.size > 0) {
       buildIntervalChannelMapping();
     }
-    
+
     return ok(void 0);
   }
   else {
