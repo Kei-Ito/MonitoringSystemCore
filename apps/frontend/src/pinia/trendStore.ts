@@ -7,7 +7,7 @@ export const useTrendStore = defineStore('trendStore', {
   state: () => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
     
     return {
       selectedDateRange: {
@@ -37,7 +37,7 @@ export const useTrendStore = defineStore('trendStore', {
       // ストアのstartDateと比較
       // もしストアのstartDateが今日でなければ（つまり日付が変わっていたら）、更新する
       if (this.selectedDateRange.startDate.getTime() !== todayStart.getTime()) {
-        const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
         
         // 日付が変わったので、既存の時系列データをクリア
         const channelValuesStore = useChannelValuesStore();
