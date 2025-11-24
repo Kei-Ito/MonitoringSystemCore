@@ -76,12 +76,23 @@ export function useWebSocket() {
         }
       };
 
+      /** WebSocketが閉じられたときの処理 */
       ws.onclose = () => {
         console.log("WebSocket connection closed");
         monitoringStore.isSampling = false;
-        retryTimer = setTimeout(() => {
-          socket = createWebSocket();
-        }, 5000);
+
+        // 全デバイスの健康状態をUnknownに設定
+        channelValuesStore.setDeviceHealth("照射炉1", DeviceHealthEnum.Unknown);
+        channelValuesStore.setDeviceHealth("照射炉2", DeviceHealthEnum.Unknown);
+        channelValuesStore.setDeviceHealth("照射炉3", DeviceHealthEnum.Unknown);
+
+        // 5秒後に再接続を試みる
+        if (!retryTimer) {
+          retryTimer = setTimeout(() => {
+            retryTimer = null;
+            socket = createWebSocket();
+          }, 5000);
+        }
       };
 
       ws.onerror = (error: Event) => {
