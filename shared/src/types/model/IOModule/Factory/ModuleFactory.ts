@@ -76,6 +76,7 @@ export function createInputChannelForInitialization(module_uuid: string,module_t
         specific_channel_setting: handler.createDefaultSpecificInputChannelSetting(),
         created_at: new Date(),
         updated_at: new Date(),
+        save_rawdata: true,
     }
 }
 
@@ -119,6 +120,7 @@ export function createOutputChannelForInitialization(module_uuid: string,module_
         specific_channel_setting: handler.createDefaultSpecificOutputChannelSetting(),
         created_at: new Date(),
         updated_at: new Date(),
+        save_rawdata: false,
     }
 }
 

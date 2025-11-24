@@ -107,10 +107,15 @@ async function ensureCsvHeader(
 ): Promise<string[]> {
     // キャッシュチェック
     if (headerCache.has(data_path)) {
-        const cachedHeader = headerCache.get(data_path)!;
-        const missingInCache = inputChannelUuids.filter(uuid => !cachedHeader.includes(uuid));
-        if (missingInCache.length === 0) {
-            return cachedHeader;
+        // ファイルが存在しない場合はキャッシュを破棄して処理を続行（新規作成扱いになる）
+        if (!fs.existsSync(data_path)) {
+            headerCache.delete(data_path);
+        } else {
+            const cachedHeader = headerCache.get(data_path)!;
+            const missingInCache = inputChannelUuids.filter(uuid => !cachedHeader.includes(uuid));
+            if (missingInCache.length === 0) {
+                return cachedHeader;
+            }
         }
     }
 
@@ -149,8 +154,9 @@ async function ensureCsvHeader(
 
     // カラム不足チェック
     const missingChannels = inputChannelUuids.filter(uuid => !currentHeaderUuids.includes(uuid));
+    const isHeaderInvalid = !currentHeaderUuids.includes('HEADER');
 
-    if (missingChannels.length === 0 && !isNewFile) {
+    if (missingChannels.length === 0 && !isNewFile && !isHeaderInvalid) {
         headerCache.set(data_path, currentHeaderUuids);
         return currentHeaderUuids;
     }
@@ -172,6 +178,16 @@ async function ensureCsvHeader(
     return await rewriteHeader(data_path, isNewFile, currentHeaderUuids, missingChannels, getName, getUnit);
 }
 
+/**
+ * CSVファイルのヘッダーが不足している場合に列を追加する処理。変更されたデータはこのメソッド内で保存される。（頻度は低いのでI/O負荷は許容する）
+ * @param data_path csvファイルのパス
+ * @param isNewFile 新しいファイルかどうか
+ * @param currentHeaderUuids 現在のcsvファイルのヘッダー
+ * @param missingChannels 不足しているチャンネルUUIDリスト（追加する列）
+ * @param getName UUIDに対応する名前を取得するメソッド（UUIDのリストだけでなく、名前、Unitも構造体として渡せば不要かも）
+ * @param getUnit UUIDに対応する単位を取得するメソッド（UUIDのリストだけでなく、名前、Unitも構造体として渡せば不要かも）
+ * @returns UUIDリスト
+ */
 async function rewriteHeader(data_path: string, isNewFile: boolean, currentHeaderUuids: string[], missingChannels: string[],
     getName: (uuid: string) => string, getUnit: (uuid: string) => string): Promise<string[]> {
     let lines: string[] = [];
@@ -212,6 +228,7 @@ async function rewriteHeader(data_path: string, isNewFile: boolean, currentHeade
     // BOM付きで保存
     await fs.promises.writeFile(data_path, BOM + newContent);
 
+    // ヘッダーのキャッシュ更新
     headerCache.set(data_path, newHeaderUuids);
 
     return newHeaderUuids;
