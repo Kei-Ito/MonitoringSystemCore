@@ -1,5 +1,5 @@
 <template>
-  <div class="py-4 container-fluid  min-vh-70">
+  <div class="container-fluid  min-vh-70">
     <GridLayout
       v-model:layout="layoutModel"
       :col-num="12"
@@ -42,6 +42,7 @@
       :show="isDateRangeModalVisible"
       :start-date="selectedDateRange.startDate"
       :end-date="selectedDateRange.endDate"
+      :initial-is-realtime="trendStore.isRealtimeMode"
       @close="hideDateRangePicker"
       @date-range-selected="updateDateRange"
     />
@@ -78,11 +79,33 @@ const trendStore = useTrendStore();
 
 const uiStore = useUiStore();
 const { isLayoutEditMode, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
-const { selectedDateRange } = storeToRefs(trendStore);
+const { selectedDateRange, isRealtimeMode } = storeToRefs(trendStore);
 
 const layoutModel = ref<GridLayoutType[]>([]);
 const isUpdatingFromStore = ref(false);
 const isPageActive = ref(true);
+
+// 日付変更監視用
+let dateCheckInterval: number | undefined;
+
+function startDateChangeCheck() {
+  if (dateCheckInterval) return;
+  
+  // 1分ごとに日付変更をチェック
+  dateCheckInterval = window.setInterval(() => {
+    trendStore.checkDateChange();
+  }, 60000);
+  
+  // 開始時にも一度チェック
+  trendStore.checkDateChange();
+}
+
+function stopDateChangeCheck() {
+  if (dateCheckInterval) {
+    clearInterval(dateCheckInterval);
+    dateCheckInterval = undefined;
+  }
+}
 
 // ストアのデータ変更を監視してローカルのlayoutModelに反映
 watch(
@@ -120,6 +143,10 @@ const isDateRangeModalVisible = ref(false);
 
 // 日付範囲のテキスト表示
 const dateRangeText = computed(() => {
+  if (isRealtimeMode.value) {
+    return "リアルタイム (当日)";
+  }
+
   const start = selectedDateRange.value.startDate;
   const end = selectedDateRange.value.endDate;
   
@@ -149,8 +176,11 @@ function hideDateRangePicker() {
   isDateRangeModalVisible.value = false;
 }
 
-function updateDateRange(range: { startDate: Date; endDate: Date }) {
-  trendStore.setDateRange(range);
+function updateDateRange(payload: { isRealtime: boolean; startDate: Date; endDate: Date }) {
+  trendStore.setTrendCondition(payload.isRealtime, {
+    startDate: payload.startDate,
+    endDate: payload.endDate
+  });
 }
 
 // Navbarに日付範囲テキストとコールバックを通知
@@ -164,12 +194,14 @@ function updateNavbarDateRange() {
 onMounted(async () => {
   // Navbarに初期状態を通知
   updateNavbarDateRange();
+  startDateChangeCheck();
 });
 
 onActivated(() => {
   isPageActive.value = true;
   // KeepAliveでキャッシュから復帰した際にもNavbarを更新
   updateNavbarDateRange();
+  startDateChangeCheck();
 
   // 復帰時に最新のレイアウト情報をストアから強制的に同期
   // (非表示中にスキップしていた更新をここで反映)
@@ -185,10 +217,11 @@ onActivated(() => {
 
 onDeactivated(() => {
   isPageActive.value = false;
+  stopDateChangeCheck();
 });
 
 // 日付範囲が変更されたらNavbarに通知
-watch(dateRangeText, () => {
+watch([dateRangeText, isRealtimeMode], () => {
   updateNavbarDateRange();
 });
 

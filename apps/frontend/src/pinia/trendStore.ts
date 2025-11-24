@@ -14,13 +14,43 @@ export const useTrendStore = defineStore('trendStore', {
         startDate: today,
         endDate: endOfToday
       },
-      isLoading: false
+      isLoading: false,
+      isRealtimeMode: true
     };
   },
   actions: {
-    setDateRange(range: { startDate: Date; endDate: Date }) {
+    setTrendCondition(isRealtime: boolean, range: { startDate: Date; endDate: Date }) {
       this.selectedDateRange = range;
+      this.isRealtimeMode = isRealtime;
       this.fetchAllTrendData();
+    },
+    /**
+     * 日付が変わったかどうかをチェックし、
+     * 今日モードであれば日付範囲を更新する
+     */
+    checkDateChange() {
+      if (!this.isRealtimeMode) return;
+      
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      
+      // ストアのstartDateと比較
+      // もしストアのstartDateが今日でなければ（つまり日付が変わっていたら）、更新する
+      if (this.selectedDateRange.startDate.getTime() !== todayStart.getTime()) {
+        const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+        
+        // 日付が変わったので、既存の時系列データをクリア
+        const channelValuesStore = useChannelValuesStore();
+        channelValuesStore.clearAllTimeSeries();
+
+        this.selectedDateRange = {
+          startDate: todayStart,
+          endDate: todayEnd
+        };
+        
+        // データ再取得
+        this.fetchAllTrendData();
+      }
     },
     async fetchAllTrendData() {
       this.isLoading = true;

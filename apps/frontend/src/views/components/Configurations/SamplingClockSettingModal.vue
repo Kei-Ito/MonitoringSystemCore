@@ -24,7 +24,9 @@
                   />
                 </div>
               </div>
+              <!-- 削除ボタン(管理者のみ表示) -->
               <button
+                v-if="isAdmin"
                 type="button"
                 class="btn btn-sm btn-danger flex-shrink-0"
                 @click="deleteInterval(interval.uuid)"
@@ -97,10 +99,6 @@
         <i class="material-icons align-middle me-2">add_circle</i>
         {{ $t('system_settings.interval.add') }}
       </button>
-      <div v-else class="alert alert-info" role="alert">
-        <i class="material-icons align-middle me-1" style="font-size: 18px;">info</i>
-        最大2つまでのサンプリング設定が可能です。
-      </div>
     </div>
 
     <!-- Footer -->
@@ -130,6 +128,7 @@
  * Imports
  * -------------------------------------- */
 import { ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import type { SamplingInterval } from '@monitoring/shared/model';
 import { 
   getSamplingIntervals, 
@@ -138,6 +137,7 @@ import {
   deleteSamplingInterval as deleteSamplingIntervalAPI
 } from '@/api/systemSettingAPI';
 import { useSystemSettingStore } from '@/pinia/systemSettingStore';
+import { useUiStore } from '@/pinia/uiStore';
 
 import BaseModal from "@/components/BaseModal.vue";
 
@@ -151,6 +151,7 @@ const props = defineProps<{
 const emit = defineEmits(['close']);
 
 const systemSettingStore = useSystemSettingStore();
+const { isAdmin } = storeToRefs(useUiStore());
 
 /* --------------------------------------
  * Reactive State

@@ -24,7 +24,6 @@ export async function getTrendData(req: Request, res: Response) {
 
     // トレンドデータ取得処理
     const trendData = await dataSaveService.getTrendData(trendDataRequest);
-    console.log('Trend data fetched successfully:', trendData);
     res.json(trendData);
     return;
 };

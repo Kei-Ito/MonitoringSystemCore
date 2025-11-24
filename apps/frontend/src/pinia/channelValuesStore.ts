@@ -182,6 +182,16 @@ export const useChannelValuesStore = defineStore("channelValues", {
         clear() {
             this.channelValues = {};
         },
+
+        /**
+         * 全チャンネルの時系列データをクリア
+         */
+        clearAllTimeSeries() {
+            Object.values(this.channelValues).forEach(channel => {
+                channel.timeSeries = markRaw([]);
+                channel.dataVersion++;
+            });
+        },
         
         // ----- Private methods -----
         

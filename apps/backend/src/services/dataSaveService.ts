@@ -345,7 +345,6 @@ function getDateRangeList(startDate: Date, endDate: Date): Date[] {
  * @returns タイムスタンプと値の配列
  */
 export async function getTrendData(trendDataRequest: trendDataRequest): Promise<{ timestamp: Date; value: number }[]> {
-    console.log('Fetching trend data from files...');
 
     const startDate = new Date(trendDataRequest.start_time);
     const endDate = new Date(trendDataRequest.end_time);

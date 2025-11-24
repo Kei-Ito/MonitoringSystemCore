@@ -10,7 +10,6 @@
       <navbar 
         ref="navbarRef"
         :class="[isNavFixed ? navbarFixed : '', isAbsolute ? absolute : '']"
-        :color="isAbsolute ? 'text-white opacity-8' : ''" 
         :minNav="navbarMinimize" 
         v-if="showNavbar"
         @show-date-range-picker="handleShowDateRangePicker" 
