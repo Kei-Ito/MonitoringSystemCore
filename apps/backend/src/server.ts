@@ -9,6 +9,7 @@ import trendDataRoutes from './routes/trendDataRouters.js';
 import chartRoutes from './routes/chartRouters.js';
 import uiRouters from './routes/uiRouters';
 import systemSettingRoutes from './routes/systemSettingRouters.js';
+import systemRoutes from './routes/systemRouters.js';
 import { getIsSamplingIntervalRunning } from './services/IOModuleService.js';
 import { initializeIOModules } from './services/IOModuleService.js';
 import { initializeLayouts } from './services/uiService.js';
@@ -67,6 +68,7 @@ async function bootstrap() {
   app.use('/api/chart', chartRoutes); // グラフ関連のAPI
   app.use('/api/system_setting', systemSettingRoutes); // システム設定関連のAPI
   app.use('/api/ui', uiRouters); // UIレイアウト関連のAPI
+  app.use('/api/system', systemRoutes); // システム制御関連のAPI
 
   // システム設定の初期化
   const configService = SystemSettingService.getInstance();
