@@ -127,7 +127,7 @@ const dialogClass = computed(() => {
 
 .modal-body {
   padding: 1.5rem;
-  max-height: 70vh;
+  max-height: 65vh;
   overflow-y: auto;
 }
 
