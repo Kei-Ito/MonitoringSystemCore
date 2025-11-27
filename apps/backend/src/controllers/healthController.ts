@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import HealthCheckService from '../services/healthCheckService.js';
+import { Request, Response, RequestHandler } from 'express';
+import HealthCheckService from '../services/healthCheckService';
 import type { HealthCheckResponse } from '@monitoring/shared/api';
 
 /**
  * システムヘルスチェック
  */
-export async function getHealthCheck(req: Request, res: Response) {
+export const getHealthCheck: RequestHandler = async (req: Request, res: Response) => {
   try {
     const healthService = HealthCheckService.getInstance();
     
@@ -19,10 +19,10 @@ export async function getHealthCheck(req: Request, res: Response) {
       data: healthStatus
     };
     
-    return res.json(response);
+    res.json(response);
   } catch (error) {
     console.error('Health check error:', error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       error: 'Health check failed'
     });

@@ -38,8 +38,6 @@ T extends IOModuleTypes
 
 function GenerateIOModule<S extends{},T extends{},U extends{}>(IOModuleDatas: databaseModuleTableModel, specificDeviceSetting:S,InputChannels: IChannelSetting<T>[], OutputChannels: IChannelSetting<U>[]): IOModule {
   let module :IOModule = createModuleForInitialization(IOModuleDatas.module_uuid, IOModuleDatas.module_name, IOModuleDatas.module_type);
-  module.module_uuid = IOModuleDatas.module_uuid;
-  module.module_type=IOModuleDatas.module_type;
   module.module_name=IOModuleDatas.module_name;
   module.status = IOModuleStatus.Unknown;
   module.input_channel_num = InputChannels.length;
@@ -49,8 +47,6 @@ function GenerateIOModule<S extends{},T extends{},U extends{}>(IOModuleDatas: da
   module.specific_device_setting = specificDeviceSetting;
   module.input_channels = InputChannels;
   module.output_channels = OutputChannels;
-  module.is_editable_input_channel = IOModuleDatas.is_editable_input_channel;
-  module.is_editable_output_channel = IOModuleDatas.is_editable_output_channel;
 
   return module;
 }
@@ -74,21 +70,30 @@ function ChannelFactory_from_Database<T>(ChannelDatas: databaseChannelTableModel
     const spiecific_channel_setting: T = JSON.parse(channel_data.specific_channel_setting);
     const channel: IChannelSetting<T> = {
       module_uuid: channel_data.module_uuid,
-      channel_id: channel_data.channel_id,
+      channel_uuid: `${channel_data.module_uuid}-${channel_data.channel_id}`,
       channel_name: channel_data.channel_name,
       direction: channel_data.direction,
       channel_number: channel_data.channel_number,
       unit: channel_data.unit,
       decimals: channel_data.decimals,
-      src_min: channel_data.src_min,
-      src_max: channel_data.src_max,
-      dst_min: channel_data.dst_min,
-      dst_max: channel_data.dst_max,
-      min_threshold: channel_data.min_threshold,
-      max_threshold: channel_data.max_threshold,
+      sampling_interval_uuid: "",
+      normalize: {
+        is_enabled: false,
+        src_min: channel_data.src_min,
+        src_max: channel_data.src_max,
+        dst_min: channel_data.dst_min,
+        dst_max: channel_data.dst_max,
+      },
+      threshold: {
+        warning_min_threshold: channel_data.min_threshold !== null ? channel_data.min_threshold : null,
+        warning_max_threshold: channel_data.max_threshold !== null ? channel_data.max_threshold : null,
+        alert_min_threshold: null,
+        alert_max_threshold: null,
+      },
       created_at: channel_data.created_at,
       updated_at: channel_data.updated_at,
-      specific_channel_setting: spiecific_channel_setting
+      specific_channel_setting: spiecific_channel_setting,
+      save_rawdata: true,
     };
     channelSettings.push(channel);
   }

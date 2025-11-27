@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, RequestHandler } from 'express';
 import { SystemSettingService } from 'src/config/SystemSetting';
 import { restartSampling } from 'src/services/IOModuleService';
 import { SystemSettingData, SamplingInterval } from '@monitoring/shared/model';
@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const systemSettingService = SystemSettingService.getInstance();
 
-export async function getSystemSetting(req: Request, res: Response) {
+export const getSystemSetting: RequestHandler = async (req: Request, res: Response) => {
   try {
     const systemSetting:SystemSettingData = systemSettingService.getSystemSetting();
     res.json(systemSetting);
@@ -19,7 +19,7 @@ export async function getSystemSetting(req: Request, res: Response) {
 /**
  * サンプリングインターバル一覧を取得
  */
-export async function getSamplingIntervals(req: Request, res: Response) {
+export const getSamplingIntervals: RequestHandler = async (req: Request, res: Response) => {
   try {
     const systemSetting: SystemSettingData = systemSettingService.getSystemSetting();
     res.json(systemSetting.samplingIntervals || []);
@@ -31,12 +31,13 @@ export async function getSamplingIntervals(req: Request, res: Response) {
 /**
  * サンプリングインターバルを追加
  */
-export async function addSamplingInterval(req: Request<{},{},{name: string, period: number}>, res: Response) {
+export const addSamplingInterval: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const { name, period } = req.body;
+    const { name, period } = req.body as {name: string, period: number};
     
     if (!name || !period || period <= 0) {
-      return res.status(400).json({ message: '名前と周期が必要です' });
+      res.status(400).json({ message: '名前と周期が必要です' });
+      return;
     }
     
     const systemSetting = systemSettingService.getSystemSetting();
@@ -48,7 +49,8 @@ export async function addSamplingInterval(req: Request<{},{},{name: string, peri
     
     // 2つのインターバルが既に存在する場合はエラー
     if (systemSetting.samplingIntervals.length >= 2) {
-      return res.status(400).json({ message: 'サンプリングインターバルは最大2個までです' });
+      res.status(400).json({ message: 'サンプリングインターバルは最大2個までです' });
+      return;
     }
     
     await systemSettingService.setSystemSetting({
@@ -68,24 +70,27 @@ export async function addSamplingInterval(req: Request<{},{},{name: string, peri
 /**
  * サンプリングインターバルを更新
  */
-export async function updateSamplingInterval(req: Request<{uuid: string},{},{name?: string, period?: number}>, res: Response) {
+export const updateSamplingInterval: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const { uuid } = req.params;
-    const { name, period } = req.body;
+    const { uuid } = req.params as { uuid: string };
+    const { name, period } = req.body as {name?: string, period?: number};
     
     if (!name && !period) {
-      return res.status(400).json({ message: '更新する項目がありません' });
+      res.status(400).json({ message: '更新する項目がありません' });
+      return;
     }
     
     if (period !== undefined && period <= 0) {
-      return res.status(400).json({ message: '周期は0より大きい値です' });
+      res.status(400).json({ message: '周期は0より大きい値です' });
+      return;
     }
     
     const systemSetting = systemSettingService.getSystemSetting();
     const intervalIndex = systemSetting.samplingIntervals.findIndex(i => i.uuid === uuid);
     
     if (intervalIndex === -1) {
-      return res.status(404).json({ message: 'サンプリングインターバルが見つかりません' });
+      res.status(404).json({ message: 'サンプリングインターバルが見つかりません' });
+      return;
     }
     
     const updatedInterval: SamplingInterval = {
@@ -114,20 +119,22 @@ export async function updateSamplingInterval(req: Request<{uuid: string},{},{nam
 /**
  * サンプリングインターバルを削除
  */
-export async function deleteSamplingInterval(req: Request<{uuid: string}>, res: Response) {
+export const deleteSamplingInterval: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const { uuid } = req.params;
+    const { uuid } = req.params as { uuid: string };
     
     const systemSetting = systemSettingService.getSystemSetting();
     
     if (systemSetting.samplingIntervals.length <= 1) {
-      return res.status(400).json({ message: '最低1個のサンプリングインターバルが必要です' });
+      res.status(400).json({ message: '最低1個のサンプリングインターバルが必要です' });
+      return;
     }
     
     const filteredIntervals = systemSetting.samplingIntervals.filter(i => i.uuid !== uuid);
     
     if (filteredIntervals.length === systemSetting.samplingIntervals.length) {
-      return res.status(404).json({ message: 'サンプリングインターバルが見つかりません' });
+      res.status(404).json({ message: 'サンプリングインターバルが見つかりません' });
+      return;
     }
     
     // 削除されたインターバルを使用しているチャンネルのチェックはフロントエンドで行うことを想定
