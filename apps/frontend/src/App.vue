@@ -28,6 +28,7 @@
     :show="showDriveMountWarning"
     :drivePath="driveMountPath"
     @shutdown="handleShutdown"
+    @reload="handleReload"
   />
 
 </template>
@@ -109,6 +110,12 @@ async function handleShutdown() {
     console.error('Shutdown error:', error);
     toast.error("シャットダウンリクエストの送信に失敗しました");
   }
+}
+
+// 画面再読み込み処理
+function handleReload() {
+  // キャッシュを無視して強制的に再読み込み
+  window.location.reload();
 }
 
 </script>

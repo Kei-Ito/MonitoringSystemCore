@@ -65,7 +65,7 @@
                                 </div>
                             </td>
                             <td>
-                                <p class="text-s font-weight-bold mb-0">30日</p>
+                                <p class="text-s font-weight-bold mb-0">1年</p>
                             </td>
                             <td>
                                 <p class="text-xs text-secondary mb-0">{{

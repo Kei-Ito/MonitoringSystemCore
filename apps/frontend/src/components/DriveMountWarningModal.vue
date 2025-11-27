@@ -18,7 +18,7 @@
         <hr>
         <p class="mb-0">
           データ保存用ドライブにアクセスできないため、システムは正常に動作しません。<br>
-          ドライブを正しく接続し、システムを再起動してください。
+          ドライブを正しく接続し、システムを再読み込みしてください。
         </p>
       </div>
 
@@ -29,21 +29,30 @@
         </h6>
         <ol class="mb-0">
           <li>データ保存用ドライブが正しく接続されているか確認してください</li>
-          <li>正しく接続されていなかった場合、再接続後にシステムを再起動してください</li>
-          <li>再起動後も認識されない場合、ドライブを別のPCへ接続し、動作を確認してください</li>
-          <li>問題が解決しない場合は、システム管理者に連絡してください</li>
+          <li>正しく接続されていなかった場合、再接続後に再読み込みを行ってください</li>
+          <li>再読み込み後もドライブが認識されない場合、ドライブを別のPCへ接続し、動作を確認してください</li>
+          <li>問題が解決しない場合は、シャットダウンを行いシステム管理者に連絡してください</li>
         </ol>
       </div>
     </div>
 
     <template #footer>
-      <button 
-        class="btn btn-danger d-flex align-items-center"
-        @click="handleShutdown"
-      >
-        <span class="material-icons me-2">power_settings_new</span>
-        システムをシャットダウン
-      </button>
+      <div class="d-flex gap-3 justify-content-end w-100">
+        <button 
+          class="btn btn-info d-flex align-items-center"
+          @click="handleReload"
+        >
+          <span class="material-icons me-2">refresh</span>
+          再読み込み
+        </button>
+        <button 
+          class="btn btn-danger d-flex align-items-center"
+          @click="handleShutdown"
+        >
+          <span class="material-icons me-2">power_settings_new</span>
+          システムをシャットダウン
+        </button>
+      </div>
     </template>
   </BaseModal>
 </template>
@@ -62,11 +71,15 @@ defineProps({
   }
 });
 
-const emit = defineEmits(['close', 'shutdown']);
+const emit = defineEmits(['close', 'shutdown', 'reload']);
 
 const handleClose = () => {
   // ドライブ未マウント時はモーダルを閉じない
   // emit('close');
+};
+
+const handleReload = () => {
+  emit('reload');
 };
 
 const handleShutdown = () => {
@@ -161,7 +174,8 @@ const handleShutdown = () => {
   color: #495057;
 }
 
-.btn-danger {
+.btn-danger,
+.btn-info {
   font-weight: 600;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
@@ -171,6 +185,11 @@ const handleShutdown = () => {
 .btn-danger:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-info:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
 }
 
 .material-icons.align-middle {
