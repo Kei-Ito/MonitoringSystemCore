@@ -98,7 +98,7 @@ const optionBuilder = () => {
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
         tooltip: { trigger: 'axis', axisPointer: { type: 'line' } }, // ← 1箇所に統一
-        xAxis: { type: 'time', boundaryGap: false, axisLabel: { formatter: formatTime }},
+        xAxis: { type: 'time', boundaryGap: ['0%', '0%'], axisLabel: { formatter: formatTime }},
         yAxis: { type: 'value' ,min:minY??undefined,max:maxY??undefined},
         dataZoom: [{ type: 'inside', start: 0, end: 100 }, { start: 0, end: 100 }],
         visualMap: visualMaps,                                    // ← 配列で渡す

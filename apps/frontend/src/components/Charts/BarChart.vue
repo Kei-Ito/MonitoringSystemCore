@@ -116,7 +116,7 @@ const optionBuilder = () => {
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
         tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        xAxis: { type: 'time', boundaryGap: true, axisLabel: { formatter: dateFormatter }},
+        xAxis: { type: 'time', boundaryGap: ['10%', '10%'], axisLabel: { formatter: dateFormatter }},
         yAxis: { type: 'value' ,min:minY??undefined,max:maxY??undefined},
         dataZoom: [{ type: 'inside', start: 0, end: 100 }, { start: 0, end: 100 }],
         visualMap: visualMaps,                                    // ← 配列で渡す

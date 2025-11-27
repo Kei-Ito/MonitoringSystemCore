@@ -148,7 +148,7 @@ const props = defineProps<{
   visible: boolean;
 }>();
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'update']);
 
 const systemSettingStore = useSystemSettingStore();
 const { isAdmin } = storeToRefs(useUiStore());
@@ -218,6 +218,7 @@ async function save() {
 
   // 元の値を更新
   originalIntervals.value = JSON.parse(JSON.stringify(intervals.value));
+  emit('update');
   emit('close');
 }
 
