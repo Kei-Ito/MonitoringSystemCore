@@ -9,7 +9,8 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "lint": "vue-tsc -p ./tsconfig.json --noEmit && eslint .",
-    "fix": "eslint . --fix"
+    "fix": "eslint . --fix",
+    "test": "vitest"
   },
   "dependencies": {
     "@monitoring/shared": "workspace:*",
@@ -28,10 +29,14 @@
     "vue-toastification": "2.0.0-rc.5"
   },
   "devDependencies": {
+    "@pinia/testing": "^1.0.3",
     "@types/bootstrap": "^5.2.10",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-vue": "^5.2.2",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
+    "happy-dom": "^20.0.10",
+    "jsdom": "^27.2.0",
     "sass": "^1.87.0",
     "sass-embedded": "^1.87.0",
     "sass-migrator": "^2.3.1",
@@ -40,6 +45,7 @@
     "vite-plugin-mock": "^3.0.2",
     "vite-plugin-pwa": "^1.0.0",
     "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.0.13",
     "vue-tsc": "^2.2.8"
   }
 }

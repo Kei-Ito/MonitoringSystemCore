@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import type { ChannelSeries,ChartConfig } from '@monitoring/shared/model'
-import { computed,toRef } from 'vue'
+import { computed,toRef, watch } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
 
@@ -11,10 +11,17 @@ import { useEChart } from '@/components/Charts/useEChart'
 const props = defineProps<{
     chart: ChartConfig
     series: ChannelSeries[]
+    loading?: boolean
 }>()
 
 const seriesData = computed(() =>
   props.series.map((s) => {
+    // dataVersion にアクセスしてリアクティブな依存関係を作成する
+    // timeSeriesはmarkRawで非リアクティブ化されているため、
+    // このアクセスがないと配列の中身が変わっても再計算が走らない
+    const _version = (s as any).dataVersion;
+    void _version;
+
     const data = s.timeSeries ?? [];
     if (!data.length) return [];
     return [...data]
@@ -32,8 +39,8 @@ const defaultPalette = [
   '#73c0de','#3ba272','#fc8452','#9a60b4','#ea7ccc'
 ]
 
-const seriesRef = toRef(props, 'series')
 const chartRef = toRef(props, 'chart')
+let isDataZoomInitialized = false
 
 
 function formatTime(value: string | number): string {
@@ -92,18 +99,42 @@ const optionBuilder = () => {
         : null
 
 
-     return {
+     const option: any = {
         animation: false,
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
         tooltip: { trigger: 'axis', axisPointer: { type: 'line' } }, // ← 1箇所に統一
-        xAxis: { type: 'time', boundaryGap: false, axisLabel: { formatter: formatTime }},
+        xAxis: { type: 'time', boundaryGap: ['0%', '0%'], axisLabel: { formatter: formatTime }},
         yAxis: { type: 'value' ,min:minY??undefined,max:maxY??undefined},
-        dataZoom: [{ type: 'inside', start: 0, end: 100 }, { start: 0, end: 100 }],
         visualMap: visualMaps,                                    // ← 配列で渡す
         series: [...lineSeries, ...(thresholdLineSeries ? [thresholdLineSeries] : [])] // ← 上書きしない
     }
+
+    if (!isDataZoomInitialized) {
+        option.dataZoom = [{ type: 'inside', start: 0, end: 100 }, { start: 0, end: 100 }]
+        isDataZoomInitialized = true
+    }
+
+    return option
 }
 // ----- EChartsをマウント -----
-const { el } = useEChart(optionBuilder, [seriesRef, chartRef])
+// seriesRef (props.series) の代わりに seriesData (computed) を監視対象にする
+// seriesData は timeSeries の変更(push)を検知して新しい配列を返すため、watch が発火する
+const { el, chart } = useEChart(optionBuilder, [seriesData, chartRef])
+
+watch([() => props.loading, chart], ([loading, chartInstance]) => {
+    if (chartInstance) {
+        if (loading) {
+            chartInstance.showLoading({
+                text: 'Loading...',
+                color: '#ffffff',
+                textColor: '#ffffff',
+                maskColor: 'rgba(0, 0, 0, 0.4)',
+                zlevel: 0
+            })
+        } else {
+            chartInstance.hideLoading()
+        }
+    }
+}, { immediate: true })
 </script>

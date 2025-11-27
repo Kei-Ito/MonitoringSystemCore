@@ -44,15 +44,13 @@
                                     </div>
                                 </div>
                             </td>
-                            <td>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <ClockView />
-                                    <a class="btn btn-link text-dark px-3 mb-0 " @click="showModal">
-                                        <i class="material-icons-round " aria-hidden="true">edit</i>
-                                    </a>
-                                </div>
+                            <td class="align-middle ps-2">
+                                <button class="btn btn-outline-secondary btn-sm d-flex align-items-center" @click="showModal">
+                                    <i class="material-icons me-2" style="font-size: 18px;">edit</i>
+                                    {{ $t('system_settings.edit_sampling_intervals') }}
+                                </button>
                             </td>
-                            <td>
+                            <td class="align-middle">
                                 <p class="text-xs text-secondary mb-0">{{
                                     $t('system_settings.descriptions.sampling_clock') }}</p>
                             </td>
@@ -102,7 +100,6 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import ClockView from "@/components/ClockView.vue";
 import ColorSelector from "@/components/ColorSelector.vue";
 import LanguageSelector from "@/components/Selector/LanguageSelector.vue";
 import { useUiStore } from "@/pinia/uiStore";

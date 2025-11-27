@@ -1,20 +1,14 @@
 <template>
-  <div class="py-4 container-fluid  min-vh-70">
-    <!--
-    <div class="row mb-4">
-      <trend-nav-bar-card />
-    </div>
-    -->
-
+  <div class="container-fluid  min-vh-70">
     <GridLayout
       v-model:layout="layoutModel"
       :col-num="12"
       :row-height="30"
-      :is-draggable="isAdmin"
-      :is-resizable="isAdmin"
+      :is-draggable="isLayoutEditMode"
+      :is-resizable="isLayoutEditMode"
       :vertical-compact="true"
       :use-css-transforms="true"
-      :class="isAdmin ? 'vue-grid-layout-style' : ''"
+      :class="isLayoutEditMode ? 'vue-grid-layout-style' : ''"
     >
       <GridItem
         v-for="(item) in layoutModel"
@@ -25,93 +19,211 @@
         :w="item.w"
         :h="item.h"
         :i="item.i"
-        :class="isAdmin ? 'p-2 vue-grid-item-style' : ''"
+        :class="isLayoutEditMode ? 'p-2 vue-grid-item-style' : ''"
       >
         <ChartHolderCard
           :chart="trendCharts[item.i]"
+          mode="trend"
         />
       </GridItem>
     </GridLayout>
+    <div class="row mb-4">
+      <div class="col-12" style="height: 400px;">
+        <DummyBarChartCard />
+      </div>
+    </div>
+    <div class="row mb-4">
+      <div class="col-12" style="height: 400px;">
+        <DummyAreaLineChartCard  />
+      </div>
+    </div>
 
-    <date-picker-modal
-      :show="isModalVisible"
-      @close="hideModal"
-      @date-selected="updateDate"
+    <date-range-picker-modal
+      :show="isDateRangeModalVisible"
+      :start-date="selectedDateRange.startDate"
+      :end-date="selectedDateRange.endDate"
+      :initial-is-realtime="trendStore.isRealtimeMode"
+      @close="hideDateRangePicker"
+      @date-range-selected="updateDateRange"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed,onMounted,onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, watch, nextTick, onActivated, onDeactivated } from 'vue';
 import { storeToRefs } from 'pinia';
 import { GridItem, GridLayout } from 'vue-grid-layout-v3';
+import type { GridLayout as GridLayoutType } from '@monitoring/shared/model';
 
 import { useUiStore } from '@/pinia/uiStore';
 import { useChartStore } from '@/pinia/chartStore';
-import { useChannelValuesStore } from '@/pinia/channelValuesStore';
+import { useTrendStore } from '@/pinia/trendStore';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
-import { getTrendData,cancelTrendDataRequests } from '@/service/trendDataService';
-import DatePickerModal from '@/components/DatePickerModal.vue';
+import DummyBarChartCard from '@/components/Cards/DummyBarChartCard.vue';
+import DummyAreaLineChartCard from '@/components/Cards/DummyAreaLineChartCard.vue';
+import DateRangePickerModal from '@/components/DateRangePickerModal.vue';
+
+// KeepAliveのinclude="Trend"と一致させるために明示的に名前を定義
+defineOptions({
+  name: 'Trend'
+});
+
+const emit = defineEmits<{
+  'update-navbar-date-range': [{ text: string; callback: () => void }];
+}>();
 
 const chartStore = useChartStore();
 const { trendCharts } = storeToRefs(chartStore);
-const channelValuesStore = useChannelValuesStore();
+const trendStore = useTrendStore();
 
 const uiStore = useUiStore();
-const { isAdmin, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
+const { isLayoutEditMode, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
+const { selectedDateRange, isRealtimeMode } = storeToRefs(trendStore);
 
-const layoutModel = computed({
-  get: () => chartStore.gridLayoutsFilteredByPage("trend", trendViewCategory1Selected.value, trendViewCategory2Selected.value),
-  set: (newLayouts) => {
-    //TODO : 非表示中のグラフのレイアウトを更新しないようにするか検討
-    newLayouts.forEach((l) => chartStore.patchGrid(l));
+const layoutModel = ref<GridLayoutType[]>([]);
+const isUpdatingFromStore = ref(false);
+const isPageActive = ref(true);
+
+// 日付変更監視用
+let dateCheckInterval: number | undefined;
+
+function startDateChangeCheck() {
+  if (dateCheckInterval) return;
+  
+  // 1分ごとに日付変更をチェック
+  dateCheckInterval = window.setInterval(() => {
+    trendStore.checkDateChange();
+  }, 60000);
+  
+  // 開始時にも一度チェック
+  trendStore.checkDateChange();
+}
+
+function stopDateChangeCheck() {
+  if (dateCheckInterval) {
+    clearInterval(dateCheckInterval);
+    dateCheckInterval = undefined;
+  }
+}
+
+// ストアのデータ変更を監視してローカルのlayoutModelに反映
+watch(
+  () => chartStore.gridLayoutsFilteredByPage("trend", trendViewCategory1Selected.value, trendViewCategory2Selected.value),
+  (newVal) => {
+    // ページが非表示の間はレイアウト更新処理をスキップしてメモリ/CPUを節約
+    if (!isPageActive.value) return;
+
+    isUpdatingFromStore.value = true;
+    layoutModel.value = JSON.parse(JSON.stringify(newVal));
+    nextTick(() => {
+      isUpdatingFromStore.value = false;
+    });
   },
-});
+  { immediate: true, deep: true }
+);
 
-onMounted(async () => {
-  const channel_uuid_list = new Set<string>();
-  // チャートで使用しているチャンネルの一覧を取得
-  Object.keys(trendCharts.value).forEach((key) => {
-    const chart = trendCharts.value[key];
-    if (chart.channel_uuids && chart.channel_uuids.length > 0) {
-      chart.channel_uuids.forEach((uuid) => channel_uuid_list.add(uuid));
+// ローカルのlayoutModelの変更を監視して、編集モード時のみストアに保存
+watch(
+  layoutModel,
+  (newVal) => {
+    if (isUpdatingFromStore.value) return;
+
+    if (isLayoutEditMode.value) {
+      newVal.forEach((l) => chartStore.patchGrid(l));
     }
-  });
+  },
+  { deep: true }
+);
 
-  channelValuesStore.prune(channel_uuid_list);
+// 日付範囲の状態管理
+// selectedDateRangeはtrendStoreで管理
 
-  for (const uuid of channel_uuid_list) {
-    // チャンネルのUUIDを使ってトレンドデータを取得
-    await getTrendData(uuid, new Date(), new Date());
+const isDateRangeModalVisible = ref(false);
+
+// 日付範囲のテキスト表示
+const dateRangeText = computed(() => {
+  if (isRealtimeMode.value) {
+    return "リアルタイム (当日)";
+  }
+
+  const start = selectedDateRange.value.startDate;
+  const end = selectedDateRange.value.endDate;
+  
+  const formatDate = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}/${month}/${day}`;
+  };
+  
+  const startStr = formatDate(start);
+  const endStr = formatDate(end);
+  
+  // 同じ日の場合は1つだけ表示
+  if (startStr === endStr) {
+    return startStr;
   }
   
+  return `${startStr} - ${endStr}`;
 });
 
-const now = new Date();
-const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-const nextDay = new Date(today);
-nextDay.setDate(nextDay.getDate() + 1);
-
-const isModalVisible = ref(false);
-const selectedDate = ref({ startDate: today, endDate: nextDay });
-
-function hideModal() {
-  isModalVisible.value = false;
+function showDateRangePicker() {
+  isDateRangeModalVisible.value = true;
 }
 
-function updateDate(date: any) {
-  const d = new Date(date);
-  const start = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  selectedDate.value = { startDate: start, endDate: end };
+function hideDateRangePicker() {
+  isDateRangeModalVisible.value = false;
 }
 
-onBeforeUnmount(()=>{
-  cancelTrendDataRequests();
-  channelValuesStore.prune(new Set());
-})
+function updateDateRange(payload: { isRealtime: boolean; startDate: Date; endDate: Date }) {
+  trendStore.setTrendCondition(payload.isRealtime, {
+    startDate: payload.startDate,
+    endDate: payload.endDate
+  });
+}
+
+// Navbarに日付範囲テキストとコールバックを通知
+function updateNavbarDateRange() {
+  emit('update-navbar-date-range', {
+    text: dateRangeText.value,
+    callback: showDateRangePicker
+  });
+}
+
+onMounted(async () => {
+  // Navbarに初期状態を通知
+  updateNavbarDateRange();
+  startDateChangeCheck();
+});
+
+onActivated(() => {
+  isPageActive.value = true;
+  // KeepAliveでキャッシュから復帰した際にもNavbarを更新
+  updateNavbarDateRange();
+  startDateChangeCheck();
+
+  // 復帰時に最新のレイアウト情報をストアから強制的に同期
+  // (非表示中にスキップしていた更新をここで反映)
+  const currentLayout = chartStore.gridLayoutsFilteredByPage("trend", trendViewCategory1Selected.value, trendViewCategory2Selected.value);
+  if (currentLayout) {
+    isUpdatingFromStore.value = true;
+    layoutModel.value = JSON.parse(JSON.stringify(currentLayout));
+    nextTick(() => {
+      isUpdatingFromStore.value = false;
+    });
+  }
+});
+
+onDeactivated(() => {
+  isPageActive.value = false;
+  stopDateChangeCheck();
+});
+
+// 日付範囲が変更されたらNavbarに通知
+watch([dateRangeText, isRealtimeMode], () => {
+  updateNavbarDateRange();
+});
 
 </script>
 <style scoped>

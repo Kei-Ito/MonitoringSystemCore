@@ -59,6 +59,7 @@ export function createInputChannelForInitialization(module_uuid: string,module_t
         unit: "",
         channel_number: -1,
         decimals: 2,
+        sampling_interval_uuid: "", // デフォルトは空文字列
         normalize:{
             is_enabled: false,
             src_min: 0,
@@ -75,6 +76,7 @@ export function createInputChannelForInitialization(module_uuid: string,module_t
         specific_channel_setting: handler.createDefaultSpecificInputChannelSetting(),
         created_at: new Date(),
         updated_at: new Date(),
+        save_rawdata: true,
     }
 }
 
@@ -101,6 +103,7 @@ export function createOutputChannelForInitialization(module_uuid: string,module_
         unit: "",
         channel_number: -1,
         decimals: 2,
+        sampling_interval_uuid: "", // デフォルトは空文字列
         normalize:{
             is_enabled: false,
             src_min: 0,
@@ -117,6 +120,7 @@ export function createOutputChannelForInitialization(module_uuid: string,module_
         specific_channel_setting: handler.createDefaultSpecificOutputChannelSetting(),
         created_at: new Date(),
         updated_at: new Date(),
+        save_rawdata: false,
     }
 }
 

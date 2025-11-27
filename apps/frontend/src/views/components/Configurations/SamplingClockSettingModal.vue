@@ -1,258 +1,437 @@
 <template>
-    <div class="modal" tabindex="-1" role="dialog" v-if="visible">
-      <div class="modal-dialog" role="document" style="max-width: 80%;">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5>{{ $t('system_settings.sampling_clock') }}</h5>
-          </div>
-          <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-            <!-- 時間を入力 -->
-            <div class="modal-body d-flex justify-content-between align-items-center mx-4">
-              <div class="d-flex align-items-center" style="flex-direction: column;">
-                <small>{{ $t('system_settings.clock.hour') }}</small>
+  <BaseModal
+    :show="visible"
+    :title="$t('system_settings.sampling_clock')"
+    size="modal-xl"
+    maxWidth="80%"
+    @close="close"
+  >
+    <!-- Body -->
+    <div>
+      <!-- サンプリングインターバル一覧 -->
+      <div class="row">
+        <div v-for="interval in intervals" :key="interval.uuid" class="col-12 col-xl-6 mb-4">
+          <div class="interval-item h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="flex-grow-1 me-3">
+                <div class="editable-name-wrapper">
+                  <i class="material-icons align-middle me-2 edit-icon">edit</i>
+                  <input
+                    type="text"
+                    class="form-control form-control-lg form-control-prominent editable-name-input fs-4"
+                    v-model="interval.name"
+                    placeholder="サンプリング設定の名前を入力"
+                  />
+                </div>
+              </div>
+              <!-- 削除ボタン(管理者のみ表示) -->
+              <button
+                v-if="isAdmin"
+                type="button"
+                class="btn btn-sm btn-danger flex-shrink-0"
+                @click="deleteInterval(interval.uuid)"
+                :disabled="intervals.length <= 1"
+              >
+                <i class="material-icons">delete</i>
+                {{ $t('modal_window.delete') }}
+              </button>
+            </div>
+            
+            <!-- 時間入力 -->
+            <div class="mb-2">
+              <label class="form-label fw-bold">
+                <i class="material-icons align-middle me-1" style="font-size: 18px;">schedule</i>
+                サンプリング周期
+              </label>
+            </div>
+            <div class="d-flex justify-content-center align-items-center mx-4 time-inputs">
+              <div class="time-input-group">
+                <label class="time-label">{{ $t('system_settings.clock.hour') }}</label>
                 <input
-                  id="time-hours"
                   type="number"
-                  v-model.number="timHoursStr"
+                  class="form-control form-control-lg text-center"
+                  v-model.number="interval.hours"
                   min="0"
                   max="24"
                   required
                 />
               </div>
-              <!-- コロン -->
-              <label style="align-self: flex-end;">:</label>
-              <div
-                class="d-flex align-items-center"
-                style="display: flex; flex-direction: column; align-items: center;"
-              >
-                <small>{{ $t('system_settings.clock.minute') }}</small>
+              <span class="time-separator">:</span>
+              <div class="time-input-group">
+                <label class="time-label">{{ $t('system_settings.clock.minute') }}</label>
                 <input
-                  id="time-minutes"
                   type="number"
-                  v-model.number="timMinutesStr"
+                  class="form-control form-control-lg text-center"
+                  v-model.number="interval.minutes"
                   min="0"
                   max="60"
                   required
                 />
               </div>
-              <!-- コロン -->
-              <label style="align-self: flex-end;">:</label>
-              <div
-                class="d-flex align-items-center"
-                style="display: flex; flex-direction: column; align-items: center;"
-              >
-                <small>{{ $t('system_settings.clock.second') }}</small>
+              <span class="time-separator">:</span>
+              <div class="time-input-group">
+                <label class="time-label">{{ $t('system_settings.clock.second') }}</label>
                 <input
-                  id="time-seconds"
                   type="number"
-                  v-model.number="timeSecondsStr"
+                  class="form-control form-control-lg text-center"
+                  v-model.number="interval.seconds"
                   min="0"
                   max="60"
                   required
                 />
               </div>
             </div>
-            <span v-if="isError" class="error-message"
-              >サンプリング周期は1秒以上に設定してください。</span
-            >
-          </div>
-  
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-primary"
-              @click="updateModule"
-              style="width: 110px;"
-            >
-              {{ $t('modal_window.update') }}
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="close"
-              style="width: 110px;"
-            >
-              {{ $t('modal_window.cancel') }}
-            </button>
+            <div v-if="interval.error" class="alert alert-danger mt-2" role="alert">
+              <i class="material-icons align-middle me-1" style="font-size: 18px;">error</i>
+              サンプリング周期は1秒以上に設定してください。
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- 新規追加ボタン（最大2個まで） -->
+      <button
+        v-if="intervals.length < 2"
+        type="button"
+        class="btn btn-success btn-lg w-100"
+        @click="addNewInterval"
+      >
+        <i class="material-icons align-middle me-2">add_circle</i>
+        {{ $t('system_settings.interval.add') }}
+      </button>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  /* --------------------------------------
-   * Imports
-   * -------------------------------------- */
-  import { storeToRefs } from 'pinia';
-  import { onMounted,ref, watch } from 'vue';
 
-  import { useMonitoringStore } from "@/pinia/monitoringStore";
-  import { updateSamplingInterval } from '@/service/monitoringService';
+    <!-- Footer -->
+    <template #footer>
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="save"
+        style="width: 110px;"
+      >
+        {{ $t('modal_window.update') }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        @click="close"
+        style="width: 110px;"
+      >
+        {{ $t('modal_window.cancel') }}
+      </button>
+    </template>
+  </BaseModal>
+</template>
   
-  /* --------------------------------------
-   * Props / Emits
-   * -------------------------------------- */
-  const props = defineProps<{
-    visible: boolean;
-  }>();
-  
-  // 親コンポーネントへイベントを送る
-  const emit =  defineEmits(['close', 'update'])
+<script setup lang="ts">
+/* --------------------------------------
+ * Imports
+ * -------------------------------------- */
+import { ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import type { SamplingInterval } from '@monitoring/shared/model';
+import { 
+  getSamplingIntervals, 
+  addSamplingInterval, 
+  updateSamplingInterval as updateSamplingIntervalAPI,
+  deleteSamplingInterval as deleteSamplingIntervalAPI
+} from '@/api/systemSettingAPI';
+import { useSystemSettingStore } from '@/pinia/systemSettingStore';
+import { useUiStore } from '@/pinia/uiStore';
 
-  const monitoringStore = useMonitoringStore();
-  
-  /* --------------------------------------
-   * Reactive State
-   * -------------------------------------- */
-  const timHoursStr = ref('');
-  const timMinutesStr = ref('');
-  const timeSecondsStr = ref('');
-  const isError = ref(false);
-  
-  const { samplingInterval } = storeToRefs(monitoringStore);
-  
-  /**
-   * モーダルを閉じる
-   */
-  function close() {
-    emit('close');
-  }
-  
-  /**
-   * 更新ボタン押下時の処理
-   */
-  function updateModule() {
-    isError.value = false;
-  
-    const hours = Number(timHoursStr.value);
-    const minutes = Number(timMinutesStr.value);
-    const seconds = Number(timeSecondsStr.value);
-  
-    // 0h0m0s は許可しない（最低1秒以上）
-    if (hours === 0 && minutes === 0 && seconds === 0) {
-      isError.value = true;
-      return;
+import BaseModal from "@/components/BaseModal.vue";
+
+/* --------------------------------------
+ * Props / Emits
+ * -------------------------------------- */
+const props = defineProps<{
+  visible: boolean;
+}>();
+
+const emit = defineEmits(['close', 'update']);
+
+const systemSettingStore = useSystemSettingStore();
+const { isAdmin } = storeToRefs(useUiStore());
+
+/* --------------------------------------
+ * Reactive State
+ * -------------------------------------- */
+interface IntervalViewModel extends SamplingInterval {
+  hours: number;
+  minutes: number;
+  seconds: number;
+  error: boolean;
+}
+
+const intervals = ref<IntervalViewModel[]>([]);
+const originalIntervals = ref<IntervalViewModel[]>([]);
+
+/* --------------------------------------
+ * Functions
+ * -------------------------------------- */
+
+/**
+ * モーダルを閉じる（変更を破棄）
+ */
+function close() {
+  // 元の値に戻す
+  intervals.value = JSON.parse(JSON.stringify(originalIntervals.value));
+  emit('close');
+}
+
+/**
+ * 保存してモーダルを閉じる
+ */
+async function save() {
+  // バリデーション
+  let hasError = false;
+  for (const interval of intervals.value) {
+    interval.error = false;
+    const period = serializeTime(interval.hours, interval.minutes, interval.seconds);
+    if (period === 0) {
+      interval.error = true;
+      hasError = true;
     }
-  
-    const milliseconds = serializeTime({ hours, minutes, seconds });
-  
-    updateSamplingInterval(milliseconds);
-  
-    // 親コンポーネントにも更新値を通知
-    emit('update', milliseconds);
-    close();
   }
-  
-  /**
-   * システム設定のサンプリング周期を分解して { hours, minutes, seconds } 形式で返す
-   */
-  function deserializeTime(time: number) {
-    const hours = Math.floor(time / 1000 / 3600);
-    const minutes = Math.floor(((time / 1000) % 3600) / 60);
-    const seconds = (time / 1000) % 60;
-    return { hours, minutes, seconds };
+
+  if (hasError) {
+    return;
   }
-  
-  /**
-   * { hours, minutes, seconds } からミリ秒へ変換
-   */
-  function serializeTime({
-    hours,
-    minutes,
-    seconds,
-  }: {
-    hours: number;
-    minutes: number;
-    seconds: number;
-  }): number {
-    return (hours * 3600 + minutes * 60 + seconds) * 1000;
-  }
-  
-  /**
-   * 2桁ゼロ埋め
-   */
-  function padZero(num: number | string) {
-    return String(num).padStart(2, '0');
-  }
-  
-  /**
-   * store からサンプリング周期を取得し、timHoursStr などに反映
-   */
-  function syncClockWithStore() {
-    const { hours, minutes, seconds } = deserializeTime(samplingInterval.value);
-    timHoursStr.value = padZero(hours);
-    timMinutesStr.value = padZero(minutes);
-    timeSecondsStr.value = padZero(seconds);
-  }
-  
-  /* --------------------------------------
-   * Watchers
-   * -------------------------------------- */
-  // モーダル表示フラグが変わったら、store から時刻を再取得する
-  watch(
-    () => props.visible,
-    (newVal) => {
-      if (newVal) {
-        syncClockWithStore();
-        isError.value = false;
-      }
+
+  // 全てのインターバルを更新
+  for (const interval of intervals.value) {
+    const period = serializeTime(interval.hours, interval.minutes, interval.seconds);
+    const result = await updateSamplingIntervalAPI(interval.uuid, {
+      name: interval.name,
+      period
+    });
+    
+    // ストアも更新
+    if (result.ok) {
+      systemSettingStore.updateSamplingInterval({
+        uuid: interval.uuid,
+        name: interval.name,
+        period
+      });
     }
-  );
-  
-  // 常に2桁で表示されるよう監視
-  watch(timHoursStr, (newVal) => {
-    timHoursStr.value = padZero(newVal);
-  });
-  
-  watch(timMinutesStr, (newVal) => {
-    timMinutesStr.value = padZero(newVal);
-  });
-  
-  watch(timeSecondsStr, (newVal) => {
-    timeSecondsStr.value = padZero(newVal);
-  });
-  
-  /* --------------------------------------
-   * Lifecycle
-   * -------------------------------------- */
-  onMounted(() => {
-    // 初期表示時にストアから時間を同期
-    const { hours, minutes, seconds } = deserializeTime(samplingInterval.value);
-    timHoursStr.value = padZero(hours);
-    timMinutesStr.value = padZero(minutes);
-    timeSecondsStr.value = padZero(seconds);
-  });
-  </script>
-  
-  <style scoped>
-  .modal {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
   }
-  
-  input {
-    text-align: center;
-    font-size: 1.5rem;
+
+  // 元の値を更新
+  originalIntervals.value = JSON.parse(JSON.stringify(intervals.value));
+  emit('update');
+  emit('close');
+}
+
+/**
+ * サンプリングインターバル一覧を取得
+ */
+async function loadIntervals() {
+  const result = await getSamplingIntervals();
+  if (result.ok) {
+    intervals.value = result.value.map(interval => ({
+      ...interval,
+      ...deserializeTime(interval.period),
+      error: false
+    }));
+    // 元の値を保存
+    originalIntervals.value = JSON.parse(JSON.stringify(intervals.value));
   }
-  
-  label {
-    font-size: 1.7rem;
-    margin-bottom: 0.2rem;
-    margin-left: 0.2rem;
-    margin-right: 0.2rem;
+}
+
+/**
+ * ミリ秒を時分秒に分解
+ */
+function deserializeTime(milliseconds: number) {
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return { hours, minutes, seconds };
+}
+
+/**
+ * 時分秒をミリ秒に変換
+ */
+function serializeTime(hours: number, minutes: number, seconds: number): number {
+  return (hours * 3600 + minutes * 60 + seconds) * 1000;
+}
+
+/**
+ * 新しいインターバルを追加
+ */
+async function addNewInterval() {
+  const result = await addSamplingInterval({
+    name: '新規サンプリング',
+    period: 1000
+  });
+
+  if (result.ok) {
+    const newInterval = {
+      ...result.value,
+      ...deserializeTime(result.value.period),
+      error: false
+    };
+    intervals.value.push(newInterval);
+    originalIntervals.value.push(JSON.parse(JSON.stringify(newInterval)));
+    
+    // ストアにも追加
+    systemSettingStore.addSamplingInterval(result.value);
   }
-  
-  .error-message {
-    color: red;
-    font-size: 1rem;
+}
+
+/**
+ * インターバルを削除
+ */
+async function deleteInterval(uuid: string) {
+  if (intervals.value.length <= 1) {
+    return;
   }
-  </style>
+
+  const result = await deleteSamplingIntervalAPI(uuid);
+  if (result.ok) {
+    intervals.value = intervals.value.filter(i => i.uuid !== uuid);
+    originalIntervals.value = originalIntervals.value.filter(i => i.uuid !== uuid);
+    
+    // ストアからも削除
+    systemSettingStore.deleteSamplingInterval(uuid);
+  }
+}
+
+/* --------------------------------------
+ * Watchers
+ * -------------------------------------- */
+watch(
+  () => props.visible,
+  (newVal) => {
+    if (newVal) {
+      loadIntervals();
+    }
+  }
+);
+</script>
+
+<style scoped>
+.interval-item {
+  padding: 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.interval-item:hover {
+  border-color: #007bff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.form-label {
+  font-size: 0.95rem;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.fw-bold {
+  font-weight: 600;
+}
+
+.editable-name-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  background-color: #f0f8ff;
+  transition: all 0.3s ease;
+}
+
+.editable-name-wrapper:hover {
+  background-color: #e6f2ff;
+  border-color: #0056b3;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.edit-icon {
+  color: #007bff;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.editable-name-input {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding-left: 0.5rem !important;
+}
+
+.editable-name-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.time-inputs {
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.time-input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.time-separator {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #007bff;
+  align-self: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+input[type="number"].form-control-lg {
+  width: 90px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  border: 2px solid #ced4da;
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+input[type="number"].form-control-lg:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.material-icons {
+  vertical-align: middle;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+.btn-danger i,
+.btn-success i {
+  font-size: 18px;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+</style>
   

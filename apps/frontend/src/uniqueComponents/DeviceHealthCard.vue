@@ -16,7 +16,7 @@
           {{ statusMessage }}
         </p>
         <div class="lighting-grid">
-          <LightingTimeComponent v-for="n in 4" :key="n" :title="`${lightTimeTitlePrefix}-${n}`" :value=" 0" :status="deviceHealth" />
+          <LightingTimeComponent v-for="n in 4" :key="n" :title="`${lightTimeTitlePrefix}-${n}`" :value="lightingTimes[n-1]" :status="deviceHealth" />
         </div>
       </div>
     </div>
@@ -28,6 +28,7 @@ import { computed } from 'vue'
 
 import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum'
 import LightingTimeComponent from './LightingTimeComponent.vue';
+import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 
 const props = defineProps<{
   /** タイトル (例: 照射炉 1) */
@@ -35,6 +36,30 @@ const props = defineProps<{
   /** 装置の状態 */
   deviceHealth: number
 }>()
+
+const channelValuesStore = useChannelValuesStore();
+
+// 各照射炉の点灯時間チャンネルUUID定義
+const LIGHTING_TIME_UUIDS: Record<string, string[]> = {
+  "照射炉1": [
+    "675b0ed1-127a-4b07-ab54-f789080a6367", // UV1-1
+    "f5e773e0-31c9-4e81-af6b-bbe89eb59544", // UV1-2
+    "430a8962-5c5e-4459-acc0-043d60343c0b", // UV1-3
+    "097ce82a-985d-45a8-b501-cb193650a2a9"  // UV1-4
+  ],
+  "照射炉2": [
+    "675b0ed2-127a-4b07-ab54-f789080a6367", // UV1-1
+    "f5e773e2-31c9-4e81-af6b-bbe89eb59544", // UV1-2
+    "430a8962-5c5e-4459-acc2-043d60343c0b", // UV1-3
+    "097ce822-985d-45a8-b501-cb193650a2a9"  // UV1-4
+  ],
+  "照射炉3": [
+    "675b0ed3-127a-4b07-ab54-f789080a6367", // UV1-1
+    "f5e773e3-31c9-4e81-af6b-bbe89eb59544", // UV1-2
+    "430a8963-5c5e-4459-acc3-043d60343c0b", // UV1-3
+    "097ce823-985d-45a8-b501-cb193650a2a9"  // UV1-4
+  ]
+};
 
 /* ---------- 表示テキスト ---------- */
 const statusLabel = computed(() => {
@@ -99,6 +124,16 @@ const lightTimeTitlePrefix = computed(() => {
     return "UV3"
   }
   return "UV"
+});
+
+const lightingTimes = computed(() => {
+  const uuids = LIGHTING_TIME_UUIDS[props.title];
+  if (!uuids) return [0, 0, 0, 0];
+
+  return uuids.map(uuid => {
+    const val = channelValuesStore.getRuntimeValue(uuid);
+    return val ? Number(val.value) : 0;
+  });
 });
 </script>
 

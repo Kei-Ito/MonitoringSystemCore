@@ -2,41 +2,86 @@
   <div class="container-fluid min-vh-70">
     <div class="row">
       <div class="col-lg-12 position-relative z-index-2">
-        <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="12" :is-draggable="isAdmin"
-          :is-resizable="isAdmin" :vertical-compact="true" :use-css-transforms="true"
-          :class = "isAdmin ? 'vue-grid-layout-style':''">
+        <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="12" :is-draggable="isLayoutEditMode"
+          :is-resizable="isLayoutEditMode" :vertical-compact="true" :use-css-transforms="true"
+          :class = "isLayoutEditMode ? 'vue-grid-layout-style':''">
           <GridItem v-for="(item) in layoutModel" :key="item.i" :static="item.static" :x="item.x" :y="item.y"
-            :w="item.w" :h="item.h" :i="item.i" :class = "isAdmin ? 'p-2 vue-grid-item-style':''">
-            <ChartHolderCard :chart="dashboardCharts[item.i]"/>
+            :w="item.w" :h="item.h" :i="item.i" :class = "isLayoutEditMode ? 'p-2 vue-grid-item-style':''">
+            <ChartHolderCard :chart="dashboardCharts[item.i]" mode="realtime"/>
           </GridItem>
         </GridLayout>
       </div>
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { ref, watch, nextTick, onActivated, onDeactivated } from 'vue';
 import { GridItem,GridLayout } from 'vue-grid-layout-v3';
+import type { GridLayout as GridLayoutType } from '@monitoring/shared/model';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
-import { useChannelValuesStore } from '@/pinia/channelValuesStore';
 import { useChartStore } from '@/pinia/chartStore';
 import { useUiStore } from '@/pinia/uiStore';
 
+defineOptions({
+  name: 'Dashboard'
+});
 
 const chartStore = useChartStore();
 const { dashboardCharts } = storeToRefs(chartStore);
 
 const uiStore = useUiStore();
-const { isAdmin,dashboardViewCategory1Selected,dashboardViewCategory2Selected } = storeToRefs(uiStore);
+const { isLayoutEditMode, dashboardViewCategory1Selected, dashboardViewCategory2Selected } = storeToRefs(uiStore);
 
-const layoutModel = computed({
-  get: () => chartStore.gridLayoutsFilteredByPage("dashboard",dashboardViewCategory1Selected.value, dashboardViewCategory2Selected.value),
-  set: (newLayouts) => {
-    //TODO : 非表示中のグラフのレイアウトを更新しないようにするか検討
-    newLayouts.forEach((l) => chartStore.patchGrid(l));
+const layoutModel = ref<GridLayoutType[]>([]);
+const isUpdatingFromStore = ref(false);
+const isPageActive = ref(true);
+
+// ストアのデータ変更を監視してローカルのlayoutModelに反映
+watch(
+  () => chartStore.gridLayoutsFilteredByPage("dashboard", dashboardViewCategory1Selected.value, dashboardViewCategory2Selected.value),
+  (newVal) => {
+    // ページが非表示の間はレイアウト更新処理をスキップしてメモリ/CPUを節約
+    if (!isPageActive.value) return;
+
+    isUpdatingFromStore.value = true;
+    layoutModel.value = JSON.parse(JSON.stringify(newVal));
+    nextTick(() => {
+      isUpdatingFromStore.value = false;
+    });
+  },
+  { immediate: true, deep: true }
+);
+
+// ローカルのlayoutModelの変更を監視して、編集モード時のみストアに保存
+watch(
+  layoutModel,
+  (newVal) => {
+    if (isUpdatingFromStore.value) return;
+
+    if (isLayoutEditMode.value) {
+      newVal.forEach((l) => chartStore.patchGrid(l));
+    }
+  },
+  { deep: true }
+);
+
+onActivated(() => {
+  isPageActive.value = true;
+  // 復帰時に最新のレイアウト情報をストアから強制的に同期
+  const currentLayout = chartStore.gridLayoutsFilteredByPage("dashboard", dashboardViewCategory1Selected.value, dashboardViewCategory2Selected.value);
+  if (currentLayout) {
+    isUpdatingFromStore.value = true;
+    layoutModel.value = JSON.parse(JSON.stringify(currentLayout));
+    nextTick(() => {
+      isUpdatingFromStore.value = false;
+    });
   }
+});
+
+onDeactivated(() => {
+  isPageActive.value = false;
 });
 
 </script>

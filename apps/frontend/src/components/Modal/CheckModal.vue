@@ -1,32 +1,34 @@
 <template>
-  <div class="modal" tabindex="-1" role="dialog" v-if="visible">
-    <div class="modal-dialog" role="document" style="max-width: 80%;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5>{{ Title }}</h5>
-        </div>
-        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
-          <div>
-            <div class="form-group row">
-              <pre class="col-form-label my-3 text-dark">{{ Body }}</pre>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="confirm(true)" style="width: 110px;">
-            {{ updateText }}
-          </button>
-          <button type="button" class="btn btn-secondary" @click="confirm(false)" style="width: 110px;">
-            {{ cancelText }}
-          </button>
-        </div>
+  <BaseModal
+    :show="visible"
+    :title="Title"
+    size="modal-lg"
+    maxWidth="80%"
+    @close="confirm(false)"
+  >
+    <!-- Body -->
+    <div>
+      <div class="form-group row">
+        <pre class="col-form-label my-3 text-dark">{{ Body }}</pre>
       </div>
     </div>
-  </div>
+
+    <!-- Footer -->
+    <template #footer>
+      <button type="button" class="btn btn-primary" @click="confirm(true)" style="width: 110px;">
+        {{ updateText }}
+      </button>
+      <button type="button" class="btn btn-secondary" @click="confirm(false)" style="width: 110px;">
+        {{ cancelText }}
+      </button>
+    </template>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+import BaseModal from "@/components/BaseModal.vue";
 
 const visible = ref(false);
 const Title = ref<string>('');

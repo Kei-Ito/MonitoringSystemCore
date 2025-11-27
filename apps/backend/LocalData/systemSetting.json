@@ -1,6 +1,17 @@
 {
-  "samplingInterval": 1000,
-  "dataRootPath": "/mnt/usb",
+  "samplingIntervals": [
+    {
+      "uuid": "fast",
+      "name": "高速サンプリング",
+      "period": 60000
+    },
+    {
+      "uuid": "slow",
+      "name": "低速サンプリング",
+      "period": 62000
+    }
+  ],
+  "dataRootPath": "/media/linaro/HD-WHAU3",
   "category1list": [
     "照射炉1",
     "照射炉2",

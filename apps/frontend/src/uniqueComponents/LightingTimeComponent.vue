@@ -17,8 +17,8 @@
 import { computed, type ComputedRef } from 'vue';
 import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum'
 
-const warningThreshold: number = 8000;
-const moderateThreshold: number = 5000;
+const warningThreshold: number = 1000;
+const moderateThreshold: number = 800;
 
 const props = defineProps({
     value: {
@@ -69,7 +69,7 @@ const color: ComputedRef<string> = computed(() => {
         if (props.value > warningThreshold) {
             return 'bg-warning';
         } else if (props.value > moderateThreshold) {
-            return 'bg-gradient-info';
+            return 'bg-success-strong';
         }
         else {
             return 'bg-gradient-success';
@@ -145,4 +145,11 @@ const color: ComputedRef<string> = computed(() => {
     /* Bootstrapの濃い系トーン */
     color: #fff !important;
 }
+
+.bg-success-strong {
+  background-color: #c08300 !important;
+  /* Bootstrapの濃い系トーン */
+  color: #fff !important;
+}
+
 </style>

@@ -75,5 +75,9 @@ export default defineConfig(({command }: ConfigEnv) => {
     define: {
       __MOCK_ENABLED__: JSON.stringify(enableMock),
     },
+    test: {
+      environment: 'happy-dom',
+      globals: true,
+    },
   }
 })

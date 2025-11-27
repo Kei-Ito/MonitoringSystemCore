@@ -11,66 +11,89 @@
           </div>
         </a>
       </li>
-      <breadcrumbs :currentPage="currentRouteName" :color="props.color" />
-      <div class="d-flex flex-grow-1 align-items-center justify-content-center gap-3 py-2"
+      <div class="d-flex flex-grow-1 flex-wrap align-items-center justify-content-center gap-3 py-2"
         v-if="currentRouteName === 'Dashboard' || currentRouteName === 'Trend'">
-        <!-- 照射炉選択（カテゴリ1）のマルチセレクト -->
-        <div class="multiselect-container">
-          <multiselect v-model="selectedCategory1" :options="category1List??[]" :multiple="false" :close-on-select="true"
-            :clear-on-select="false" :searchable="false" :allow-empty="false" :preserve-search="false" selectLabel=""
-            selectedLabel="" deselectLabel="" placeholder="Category1を選択" :preselect-first="false">
-            <!-- マルチセレクト時のテンプレート -->
-            <template #selection>
-              <span class="multiselect-selected">
-                {{ selectedCategory1.length === 1
-                  ? selectedCategory1[0]
-                  : `${selectedCategory1.length} 項目 選択中` }}
-              </span>
-            </template>
+        
+        <!-- フィルタリンググループ（表示対象） -->
+        <div class="control-card">
+          <div class="control-card-label">
+            <i class="material-icons-round fs-6 me-1">filter_alt</i>
+            表示対象
+          </div>
+          <div class="d-flex gap-2 align-items-end">
+            <!-- 照射炉選択（カテゴリ1）のマルチセレクト -->
+            <div class="multiselect-wrapper">
+              <multiselect v-model="selectedCategory1" :options="category1List??[]" :multiple="false" :close-on-select="true"
+                :clear-on-select="false" :searchable="false" :allow-empty="false" :preserve-search="false" selectLabel=""
+                selectedLabel="" deselectLabel="" placeholder="Category1を選択" :preselect-first="false" :disabled="isLayoutEditMode">
+                <!-- マルチセレクト時のテンプレート -->
+                <template #selection>
+                  <span class="multiselect-selected">
+                    {{ selectedCategory1.length === 1
+                      ? selectedCategory1[0]
+                      : `${selectedCategory1.length} 項目 選択中` }}
+                  </span>
+                </template>
 
-            <template #option="props">
-              <div class="option__desc d-flex align-items-center">
-                <span class="material-icons-round me-2 fs-5">
-                  {{ isSelected(props.option, selectedCategory1) }}
-                </span>
-                <span class="option__title">{{ props.option }}</span>
-              </div>
-            </template>
-          </multiselect>
+                <template #option="props">
+                  <div class="option__desc d-flex align-items-center">
+                    <span class="material-icons-round me-2 fs-5">
+                      {{ isSelected(props.option, selectedCategory1) }}
+                    </span>
+                    <span class="option__title">{{ props.option }}</span>
+                  </div>
+                </template>
+              </multiselect>
+            </div>
+
+            <!-- カテゴリ2のマルチセレクト -->
+            <div class="multiselect-wrapper">
+              <multiselect v-model="selectedCategory2" :options="category2List??[]" :multiple="true" :close-on-select="false"
+                :clear-on-select="false" :preserve-search="false" placeholder="" :searchable="false" selectLabel=""
+                selectedLabel="" deselectLabel="" :preselect-first="false" :disabled="isLayoutEditMode">
+                <!-- マルチセレクト時のテンプレート -->
+                <template #selection="{ values }">
+                  <span class="multiselect-selected">
+                    {{ values.length === 1
+                      ? values[0]
+                      : `${values.length} 項目 選択中` }}
+                  </span>
+                </template>
+
+                <!-- プルダウンのテンプレート -->
+                <template #option="props">
+                  <div class="option__desc d-flex align-items-center">
+                    <span class="material-icons-round me-2 fs-5">
+                      {{ isSelected(props.option, selectedCategory2) }}
+                    </span>
+                    <span class="option__title">{{ props.option }}</span>
+                  </div>
+                </template>
+              </multiselect>
+            </div>
+          </div>
         </div>
 
-        <!-- カテゴリ2のマルチセレクト -->
-        <div class="multiselect-container">
-          <multiselect v-model="selectedCategory2" :options="category2List??[]" :multiple="true" :close-on-select="false"
-            :clear-on-select="false" :preserve-search="false" placeholder="" :searchable="false" selectLabel=""
-            selectedLabel="" deselectLabel="" :preselect-first="false">
-            <!-- マルチセレクト時のテンプレート -->
-            <template #selection="{ values }">
-              <span class="multiselect-selected">
-                {{ values.length === 1
-                  ? values[0]
-                  : `${values.length} 項目 選択中` }}
-              </span>
-            </template>
-
-            <!-- プルダウンのテンプレート -->
-            <template #option="props">
-              <div class="option__desc d-flex align-items-center">
-                <span class="material-icons-round me-2 fs-5">
-                  {{ isSelected(props.option, selectedCategory2) }}
-                </span>
-                <span class="option__title">{{ props.option }}</span>
-              </div>
-            </template>
-          </multiselect>
+        <!-- Trendページ専用: 日付範囲選択 -->
+        <div v-if="currentRouteName === 'Trend'" class="control-card">
+          <div class="control-card-label">
+            <i class="material-icons-round fs-6 me-1">date_range</i>
+            表示期間
+          </div>
+          <div class="date-range-wrapper">
+            <!-- <div class="input-label">表示範囲</div> -->
+            <button class="btn btn-outline-secondary btn-date-range d-flex align-items-center justify-content-center" @click="showDateRangePicker">
+              <i class="material-icons me-2" style="font-size: 1.2rem;">calendar_month</i>
+              <span class="date-range-text">{{ dateRangeText }}</span>
+            </button>
+          </div>
         </div>
       </div>
-      <!--
-      <div>
-        <a class="nav-link text-body font-weight-bold px-0" >UI編集</a>
-        <ToggleBtn v-model="isAdmin" class="mr-3" />
+      
+      <div v-if="isAdmin" class="d-flex align-items-center">
+        <span class="nav-link text-body font-weight-bold px-0 me-2">レイアウト編集</span>
+        <ToggleBtn v-model="isLayoutEditModeModel" class="mr-3" />
       </div>
-      -->
     
       <!-- ユーザーログインアイコン -->
        <!--
@@ -95,19 +118,19 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, watch } from "vue";
+import { computed, watch, ref } from "vue";
 import Multiselect from 'vue-multiselect';
 import { useRoute } from "vue-router";
 
-//import ToggleBtn from "@/components/ToggleBtn.vue";
+import ToggleBtn from "@/components/ToggleBtn.vue";
 import { useUiStore } from "@/pinia/uiStore";
 
-import Breadcrumbs from "../Breadcrumbs.vue";
 
-/* Props */
-const props = defineProps({
-  color: String,
-});
+/* Emits */
+const emit = defineEmits<{
+  'show-date-range-picker': [];
+  'date-range-text': [string];
+}>();
 
 const uiStore = useUiStore();
 
@@ -118,7 +141,8 @@ const route = useRoute();
 const {
   isRTL,
   isAbsolute,
-  //isAdmin,
+  isAdmin,
+  isLayoutEditMode,
   category1List,
   category2List,
   dashboardViewCategory1Selected,
@@ -128,6 +152,9 @@ const {
 } = storeToRefs(uiStore);
 
 const currentRouteName = computed<string>(() => String(route.name ?? ""));
+
+// 日付範囲テキスト（親コンポーネントから受け取る）
+const dateRangeText = ref("今日");
 
 // 現在のルートに基づいて適切なカテゴリ選択を取得する computed プロパティ
 const selectedCategory1 = computed({
@@ -177,6 +204,26 @@ const isSelected = (currentValue: any, value: any | any[]): string => {
     return "";
   }
 };
+
+const showDateRangePicker = () => {
+  emit('show-date-range-picker');
+};
+
+// 外部から日付範囲テキストを設定できるようにする
+const setDateRangeText = (text: string) => {
+  dateRangeText.value = text;
+};
+
+const isLayoutEditModeModel = computed({
+  get: () => isLayoutEditMode.value,
+  set: () => uiStore.toggleLayoutEditMode()
+});
+
+// コンポーネント外から呼び出せるようにする
+defineExpose({
+  setDateRangeText
+});
+
 // ルート変更時に選択状態を更新
 watch(currentRouteName, () => {
   // selectedCategory1 と selectedCategory2 は computed プロパティなので自動的に更新される
@@ -186,15 +233,74 @@ watch(currentRouteName, () => {
 
 
 <style scoped>
-.multiselect-container {
+.control-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 8px 12px 8px 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid #e0e0e0;
+}
+
+.control-card-label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.multiselect-wrapper {
   width: 30vw;
   max-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.date-range-wrapper {
+  min-width: 180px;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-date-range {
+  width: 100%;
+  height: 40px; /* ボタンの高さを固定 */
+  padding: 0.375rem 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  border: 1px solid #929292; /* multiselectと同じボーダー色 */
+  border-radius: 0.25rem;
+  color: #35495e; /* multiselectのテキスト色に近づける */
+  background-color: white;
+  margin-bottom: 0; /* ボタンのデフォルトマージンを削除 */
+}
+
+.btn-date-range:hover {
+  background-color: #f8f9fa;
+  color: #35495e;
+  border-color: #929292;
+}
+
+.date-range-text {
+  font-size: 1.2rem; /* multiselect-selectedと同じサイズ */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  line-height: 1;
 }
 
 /* Vue-Multiselect のスタイルカスタマイズ */
 :deep(.multiselect) {
   border: 1px solid #929292;
   border-radius: 0.25rem;
+  min-height: 40px; /* 高さを固定 */
 }
 
 :deep(.multiselect__tags) {
@@ -202,6 +308,8 @@ watch(currentRouteName, () => {
   background: white;
   align-items: center;
   text-align: center;
+  min-height: 38px; /* パディングを含めて40pxになるように調整 */
+  padding-top: 6px;
 }
 
 

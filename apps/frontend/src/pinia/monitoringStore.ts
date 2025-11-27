@@ -57,7 +57,6 @@ export const useMonitoringStore = defineStore('monitoringStore', {
       }
       
       if (systemSettingResult.ok) {
-        this.samplingInterval = systemSettingResult.value.samplingInterval;
         
         // uiStoreにカテゴリ設定を反映
         const uiStore = useUiStore();
@@ -77,9 +76,6 @@ export const useMonitoringStore = defineStore('monitoringStore', {
       
       // 最初に失敗した結果を返す（両方成功なら最初の成功結果）
       return ioModulesResult.ok ? systemSettingResult : ioModulesResult;
-    },
-    setSamplingInterval(clock: number) {
-      this.samplingInterval = clock;
     },
     setIOModules(modules: IOModule[]) {
       // グルーピング

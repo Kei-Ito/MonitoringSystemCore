@@ -1,22 +1,23 @@
 
 import { Request, Response } from 'express';
-import { getDashboardChartList,addDashboardChart ,updateDashboardChart} from "src/services/databaseService";
 import { ChartConfig } from '@monitoring/shared/model';
+
+// TODO: databaseServiceが削除されたため、チャート設定の永続化機能の実装が必要
+// ローカルJSONファイルまたは別のストレージ実装を追加する
 
 export async function addChart(req: Request<{},{},ChartConfig>, res: Response) {
     try {
-        await addDashboardChart(req.body);
-        res.status(200).send();
+        // TODO: チャート追加機能の実装
+        res.status(501).json({ message: 'Chart add feature is not implemented yet' });
     } catch (error) {
         res.status(500).json({ message: error });
     }
-
 }
 
 export async function getDashboardCharts(req: Request<{},{},{}>, res: Response) {
   try {
-    const data = await getDashboardChartList();
-    res.status(200).json(data);
+    // TODO: チャート取得機能の実装
+    res.status(501).json([]);
   } catch (error) {
     res.status(500).json({ message: error });
   }
@@ -24,8 +25,8 @@ export async function getDashboardCharts(req: Request<{},{},{}>, res: Response) 
 
 export async function updateDashboardChartController(req: Request<{},{},ChartConfig>, res: Response) {
   try {
-    await updateDashboardChart(req.body);
-    res.status(200).send();
+    // TODO: チャート更新機能の実装
+    res.status(501).json({ message: 'Chart update feature is not implemented yet' });
   } catch (error) {
     res.status(500).json({ message: error });
   }
