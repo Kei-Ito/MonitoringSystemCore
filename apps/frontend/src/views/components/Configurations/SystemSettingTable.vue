@@ -70,7 +70,6 @@
 import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
-import ColorSelector from "@/components/ColorSelector.vue";
 import LanguageSelector from "@/components/Selector/LanguageSelector.vue";
 import { useUiStore } from "@/pinia/uiStore";
 
