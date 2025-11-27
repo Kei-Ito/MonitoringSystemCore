@@ -1,7 +1,17 @@
 <template>
   <div class="card z-index-2 mb-1 h-100 d-flex flex-column">
     <!-- グラフ本体 -->
-    <div class="card-body flex-grow-1 p-2 border-radius-lg bg-gradient-dark shadow-dark m-2">
+    <div class="card-body flex-grow-1 p-2 border-radius-lg bg-gradient-dark shadow-dark m-2 position-relative">
+      <!-- 設定ボタン -->
+      <button 
+        class="btn btn-icon-only btn-rounded chart-settings-btn position-absolute"
+        :class="`border-${color}`"
+        @click="openSettings"
+        :title="$t('chart.settings') || 'グラフ設定'"
+      >
+        <i class="material-icons">settings</i>
+      </button>
+      
       <component :is="resolved" :chart="chart" :series="series" :loading="isLoading" class="h-100 w-100 m-0"/>
     </div>
 
@@ -31,6 +41,14 @@
         </h5>
       </div>
     </div>
+
+    <!-- 設定モーダル -->
+    <ChartSettingsModal
+      :visible="isSettingsModalVisible"
+      :chart="chart"
+      @close="closeSettings"
+      @update="handleUpdate"
+    />
   </div>
 </template>
 
@@ -43,8 +61,11 @@ import BarChart from '@/components/Charts/BarChart.vue'
 import GaugeChart from '@/components/Charts/GaugeChart.vue'
 import HorizontalBarChart from '@/components/Charts/HorizontalBarChart.vue'
 import LineChart from '@/components/Charts/LineChart.vue'
+import ChartSettingsModal from '@/components/Modals/ChartSettingsModal.vue'
 import { useSeries } from '@/pinia/useSeries'
 import { useChannelValuesStore } from '@/pinia/channelValuesStore'
+import { useUiStore } from '@/pinia/uiStore'
+import { storeToRefs } from 'pinia'
 
 /* ---------- props & series ---------- */
 const props = defineProps<{ 
@@ -52,6 +73,8 @@ const props = defineProps<{
 }>()
 const series  = useSeries(props.chart.chart_uuid)
 const channelValuesStore = useChannelValuesStore()
+const uiStore = useUiStore()
+const { color } = storeToRefs(uiStore)
 
 const isLoading = computed(() => {
   if (!props.chart.channel_uuids) return false;
@@ -80,6 +103,23 @@ const {
 /* ---------- 動的チャート ---------- */
 const componentMap = { HorizontalBarChart,GaugeChart,LineChart,BarChart }
 const resolved = computed(() => componentMap[props.chart.chart_type])
+
+/* ---------- 設定モーダル ---------- */
+const isSettingsModalVisible = ref<boolean>(false)
+
+const openSettings = () => {
+  isSettingsModalVisible.value = true
+}
+
+const closeSettings = () => {
+  isSettingsModalVisible.value = false
+}
+
+const handleUpdate = (updatedConfig: ChartConfig) => {
+  console.log('グラフ設定を更新:', updatedConfig)
+  // TODO: API呼び出しでバックエンドに保存する処理を実装
+  closeSettings()
+}
 </script>
 
 
@@ -113,5 +153,32 @@ const resolved = computed(() => componentMap[props.chart.chart_type])
   0%,2% {opacity:0;transform:translateX(0);}
   12%   {opacity:1;transform:translateX(0);}
   100%  {transform:translateX(var(--dist));}
+}
+
+/* ---- 設定ボタン ---- */
+.chart-settings-btn {
+  top: 8px;
+  right: 8px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  padding: 0;
+  transition: all 0.3s ease;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-width: 2px;
+  border-style: solid;
+}
+
+.chart-settings-btn:hover {
+  transform: rotate(90deg) scale(1.1);
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.chart-settings-btn .material-icons {
+  font-size: 22px;
+  line-height: 1;
+  color: white;
 }
 </style>

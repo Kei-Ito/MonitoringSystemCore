@@ -1,0 +1,260 @@
+<template>
+    <div>
+        <!-- チャンネルの色と線の太さ設定 -->
+        <div class="mb-3">
+            <label class="form-label fw-bold">
+                <i class="material-icons align-middle me-1" style="font-size: 18px;">palette</i>
+                チャンネルの外観
+            </label>
+            <div class="channel-colors">
+                <div v-for="channel in channels" :key="channel.channel_uuid" class="d-flex align-items-center mb-2">
+                    <span class="channel-name flex-grow-1">{{ channel.channel_name }}</span>
+                    <input
+                        type="color"
+                        class="form-control form-control-color me-2 d-flex align-items-center"
+                        v-model="channelColors[channel.channel_uuid]"
+                        style="width: 50px; height: 38px; padding: 4px;"
+                    />
+                    <input
+                        type="number"
+                        class="form-control text-center"
+                        v-model.number="channelLineWidths[channel.channel_uuid]"
+                        min="1"
+                        max="5"
+                        step="0.5"
+                        style="width: 70px;"
+                    />
+                    <span class="ms-2 text-muted small">px</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 閾値設定 -->
+        <div class="mb-3">
+            <label class="form-label fw-bold d-flex align-items-center">
+                <i class="material-icons align-middle me-1" style="font-size: 18px;">notifications</i>
+                閾値設定
+                <input
+                    type="checkbox"
+                    class="form-check-input ms-auto"
+                    v-model="thresholdsEnabled"
+                    style="cursor: pointer;"
+                />
+            </label>
+
+            <div v-if="thresholdsEnabled" class="threshold-inputs mt-2">
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label class="form-label small">最小閾値</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            v-model.number="localOptions.thresholds.min"
+                            placeholder="下限値"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small">最大閾値</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            v-model.number="localOptions.thresholds.max"
+                            placeholder="上限値"
+                        />
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label small">閾値超過時の色</label>
+                    <div class="d-flex align-items-center">
+                        <input
+                            type="color"
+                            class="form-control form-control-color d-flex align-items-center"
+                            v-model="localOptions.thresholds.color"
+                            style="width: 60px; height: 38px; padding: 4px;"
+                        />
+                        <input
+                            type="text"
+                            class="form-control ms-2"
+                            v-model="localOptions.thresholds.color"
+                            placeholder="#ff0000"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Y軸範囲設定 -->
+        <div class="mb-3">
+            <label class="form-label fw-bold d-flex align-items-center">
+                <i class="material-icons align-middle me-1" style="font-size: 18px;">height</i>
+                Y軸範囲
+                <input
+                    type="checkbox"
+                    class="form-check-input ms-auto"
+                    v-model="yAxisRangeEnabled"
+                    style="cursor: pointer;"
+                />
+            </label>
+
+            <div v-if="yAxisRangeEnabled" class="range-inputs mt-2">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label class="form-label small">最小値</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            v-model.number="localOptions.visibility.minY"
+                            placeholder="自動"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small">最大値</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            v-model.number="localOptions.visibility.maxY"
+                            placeholder="自動"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+
+interface Channel {
+    channel_uuid: string
+    channel_name: string
+}
+
+interface ChartOptions {
+    thresholds: {
+        min: number | null
+        max: number | null
+        color: string
+    }
+    visibility: {
+        minY: number | null
+        maxY: number | null
+    }
+    seriesColors?: Record<string, string>
+    seriesLineWidths?: Record<string, number>
+}
+
+const props = defineProps<{
+    options: ChartOptions
+    channels: Channel[]
+}>()
+
+const emit = defineEmits<{
+    update: [options: ChartOptions]
+}>()
+
+const localOptions = ref<ChartOptions>({ ...props.options })
+const thresholdsEnabled = ref(false)
+const yAxisRangeEnabled = ref(false)
+const channelColors = ref<Record<string, string>>({})
+const channelLineWidths = ref<Record<string, number>>({})
+
+// デフォルトカラーパレット
+const defaultColors = [
+    '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de',
+    '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'
+]
+
+// 初期化
+watch(() => props.options, (newOptions) => {
+    localOptions.value = { ...newOptions }
+    
+    // 閾値の有効/無効を判定
+    thresholdsEnabled.value = newOptions.thresholds?.min != null && newOptions.thresholds?.max != null
+    
+    // Y軸範囲の有効/無効を判定
+    yAxisRangeEnabled.value = newOptions.visibility?.minY != null || newOptions.visibility?.maxY != null
+    
+    // チャンネルカラーと線の太さの初期化
+    props.channels.forEach((channel, index) => {
+        // カラーの初期化
+        if (newOptions.seriesColors && newOptions.seriesColors[channel.channel_uuid]) {
+            channelColors.value[channel.channel_uuid] = newOptions.seriesColors[channel.channel_uuid]
+        } else {
+            channelColors.value[channel.channel_uuid] = defaultColors[index % defaultColors.length]
+        }
+        
+        // 線の太さの初期化
+        if (newOptions.seriesLineWidths && newOptions.seriesLineWidths[channel.channel_uuid]) {
+            channelLineWidths.value[channel.channel_uuid] = newOptions.seriesLineWidths[channel.channel_uuid]
+        } else {
+            channelLineWidths.value[channel.channel_uuid] = 2 // デフォルトは2px
+        }
+    })
+}, { immediate: true })
+
+// 変更を親に通知
+watch([localOptions, channelColors, channelLineWidths, thresholdsEnabled, yAxisRangeEnabled], () => {
+    const updated = { ...localOptions.value }
+    
+    // チャンネルカラーを反映
+    updated.seriesColors = { ...channelColors.value }
+    
+    // 線の太さを反映
+    updated.seriesLineWidths = { ...channelLineWidths.value }
+    
+    // 閾値が無効の場合はnullに
+    if (!thresholdsEnabled.value) {
+        updated.thresholds = { min: null, max: null, color: '#ff0000' }
+    }
+    
+    // Y軸範囲が無効の場合はnullに
+    if (!yAxisRangeEnabled.value) {
+        updated.visibility = { minY: null, maxY: null }
+    }
+    
+    emit('update', updated)
+}, { deep: true })
+</script>
+
+<style scoped>
+.channel-colors,
+.threshold-inputs,
+.range-inputs {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.channel-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #344767;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.form-label {
+    margin-bottom: 0.5rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+.form-label.small {
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+</style>
