@@ -1,6 +1,7 @@
 import { getIOModuleInputResponse } from '@monitoring/shared/api';
 import { csvDataRequest, trendDataRequest, getIsDataExistRequestModel } from '@monitoring/shared/api';
 import { SystemSettingService } from 'src/config/SystemSetting';
+import { Result, ok, err } from '@monitoring/shared/utils';
 import readline from 'readline';
 import csv from "csv-parser";
 
@@ -250,8 +251,8 @@ async function rewriteHeader(data_path: string, isNewFile: boolean, currentHeade
 
 const BOM = '\uFEFF';
 
-export async function saveInputDatas(data_list: getIOModuleInputResponse[], channelMeta?: Map<string, { name: string, unit: string }>, suffix?: string): Promise<void> {
-    if (data_list.length === 0) return;
+export async function saveInputDatas(data_list: getIOModuleInputResponse[], channelMeta?: Map<string, { name: string, unit: string }>, suffix?: string): Promise<Result<void>> {
+    if (data_list.length === 0) return ok(void 0);
 
     await acquireLock();
 
@@ -273,8 +274,11 @@ export async function saveInputDatas(data_list: getIOModuleInputResponse[], chan
         const sortedValues = currentHeaderUuids.slice(1).map(uuid => value_map.get(uuid) ?? '');
         await fs.promises.appendFile(data_path, [timestamp, ...sortedValues].join(',') + '\n');
 
+        return ok(void 0);
     } catch (error) {
-        console.error('Error saving input data:', error);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.error('Error saving input data:', errorMessage);
+        return err(`Failed to save data: ${errorMessage}`);
     } finally {
         releaseLock();
     }

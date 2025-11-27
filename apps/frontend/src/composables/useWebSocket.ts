@@ -106,6 +106,30 @@ export function useWebSocket() {
             channelValuesStore.setDeviceHealth("照射炉2", DeviceHealthEnum.Unknown);
             channelValuesStore.setDeviceHealth("照射炉3", DeviceHealthEnum.Unknown);
             break;
+          case "SamplingError":
+            monitoringStore.isSampling = false;
+            const errorMsg = message.message || "サンプリング中にエラーが発生しました";
+            const errors = message.errors || [];
+            
+            // エラーメッセージを表示
+            toast.error(errorMsg, { timeout: false });
+            
+            // 詳細エラーをコンソールに出力
+            if (errors.length > 0) {
+              console.error("サンプリングエラー詳細:", errors);
+            }
+            
+            // デバイス健康状態をUnknownに設定
+            channelValuesStore.setDeviceHealth("照射炉1", DeviceHealthEnum.Unknown);
+            channelValuesStore.setDeviceHealth("照射炉2", DeviceHealthEnum.Unknown);
+            channelValuesStore.setDeviceHealth("照射炉3", DeviceHealthEnum.Unknown);
+            
+            // ドライブマウント警告を表示
+            showDriveMountWarning.value = true;
+            
+            // ヘルスチェックを実行して状態を更新
+            performHealthCheck();
+            break;
           case "samplingStatus":
             monitoringStore.isSampling = message.data;
             break;

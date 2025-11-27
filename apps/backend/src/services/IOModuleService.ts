@@ -6,6 +6,7 @@ import { IOModuleStatusResponse, getIOModuleInputResponse } from '@monitoring/sh
 import { IOModuleStatus } from '@monitoring/shared/enum';
 import { Result, ok, err } from '@monitoring/shared/utils';
 import { saveInputDatas } from './dataSaveService';
+import HealthCheckService from './healthCheckService';
 
 const jsonFilePath: string = './LocalData/ioModuleSetting.json';
 let currentInputDatas: getIOModuleInputResponse[] = []; // 現在のセンサ値
@@ -248,7 +249,34 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
     }
   }
 
-  saveInputDatas(dataToSave, channelMeta, samplingIntervalUuid); // このインターバルで収集したデータのみ保存
+  // データ保存を実行し、失敗時はヘルスチェックを行う
+  const saveResult = await saveInputDatas(dataToSave, channelMeta, samplingIntervalUuid);
+  if (!saveResult.ok) {
+    console.error(`データ保存に失敗しました: ${saveResult.error}`);
+    
+    // ヘルスチェックを実行
+    const healthCheckService = HealthCheckService.getInstance();
+    await healthCheckService.checkDriveMount();
+    const healthStatus = healthCheckService.getHealthStatus();
+    
+    // ドライブマウントに問題がある場合はサンプリングを停止
+    if (!healthStatus.drivesMounted) {
+      console.error('ドライブマウントに問題があるため、サンプリングを停止します');
+      console.error('エラー詳細:', healthStatus.errors);
+      
+      // サンプリングを停止
+      stopIOModuleInputSamplingInterval(broadcast);
+      
+      // エラー通知をフロントエンドに送信
+      broadcast({
+        type: 'SamplingError',
+        message: 'データ保存に失敗したため、サンプリングを停止しました',
+        errors: healthStatus.errors
+      });
+      
+      return; // 以降の処理をスキップ
+    }
+  }
 
   //ステータスを更新
   // statusはチャンネルデータの処理中に更新される可能性がある
