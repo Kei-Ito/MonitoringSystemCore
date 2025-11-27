@@ -29,26 +29,47 @@ class HealthCheckService {
   /**
    * UUIDを使用してドライブをマウント
    */
-  private async mountDriveByUUID(uuid: string, mountPoint: string): Promise<boolean> {
+  private async mountDriveByUUID(uuid: string): Promise<{ success: boolean; mountPoint?: string }> {
     try {
-      // マウントポイントのディレクトリが存在しない場合は作成
-      try {
-        await fs.promises.access(mountPoint);
-      } catch {
-        await fs.promises.mkdir(mountPoint, { recursive: true });
-        console.log(`Created mount point: ${mountPoint}`);
-      }
-
-      // sudoを使ってマウント実行
-      const mountCommand = `sudo mount -U ${uuid} ${mountPoint}`;
-      console.log(`Attempting to mount drive with UUID: ${uuid} to ${mountPoint}`);
+      // udisksctlを使用してマウント（sudoなし、自動的にマウントポイントが作成される）
+      const mountCommand = `udisksctl mount -b /dev/disk/by-uuid/${uuid}`;
+      console.log(`Attempting to mount drive with UUID: ${uuid}`);
       
-      await execAsync(mountCommand);
-      console.log(`✓ Successfully mounted drive: ${mountPoint}`);
-      return true;
-    } catch (error) {
-      console.error(`✗ Failed to mount drive:`, error);
-      return false;
+      const { stdout, stderr } = await execAsync(mountCommand);
+      
+      // udisksctlの出力からマウントポイントを抽出
+      // 例: "Mounted /dev/sda1 at /media/linaro/HD-WHAU3"
+      const mountPointMatch = stdout.match(/at\s+(.+?)[\.\s]*$/);
+      const mountPoint = mountPointMatch ? mountPointMatch[1].trim() : undefined;
+      
+      if (mountPoint) {
+        console.log(`✓ Successfully mounted drive at: ${mountPoint}`);
+        return { success: true, mountPoint };
+      } else {
+        console.log(`✓ Drive mounted but mount point could not be determined`);
+        console.log(`Output: ${stdout}`);
+        return { success: true };
+      }
+    } catch (error: any) {
+      // ドライブが既にマウントされている場合のエラーを処理
+      if (error.stderr?.includes('already mounted') || error.message?.includes('already mounted')) {
+        console.log(`ℹ Drive with UUID ${uuid} is already mounted`);
+        // 既存のマウントポイントを取得
+        try {
+          const { stdout } = await execAsync(`findmnt -rno TARGET /dev/disk/by-uuid/${uuid}`);
+          const existingMountPoint = stdout.trim();
+          if (existingMountPoint) {
+            console.log(`✓ Existing mount point: ${existingMountPoint}`);
+            return { success: true, mountPoint: existingMountPoint };
+          }
+        } catch (findError) {
+          console.warn(`Could not determine existing mount point`);
+        }
+        return { success: true };
+      }
+      
+      console.error(`✗ Failed to mount drive:`, error.message || error);
+      return { success: false };
     }
   }
 
@@ -81,19 +102,30 @@ class HealthCheckService {
       // UUIDが設定されている場合はマウントを試行
       if (driveUUID) {
         console.log(`Attempting to mount drive with UUID: ${driveUUID}`);
-        const mountSuccess = await this.mountDriveByUUID(driveUUID, dataRootPath);
+        const mountResult = await this.mountDriveByUUID(driveUUID);
         
-        if (mountSuccess) {
-          // マウント成功後、再度アクセス確認
+        if (mountResult.success) {
+          // マウント成功後、設定されたパスまたは実際のマウントポイントでアクセス確認
+          const pathToCheck = mountResult.mountPoint || dataRootPath;
+          
           try {
-            await fs.promises.access(dataRootPath, fs.constants.R_OK | fs.constants.W_OK);
+            await fs.promises.access(pathToCheck, fs.constants.R_OK | fs.constants.W_OK);
             this.healthStatus.drivesMounted = true;
-            console.log(`✓ Drive mounted and verified: ${dataRootPath}`);
+            
+            // 実際のマウントポイントが設定パスと異なる場合は警告
+            if (mountResult.mountPoint && mountResult.mountPoint !== dataRootPath) {
+              console.warn(`⚠ Drive mounted at ${mountResult.mountPoint}, but configured path is ${dataRootPath}`);
+              this.healthStatus.errors.push(
+                `Drive mounted at different location: ${mountResult.mountPoint} (configured: ${dataRootPath})`
+              );
+            } else {
+              console.log(`✓ Drive mounted and verified: ${pathToCheck}`);
+            }
             return;
           } catch (verifyError) {
             this.healthStatus.drivesMounted = false;
-            this.healthStatus.errors.push(`Drive mounted but not accessible: ${dataRootPath}`);
-            console.error(`✗ Drive mounted but verification failed: ${dataRootPath}`);
+            this.healthStatus.errors.push(`Drive mounted but not accessible: ${pathToCheck}`);
+            console.error(`✗ Drive mounted but verification failed: ${pathToCheck}`);
           }
         } else {
           this.healthStatus.drivesMounted = false;
