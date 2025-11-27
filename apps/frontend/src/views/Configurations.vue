@@ -6,7 +6,11 @@
       </div>
       <div class="col-lg-6 col-md-12">
         <IOModuleTable />
-
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-lg-6 col-md-12">
+        <SystemControlCard />
       </div>
     </div>
   </div>
@@ -16,6 +20,7 @@
 <script setup lang="ts">
 import IOModuleTable from "@/views/components/Configurations/IOModuleTable.vue";
 import SystemSettingTable from "@/views/components/Configurations/SystemSettingTable.vue";
+import SystemControlCard from "@/views/components/Configurations/SystemControlCard.vue";
 </script>
 <style scoped>
 button:focus,

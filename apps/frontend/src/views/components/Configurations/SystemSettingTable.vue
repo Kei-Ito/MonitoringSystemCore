@@ -14,27 +14,9 @@
                                 $t('system_settings.setting_item') }}</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{{
                                 $t('system_settings.setting_value') }}</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">{{
-                                $t('system_settings.discription') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <div class="d-flex px-2 py-1">
-                                    <div class="d-flex flex-column justify-content-center">
-                                        <h6 class="mb-0 text-sm">{{ $t('system_settings.system_color') }}</h6>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <ColorSelector />
-                            </td>
-                            <td>
-                                <p class="text-xs text-secondary mb-0">{{
-                                    $t('system_settings.descriptions.system_color') }}</p>
-                            </td>
-                        </tr>
                         <!--サンプリング周期-->
                         <tr>
                             <td>
@@ -50,10 +32,6 @@
                                     {{ $t('system_settings.edit_sampling_intervals') }}
                                 </button>
                             </td>
-                            <td class="align-middle">
-                                <p class="text-xs text-secondary mb-0">{{
-                                    $t('system_settings.descriptions.sampling_clock') }}</p>
-                            </td>
                         </tr>
                         <!--保存期間-->
                         <tr>
@@ -67,10 +45,6 @@
                             <td>
                                 <p class="text-s font-weight-bold mb-0">1年</p>
                             </td>
-                            <td>
-                                <p class="text-xs text-secondary mb-0">{{
-                                    $t('system_settings.descriptions.data_retention') }}</p>
-                            </td>
                         </tr>
                         <!--言語設定-->
                         <tr>
@@ -83,10 +57,6 @@
                             </td>
                             <td>
                                 <language-selector />
-                            </td>
-                            <td>
-                                <p class="text-xs text-secondary mb-0">{{ $t('system_settings.descriptions.language') }}
-                                </p>
                             </td>
                         </tr>
                     </tbody>

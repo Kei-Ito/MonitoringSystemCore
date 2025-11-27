@@ -32,7 +32,7 @@
           "warning_min_threshold": null,
           "warning_max_threshold": 55,
           "alert_min_threshold": null,
-          "alert_max_threshold": null
+          "alert_max_threshold": ""
         },
         "specific_channel_setting": {
           "register_address": 10030,

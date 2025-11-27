@@ -56,7 +56,7 @@
                   </a>
                 </td>
               </tr>
-              <tr>
+              <tr v-if="isAdmin">
                 <td colspan="4" class="text-start">
                   <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
                     @click="openIOModuleAddModal">
@@ -94,7 +94,7 @@ import { addIOModule } from "@/service/monitoringService";
 const uiStore = useUiStore();
 const monitoringStore = useMonitoringStore();
 
-const { color } = storeToRefs(uiStore);
+const { color,isAdmin } = storeToRefs(uiStore);
 const { ioModules } = storeToRefs(monitoringStore);
 
 const isEditModalVisible = ref<boolean>(false);

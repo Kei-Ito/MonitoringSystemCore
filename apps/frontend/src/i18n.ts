@@ -44,14 +44,6 @@ const translations:any = {
           week: '週',
           month: '月',
           year: '年'
-        },
-        descriptions: {
-          system_color: 'システムの配色を設定します',
-          language: '表示言語を設定します',
-          dark_mode: 'ダークモードを有効/無効にします',
-          fixed_navbar: 'ナビゲーションバーを固定するかどうかを設定します',
-          sampling_clock: 'データ収集の周期を設定します',
-          data_retention: 'データを保持する期間を設定します'
         }
     },
     io_settings:{
@@ -59,6 +51,25 @@ const translations:any = {
       name: '名称',
       status: 'ステータス',
       created: '追加日',
+    },
+    system_control: {
+      title: 'システム制御',
+      description: 'システムの再起動またはシャットダウンを実行します。',
+      shutdown: 'シャットダウン',
+      reboot: '再起動',
+      cancel: 'キャンセル',
+      confirm_shutdown_title: 'シャットダウンの確認',
+      confirm_shutdown_message: 'システムをシャットダウンしますか？この操作により、すべてのアプリケーションが終了します。',
+      confirm_shutdown: 'シャットダウン',
+      confirm_reboot_title: '再起動の確認',
+      confirm_reboot_message: 'システムを再起動しますか？この操作により、すべてのアプリケーションが一時的に終了します。',
+      confirm_reboot: '再起動',
+      shutdown_success: 'システムをシャットダウンしています...',
+      reboot_success: 'システムを再起動しています...',
+      shutdown_error: 'シャットダウンに失敗しました',
+      reboot_error: '再起動に失敗しました',
+      shutting_down: 'シャットダウン中...',
+      rebooting: '再起動中...',
     },
     modal_window: {
       update: '更新',
@@ -110,14 +121,6 @@ const translations:any = {
           week: 'Week',
           month: 'Month',
           year: 'Year'
-        },
-        descriptions: {
-            system_color: 'Set the system color scheme',
-          language: 'Set the display language',
-          dark_mode: 'Enable/disable dark mode',
-          fixed_navbar: 'Set whether to fix the navigation bar',
-          sampling_clock: 'Set the data collection interval',
-          data_retention: 'Set the period for which data is retained'
         }
     },
     io_settings:{
@@ -125,6 +128,25 @@ const translations:any = {
       name: 'Name',
       status: 'Status',
       created: 'Created',
+    },
+    system_control: {
+      title: 'System Control',
+      description: 'You can reboot or shut down the system.',
+      shutdown: 'Shutdown',
+      reboot: 'Reboot',
+      cancel: 'Cancel',
+      confirm_shutdown_title: 'Confirm Shutdown',
+      confirm_shutdown_message: 'Are you sure you want to shut down the system? This will close all applications.',
+      confirm_shutdown: 'Execute Shutdown',
+      confirm_reboot_title: 'Confirm Reboot',
+      confirm_reboot_message: 'Are you sure you want to reboot the system? This will temporarily close all applications.',
+      confirm_reboot: 'Execute Reboot',
+      shutdown_success: 'System is shutting down...',
+      reboot_success: 'System is rebooting...',
+      shutdown_error: 'Failed to shutdown',
+      reboot_error: 'Failed to reboot',
+      shutting_down: 'Shutting down...',
+      rebooting: 'Rebooting...',
     },
     modal_window: {
       update: 'Update',
@@ -176,14 +198,6 @@ const translations:any = {
           week: '周',
           month: '月',
           year: '年'
-        },
-        descriptions: {
-          system_color: '设置系统配色',
-          language: '设置显示语言',
-          dark_mode: '启用/禁用深色模式',
-          fixed_navbar: '设置是否固定导航栏',
-          sampling_clock: '设置数据采集间隔',
-          data_retention: '设置数据保留期限'
         }
     },
     io_settings: {
@@ -191,6 +205,25 @@ const translations:any = {
       name: '名称',
       status: '状态',
       created: '创建时间',
+    },
+    system_control: {
+      title: '系统控制',
+      description: '您可以重启或关闭系统。',
+      shutdown: '关机',
+      reboot: '重启',
+      cancel: '取消',
+      confirm_shutdown_title: '确认关机',
+      confirm_shutdown_message: '您确定要关闭系统吗？这将关闭所有应用程序。',
+      confirm_shutdown: '执行关机',
+      confirm_reboot_title: '确认重启',
+      confirm_reboot_message: '您确定要重启系统吗？这将暂时关闭所有应用程序。',
+      confirm_reboot: '执行重启',
+      shutdown_success: '系统正在关机...',
+      reboot_success: '系统正在重启...',
+      shutdown_error: '关机失败',
+      reboot_error: '重启失败',
+      shutting_down: '关机中...',
+      rebooting: '重启中...',
     },
     modal_window: {
       update: '更新',
@@ -242,14 +275,6 @@ const translations:any = {
           week: '주',
           month: '월',
           year: '년'
-        },
-        descriptions: {
-          system_color: '시스템 색상을 설정합니다',
-          language: '표시 언어를 설정합니다',
-          dark_mode: '다크 모드를 활성화/비활성화합니다',
-          fixed_navbar: '네비게이션 바 고정 여부를 설정합니다',
-          sampling_clock: '데이터 수집 주기를 설정합니다',
-          data_retention: '데이터 보존 기간을 설정합니다'
         }
     },
     io_settings: {
@@ -257,6 +282,25 @@ const translations:any = {
       name: '이름',
       status: '상태',
       created: '추가일',
+    },
+    system_control: {
+      title: '시스템 제어',
+      description: '시스템을 재시작하거나 종료할 수 있습니다.',
+      shutdown: '종료',
+      reboot: '재시작',
+      cancel: '취소',
+      confirm_shutdown_title: '종료 확인',
+      confirm_shutdown_message: '시스템을 종료하시겠습니까? 이 작업은 모든 애플리케이션을 닫습니다.',
+      confirm_shutdown: '종료 실행',
+      confirm_reboot_title: '재시작 확인',
+      confirm_reboot_message: '시스템을 재시작하시겠습니까? 이 작업은 모든 애플리케이션을 일시적으로 닫습니다.',
+      confirm_reboot: '재시작 실행',
+      shutdown_success: '시스템을 종료하는 중...',
+      reboot_success: '시스템을 재시작하는 중...',
+      shutdown_error: '종료 실패',
+      reboot_error: '재시작 실패',
+      shutting_down: '종료 중...',
+      rebooting: '재시작 중...',
     },
     modal_window: {
       update: '업데이트',

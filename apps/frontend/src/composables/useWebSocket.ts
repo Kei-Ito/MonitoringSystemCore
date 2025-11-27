@@ -33,7 +33,7 @@ export function useWebSocket() {
         const healthData = healthResult.value.data;
         
         if (!healthData.drivesMounted) {
-          showDriveMountWarning.value = true;
+          showDriveMountWarning.value = false;////////ここをtrueに変更////////
           driveMountPath.value = healthData.dataRootPath;
           
           toast.error(

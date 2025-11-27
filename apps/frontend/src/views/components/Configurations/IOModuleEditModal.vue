@@ -1,24 +1,36 @@
 <template>
-  <BaseModal
-    :show="visible"
-    title="入出力モジュール設定"
-    size="modal-xl"
-    maxWidth="80%"
-    @close="close"
-  >
+  <BaseModal :show="visible" title="入出力モジュール設定" size="modal-xl" maxWidth="80%" @close="close">
     <template #header>
       <div class="d-flex align-items-center w-100">
         <h5 class="modal-title fw-bold text-white mb-0">入出力モジュール設定</h5>
-        <button type="button" class="btn btn-secondary btn-sm ms-auto me-3 mb-0" @click="deleteModuleBtnClicked">モジュールを削除</button>
+        <button v-if="isAdmin" type="button" class="btn btn-secondary btn-sm ms-auto me-3 mb-0"
+          @click="deleteModuleBtnClicked">モジュールを削除</button>
       </div>
     </template>
 
     <!-- Body -->
     <div>
-      <label for="name" class="mx-3">モジュール名</label>
-      <input type="text" v-model="localModule.module_name" id="name" style="width: 60%;" />
+      <!-- モジュール名 -->
+      <div class="mb-4">
+        <div class="editable-name-wrapper">
+          <i class="material-icons align-middle me-2 edit-icon">edit</i>
+          <input
+            type="text"
+            class="form-control form-control-lg form-control-prominent editable-name-input fs-4"
+            v-model="localModule.module_name"
+            id="name"
+            placeholder="モジュール名を入力"
+          />
+        </div>
+      </div>
 
-      <table v-if="isVisibleSpecificSettingTable" class="table mx-0 container mt-2">
+      <!-- デバイス固有設定 -->
+      <div v-if="isVisibleSpecificSettingTable&&isAdmin" class="settings-section mb-4">
+        <div class="section-header mb-3">
+          <i class="material-icons align-middle me-2">settings</i>
+          <span class="fw-bold">デバイス固有設定</span>
+        </div>
+        <table class="table table-styled">
         <thead>
           <tr>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">項目</th>
@@ -37,7 +49,15 @@
           </tr>
         </tbody>
       </table>
-      <table class="table container mt-3">
+      </div>
+
+      <!-- 入力チャンネル -->
+      <div class="settings-section mb-4">
+        <div class="section-header mb-3">
+          <i class="material-icons align-middle me-2">input</i>
+          <span class="fw-bold">入力チャンネル</span>
+        </div>
+        <table class="table table-styled">
         <thead>
           <tr>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
@@ -53,11 +73,11 @@
               style="width: 15px;">
               入力値設定
             </th>
-            <th v-if="isEditableSpecificInputChannelSetting"
+            <th v-if="isEditableSpecificInputChannelSetting && isAdmin"
               class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
               詳細設定
             </th>
-            <th v-if="isAddableInputChannel"
+            <th v-if="isAddableInputChannel && isAdmin"
               class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
               style="width: 15px;">
               削除
@@ -86,26 +106,23 @@
             </td>
             <td class="align-middle text-center">
               <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0">
-                <i class="material-icons-round" aria-hidden="true"
-                  @click="openNormalizeSettingModal(channel)">tune</i>
+                <i class="material-icons-round" aria-hidden="true" @click="openNormalizeSettingModal(channel)">tune</i>
               </a>
             </td>
-            <td v-if="isEditableSpecificInputChannelSetting" class="align-middle text-center">
-              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0"
-                @click="openChannelSpecificSettingModal(channel)">
+            <td v-if="isEditableSpecificInputChannelSetting && isAdmin" class="align-middle text-center">
+              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="openChannelSpecificSettingModal(channel)">
                 <i class="material-icons-round" aria-hidden="true">edit</i>
               </a>
             </td>
-            <td v-if="isAddableInputChannel" class="align-middle text-center">
+            <td v-if="isAddableInputChannel && isAdmin" class="align-middle text-center">
               <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannelButtonClick(channel)">
                 <i class="material-icons-round" aria-hidden="true">delete</i>
               </a>
             </td>
           </tr>
-          <tr v-if="isAddableInputChannel">
+          <tr v-if="isAddableInputChannel && isAdmin">
             <td colspan="5" class="text-start">
-              <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
-                @click="addInputChannel">
+              <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center" @click="addInputChannel">
                 <div class="d-flex items-center justify-center  items-center">
                   <i class="material-icons me-2" style="font-size:25px;">add</i>
                   <p class="text-muted mb-0 flex" style="font-size: 1.0em;">入力チャンネルを追加</p>
@@ -115,8 +132,15 @@
           </tr>
         </tbody>
       </table>
-      <table class="table  container mt-3"
-        v-if="isAddableOutputChannel || localModule.output_channels.length !== 0">
+      </div>
+
+      <!-- 出力チャンネル -->
+      <div v-if="isAddableOutputChannel || localModule.output_channels.length !== 0" class="settings-section mb-4">
+        <div class="section-header mb-3">
+          <i class="material-icons align-middle me-2">output</i>
+          <span class="fw-bold">出力チャンネル</span>
+        </div>
+        <table class="table table-styled">
         <thead>
           <tr>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
@@ -126,11 +150,11 @@
             </th>
             <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
               少数点以下表示</th>
-            <th v-if="isEditableSpecificOutputChannelSetting"
+            <th v-if="isEditableSpecificOutputChannelSetting && isAdmin"
               class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
               詳細設定
             </th>
-            <th v-if="isAddableOutputChannel"
+            <th v-if="isAddableOutputChannel && isAdmin"
               class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
               style="width: 15px;">
               削除
@@ -151,8 +175,7 @@
                 class="w-100" />
             </td>
             <td v-if="isEditableSpecificOutputChannelSetting" class="align-middle text-center">
-              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0"
-                @click="openChannelSpecificSettingModal(channel)">
+              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="openChannelSpecificSettingModal(channel)">
                 <i class="material-icons-round" aria-hidden="true">edit</i>
               </a>
             </td>
@@ -162,7 +185,7 @@
               </a>
             </td>
           </tr>
-          <tr v-if="isAddableOutputChannel">
+          <tr v-if="isAddableOutputChannel && isAdmin">
             <td colspan="4" class="text-start">
               <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
                 @click="addOutputChannel">
@@ -175,7 +198,12 @@
           </tr>
         </tbody>
       </table>
-      <span v-if="isError" class="error-message">更新に失敗しました。</span>
+      </div>
+
+      <div v-if="isError" class="alert alert-danger" role="alert">
+        <i class="material-icons align-middle me-2" style="font-size: 18px;">error</i>
+        更新に失敗しました。
+      </div>
     </div>
 
     <!-- Footer -->
@@ -208,6 +236,7 @@ import CheckModal from '@/components/Modal/CheckModal.vue';
 import { addChannel, deleteChannel, deleteIOModule, updateIOModule } from '@/service/monitoringService';
 import InputDataSettingModal from '@/views/components/Configurations/InputDataSettingModal.vue';
 import { useSystemSettingStore } from '@/pinia/systemSettingStore';
+import { useUiStore } from '@/pinia/uiStore';
 
 const props = defineProps({
   visible: {
@@ -246,6 +275,9 @@ const checkModal = ref<InstanceType<typeof CheckModal> | null>(null)
 // システム設定ストアからサンプリングインターバルを取得
 const systemSettingStore = useSystemSettingStore();
 const samplingIntervals = computed(() => systemSettingStore.samplingIntervals);
+
+const uiStore = useUiStore();
+const { isAdmin } = toRefs(uiStore);
 
 // コンポーネントマウント時にサンプリングインターバルを読み込む
 onMounted(async () => {
@@ -387,6 +419,137 @@ function determineInputType(value: any): string {
 
 </script>
 <style scoped>
+/* モジュール名編集エリア */
+.editable-name-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  background-color: #f0f8ff;
+  transition: all 0.3s ease;
+}
+
+.editable-name-wrapper:hover {
+  background-color: #e6f2ff;
+  border-color: #0056b3;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.edit-icon {
+  color: #007bff;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.editable-name-input {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding-left: 0.5rem !important;
+}
+
+.editable-name-input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* セクションヘッダー */
+.settings-section {
+  padding: 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.settings-section:hover {
+  border-color: #007bff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #495057;
+}
+
+.section-header i {
+  color: #007bff;
+  font-size: 24px;
+}
+
+/* テーブルスタイル */
+.table-styled {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.table-styled thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.table-styled thead th {
+  color: #ffffff !important;
+  font-weight: 600;
+  border: none;
+  padding: 0.75rem;
+}
+
+.table-styled tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table-styled tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.table-styled tbody td {
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+
+.table-styled input[type="text"],
+.table-styled input[type="number"],
+.table-styled select {
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 0.375rem 0.75rem;
+  transition: border-color 0.2s;
+}
+
+.table-styled input[type="text"]:focus,
+.table-styled input[type="number"]:focus,
+.table-styled select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+/* アイコンボタン */
+.material-icons,
+.material-icons-round {
+  vertical-align: middle;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+/* アラート */
+.alert {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  border-radius: 8px;
+}
+
 .channel-settings {
   margin-top: 15px;
   padding: 10px;

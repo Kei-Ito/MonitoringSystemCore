@@ -47,16 +47,32 @@
                 <label class="fs-5 text-nowrap mb-0 pb-0 text-dark">閾値設定</label>  
             </div>
             <span class="ms-2 mt-2 text-xs font-weight-bolder opacity-7">閾値の範囲外の入力値を異常と判定</span>
-            <div class="form-group mb-3 p-2 border rounded-3">
-                <div class="d-flex align-items-center">
-                    <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最大値</label>
-                    <input type="number" class="form-control border px-2 fs-5"
-                        v-model="localChannelSetting.threshold.alert_max_threshold" :min="localChannelSetting.threshold.alert_min_threshold??0" />
+            <div class="d-flex justify-content-evenly">
+                <div class="form-group mb-3 me-2 p-2 border rounded-3">
+                    <label class="fs-5 d-inline-block text-nowrap align-middle mb-2 text-dark">警告閾値</label>
+                    <div class="d-flex align-items-center">
+                        <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最大値</label>
+                        <input type="number" class="form-control border px-2 fs-5" style="width:100px"
+                            v-model="localChannelSetting.threshold.warning_max_threshold" :min="localChannelSetting.threshold.warning_min_threshold??undefined" />
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最小値</label>
+                        <input type="number" class="form-control border px-2 fs-5" style="width:100px"
+                            v-model="localChannelSetting.threshold.warning_min_threshold" :max="localChannelSetting.threshold.warning_max_threshold??undefined" />
+                    </div>
                 </div>
-                <div class="d-flex align-items-center mb-2">
-                    <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最小値</label>
-                    <input type="number" class="form-control border px-2 fs-5"
-                        v-model="localChannelSetting.threshold.alert_min_threshold" :max="localChannelSetting.threshold.alert_max_threshold??999999" />
+                <div class="form-group mb-3 p-2 border rounded-3">
+                    <label class="fs-5 d-inline-block text-nowrap align-middle mb-2 text-dark">アラート閾値</label>
+                    <div class="d-flex align-items-center">
+                        <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最大値</label>
+                        <input type="number" class="form-control border px-2 fs-5" style="width:100px"
+                            v-model="localChannelSetting.threshold.alert_max_threshold" :min="localChannelSetting.threshold.alert_min_threshold??undefined" />
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <label class="d-inline-block text-nowrap me-2 mb-0 align-middle text-dark">最小値</label>
+                        <input type="number" class="form-control border px-2 fs-5" style="width:100px"
+                            v-model="localChannelSetting.threshold.alert_min_threshold" :max="localChannelSetting.threshold.alert_max_threshold??undefined" />
+                    </div>
                 </div>
             </div>
 
@@ -114,6 +130,10 @@ function update() {
         isError.value = true;
         return;
     }
+    
+    // 空文字列をnullに変換
+    normalizeThresholdValues();
+    
     emit('update', localChannelSetting.value);
     close();
 }
@@ -125,6 +145,19 @@ function validateValue(): boolean {
     } else {
         return false;
     }
+}
+
+/**
+ * 閾値の空文字列をnullに変換
+ */
+function normalizeThresholdValues() {
+    const threshold = localChannelSetting.value.threshold;
+    
+    // 空文字列または空白文字列をnullに変換（any経由で型チェックを回避）
+    threshold.warning_min_threshold = (threshold.warning_min_threshold as any) === '' || threshold.warning_min_threshold === null ? null : Number(threshold.warning_min_threshold);
+    threshold.warning_max_threshold = (threshold.warning_max_threshold as any) === '' || threshold.warning_max_threshold === null ? null : Number(threshold.warning_max_threshold);
+    threshold.alert_min_threshold = (threshold.alert_min_threshold as any) === '' || threshold.alert_min_threshold === null ? null : Number(threshold.alert_min_threshold);
+    threshold.alert_max_threshold = (threshold.alert_max_threshold as any) === '' || threshold.alert_max_threshold === null ? null : Number(threshold.alert_max_threshold);
 }
 
 // モーダルが表示されたときに、localChannelSettingにprops.modelValueをセット

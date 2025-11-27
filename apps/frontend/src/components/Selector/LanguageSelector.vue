@@ -30,3 +30,14 @@ const currentLocale = computed<string>({
 })
 
 </script>
+
+<style scoped>
+.language-selector {
+  max-width: 200px;
+}
+
+.language-selector .form-select {
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+</style>
