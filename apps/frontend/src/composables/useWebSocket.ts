@@ -37,7 +37,7 @@ export function useWebSocket() {
           driveMountPath.value = healthData.dataRootPath;
           
           toast.error(
-            `警告: データドライブがマウントされていません (${healthData.dataRootPath || '未設定'})`,
+            `データ保存用ドライブがマウントされていません`,
             { timeout: false }
           );
         } else {
