@@ -23,6 +23,13 @@
     </main>
   </div>
 
+  <!-- ドライブマウント警告モーダル -->
+  <drive-mount-warning-modal
+    :show="showDriveMountWarning"
+    :drivePath="driveMountPath"
+    @shutdown="handleShutdown"
+  />
+
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
@@ -32,11 +39,16 @@ import SplashWindow from "@/components/SplashWindow.vue";
 import AppFooter from "@/examples/Footer.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import Sidenav from "@/examples/Sidenav/index.vue";
+import DriveMountWarningModal from "@/components/DriveMountWarningModal.vue";
 import { useUiStore } from "@/pinia/uiStore";
 import { useAppInitializer } from '@/composables/useAppInitializer';
+import { showDriveMountWarning, driveMountPath } from '@/composables/useWebSocket';
+import { shutdownSystem } from '@/api';
+import { useToast } from "vue-toastification";
 
 const uiStore = useUiStore()
 const { isLoading } = useAppInitializer();
+const toast = useToast();
 
 const navbarRef = ref<InstanceType<typeof Navbar> | null>(null);
 let dateRangePickerCallback: (() => void) | null = null;
@@ -80,6 +92,23 @@ onMounted(async () => {
 
 function navbarMinimize() {
   uiStore.navbarMinimize();
+}
+
+// システムシャットダウン処理
+async function handleShutdown() {
+  try {
+    const result = await shutdownSystem();
+    if (result.ok) {
+      toast.info("システムをシャットダウンしています...", {
+        timeout: 5000
+      });
+    } else {
+      toast.error(`シャットダウンに失敗しました: ${result.error}`);
+    }
+  } catch (error) {
+    console.error('Shutdown error:', error);
+    toast.error("シャットダウンリクエストの送信に失敗しました");
+  }
 }
 
 </script>

@@ -10,10 +10,12 @@ import chartRoutes from './routes/chartRouters.js';
 import uiRouters from './routes/uiRouters';
 import systemSettingRoutes from './routes/systemSettingRouters.js';
 import systemRoutes from './routes/systemRouters.js';
+import healthRoutes from './routes/healthRouters.js';
 import { getIsSamplingIntervalRunning } from './services/IOModuleService.js';
 import { initializeIOModules } from './services/IOModuleService.js';
 import { initializeLayouts } from './services/uiService.js';
 import { SystemSettingService } from './config/SystemSetting.js';
+import HealthCheckService from './services/healthCheckService.js';
 
 async function bootstrap() {
   const app = express();
@@ -69,11 +71,15 @@ async function bootstrap() {
   app.use('/api/system_setting', systemSettingRoutes); // システム設定関連のAPI
   app.use('/api/ui', uiRouters); // UIレイアウト関連のAPI
   app.use('/api/system', systemRoutes); // システム制御関連のAPI
+  app.use('/api/health', healthRoutes); // ヘルスチェック関連のAPI
 
   // システム設定の初期化
   const configService = SystemSettingService.getInstance();
   await configService.loadSystemSettingFromDatabase();
 
+  // 起動時にヘルスチェックを実行
+  const healthService = HealthCheckService.getInstance();
+  await healthService.checkDriveMount();
 
   // 未定義のルートに対してindex.htmlを返す
   app.get('*', (req: Request, res: Response) => {
