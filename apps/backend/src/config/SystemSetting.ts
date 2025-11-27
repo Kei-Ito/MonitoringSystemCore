@@ -44,6 +44,7 @@ export class SystemSettingService {
         return {
             samplingIntervals: [interval1, interval2],
             dataRootPath: "",
+            driveUUID: "",
             category1list: [],
             category2list: [],
             dashboardViewCategory1Selected: [],
@@ -80,6 +81,7 @@ export class SystemSettingService {
         const systemSetting: SystemSettingData = {
             samplingIntervals: this._systemSetting?.samplingIntervals ?? defaultSetting.samplingIntervals,
             dataRootPath: this._systemSetting?.dataRootPath ?? "",
+            driveUUID: this._systemSetting?.driveUUID ?? "",
             category1list: this._systemSetting?.category1list ?? [],
             category2list: this._systemSetting?.category2list ?? [],
             dashboardViewCategory1Selected: this._systemSetting?.dashboardViewCategory1Selected ?? [],
