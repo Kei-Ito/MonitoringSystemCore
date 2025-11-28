@@ -52,32 +52,50 @@ const optionBuilder = () => {
     const thresholds = chartRef.value.chart_options.thresholds;
     const minY = chartRef.value.chart_options.visibility?.minY;
     const maxY = chartRef.value.chart_options.visibility?.maxY;
+    const seriesColors = chartRef.value.chart_options.seriesColors ?? {};
+    const seriesLineWidths = chartRef.value.chart_options.seriesLineWidths ?? {};
 
     // 折れ線（dataset から列名でマッピング）
-    const lineSeries = props.series.map((s, idx) => ({
-        name: s.channel_name,
-        type: 'line',
-        showSymbol: false,
-        sampling: 'lttb',
-        emphasis: { disabled: true, focus: 'none' },
-        data: seriesData.value[idx] ?? []
-    }))
+    const lineSeries = props.series.map((s, idx) => {
+        const color = seriesColors[s.channel_uuid] ?? defaultPalette[idx % defaultPalette.length];
+        const width = seriesLineWidths[s.channel_uuid] ?? 2;
+
+        return {
+            name: s.channel_name,
+            type: 'line',
+            showSymbol: false,
+            sampling: 'lttb',
+            emphasis: { disabled: true, focus: 'none' },
+            data: seriesData.value[idx] ?? [],
+            lineStyle: {
+                width: width,
+                // 閾値設定がない場合はここで色を指定
+                ...(thresholds.min == null || thresholds.max == null ? { color } : {})
+            },
+            itemStyle: {
+                // 閾値設定がない場合はここで色を指定
+                ...(thresholds.min == null || thresholds.max == null ? { color } : {})
+            }
+        }
+    })
 
     // しきい値で色分け（シリーズごと）
     const visualMaps =
         thresholds.min != null && thresholds.max != null
-        ? props.series.map((_, idx) => ({
-            show: false,
-            type: 'piecewise',
-            seriesIndex: idx,  // ← このシリーズだけに適用
-            dimension: 1,      // ← series内の y 次元を指す（x=0, y=1）
-            pieces: [
-                { lte: thresholds.min, color: thresholds.color },
-                { gt: thresholds.min, lte: thresholds.max,
-                color: defaultPalette[idx % defaultPalette.length] },
-                { gt: thresholds.max, color: thresholds.color }
-            ]
-            }))
+        ? props.series.map((s, idx) => {
+            const color = seriesColors[s.channel_uuid] ?? defaultPalette[idx % defaultPalette.length];
+            return {
+                show: false,
+                type: 'piecewise',
+                seriesIndex: idx,  // ← このシリーズだけに適用
+                dimension: 1,      // ← series内の y 次元を指す（x=0, y=1）
+                pieces: [
+                    { lte: thresholds.min, color: thresholds.color },
+                    { gt: thresholds.min, lte: thresholds.max, color: color },
+                    { gt: thresholds.max, color: thresholds.color }
+                ]
+            }
+        })
         : []
 
     // 上下限の markLine（ダミー series に付与）

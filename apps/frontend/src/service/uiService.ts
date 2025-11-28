@@ -1,3 +1,4 @@
+import type { UiLayout } from '@monitoring/shared/api';
 import * as api from '@/api'
 import { handleApiRequest } from '@/service/handle';
 
@@ -11,4 +12,14 @@ export const fetchUiLayouts = () =>
         apiCall: () => api.getUiLayouts(),
         onSuccess: (val) => val, // データをそのまま返す
         errorMsg: "UIレイアウトの取得に失敗しました",
+    });
+
+/**
+ * UIレイアウトを保存する
+ */
+export const saveUiLayouts = (layout: UiLayout) =>
+    handleApiRequest({
+        apiCall: () => api.updateUiLayouts(layout),
+        onSuccess: () => {},
+        errorMsg: "UIレイアウトの保存に失敗しました",
     });

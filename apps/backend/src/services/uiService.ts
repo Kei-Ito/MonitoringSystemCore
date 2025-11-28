@@ -23,3 +23,17 @@ export function getLayouts(): Record<string, ChartConfig[]> {
     console.log('getLayouts called');
   return layouts;
 }
+
+/**
+ * UIレイアウト設定を保存する
+ * @param newLayouts 保存するレイアウト設定
+ */
+export async function saveLayouts(newLayouts: Record<string, ChartConfig[]>): Promise<void> {
+  layouts = newLayouts;
+  try {
+    await json.saveJson(jsonFilePath, layouts);
+  } catch (error) {
+    console.error('レイアウトの設定ファイルの保存に失敗しました:', error);
+    throw new Error('Failed to save layout settings');
+  }
+}

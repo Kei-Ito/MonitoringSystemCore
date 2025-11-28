@@ -53,59 +53,65 @@
                         </h6>
 
                         <div class="settings-form">
-                            <h6 class="subsection-title mb-3">
+                            
+                                <h6 class="subsection-title mb-3">
                                     <i class="material-icons align-middle me-2">palette</i>
                                     一般設定
                                 </h6>
-                            <!-- タイトル & 単位 -->
-                            <div class="mb-3">
-                                <div class="row g-2">
-                                    <!-- タイトル -->
-                                    <div class="col-12 col-xl-6">
-                                        <label class="form-label fw-bold">
-                                            <i class="material-icons align-middle me-1" style="font-size: 18px;">title</i>
-                                            グラフタイトル
-                                        </label>
-                                        <input type="text" class="form-control" v-model="localSettings.chart_title"
-                                            placeholder="グラフのタイトルを入力" />
-                                    </div>
+                            <div class="setting-card">
+                                <!-- タイトル & 単位 -->
+                                <div class="mb-3 ">
+                                    <div class="row g-2">
+                                        <!-- タイトル -->
+                                        <div class="col-12 col-xl-6">
+                                            <label class="form-label fw-bold">
+                                                <i class="material-icons align-middle me-1"
+                                                    style="font-size: 18px;">title</i>
+                                                グラフタイトル
+                                            </label>
+                                            <input type="text" class="form-control" v-model="localSettings.chart_title"
+                                                placeholder="グラフのタイトルを入力" />
+                                        </div>
 
-                                    <!-- 単位 -->
-                                    <div class="col-12 col-xl-6">
-                                        <label class="form-label fw-bold">
-                                            <i class="material-icons align-middle me-1" style="font-size: 18px;">straighten</i>
-                                            単位
-                                        </label>
-                                        <input type="text" class="form-control" v-model="localSettings.chart_unit"
-                                            placeholder="単位を入力（例: ℃, %, kW）" />
+                                        <!-- 単位 -->
+                                        <div class="col-12 col-xl-6">
+                                            <label class="form-label fw-bold">
+                                                <i class="material-icons align-middle me-1"
+                                                    style="font-size: 18px;">straighten</i>
+                                                単位
+                                            </label>
+                                            <input type="text" class="form-control" v-model="localSettings.chart_unit"
+                                                placeholder="単位を入力（例: ℃, %, kW）" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <!-- カテゴリ1 & カテゴリ2 -->
-                            <div class="mb-3">
-                                <label class="form-label fw-bold">
-                                    <i class="material-icons align-middle me-1" style="font-size: 18px;">category</i>
-                                    カテゴリ
-                                </label>
-                                <div class="row g-2">
-                                    <div class="col-6">
-                                        <label class="form-label small text-muted">照射炉</label>
-                                        <select class="form-select" v-model="localSettings.category1">
-                                            <option value="" disabled>照射炉を選択</option>
-                                            <option v-for="cat in uiStore.category1List" :key="cat" :value="cat">
-                                                {{ cat }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label small text-muted">分類</label>
-                                        <select class="form-select" v-model="localSettings.category2">
-                                            <option value="" disabled>分類を選択</option>
-                                            <option v-for="cat in uiStore.category2List" :key="cat" :value="cat">
-                                                {{ cat }}
-                                            </option>
-                                        </select>
+
+                                <!-- カテゴリ1 & カテゴリ2 -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="material-icons align-middle me-1"
+                                            style="font-size: 18px;">category</i>
+                                        カテゴリ
+                                    </label>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <label class="form-label small text-muted">照射炉</label>
+                                            <select class="form-select" v-model="localSettings.category1">
+                                                <option value="" disabled>照射炉を選択</option>
+                                                <option v-for="cat in uiStore.category1List" :key="cat" :value="cat">
+                                                    {{ cat }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small text-muted">分類</label>
+                                            <select class="form-select" v-model="localSettings.category2">
+                                                <option value="" disabled>分類を選択</option>
+                                                <option v-for="cat in uiStore.category2List" :key="cat" :value="cat">
+                                                    {{ cat }}
+                                                </option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -118,19 +124,12 @@
                                 </h6>
 
                                 <!-- ラインチャート / バーチャート用設定 -->
-                                <LineBarChartSettings
-                                    v-if="isLineOrBarChart"
-                                    :options="localSettings.chart_options"
-                                    :channels="chartChannels"
-                                    @update="updateChartOptions"
-                                />
+                                <LineBarChartSettings v-if="isLineOrBarChart" :options="localSettings.chart_options"
+                                    :channels="chartChannels" @update="updateChartOptions" />
 
                                 <!-- ゲージチャート / 横バーチャート用設定 -->
-                                <GaugeHorizontalBarSettings
-                                    v-if="isGaugeOrHorizontalBar"
-                                    :options="localSettings.chart_options"
-                                    @update="updateChartOptions"
-                                />
+                                <GaugeHorizontalBarSettings v-if="isGaugeOrHorizontalBar"
+                                    :options="localSettings.chart_options" @update="updateChartOptions" />
                             </div>
                         </div>
                     </div>
@@ -181,7 +180,7 @@ const emit = defineEmits<{
 const localSettings = ref<ChartConfig>({ ...props.chart })
 
 // プレビュー用のチャート設定
-const previewChart = computed(() => localSettings.value)
+const previewChart = computed(() => ({ ...localSettings.value }))
 const previewSeries = useSeries(props.chart.chart_uuid)
 
 // チャートコンポーネントのマッピング
@@ -194,10 +193,10 @@ const componentMap = {
 const chartComponent = computed(() => componentMap[localSettings.value.chart_type])
 
 // グラフタイプによる条件分岐
-const isLineOrBarChart = computed(() => 
+const isLineOrBarChart = computed(() =>
     localSettings.value.chart_type === 'LineChart' || localSettings.value.chart_type === 'BarChart'
 )
-const isGaugeOrHorizontalBar = computed(() => 
+const isGaugeOrHorizontalBar = computed(() =>
     localSettings.value.chart_type === 'GaugeChart' || localSettings.value.chart_type === 'HorizontalBarChart'
 )
 
@@ -206,7 +205,7 @@ const monitoringStore = useMonitoringStore()
 const uiStore = useUiStore()
 const chartChannels = computed(() => {
     if (!props.chart.channel_uuids || props.chart.channel_uuids.length === 0) return []
-    
+
     return props.chart.channel_uuids.map(uuid => {
         for (const module of monitoringStore.ioModules) {
             const channel = module.input_channels.find(ch => ch.channel_uuid === uuid)
@@ -225,12 +224,12 @@ const updateChartOptions = (options: any) => {
 watch(() => props.visible, (newVal) => {
     if (newVal) {
         localSettings.value = { ...props.chart }
-        
+
         // chart_optionsの初期化
         if (!localSettings.value.chart_options) {
             localSettings.value.chart_options = {}
         }
-        
+
         // ラインチャート/バーチャート用の初期化
         if (isLineOrBarChart.value) {
             if (!localSettings.value.chart_options.thresholds) {
@@ -243,7 +242,7 @@ watch(() => props.visible, (newVal) => {
                 localSettings.value.chart_options.seriesColors = {}
             }
         }
-        
+
         // ゲージ/横バーチャート用の初期化
         if (isGaugeOrHorizontalBar.value) {
             if (!localSettings.value.chart_options.minValue) {
@@ -273,16 +272,13 @@ const save = () => {
 </script>
 
 <style scoped>
-.chart-settings-container {
-    min-height: 500px;
-}
-
 .section-title {
     font-size: 1.1rem;
     font-weight: 600;
     color: #5e72e4;
     border-bottom: 2px solid #e9ecef;
     padding-bottom: 0.5rem;
+    flex-shrink: 0;
 }
 
 .subsection-title {
@@ -298,11 +294,11 @@ const save = () => {
 }
 
 .preview-section {
-    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .preview-card {
-    height: 550px;
     display: flex;
     flex-direction: column;
 }
@@ -315,11 +311,19 @@ const save = () => {
     background: #f8f9fa;
     border-radius: 0.75rem;
     padding: 1.5rem;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.setting-card {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .settings-form {
-    max-height: 480px;
     overflow-y: auto;
     padding-right: 0.5rem;
 }
@@ -383,14 +387,54 @@ const save = () => {
     box-shadow: 0 0 0 0.2rem rgba(94, 114, 228, 0.25);
 }
 
-/* レスポンシブ調整 */
+/* デスクトップ表示（XL以上）でのレイアウト調整 */
+@media (min-width: 1200px) {
+    .chart-settings-container {
+        height: 55vh;
+        min-height: 400px;
+        max-height: 600px;
+    }
+
+    .chart-settings-container .row {
+        height: 100%;
+    }
+
+    .chart-settings-container .col-xl-7,
+    .chart-settings-container .col-xl-5 {
+        height: 100%;
+    }
+
+    .preview-section {
+        height: 100%;
+    }
+
+    .preview-card {
+        height: auto;
+        flex: 1;
+    }
+
+    .settings-section {
+        height: 100%;
+        max-height: 100%;
+    }
+
+    .settings-form {
+        flex: 1;
+        min-height: 0;
+        /* Flexboxスクロール用 */
+        max-height: none;
+    }
+}
+
+/* モバイル・タブレット表示（XL未満） */
 @media (max-width: 1199px) {
     .preview-card {
         height: 400px;
     }
 
     .settings-form {
-        max-height: none;
+        max-height: 500px;
+        /* モバイル時は適度な高さ制限 */
     }
 }
 </style>

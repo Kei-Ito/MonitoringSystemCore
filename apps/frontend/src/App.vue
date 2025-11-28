@@ -5,7 +5,7 @@
   </div>
   <div v-else>
     <sidenav :custom_class="color" :class="[isRTL ? 'fixed-end' : 'fixed-start']" v-if="showSidenav" />
-    <main class="main-content position-relative max-height-vh-100 h-100 overflow-x-hidden">
+    <main class="main-content position-relative max-height-vh-100 h-100 overflow-x-hidden d-flex flex-column">
       <!-- nav -->
       <navbar 
         ref="navbarRef"
@@ -14,11 +14,13 @@
         v-if="showNavbar"
         @show-date-range-picker="handleShowDateRangePicker" 
       />
-      <router-view v-slot="{ Component }">
-        <keep-alive include="Trend,Dashboard">
-          <component :is="Component" @update-navbar-date-range="updateNavbarDateRange" />
-        </keep-alive>
-      </router-view>
+      <div class="flex-grow-1">
+        <router-view v-slot="{ Component }">
+          <keep-alive include="Trend,Dashboard">
+            <component :is="Component" @update-navbar-date-range="updateNavbarDateRange" />
+          </keep-alive>
+        </router-view>
+      </div>
       <app-footer v-show="showFooter" />
     </main>
   </div>

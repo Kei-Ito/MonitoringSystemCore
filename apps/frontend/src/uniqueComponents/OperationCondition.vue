@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid" style="min-height: 60vh;">
-        <div class="mt-4 row  device-health-row">
+        <div class="mt-5 row  device-health-row">
             <!-- 照射炉1の状態表示 -->
             <div class="col-sm-4">
                 <DeviceHealthCard :title="allDeviceHealthStatuses[0].name" :deviceHealth="allDeviceHealthStatuses[0].status" />

@@ -110,7 +110,7 @@ watch(() => props.options, (newOptions) => {
 
 // 変更を親に通知
 watch(localOptions, (newValue) => {
-    emit('update', newValue)
+    emit('update', { ...newValue })
 }, { deep: true })
 </script>
 

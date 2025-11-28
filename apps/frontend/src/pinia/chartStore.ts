@@ -130,5 +130,29 @@ export const useChartStore = defineStore('chartStore', {
         return err(`Chart with UUID ${chart_uuid} not found`);
       }
     },
+    /** チャート設定を更新して保存（全ページ対象） */
+    async updateChartConfig(updatedChart: ChartConfig) {
+      let found = false;
+      // ストア内のデータを更新
+      for (const pageName in this.uiLayouts) {
+        const index = this.uiLayouts[pageName].findIndex((c) => c.chart_uuid === updatedChart.chart_uuid);
+        if (index !== -1) {
+          this.uiLayouts[pageName][index] = updatedChart;
+          found = true;
+        }
+      }
+
+      if (found) {
+        // バックエンドに保存
+        const result = await uiService.saveUiLayouts(this.uiLayouts);
+        if (result.ok) {
+          return ok(updatedChart);
+        } else {
+          return err(result.error);
+        }
+      } else {
+        return err(`Chart with UUID ${updatedChart.chart_uuid} not found`);
+      }
+    },
   },
 })

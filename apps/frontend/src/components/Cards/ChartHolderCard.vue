@@ -65,7 +65,9 @@ import ChartSettingsModal from '@/components/Modals/ChartSettingsModal.vue'
 import { useSeries } from '@/pinia/useSeries'
 import { useChannelValuesStore } from '@/pinia/channelValuesStore'
 import { useUiStore } from '@/pinia/uiStore'
+import { useChartStore } from '@/pinia/chartStore'
 import { storeToRefs } from 'pinia'
+import { useToast } from 'vue-toastification'
 
 /* ---------- props & series ---------- */
 const props = defineProps<{ 
@@ -74,6 +76,8 @@ const props = defineProps<{
 const series  = useSeries(props.chart.chart_uuid)
 const channelValuesStore = useChannelValuesStore()
 const uiStore = useUiStore()
+const chartStore = useChartStore()
+const toast = useToast()
 const { color } = storeToRefs(uiStore)
 
 const isLoading = computed(() => {
@@ -115,9 +119,13 @@ const closeSettings = () => {
   isSettingsModalVisible.value = false
 }
 
-const handleUpdate = (updatedConfig: ChartConfig) => {
-  console.log('グラフ設定を更新:', updatedConfig)
-  // TODO: API呼び出しでバックエンドに保存する処理を実装
+const handleUpdate = async (updatedConfig: ChartConfig) => {
+  const result = await chartStore.updateChartConfig(updatedConfig)
+  if (result.ok) {
+    toast.success('グラフ設定を更新しました')
+  } else {
+    toast.error('グラフ設定の更新に失敗しました')
+  }
   closeSettings()
 }
 </script>

@@ -1,1191 +1,1220 @@
 {
-    "dashboard": [
-        {
-            "chart_uuid": "chart001",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10030",
-                "10031",
-                "10032",
-                "10033",
-                "10034",
-                "10035",
-                "10036",
-                "10037",
-                "10038"
-            ],
-            "chart_title": "液温",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart001",
-                "x": 2,
-                "y": 0,
-                "w": 12,
-                "h": 15,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 70,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    55,
-                    60
-                ]
-            },
-            "category1": "照射炉1",
-            "category2": "液温"
+  "dashboard": [
+    {
+      "chart_uuid": "chart001",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10030",
+        "10031",
+        "10032",
+        "10033",
+        "10034",
+        "10035",
+        "10036",
+        "10037",
+        "10038"
+      ],
+      "chart_title": "液温",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart001",
+        "x": 2,
+        "y": 0,
+        "w": 12,
+        "h": 15,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 70,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          55,
+          60
+        ]
+      },
+      "category1": "照射炉1",
+      "category2": "液温"
+    },
+    {
+      "chart_uuid": "chart002",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10012",
+        "10013",
+        "10014",
+        "10015"
+      ],
+      "chart_title": "UV強度",
+      "chart_unit": "%",
+      "grid_layout": {
+        "i": "chart002",
+        "x": 0,
+        "y": 15,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 150,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581"
+        ],
+        "thresholds": [
+          60,
+          70
+        ]
+      },
+      "category1": "照射炉1",
+      "category2": "UV強度"
+    },
+    {
+      "chart_uuid": "chart003",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10020"
+      ],
+      "chart_title": "炉内温度",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart003",
+        "x": 0,
+        "y": 26,
+        "w": 12,
+        "h": 8,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 90,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          75,
+          80
+        ]
+      },
+      "category1": "照射炉1",
+      "category2": "炉内温度"
+    },
+    {
+      "chart_uuid": "chart004",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10002",
+        "10005",
+        "10008",
+        "10011"
+      ],
+      "chart_title": "ランプ電圧",
+      "chart_unit": "V",
+      "grid_layout": {
+        "i": "chart004",
+        "x": 0,
+        "y": 34,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 1200,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          450,
+          470,
+          950,
+          1000
+        ]
+      },
+      "category1": "照射炉1",
+      "category2": "ランプ電圧"
+    },
+    {
+      "chart_uuid": "chart005",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10001",
+        "10004",
+        "10007",
+        "10010"
+      ],
+      "chart_title": "ランプ電流",
+      "chart_unit": "A",
+      "grid_layout": {
+        "i": "chart005",
+        "x": 0,
+        "y": 45,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 9,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          1.5,
+          2,
+          5,
+          5.5
+        ]
+      },
+      "category1": "照射炉1",
+      "category2": "ランプ電流"
+    },
+    {
+      "chart_uuid": "chart006",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10000",
+        "10003",
+        "10006",
+        "10009"
+      ],
+      "chart_title": "安定器電流",
+      "chart_unit": "A",
+      "grid_layout": {
+        "i": "chart006",
+        "x": 0,
+        "y": 56,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 17,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          10,
+          10.5,
+          14.5,
+          15
+        ]
+      },
+      "category1": "照射炉1",
+      "category2": "安定器電流"
+    },
+    {
+      "chart_uuid": "chart007",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10039"
+      ],
+      "chart_title": "冷却ファン周波数",
+      "chart_unit": "Hz",
+      "grid_layout": {
+        "i": "chart007",
+        "x": 0,
+        "y": 67,
+        "w": 12,
+        "h": 8,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 70,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#65B581"
+        ],
+        "thresholds": [
+          0
+        ]
+      },
+      "category1": "照射炉1",
+      "category2": "冷却ファン周波数"
+    },
+    {
+      "chart_uuid": "chart014",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10080",
+        "10081",
+        "10082",
+        "10083",
+        "10084",
+        "10085",
+        "10086",
+        "10087",
+        "10088"
+      ],
+      "chart_title": "液温",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart014",
+        "x": 2,
+        "y": 0,
+        "w": 12,
+        "h": 15,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 70,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          55,
+          60
+        ]
+      },
+      "category1": "照射炉2",
+      "category2": "液温"
+    },
+    {
+      "chart_uuid": "chart015",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10130",
+        "10131",
+        "10132",
+        "10133",
+        "10134",
+        "10135",
+        "10136",
+        "10137",
+        "10138"
+      ],
+      "chart_title": "液温",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart015",
+        "x": 2,
+        "y": 0,
+        "w": 12,
+        "h": 15,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 70,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          55,
+          60
+        ]
+      },
+      "category1": "照射炉3",
+      "category2": "液温"
+    },
+    {
+      "chart_uuid": "chart016",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10062",
+        "10063",
+        "10064",
+        "10065"
+      ],
+      "chart_title": "UV強度",
+      "chart_unit": "%",
+      "grid_layout": {
+        "i": "chart016",
+        "x": 0,
+        "y": 15,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 150,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581"
+        ],
+        "thresholds": [
+          60,
+          70
+        ]
+      },
+      "category1": "照射炉2",
+      "category2": "UV強度"
+    },
+    {
+      "chart_uuid": "chart017",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10112",
+        "10113",
+        "10114",
+        "10115"
+      ],
+      "chart_title": "UV強度",
+      "chart_unit": "%",
+      "grid_layout": {
+        "i": "chart017",
+        "x": 0,
+        "y": 15,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 150,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581"
+        ],
+        "thresholds": [
+          60,
+          70
+        ]
+      },
+      "category1": "照射炉3",
+      "category2": "UV強度"
+    },
+    {
+      "chart_uuid": "chart018",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10070"
+      ],
+      "chart_title": "炉内温度",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart018",
+        "x": 0,
+        "y": 26,
+        "w": 12,
+        "h": 8,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 90,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          75,
+          80
+        ]
+      },
+      "category1": "照射炉2",
+      "category2": "炉内温度"
+    },
+    {
+      "chart_uuid": "chart019",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10120"
+      ],
+      "chart_title": "炉内温度",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart019",
+        "x": 0,
+        "y": 26,
+        "w": 12,
+        "h": 8,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 90,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          75,
+          80
+        ]
+      },
+      "category1": "照射炉3",
+      "category2": "炉内温度"
+    },
+    {
+      "chart_uuid": "chart020",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10052",
+        "10055",
+        "10058",
+        "10061"
+      ],
+      "chart_title": "ランプ電圧",
+      "chart_unit": "V",
+      "grid_layout": {
+        "i": "chart020",
+        "x": 0,
+        "y": 34,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 1200,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          450,
+          470,
+          950,
+          1000
+        ]
+      },
+      "category1": "照射炉2",
+      "category2": "ランプ電圧"
+    },
+    {
+      "chart_uuid": "chart021",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10102",
+        "10105",
+        "10108",
+        "10111"
+      ],
+      "chart_title": "ランプ電圧",
+      "chart_unit": "V",
+      "grid_layout": {
+        "i": "chart021",
+        "x": 0,
+        "y": 34,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 1200,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          450,
+          470,
+          950,
+          1000
+        ]
+      },
+      "category1": "照射炉3",
+      "category2": "ランプ電圧"
+    },
+    {
+      "chart_uuid": "chart022",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10051",
+        "10054",
+        "10057",
+        "10060"
+      ],
+      "chart_title": "ランプ電流",
+      "chart_unit": "A",
+      "grid_layout": {
+        "i": "chart022",
+        "x": 0,
+        "y": 45,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 9,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          1.5,
+          2,
+          5,
+          5.5
+        ]
+      },
+      "category1": "照射炉2",
+      "category2": "ランプ電流"
+    },
+    {
+      "chart_uuid": "chart023",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10101",
+        "10104",
+        "10107",
+        "10110"
+      ],
+      "chart_title": "ランプ電流",
+      "chart_unit": "A",
+      "grid_layout": {
+        "i": "chart023",
+        "x": 0,
+        "y": 45,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 9,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          1.5,
+          2,
+          5,
+          5.5
+        ]
+      },
+      "category1": "照射炉3",
+      "category2": "ランプ電流"
+    },
+    {
+      "chart_uuid": "chart024",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10050",
+        "10053",
+        "10056",
+        "10059"
+      ],
+      "chart_title": "安定器電流",
+      "chart_unit": "A",
+      "grid_layout": {
+        "i": "chart024",
+        "x": 0,
+        "y": 56,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 17,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          10,
+          10.5,
+          14.5,
+          15
+        ]
+      },
+      "category1": "照射炉2",
+      "category2": "安定器電流"
+    },
+    {
+      "chart_uuid": "chart025",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10100",
+        "10103",
+        "10106",
+        "10109"
+      ],
+      "chart_title": "安定器電流",
+      "chart_unit": "A",
+      "grid_layout": {
+        "i": "chart025",
+        "x": 0,
+        "y": 56,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 17,
+        "minValue": 0,
+        "colors": [
+          "#FF6E76",
+          "#ff7300",
+          "#65B581",
+          "#ff7300",
+          "#FF6E76"
+        ],
+        "thresholds": [
+          10,
+          10.5,
+          14.5,
+          15
+        ]
+      },
+      "category1": "照射炉3",
+      "category2": "安定器電流"
+    },
+    {
+      "chart_uuid": "chart026",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10089"
+      ],
+      "chart_title": "冷却ファン周波数",
+      "chart_unit": "Hz",
+      "grid_layout": {
+        "i": "chart026",
+        "x": 0,
+        "y": 67,
+        "w": 12,
+        "h": 8,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 70,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#65B581"
+        ],
+        "thresholds": [
+          0
+        ]
+      },
+      "category1": "照射炉2",
+      "category2": "冷却ファン周波数"
+    },
+    {
+      "chart_uuid": "chart027",
+      "chart_type": "HorizontalBarChart",
+      "channel_uuids": [
+        "10139"
+      ],
+      "chart_title": "冷却ファン周波数",
+      "chart_unit": "Hz",
+      "grid_layout": {
+        "i": "chart027",
+        "x": 0,
+        "y": 67,
+        "w": 12,
+        "h": 8,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 70,
+        "minValue": 0,
+        "colors": [
+          "#65B581",
+          "#65B581"
+        ],
+        "thresholds": [
+          0
+        ]
+      },
+      "category1": "照射炉3",
+      "category2": "冷却ファン周波数"
+    }
+  ],
+  "trend": [
+    {
+      "chart_uuid": "chart011",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10030",
+        "10031",
+        "10032",
+        "10033",
+        "10034",
+        "10035",
+        "10036",
+        "10037",
+        "10038"
+      ],
+      "chart_title": "液温",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart011",
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 60,
+          "min": -10,
+          "color": "#FF0000"
         },
-        {
-            "chart_uuid": "chart002",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10012",
-                "10013",
-                "10014",
-                "10015"
-            ],
-            "chart_title": "UV強度",
-            "chart_unit": "%",
-            "grid_layout": {
-                "i": "chart002",
-                "x": 0,
-                "y": 15,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 150,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581"
-                ],
-                "thresholds": [
-                    60,
-                    70
-                ]
-            },
-            "category1": "照射炉1",
-            "category2": "UV強度"
+        "visibility": {
+          "maxY": 80,
+          "minY": 0
         },
-        {
-            "chart_uuid": "chart003",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10020"
-            ],
-            "chart_title": "炉内温度",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart003",
-                "x": 0,
-                "y": 26,
-                "w": 12,
-                "h": 8,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 90,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    75,
-                    80
-                ]
-            },
-            "category1": "照射炉1",
-            "category2": "炉内温度"
+        "seriesColors": {
+          "10030": "#5470c6",
+          "10031": "#91cc75",
+          "10032": "#fac858",
+          "10033": "#ee6666",
+          "10034": "#73c0de",
+          "10035": "#3ba272",
+          "10036": "#fc8452",
+          "10037": "#9a60b4",
+          "10038": "#ea7ccc"
         },
-        {
-            "chart_uuid": "chart004",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10002",
-                "10005",
-                "10008",
-                "10011"
-            ],
-            "chart_title": "ランプ電圧",
-            "chart_unit": "V",
-            "grid_layout": {
-                "i": "chart004",
-                "x": 0,
-                "y": 34,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 1200,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    450,
-                    470,
-                    950,
-                    1000
-                ]
-            },
-            "category1": "照射炉1",
-            "category2": "ランプ電圧"
-        },
-        {
-            "chart_uuid": "chart005",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10001",
-                "10004",
-                "10007",
-                "10010"
-            ],
-            "chart_title": "ランプ電流",
-            "chart_unit": "A",
-            "grid_layout": {
-                "i": "chart005",
-                "x": 0,
-                "y": 45,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 9,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    1.5,
-                    2,
-                    5,
-                    5.5
-                ]
-            },
-            "category1": "照射炉1",
-            "category2": "ランプ電流"
-        },
-        {
-            "chart_uuid": "chart006",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10000",
-                "10003",
-                "10006",
-                "10009"
-            ],
-            "chart_title": "安定器電流",
-            "chart_unit": "A",
-            "grid_layout": {
-                "i": "chart006",
-                "x": 0,
-                "y": 56,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 17,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    10,
-                    10.5,
-                    14.5,
-                    15
-                ]
-            },
-            "category1": "照射炉1",
-            "category2": "安定器電流"
-        },
-        {
-            "chart_uuid": "chart007",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10039"
-            ],
-            "chart_title": "冷却ファン周波数",
-            "chart_unit": "Hz",
-            "grid_layout": {
-                "i": "chart007",
-                "x": 0,
-                "y": 67,
-                "w": 12,
-                "h": 8,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 70,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#65B581"
-                ],
-                "thresholds": [
-                    0
-                ]
-            },
-            "category1": "照射炉1",
-            "category2": "冷却ファン周波数"
-        },
-        {
-            "chart_uuid": "chart014",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10080",
-                "10081",
-                "10082",
-                "10083",
-                "10084",
-                "10085",
-                "10086",
-                "10087",
-                "10088"
-            ],
-            "chart_title": "液温",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart014",
-                "x": 2,
-                "y": 0,
-                "w": 12,
-                "h": 15,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 70,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    55,
-                    60
-                ]
-            },
-            "category1": "照射炉2",
-            "category2": "液温"
-        },
-        {
-            "chart_uuid": "chart015",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10130",
-                "10131",
-                "10132",
-                "10133",
-                "10134",
-                "10135",
-                "10136",
-                "10137",
-                "10138"
-            ],
-            "chart_title": "液温",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart015",
-                "x": 2,
-                "y": 0,
-                "w": 12,
-                "h": 15,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 70,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    55,
-                    60
-                ]
-            },
-            "category1": "照射炉3",
-            "category2": "液温"
-        },
-        {
-            "chart_uuid": "chart016",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10062",
-                "10063",
-                "10064",
-                "10065"
-            ],
-            "chart_title": "UV強度",
-            "chart_unit": "%",
-            "grid_layout": {
-                "i": "chart016",
-                "x": 0,
-                "y": 15,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 150,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581"
-                ],
-                "thresholds": [
-                    60,
-                    70
-                ]
-            },
-            "category1": "照射炉2",
-            "category2": "UV強度"
-        },
-        {
-            "chart_uuid": "chart017",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10112",
-                "10113",
-                "10114",
-                "10115"
-            ],
-            "chart_title": "UV強度",
-            "chart_unit": "%",
-            "grid_layout": {
-                "i": "chart017",
-                "x": 0,
-                "y": 15,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 150,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581"
-                ],
-                "thresholds": [
-                    60,
-                    70
-                ]
-            },
-            "category1": "照射炉3",
-            "category2": "UV強度"
-        },
-        {
-            "chart_uuid": "chart018",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10070"
-            ],
-            "chart_title": "炉内温度",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart018",
-                "x": 0,
-                "y": 26,
-                "w": 12,
-                "h": 8,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 90,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    75,
-                    80
-                ]
-            },
-            "category1": "照射炉2",
-            "category2": "炉内温度"
-        },
-        {
-            "chart_uuid": "chart019",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10120"
-            ],
-            "chart_title": "炉内温度",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart019",
-                "x": 0,
-                "y": 26,
-                "w": 12,
-                "h": 8,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 90,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    75,
-                    80
-                ]
-            },
-            "category1": "照射炉3",
-            "category2": "炉内温度"
-        },
-        {
-            "chart_uuid": "chart020",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10052",
-                "10055",
-                "10058",
-                "10061"
-            ],
-            "chart_title": "ランプ電圧",
-            "chart_unit": "V",
-            "grid_layout": {
-                "i": "chart020",
-                "x": 0,
-                "y": 34,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 1200,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    450,
-                    470,
-                    950,
-                    1000
-                ]
-            },
-            "category1": "照射炉2",
-            "category2": "ランプ電圧"
-        },
-        {
-            "chart_uuid": "chart021",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10102",
-                "10105",
-                "10108",
-                "10111"
-            ],
-            "chart_title": "ランプ電圧",
-            "chart_unit": "V",
-            "grid_layout": {
-                "i": "chart021",
-                "x": 0,
-                "y": 34,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 1200,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    450,
-                    470,
-                    950,
-                    1000
-                ]
-            },
-            "category1": "照射炉3",
-            "category2": "ランプ電圧"
-        },
-        {
-            "chart_uuid": "chart022",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10051",
-                "10054",
-                "10057",
-                "10060"
-            ],
-            "chart_title": "ランプ電流",
-            "chart_unit": "A",
-            "grid_layout": {
-                "i": "chart022",
-                "x": 0,
-                "y": 45,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 9,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    1.5,
-                    2,
-                    5,
-                    5.5
-                ]
-            },
-            "category1": "照射炉2",
-            "category2": "ランプ電流"
-        },
-        {
-            "chart_uuid": "chart023",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10101",
-                "10104",
-                "10107",
-                "10110"
-            ],
-            "chart_title": "ランプ電流",
-            "chart_unit": "A",
-            "grid_layout": {
-                "i": "chart023",
-                "x": 0,
-                "y": 45,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 9,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    1.5,
-                    2,
-                    5,
-                    5.5
-                ]
-            },
-            "category1": "照射炉3",
-            "category2": "ランプ電流"
-        },
-        {
-            "chart_uuid": "chart024",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10050",
-                "10053",
-                "10056",
-                "10059"
-            ],
-            "chart_title": "安定器電流",
-            "chart_unit": "A",
-            "grid_layout": {
-                "i": "chart024",
-                "x": 0,
-                "y": 56,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 17,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    10,
-                    10.5,
-                    14.5,
-                    15
-                ]
-            },
-            "category1": "照射炉2",
-            "category2": "安定器電流"
-        },
-        {
-            "chart_uuid": "chart025",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10100",
-                "10103",
-                "10106",
-                "10109"
-            ],
-            "chart_title": "安定器電流",
-            "chart_unit": "A",
-            "grid_layout": {
-                "i": "chart025",
-                "x": 0,
-                "y": 56,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 17,
-                "minValue": 0,
-                "colors": [
-                    "#FF6E76",
-                    "#ff7300",
-                    "#65B581",
-                    "#ff7300",
-                    "#FF6E76"
-                ],
-                "thresholds": [
-                    10,
-                    10.5,
-                    14.5,
-                    15
-                ]
-            },
-            "category1": "照射炉3",
-            "category2": "安定器電流"
-        },
-        {
-            "chart_uuid": "chart026",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10089"
-            ],
-            "chart_title": "冷却ファン周波数",
-            "chart_unit": "Hz",
-            "grid_layout": {
-                "i": "chart026",
-                "x": 0,
-                "y": 67,
-                "w": 12,
-                "h": 8,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 70,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#65B581"
-                ],
-                "thresholds": [
-                    0
-                ]
-            },
-            "category1": "照射炉2",
-            "category2": "冷却ファン周波数"
-        },
-        {
-            "chart_uuid": "chart027",
-            "chart_type": "HorizontalBarChart",
-            "channel_uuids": [
-                "10139"
-            ],
-            "chart_title": "冷却ファン周波数",
-            "chart_unit": "Hz",
-            "grid_layout": {
-                "i": "chart027",
-                "x": 0,
-                "y": 67,
-                "w": 12,
-                "h": 8,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "maxValue": 70,
-                "minValue": 0,
-                "colors": [
-                    "#65B581",
-                    "#65B581"
-                ],
-                "thresholds": [
-                    0
-                ]
-            },
-            "category1": "照射炉3",
-            "category2": "冷却ファン周波数"
+        "seriesLineWidths": {
+          "10030": 2,
+          "10031": 2,
+          "10032": 2,
+          "10033": 2,
+          "10034": 2,
+          "10035": 2,
+          "10036": 2,
+          "10037": 2,
+          "10038": 2
         }
-    ],
-    "trend": [
-        {
-            "chart_uuid": "chart011",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10030",
-                "10031",
-                "10032",
-                "10033",
-                "10034",
-                "10035",
-                "10036",
-                "10037",
-                "10038"
-            ],
-            "chart_title": "液温",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart011",
-                "x": 0,
-                "y": 0,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 60,
-                    "min": -10,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 80,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉1",
-            "category2": "液温"
+      },
+      "category1": "照射炉1",
+      "category2": "液温"
+    },
+    {
+      "chart_uuid": "chart012",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10012",
+        "10013",
+        "10014",
+        "10015"
+      ],
+      "chart_title": "UV強度",
+      "chart_unit": "%",
+      "grid_layout": {
+        "i": "chart012",
+        "x": 0,
+        "y": 11,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 200,
+          "min": 50,
+          "color": "#FF0000"
         },
-        {
-            "chart_uuid": "chart012",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10012",
-                "10013",
-                "10014",
-                "10015"
-            ],
-            "chart_title": "UV強度",
-            "chart_unit": "%",
-            "grid_layout": {
-                "i": "chart012",
-                "x": 0,
-                "y": 11,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 200,
-                    "min": 50,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 120,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉1",
-            "category2": "UV強度"
+        "visibility": {
+          "maxY": 120,
+          "minY": 0
         },
-        {
-            "chart_uuid": "chart013",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10020"
-            ],
-            "chart_title": "炉内温度",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart013",
-                "x": 0,
-                "y": 22,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 80,
-                    "min": 0,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 80,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉1",
-            "category2": "炉内温度"
+        "seriesColors": {}
+      },
+      "category1": "照射炉1",
+      "category2": "UV強度"
+    },
+    {
+      "chart_uuid": "chart013",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10020"
+      ],
+      "chart_title": "炉内温度",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart013",
+        "x": 0,
+        "y": 22,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 80,
+          "min": 0,
+          "color": "#FF0000"
         },
-        {
-            "chart_uuid": "chart028",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10080",
-                "10081",
-                "10082",
-                "10083",
-                "10084",
-                "10085",
-                "10086",
-                "10087",
-                "10088"
-            ],
-            "chart_title": "液温",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart028",
-                "x": 0,
-                "y": 0,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 60,
-                    "min": -10,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 80,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉2",
-            "category2": "液温"
+        "visibility": {
+          "maxY": 80,
+          "minY": 0
         },
-        {
-            "chart_uuid": "chart029",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10130",
-                "10131",
-                "10132",
-                "10133",
-                "10134",
-                "10135",
-                "10136",
-                "10137",
-                "10138"
-            ],
-            "chart_title": "液温",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart029",
-                "x": 0,
-                "y": 0,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 60,
-                    "min": -10,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 80,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉3",
-            "category2": "液温"
+        "seriesColors": {
+          "10020": "#5470c6"
         },
-        {
-            "chart_uuid": "chart030",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10062",
-                "10063",
-                "10064",
-                "10065"
-            ],
-            "chart_title": "UV強度",
-            "chart_unit": "%",
-            "grid_layout": {
-                "i": "chart030",
-                "x": 0,
-                "y": 11,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 200,
-                    "min": 50,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 120,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉2",
-            "category2": "UV強度"
-        },
-        {
-            "chart_uuid": "chart031",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10112",
-                "10113",
-                "10114",
-                "10115"
-            ],
-            "chart_title": "UV強度",
-            "chart_unit": "%",
-            "grid_layout": {
-                "i": "chart031",
-                "x": 0,
-                "y": 11,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 200,
-                    "min": 50,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 120,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉3",
-            "category2": "UV強度"
-        },
-        {
-            "chart_uuid": "chart032",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10070"
-            ],
-            "chart_title": "炉内温度",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart032",
-                "x": 0,
-                "y": 22,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 80,
-                    "min": 0,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 80,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉2",
-            "category2": "炉内温度"
-        },
-        {
-            "chart_uuid": "chart033",
-            "chart_type": "LineChart",
-            "channel_uuids": [
-                "10120"
-            ],
-            "chart_title": "炉内温度",
-            "chart_unit": "℃",
-            "grid_layout": {
-                "i": "chart033",
-                "x": 0,
-                "y": 22,
-                "w": 12,
-                "h": 11,
-                "static": false,
-                "minW": null,
-                "minH": null,
-                "maxW": null,
-                "maxH": null
-            },
-            "chart_options": {
-                "thresholds": {
-                    "max": 80,
-                    "min": 0,
-                    "color": "#FF0000"
-                },
-                "visibility": {
-                    "maxY": 80,
-                    "minY": 0
-                }
-            },
-            "category1": "照射炉3",
-            "category2": "炉内温度"
+        "seriesLineWidths": {
+          "10020": 4
         }
-    ]
+      },
+      "category1": "照射炉1",
+      "category2": "炉内温度"
+    },
+    {
+      "chart_uuid": "chart028",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10080",
+        "10081",
+        "10082",
+        "10083",
+        "10084",
+        "10085",
+        "10086",
+        "10087",
+        "10088"
+      ],
+      "chart_title": "液温",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart028",
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 60,
+          "min": -10,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 80,
+          "minY": 0
+        }
+      },
+      "category1": "照射炉2",
+      "category2": "液温"
+    },
+    {
+      "chart_uuid": "chart029",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10130",
+        "10131",
+        "10132",
+        "10133",
+        "10134",
+        "10135",
+        "10136",
+        "10137",
+        "10138"
+      ],
+      "chart_title": "液温",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart029",
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 60,
+          "min": -10,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 80,
+          "minY": 0
+        }
+      },
+      "category1": "照射炉3",
+      "category2": "液温"
+    },
+    {
+      "chart_uuid": "chart030",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10062",
+        "10063",
+        "10064",
+        "10065"
+      ],
+      "chart_title": "UV強度",
+      "chart_unit": "%",
+      "grid_layout": {
+        "i": "chart030",
+        "x": 0,
+        "y": 11,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 200,
+          "min": 50,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 120,
+          "minY": 0
+        }
+      },
+      "category1": "照射炉2",
+      "category2": "UV強度"
+    },
+    {
+      "chart_uuid": "chart031",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10112",
+        "10113",
+        "10114",
+        "10115"
+      ],
+      "chart_title": "UV強度",
+      "chart_unit": "%",
+      "grid_layout": {
+        "i": "chart031",
+        "x": 0,
+        "y": 11,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 200,
+          "min": 50,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 120,
+          "minY": 0
+        }
+      },
+      "category1": "照射炉3",
+      "category2": "UV強度"
+    },
+    {
+      "chart_uuid": "chart032",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10070"
+      ],
+      "chart_title": "炉内温度",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart032",
+        "x": 0,
+        "y": 22,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 80,
+          "min": 0,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 80,
+          "minY": 0
+        }
+      },
+      "category1": "照射炉2",
+      "category2": "炉内温度"
+    },
+    {
+      "chart_uuid": "chart033",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10120"
+      ],
+      "chart_title": "炉内温度",
+      "chart_unit": "℃",
+      "grid_layout": {
+        "i": "chart033",
+        "x": 0,
+        "y": 22,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 80,
+          "min": 0,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 80,
+          "minY": 0
+        }
+      },
+      "category1": "照射炉3",
+      "category2": "炉内温度"
+    }
+  ]
 }
