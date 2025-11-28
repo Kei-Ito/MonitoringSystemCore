@@ -1,10 +1,14 @@
 <template>
-  <!-- ローディング画面 -->
-  <div v-if="isLoading" class="loading-container">
-    <splash-window />
-  </div>
-  <div v-else>
-    <sidenav :custom_class="color" :class="[isRTL ? 'fixed-end' : 'fixed-start']" v-if="showSidenav" />
+  <!-- メインコンテンツ (ロード完了後に表示、スプラッシュの下に配置) -->
+  <div v-if="!isLoading || isSplashVisible">
+    <sidenav 
+      :custom_class="color" 
+      :class="[
+        isRTL ? 'fixed-end' : 'fixed-start',
+        { 'splash-hidden-content': isSplashVisible }
+      ]" 
+      v-if="showSidenav" 
+    />
     <main class="main-content position-relative max-height-vh-100 h-100 overflow-x-hidden d-flex flex-column">
       <!-- nav -->
       <navbar 
@@ -24,6 +28,13 @@
       <app-footer v-show="showFooter" />
     </main>
   </div>
+
+  <!-- スプラッシュウィンドウ (最前面) -->
+  <splash-window 
+    v-if="isSplashVisible" 
+    :is-finishing="!isLoading"
+    @animation-end="onSplashAnimationEnd"
+  />
 
   <!-- ドライブマウント警告モーダル -->
   <drive-mount-warning-modal
@@ -53,6 +64,8 @@ const uiStore = useUiStore()
 const { isLoading } = useAppInitializer();
 const toast = useToast();
 
+const isSplashVisible = ref(true);
+
 const navbarRef = ref<InstanceType<typeof Navbar> | null>(null);
 let dateRangePickerCallback: (() => void) | null = null;
 
@@ -67,6 +80,10 @@ const {
   showNavbar,
   showFooter,
 } = storeToRefs(uiStore);
+
+function onSplashAnimationEnd() {
+  isSplashVisible.value = false;
+}
 
 // Navbarから日付範囲選択ボタンがクリックされたときの処理
 function handleShowDateRangePicker() {
@@ -121,3 +138,16 @@ function handleReload() {
 }
 
 </script>
+<style>
+/* スプラッシュ表示中はサイドバーの中身を隠す */
+.sidenav.splash-hidden-content > * {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+/* クラスが外れたらフェードイン */
+.sidenav:not(.splash-hidden-content) > * {
+  opacity: 1;
+  transition: opacity 0.8s ease-out;
+}
+</style>
