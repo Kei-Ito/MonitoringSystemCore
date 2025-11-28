@@ -1,17 +1,13 @@
 <template>
   <div class="container-fluid min-vh-70">
-    <div class="row">
-      <div class="col-lg-12 position-relative z-index-2">
-        <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="12" :is-draggable="isLayoutEditMode"
-          :is-resizable="isLayoutEditMode" :vertical-compact="true" :use-css-transforms="true"
-          :class = "isLayoutEditMode ? 'vue-grid-layout-style':''">
-          <GridItem v-for="(item) in layoutModel" :key="item.i" :static="item.static" :x="item.x" :y="item.y"
-            :w="item.w" :h="item.h" :i="item.i" :class = "isLayoutEditMode ? 'p-2 vue-grid-item-style':''">
-            <ChartHolderCard :chart="dashboardCharts[item.i]" mode="realtime"/>
-          </GridItem>
-        </GridLayout>
-      </div>
-    </div>
+    <GridLayout v-model:layout="layoutModel" :col-num="12" :row-height="12" :is-draggable="isLayoutEditMode"
+      :is-resizable="isLayoutEditMode" :vertical-compact="true" :use-css-transforms="true"
+      :class = "isLayoutEditMode ? 'vue-grid-layout-style':''">
+      <GridItem v-for="(item) in layoutModel" :key="item.i" :static="item.static" :x="item.x" :y="item.y"
+        :w="item.w" :h="item.h" :i="item.i" :class = "isLayoutEditMode ? 'p-2 vue-grid-item-style':''">
+        <ChartHolderCard :chart="dashboardCharts[item.i]" mode="realtime"/>
+      </GridItem>
+    </GridLayout>
   </div>
 </template>
 <script setup lang="ts">
