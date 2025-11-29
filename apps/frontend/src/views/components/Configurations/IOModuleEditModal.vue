@@ -30,25 +30,27 @@
           <i class="material-icons align-middle me-2">settings</i>
           <span class="fw-bold">デバイス固有設定</span>
         </div>
-        <table class="table table-styled">
-        <thead>
-          <tr>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">項目</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">内容</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(value, key) in localModule.specific_device_setting" :key="localModule.module_uuid">
-            <td>
-              <label class="form-label fs-6" :for="key">{{ key }}</label>
-            </td>
-            <td>
-              <input class="w-100" :type="determineInputType(value)" :id="key"
-                v-model="localModule.specific_device_setting[key]" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="table-responsive">
+          <table class="table table-styled">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">項目</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-10">内容</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(value, key) in localModule.specific_device_setting" :key="localModule.module_uuid">
+                <td>
+                  <label class="form-label fs-6" :for="key">{{ key }}</label>
+                </td>
+                <td>
+                  <input class="w-100" :type="determineInputType(value)" :id="key"
+                    v-model="localModule.specific_device_setting[key]" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 入力チャンネル -->
@@ -57,81 +59,83 @@
           <i class="material-icons align-middle me-2">input</i>
           <span class="fw-bold">入力チャンネル</span>
         </div>
-        <table class="table table-styled">
-        <thead>
-          <tr>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
-              入力チャンネル</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">入力チャンネル名</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">単位
-            </th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
-              少数点以下表示</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">
-              サンプリング周期</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
-              style="width: 15px;">
-              入力値設定
-            </th>
-            <th v-if="isEditableSpecificInputChannelSetting && isAdmin"
-              class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
-              詳細設定
-            </th>
-            <th v-if="isAddableInputChannel && isAdmin"
-              class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
-              style="width: 15px;">
-              削除
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(channel, index) in localModule.input_channels" :key="channel.channel_uuid">
-            <td>チャンネル {{ index + 1 }}</td>
-            <td>
-              <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
-            </td>
-            <td>
-              <input type="text" v-model="channel.unit" :id="'channel-unit-' + index" class="w-100" />
-            </td>
-            <td>
-              <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
-                class="w-100" />
-            </td>
-            <td>
-              <select v-model="channel.sampling_interval_uuid" class="form-select form-select-sm">
-                <option v-for="interval in samplingIntervals" :key="interval.uuid" :value="interval.uuid">
-                  {{ interval.name }}
-                </option>
-              </select>
-            </td>
-            <td class="align-middle text-center">
-              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0">
-                <i class="material-icons-round" aria-hidden="true" @click="openNormalizeSettingModal(channel)">tune</i>
-              </a>
-            </td>
-            <td v-if="isEditableSpecificInputChannelSetting && isAdmin" class="align-middle text-center">
-              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="openChannelSpecificSettingModal(channel)">
-                <i class="material-icons-round" aria-hidden="true">edit</i>
-              </a>
-            </td>
-            <td v-if="isAddableInputChannel && isAdmin" class="align-middle text-center">
-              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannelButtonClick(channel)">
-                <i class="material-icons-round" aria-hidden="true">delete</i>
-              </a>
-            </td>
-          </tr>
-          <tr v-if="isAddableInputChannel && isAdmin">
-            <td colspan="5" class="text-start">
-              <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center" @click="addInputChannel">
-                <div class="d-flex items-center justify-center  items-center">
-                  <i class="material-icons me-2" style="font-size:25px;">add</i>
-                  <p class="text-muted mb-0 flex" style="font-size: 1.0em;">入力チャンネルを追加</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="table-responsive">
+          <table class="table table-styled">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="min-width: 150px;">入力チャンネル名</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%; min-width: 80px;">単位
+                </th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px; min-width: 120px;">
+                  少数点以下表示</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%; min-width: 140px;">
+                  サンプリング周期</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
+                  style="width: 15px; min-width: 90px;">
+                  入力値設定
+                </th>
+                <th v-if="isEditableSpecificInputChannelSetting && isAdmin"
+                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px; min-width: 70px;">
+                  詳細設定
+                </th>
+                <th v-if="isAddableInputChannel && isAdmin"
+                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
+                  style="width: 15px; min-width: 50px;">
+                  削除
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(channel, index) in localModule.input_channels" :key="channel.channel_uuid">
+                <td>
+                  <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
+                </td>
+                <td>
+                  <input type="text" v-model="channel.unit" :id="'channel-unit-' + index" class="w-100" />
+                </td>
+                <td>
+                  <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
+                    class="w-100" />
+                </td>
+                <td>
+                  <select v-model="channel.sampling_interval_uuid" class="form-select form-select-sm">
+                    <option v-for="interval in samplingIntervals" :key="interval.uuid" :value="interval.uuid">
+                      {{ interval.name }}
+                    </option>
+                  </select>
+                </td>
+                <td class="align-middle text-center">
+                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0">
+                    <i class="material-icons-round" aria-hidden="true"
+                      @click="openNormalizeSettingModal(channel)">tune</i>
+                  </a>
+                </td>
+                <td v-if="isEditableSpecificInputChannelSetting && isAdmin" class="align-middle text-center">
+                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0"
+                    @click="openChannelSpecificSettingModal(channel)">
+                    <i class="material-icons-round" aria-hidden="true">edit</i>
+                  </a>
+                </td>
+                <td v-if="isAddableInputChannel && isAdmin" class="align-middle text-center">
+                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannelButtonClick(channel)">
+                    <i class="material-icons-round" aria-hidden="true">delete</i>
+                  </a>
+                </td>
+              </tr>
+              <tr v-if="isAddableInputChannel && isAdmin">
+                <td colspan="5" class="text-start">
+                  <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
+                    @click="addInputChannel">
+                    <div class="d-flex items-center justify-center  items-center">
+                      <i class="material-icons me-2" style="font-size:25px;">add</i>
+                      <p class="text-muted mb-0 flex" style="font-size: 1.0em;">入力チャンネルを追加</p>
+                    </div>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- 出力チャンネル -->
@@ -140,64 +144,64 @@
           <i class="material-icons align-middle me-2">output</i>
           <span class="fw-bold">出力チャンネル</span>
         </div>
-        <table class="table table-styled">
-        <thead>
-          <tr>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 10px;">
-              出力チャンネル</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7">出力チャンネル名</th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%;">単位
-            </th>
-            <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px;">
-              少数点以下表示</th>
-            <th v-if="isEditableSpecificOutputChannelSetting && isAdmin"
-              class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px;">
-              詳細設定
-            </th>
-            <th v-if="isAddableOutputChannel && isAdmin"
-              class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
-              style="width: 15px;">
-              削除
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(channel, index) in localModule.output_channels" :key="channel.channel_uuid">
-            <td>チャンネル {{ index + 1 }}</td>
-            <td>
-              <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
-            </td>
-            <td>
-              <input type="text" v-model="channel.unit" :id="'channel-unit-' + index" class="w-100" />
-            </td>
-            <td>
-              <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
-                class="w-100" />
-            </td>
-            <td v-if="isEditableSpecificOutputChannelSetting" class="align-middle text-center">
-              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="openChannelSpecificSettingModal(channel)">
-                <i class="material-icons-round" aria-hidden="true">edit</i>
-              </a>
-            </td>
-            <td v-if="isAddableOutputChannel" class="align-middle text-center">
-              <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannel(channel)">
-                <i class="material-icons-round" aria-hidden="true">delete</i>
-              </a>
-            </td>
-          </tr>
-          <tr v-if="isAddableOutputChannel && isAdmin">
-            <td colspan="4" class="text-start">
-              <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
-                @click="addOutputChannel">
-                <div class="d-flex items-center justify-center  items-center">
-                  <i class="material-icons me-2" style="font-size:25px;">add</i>
-                  <p class="text-muted mb-0 flex" style="font-size: 1.0em;">出力チャンネルを追加</p>
-                </div>
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="table-responsive">
+          <table class="table table-styled">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="min-width: 150px;">出力チャンネル名</th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%; min-width: 80px;">単位
+                </th>
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px; min-width: 120px;">
+                  少数点以下表示</th>
+                <th v-if="isEditableSpecificOutputChannelSetting && isAdmin"
+                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px; min-width: 70px;">
+                  詳細設定
+                </th>
+                <th v-if="isAddableOutputChannel && isAdmin"
+                  class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2 text-center"
+                  style="width: 15px; min-width: 50px;">
+                  削除
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(channel, index) in localModule.output_channels" :key="channel.channel_uuid">
+                <td>
+                  <input type="text" v-model="channel.channel_name" :id="'channel-name-' + index" class="w-100" />
+                </td>
+                <td>
+                  <input type="text" v-model="channel.unit" :id="'channel-unit-' + index" class="w-100" />
+                </td>
+                <td>
+                  <input type="number" v-model="channel.decimals" :id="'channel-decimals-' + index" min="0" max="5"
+                    class="w-100" />
+                </td>
+                <td v-if="isEditableSpecificOutputChannelSetting" class="align-middle text-center">
+                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0"
+                    @click="openChannelSpecificSettingModal(channel)">
+                    <i class="material-icons-round" aria-hidden="true">edit</i>
+                  </a>
+                </td>
+                <td v-if="isAddableOutputChannel" class="align-middle text-center">
+                  <a class="btn btn-link text-dark px-1 py-0 mb-0 mt-0" @click="deleteChannel(channel)">
+                    <i class="material-icons-round" aria-hidden="true">delete</i>
+                  </a>
+                </td>
+              </tr>
+              <tr v-if="isAddableOutputChannel && isAdmin">
+                <td colspan="4" class="text-start">
+                  <a class="btn bg-transparent border-0 d-flex flex-column justify-content-center"
+                    @click="addOutputChannel">
+                    <div class="d-flex items-center justify-center  items-center">
+                      <i class="material-icons me-2" style="font-size:25px;">add</i>
+                      <p class="text-muted mb-0 flex" style="font-size: 1.0em;">出力チャンネルを追加</p>
+                    </div>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <div v-if="isError" class="alert alert-danger" role="alert">
