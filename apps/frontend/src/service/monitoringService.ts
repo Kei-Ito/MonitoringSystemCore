@@ -13,19 +13,21 @@ const channelLock = new RequestLock<string>(); // key = channelUUID など
 
 
 /** システム設定を取得する（純粋API呼び出し） */
-export const fetchSystemSetting = () =>
+export const fetchSystemSetting = (options?: { showErrorToast?: boolean }) =>
     handleApiRequest({
         apiCall: () => api.getSystemSetting(),
         onSuccess: (val) => val, // データをそのまま返す
         errorMsg: "システム設定の取得に失敗しました",
+        showErrorToast: options?.showErrorToast,
     });
 
 /** IOモジュール一覧を取得する（純粋API呼び出し） */
-export const getIOModules = () =>
+export const getIOModules = (options?: { showErrorToast?: boolean }) =>
     handleApiRequest({
         apiCall: () => api.getIOModules(),
         onSuccess: (val) => val, // データをそのまま返す
         errorMsg: "入出力モジュールの取得に失敗しました",
+        showErrorToast: options?.showErrorToast,
     });
 
 /** IOModuleを追加し、backendへ変更をpushするメソッド */

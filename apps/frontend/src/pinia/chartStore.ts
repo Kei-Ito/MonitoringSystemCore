@@ -95,7 +95,7 @@ export const useChartStore = defineStore('chartStore', {
     async initialize() {
       if (this.isInitialized) return; // 二重初期化防止
       
-      const result = await uiService.fetchUiLayouts();
+      const result = await uiService.fetchUiLayouts({ showErrorToast: false });
       if (result.ok) {
         this.setUiLayouts(result.value); // Store側でデータを更新
         this.isInitialized = true;

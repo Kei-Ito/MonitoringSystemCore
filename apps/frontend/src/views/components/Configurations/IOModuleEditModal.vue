@@ -66,7 +66,7 @@
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="min-width: 150px;">入力チャンネル名</th>
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%; min-width: 80px;">単位
                 </th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px; min-width: 120px;">
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px; min-width: 80px;">
                   少数点以下表示</th>
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%; min-width: 140px;">
                   サンプリング周期</th>
@@ -151,7 +151,7 @@
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="min-width: 150px;">出力チャンネル名</th>
                 <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 15%; min-width: 80px;">単位
                 </th>
-                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px; min-width: 120px;">
+                <th class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7" style="width: 30px; min-width: 80px;">
                   少数点以下表示</th>
                 <th v-if="isEditableSpecificOutputChannelSetting && isAdmin"
                   class="text-uppercase text-secondary text-xs font-weight-bolder opacity-7 px-2" style="width: 15px; min-width: 70px;">

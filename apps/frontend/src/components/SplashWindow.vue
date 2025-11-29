@@ -1,7 +1,7 @@
 <template>
   <div 
     class="splashwindow_container" 
-    :class="{ finishing: isFinishing }"
+    :class="{ finishing: isFinishing, 'error-mode': isError }"
     @transitionend="handleTransitionEnd"
   >
     <div class="content-wrapper" :class="{ 'fade-out': isFinishing }">
@@ -18,8 +18,18 @@
       </h1>
       
       <!-- ローディングスピナー -->
-      <div class="spinner-container">
+      <div class="spinner-container" v-if="!isError">
         <loading-spinner />
+      </div>
+      <!-- エラーメッセージ -->
+      <div class="error-message" v-if="isError">
+        <p class="error-title">Connection Failed</p>
+        <ul class="error-solutions">
+          <li>ネットワーク接続を確認してください</li>
+          <li>システム本体が起動しているか確認してください</li>
+          <li>ページを再読み込みしてください</li>
+          <li>上記の手順で解決しない場合、システム管理者にお問い合わせください</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -30,6 +40,7 @@ import LoadingSpinner from './LoadingSpinner.vue'
 
 defineProps<{
   isFinishing?: boolean
+  isError?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -106,6 +117,18 @@ function handleTransitionEnd(event: TransitionEvent) {
   background-color: #191919; 
 }
 
+/* 画面幅が狭い場合（1200px未満）の終了時スタイル */
+@media (max-width: 1199.98px) {
+  .splashwindow_container.finishing {
+    /* サイドバーの形状に変形せず、画面左外へスライドアウト */
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: -100vw;
+    border-radius: 0;
+  }
+}
+
 .content-wrapper {
   display: flex;
   flex-direction: column;
@@ -165,9 +188,9 @@ function handleTransitionEnd(event: TransitionEvent) {
   text-align: center;
   
   /* 初期状態（消灯） */
-  color: #111; 
+  color: #222; 
   text-shadow: none;
-  opacity: 0.3;
+  opacity: 1;
 
   /* 点灯アニメーション（ライトと同期） */
   animation: textIllumination 4s forwards;
@@ -263,49 +286,49 @@ function handleTransitionEnd(event: TransitionEvent) {
 /* 文字が照らされるアニメーション */
 @keyframes textIllumination {
   0% {
-    color: #111;
+    color: #222;
     text-shadow: none;
-    opacity: 0.1;
+    opacity: 1;
   }
   6% {
-    color: #111;
+    color: #222;
     text-shadow: none;
-    opacity: 0.1;
+    opacity: 1;
   }
   7% {
-    color: #332040;
-    text-shadow: 0 0 5px rgba(160, 32, 240, 0.5);
-    opacity: 0.5;
+    color: #534060;
+    text-shadow: 0 0 5px rgba(160, 32, 240, 0.3);
+    opacity: 1;
   }
   8% {
-    color: #111;
+    color: #222;
     text-shadow: none;
-    opacity: 0.1;
+    opacity: 1;
   }
   9% {
-    color: #111;
+    color: #222;
     text-shadow: none;
-    opacity: 0.1;
+    opacity: 1;
   }
   10% {
-    color: #443050;
-    text-shadow: 0 0 10px rgba(160, 32, 240, 0.6);
-    opacity: 0.6;
+    color: #534060;
+    text-shadow: 0 0 10px rgba(160, 32, 240, 0.4);
+    opacity: 1;
   }
   12% {
-    color: #111;
+    color: #222;
     text-shadow: none;
-    opacity: 0.1;
+    opacity: 1;
   }
   14% {
-    color: #332040;
-    text-shadow: 0 0 5px rgba(160, 32, 240, 0.5);
-    opacity: 0.5;
+    color: #534060;
+    text-shadow: 0 0 5px rgba(160, 32, 240, 0.3);
+    opacity: 1;
   }
   16% {
-    color: #111;
+    color: #222;
     text-shadow: none;
-    opacity: 0.1;
+    opacity: 1;
   }
   19% {
     color: #fff;
@@ -315,13 +338,13 @@ function handleTransitionEnd(event: TransitionEvent) {
   22% {
     color: #ccc;
     text-shadow: 0 0 5px #a020f0;
-    opacity: 0.8;
+    opacity: 1;
   }
   25% {
     /* 点滅終了 */
     color: #ddd;
     text-shadow: 0 0 8px #a020f0, 0 0 15px #a020f0;
-    opacity: 0.9;
+    opacity: 1;
   }
   100% {
     color: #ffffff;
@@ -335,5 +358,59 @@ function handleTransitionEnd(event: TransitionEvent) {
 
 @keyframes fadeIn {
   to { opacity: 1; }
+}
+
+/* エラーモード時のスタイル */
+.error-mode .tube {
+  animation: none;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.error-mode .title {
+  animation: none;
+  color: #222;
+  text-shadow: none;
+  opacity: 1;
+}
+
+.error-message {
+  margin-top: 40px;
+  color: #ff4444;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn 2s ease-in forwards; /* ぼんやりと浮き上がる */
+}
+
+.error-title {
+  font-size: 1.8em;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
+}
+
+.error-solutions {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1rem;
+  color: #ccc;
+  text-align: left;
+  display: inline-block;
+}
+
+.error-solutions li {
+  margin-bottom: 0.5rem;
+  padding-left: 1.5em;
+  position: relative;
+}
+
+.error-solutions li::before {
+  content: "•";
+  color: #ff4444;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
 }
 </style>

@@ -32,7 +32,8 @@
   <!-- スプラッシュウィンドウ (最前面) -->
   <splash-window 
     v-if="isSplashVisible" 
-    :is-finishing="!isLoading"
+    :is-finishing="!isLoading && !showAsError"
+    :is-error="showAsError"
     @animation-end="onSplashAnimationEnd"
   />
 
@@ -47,7 +48,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, computed } from "vue";
 
 import SplashWindow from "@/components/SplashWindow.vue";
 import AppFooter from "@/examples/Footer.vue";
@@ -61,10 +62,14 @@ import { shutdownSystem } from '@/api';
 import { useToast } from "vue-toastification";
 
 const uiStore = useUiStore()
-const { isLoading } = useAppInitializer();
+const { isLoading, isError, initialize } = useAppInitializer();
 const toast = useToast();
 
 const isSplashVisible = ref(true);
+const isOffline = ref(!navigator.onLine);
+
+// サーバーエラーまたはオフラインの場合にエラー表示とする
+const showAsError = computed(() => isError.value || isOffline.value);
 
 const navbarRef = ref<InstanceType<typeof Navbar> | null>(null);
 let dateRangePickerCallback: (() => void) | null = null;
@@ -85,6 +90,15 @@ function onSplashAnimationEnd() {
   isSplashVisible.value = false;
 }
 
+// オンライン/オフライン状態の監視
+const updateOnlineStatus = () => {
+  isOffline.value = !navigator.onLine;
+  if (!isOffline.value && isLoading.value) {
+    // オフラインから復帰し、まだロード中の場合は初期化を再試行
+    initialize();
+  }
+};
+
 // Navbarから日付範囲選択ボタンがクリックされたときの処理
 function handleShowDateRangePicker() {
   if (dateRangePickerCallback) {
@@ -103,6 +117,9 @@ function updateNavbarDateRange(payload: { text: string; callback?: () => void })
 }
 
 onMounted(async () => {
+  window.addEventListener('online', updateOnlineStatus);
+  window.addEventListener('offline', updateOnlineStatus);
+
   const sidenav = document.getElementsByClassName("g-sidenav-show")[0];
 
   if (window.innerWidth > 1200) {
@@ -110,9 +127,15 @@ onMounted(async () => {
   }
 });
 
+onUnmounted(() => {
+  window.removeEventListener('online', updateOnlineStatus);
+  window.removeEventListener('offline', updateOnlineStatus);
+});
+
 function navbarMinimize() {
   uiStore.navbarMinimize();
 }
+
 
 // システムシャットダウン処理
 async function handleShutdown() {

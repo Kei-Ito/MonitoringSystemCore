@@ -47,8 +47,8 @@ export const useMonitoringStore = defineStore('monitoringStore', {
       
       // 並列実行で高速化
       const [ioModulesResult, systemSettingResult] = await Promise.all([
-        monitoringService.getIOModules(),
-        monitoringService.fetchSystemSetting(),
+        monitoringService.getIOModules({ showErrorToast: false }),
+        monitoringService.fetchSystemSetting({ showErrorToast: false }),
       ]);
       
       // Store側でデータを更新

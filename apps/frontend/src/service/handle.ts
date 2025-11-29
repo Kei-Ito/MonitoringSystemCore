@@ -21,16 +21,18 @@ export async function handleApiRequest<R, U = void>({
   onSuccess,
   successMsg,
   errorMsg,
+  showErrorToast = true,
 }: {
   apiCall: () => Promise<Result<R,ApiError>>;          // 必須
   onSuccess?: (val: R) => U;                  // 成功時のコールバック
   successMsg?: string;                        // 成功トースト
   errorMsg?: string;                          // 失敗トースト
+  showErrorToast?: boolean;                   // エラー時にトーストを表示するかどうか
 }): Promise<Result<U,ApiError>> {
   const res = await apiCall();                // 必ず resolve する Result
 
   if (!res.ok) {
-    if (errorMsg) toast.error(errorMsg);
+    if (errorMsg && showErrorToast) toast.error(errorMsg);
     return err<ApiError>(res.error);          // Result<ApiError>
   }
 
@@ -41,7 +43,7 @@ export async function handleApiRequest<R, U = void>({
   } catch (e) {
     // onSuccess 内の例外も ApiError に包んで返す
     const fail: ApiError = { message: (e as Error).message };
-    toast.error(errorMsg ?? '処理中にエラーが発生しました');
+    if (showErrorToast) toast.error(errorMsg ?? '処理中にエラーが発生しました');
     return err<ApiError>(fail);
   }
 }
