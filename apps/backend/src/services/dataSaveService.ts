@@ -2,6 +2,7 @@ import { getIOModuleInputResponse } from '@monitoring/shared/api';
 import { csvDataRequest, trendDataRequest, getIsDataExistRequestModel } from '@monitoring/shared/api';
 import { SystemSettingService } from 'src/config/SystemSetting';
 import { Result, ok, err } from '@monitoring/shared/utils';
+import { downsampleData, downsampleDataByInterval } from 'src/utils/monitoringDataUitls';
 import readline from 'readline';
 import csv from "csv-parser";
 
@@ -34,6 +35,19 @@ function getLogDir(date: Date): string {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return path.join(configService.getSystemSetting().dataRootPath, year, month, day);
+}
+
+/**
+ * キャッシュディレクトリのパスを取得する
+ * @param date 日付
+ * @returns キャッシュディレクトリパス
+ */
+function getCacheDir(date: Date): string {
+    const year = date.getFullYear().toString();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    // データルートパスの下に 'cache' ディレクトリを作成
+    return path.join(configService.getSystemSetting().dataRootPath, 'cache', year, month, day);
 }
 
 /**
@@ -288,8 +302,33 @@ export async function saveInputDatas(data_list: getIOModuleInputResponse[], chan
 
 async function loadCsvColumn(
     filePath: string,
-    targetColumn: string
+    targetColumn: string,
+    resolutionMs: number = 0, // 0の場合は間引きなし
+    date?: Date // キャッシュファイル生成用
 ): Promise<{ timestamp: Date; value: number }[]> {
+    
+    // キャッシュ利用判定: 解像度が指定されており、かつ日付が指定されている（＝過去データ）場合
+    if (resolutionMs > 0 && date) {
+        const cacheDir = getCacheDir(date);
+        const cacheFileName = `cache_${targetColumn}_${resolutionMs}.json`;
+        const cacheFilePath = path.join(cacheDir, cacheFileName);
+
+        if (fs.existsSync(cacheFilePath)) {
+            try {
+                const cacheContent = await fs.promises.readFile(cacheFilePath, 'utf-8');
+                const cachedData = JSON.parse(cacheContent);
+                // JSONから復元したtimestampは文字列なのでDateオブジェクトに変換
+                return cachedData.map((d: any) => ({
+                    timestamp: new Date(d.timestamp),
+                    value: d.value
+                }));
+            } catch (e) {
+                console.warn(`Failed to read cache file: ${cacheFilePath}`, e);
+                // キャッシュ読み込み失敗時は生データ読み込みへフォールバック
+            }
+        }
+    }
+
     // キャッシュまたはファイルからヘッダーを取得して確認
     let headerUuids = headerCache.get(filePath);
 
@@ -312,7 +351,7 @@ async function loadCsvColumn(
         return [];
     }
 
-    return new Promise((resolve, reject) => {
+    const results = await new Promise<{ timestamp: Date; value: number }[]>((resolve, reject) => {
         const results: { timestamp: Date; value: number }[] = [];
         const skipLines = 2; // 1,2行目をスキップ、3行目をヘッダーとして使用
 
@@ -333,8 +372,29 @@ async function loadCsvColumn(
             .on("end", () => resolve(results))
             .on("error", reject);
     });
+
+    // 間引き処理とキャッシュ保存
+    if (resolutionMs > 0 && date) {
+        const downsampled = downsampleDataByInterval(results, resolutionMs);
+        
+        // キャッシュ保存（非同期で実行し、レスポンスをブロックしない）
+        (async () => {
+            try {
+                const cacheDir = getCacheDir(date);
+                await fs.promises.mkdir(cacheDir, { recursive: true });
+                const cacheFileName = `cache_${targetColumn}_${resolutionMs}.json`;
+                const cacheFilePath = path.join(cacheDir, cacheFileName);
+                await fs.promises.writeFile(cacheFilePath, JSON.stringify(downsampled));
+            } catch (e) {
+                console.error(`Failed to write cache file`, e);
+            }
+        })();
+
+        return downsampled;
+    }
+
+    return results;
 }
-// ...existing code...
 
 /**
  * 指定された日付範囲の全日付リストを生成
@@ -367,6 +427,24 @@ export async function getTrendData(trendDataRequest: trendDataRequest): Promise<
     const startDate = new Date(trendDataRequest.start_time);
     const endDate = new Date(trendDataRequest.end_time);
     const dateList = getDateRangeList(startDate, endDate);
+    
+    // 今日の日付を取得（時刻は00:00:00）
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // 期間の長さを計算（ミリ秒）
+    const durationMs = endDate.getTime() - startDate.getTime();
+    const hours = durationMs / (1000 * 60 * 60);
+
+    // 間引き解像度の決定
+    let resolutionMs = 0;
+    if (hours < 3) {
+        resolutionMs = 0; // そのまま
+    } else if (hours < 24) {
+        resolutionMs = 60 * 1000; // 1分単位
+    } else {
+        resolutionMs = 60 * 60 * 1000; // 1時間単位
+    }
 
     // 各日付のデータを並列で取得
     const dataPromises = dateList.map(async date => {
@@ -377,10 +455,22 @@ export async function getTrendData(trendDataRequest: trendDataRequest): Promise<
         const files = await fs.promises.readdir(dirPath);
         const csvFiles = files.filter(f => f.startsWith('data') && f.endsWith('.csv'));
 
+        // キャッシュを利用するか判定（今日の日付でなければキャッシュ可）
+        const checkDate = new Date(date);
+        checkDate.setHours(0, 0, 0, 0);
+        const isPastDate = checkDate.getTime() < today.getTime();
+
         // 各CSVファイルからデータを読み込む
         const filePromises = csvFiles.map(file => {
             const filePath = path.join(dirPath, file);
-            return loadCsvColumn(filePath, trendDataRequest.channel_uuid);
+            // 過去データなら解像度を指定してキャッシュ利用/生成を行う
+            // 今日データなら解像度0（生データ）で読み込み、後でまとめて間引く（キャッシュしない）
+            return loadCsvColumn(
+                filePath, 
+                trendDataRequest.channel_uuid, 
+                isPastDate ? resolutionMs : 0,
+                isPastDate ? date : undefined
+            );
         });
 
         const results = await Promise.all(filePromises);
@@ -398,6 +488,16 @@ export async function getTrendData(trendDataRequest: trendDataRequest): Promise<
 
     // タイムスタンプでソート
     filteredData.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+
+    // 今日のデータが含まれている場合、または解像度が0の場合は、
+    // 結合後に再度間引きを行う必要があるかもしれないが、
+    // 過去データは既に間引かれているので、今日のデータだけ間引いて結合するのが理想。
+    // しかし実装を簡単にするため、ここでは「今日のデータ」も結合後に同じ解像度で間引く。
+    // (loadCsvColumnで今日のデータはresolution=0で返ってきている)
+    
+    if (resolutionMs > 0) {
+        return downsampleDataByInterval(filteredData, resolutionMs);
+    }
 
     return filteredData;
 }

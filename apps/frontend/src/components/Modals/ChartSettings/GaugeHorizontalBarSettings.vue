@@ -14,6 +14,7 @@
                             type="number"
                             class="form-control"
                             v-model.number="localOptions.minValue"
+                            @change="emitUpdate"
                             placeholder="0"
                         />
                     </div>
@@ -23,6 +24,7 @@
                             type="number"
                             class="form-control"
                             v-model.number="localOptions.maxValue"
+                            @change="emitUpdate"
                             placeholder="100"
                         />
                     </div>
@@ -43,6 +45,7 @@
                         type="number"
                         class="form-control me-2"
                         v-model.number="localOptions.thresholds[index]"
+                        @change="emitUpdate"
                         placeholder="閾値"
                         style="width: 100px;"
                     />
@@ -50,12 +53,14 @@
                         type="color"
                         class="form-control form-control-color me-2"
                         v-model="localOptions.colors[index]"
+                        @change="emitUpdate"
                         style="width: 50px; height: 38px;"
                     />
                     <input
                         type="text"
                         class="form-control"
                         v-model="localOptions.colors[index]"
+                        @change="emitUpdate"
                         placeholder="#color"
                         style="width: 120px;"
                     />
@@ -68,12 +73,14 @@
                         type="color"
                         class="form-control form-control-color me-2"
                         v-model="localOptions.colors[localOptions.thresholds.length]"
+                        @change="emitUpdate"
                         style="width: 50px; height: 38px;"
                     />
                     <input
                         type="text"
                         class="form-control"
                         v-model="localOptions.colors[localOptions.thresholds.length]"
+                        @change="emitUpdate"
                         placeholder="#color"
                         style="width: 120px;"
                     />
@@ -101,17 +108,17 @@ const emit = defineEmits<{
     update: [options: ChartOptions]
 }>()
 
-const localOptions = ref<ChartOptions>({ ...props.options })
+const localOptions = ref<ChartOptions>(JSON.parse(JSON.stringify(props.options)))
 
 // 初期化
 watch(() => props.options, (newOptions) => {
-    localOptions.value = { ...newOptions }
+    localOptions.value = JSON.parse(JSON.stringify(newOptions))
 }, { immediate: true })
 
 // 変更を親に通知
-watch(localOptions, (newValue) => {
-    emit('update', { ...newValue })
-}, { deep: true })
+const emitUpdate = () => {
+    emit('update', JSON.parse(JSON.stringify(localOptions.value)))
+}
 </script>
 
 <style scoped>

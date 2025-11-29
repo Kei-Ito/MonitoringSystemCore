@@ -3,12 +3,12 @@
     {
       "uuid": "fast",
       "name": "高速サンプリング",
-      "period": 60000
+      "period": 1000
     },
     {
       "uuid": "slow",
       "name": "低速サンプリング",
-      "period": 62000
+      "period": 2000
     }
   ],
   "dataRootPath": "/media/linaro/HD-WHAU3",

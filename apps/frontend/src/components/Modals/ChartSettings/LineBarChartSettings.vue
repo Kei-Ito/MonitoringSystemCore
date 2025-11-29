@@ -13,12 +13,14 @@
                         type="color"
                         class="form-control form-control-color me-2 d-flex align-items-center"
                         v-model="channelColors[channel.channel_uuid]"
+                        @change="emitUpdate"
                         style="width: 50px; height: 38px; padding: 4px;"
                     />
                     <input
                         type="number"
                         class="form-control text-center"
                         v-model.number="channelLineWidths[channel.channel_uuid]"
+                        @change="emitUpdate"
                         min="1"
                         max="5"
                         step="0.5"
@@ -38,6 +40,7 @@
                     type="checkbox"
                     class="form-check-input ms-auto"
                     v-model="thresholdsEnabled"
+                    @change="onThresholdsEnabledChange"
                     style="cursor: pointer;"
                 />
             </label>
@@ -50,6 +53,7 @@
                             type="number"
                             class="form-control"
                             v-model.number="localOptions.thresholds.min"
+                            @change="emitUpdate"
                             placeholder="下限値"
                         />
                     </div>
@@ -59,6 +63,7 @@
                             type="number"
                             class="form-control"
                             v-model.number="localOptions.thresholds.max"
+                            @change="emitUpdate"
                             placeholder="上限値"
                         />
                     </div>
@@ -70,12 +75,14 @@
                             type="color"
                             class="form-control form-control-color d-flex align-items-center"
                             v-model="localOptions.thresholds.color"
+                            @change="emitUpdate"
                             style="width: 60px; height: 38px; padding: 4px;"
                         />
                         <input
                             type="text"
                             class="form-control ms-2"
                             v-model="localOptions.thresholds.color"
+                            @change="emitUpdate"
                             placeholder="#ff0000"
                         />
                     </div>
@@ -92,6 +99,7 @@
                     type="checkbox"
                     class="form-check-input ms-auto"
                     v-model="yAxisRangeEnabled"
+                    @change="onYAxisRangeEnabledChange"
                     style="cursor: pointer;"
                 />
             </label>
@@ -104,6 +112,7 @@
                             type="number"
                             class="form-control"
                             v-model.number="localOptions.visibility.minY"
+                            @change="emitUpdate"
                             placeholder="自動"
                         />
                     </div>
@@ -113,6 +122,7 @@
                             type="number"
                             class="form-control"
                             v-model.number="localOptions.visibility.maxY"
+                            @change="emitUpdate"
                             placeholder="自動"
                         />
                     </div>
@@ -153,7 +163,7 @@ const emit = defineEmits<{
     update: [options: ChartOptions]
 }>()
 
-const localOptions = ref<ChartOptions>({ ...props.options })
+const localOptions = ref<ChartOptions>(JSON.parse(JSON.stringify(props.options)))
 const thresholdsEnabled = ref(false)
 const yAxisRangeEnabled = ref(false)
 const channelColors = ref<Record<string, string>>({})
@@ -167,7 +177,7 @@ const defaultColors = [
 
 // 初期化
 watch(() => props.options, (newOptions) => {
-    localOptions.value = { ...newOptions }
+    localOptions.value = JSON.parse(JSON.stringify(newOptions))
     
     // 閾値の有効/無効を判定
     thresholdsEnabled.value = newOptions.thresholds?.min != null && newOptions.thresholds?.max != null
@@ -194,8 +204,8 @@ watch(() => props.options, (newOptions) => {
 }, { immediate: true })
 
 // 変更を親に通知
-watch([localOptions, channelColors, channelLineWidths, thresholdsEnabled, yAxisRangeEnabled], () => {
-    const updated = { ...localOptions.value }
+const emitUpdate = () => {
+    const updated = JSON.parse(JSON.stringify(localOptions.value))
     
     // チャンネルカラーを反映
     updated.seriesColors = { ...channelColors.value }
@@ -214,7 +224,27 @@ watch([localOptions, channelColors, channelLineWidths, thresholdsEnabled, yAxisR
     }
     
     emit('update', updated)
-}, { deep: true })
+}
+
+const onThresholdsEnabledChange = () => {
+    if (thresholdsEnabled.value) {
+        // 有効化されたとき、値がなければ初期値をセット
+        if (localOptions.value.thresholds.min == null) localOptions.value.thresholds.min = 0
+        if (localOptions.value.thresholds.max == null) localOptions.value.thresholds.max = 100
+    }
+    emitUpdate()
+}
+
+const onYAxisRangeEnabledChange = () => {
+    if (yAxisRangeEnabled.value) {
+        // 有効化されたとき、値がなければ初期値をセット
+        if (localOptions.value.visibility.minY == null && localOptions.value.visibility.maxY == null) {
+             localOptions.value.visibility.minY = 0
+             localOptions.value.visibility.maxY = 100
+        }
+    }
+    emitUpdate()
+}
 </script>
 
 <style scoped>

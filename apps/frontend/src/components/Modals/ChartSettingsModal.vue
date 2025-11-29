@@ -4,7 +4,7 @@
         <div class="chart-settings-container">
             <div class="row g-4">
                 <!-- 左側: プレビュー -->
-                <div class="col-12 col-xl-7 order-2 order-xl-1">
+                <div class="col-12 col-xl-7">
                     <div class="preview-section">
                         <h6 class="section-title mb-3">
                             <i class="material-icons align-middle me-2">visibility</i>
@@ -45,7 +45,7 @@
                 </div>
 
                 <!-- 右側: 設定項目 -->
-                <div class="col-12 col-xl-5 order-1 order-xl-2">
+                <div class="col-12 col-xl-5">
                     <div class="settings-section">
                         <h6 class="section-title mb-3">
                             <i class="material-icons align-middle me-2">tune</i>
@@ -69,7 +69,7 @@
                                                     style="font-size: 18px;">title</i>
                                                 グラフタイトル
                                             </label>
-                                            <input type="text" class="form-control" v-model="localSettings.chart_title"
+                                            <input type="text" class="form-control" v-model.lazy="localSettings.chart_title"
                                                 placeholder="グラフのタイトルを入力" />
                                         </div>
 
@@ -80,7 +80,7 @@
                                                     style="font-size: 18px;">straighten</i>
                                                 単位
                                             </label>
-                                            <input type="text" class="form-control" v-model="localSettings.chart_unit"
+                                            <input type="text" class="form-control" v-model.lazy="localSettings.chart_unit"
                                                 placeholder="単位を入力（例: ℃, %, kW）" />
                                         </div>
                                     </div>
@@ -177,7 +177,7 @@ const emit = defineEmits<{
 }>()
 
 // ローカル設定（編集用）
-const localSettings = ref<ChartConfig>({ ...props.chart })
+const localSettings = ref<ChartConfig>(JSON.parse(JSON.stringify(props.chart)))
 
 // プレビュー用のチャート設定
 const previewChart = computed(() => ({ ...localSettings.value }))
@@ -223,7 +223,7 @@ const updateChartOptions = (options: any) => {
 // モーダルが開いたときに設定をリセット
 watch(() => props.visible, (newVal) => {
     if (newVal) {
-        localSettings.value = { ...props.chart }
+        localSettings.value = JSON.parse(JSON.stringify(props.chart))
 
         // chart_optionsの初期化
         if (!localSettings.value.chart_options) {
