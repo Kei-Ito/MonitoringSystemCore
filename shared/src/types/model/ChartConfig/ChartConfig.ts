@@ -13,3 +13,8 @@ export interface ChartConfig {
     category1: string|null;
     category2: string|null;
 }
+
+export interface ChartOptions {
+    isCumulative?: boolean;
+    cumulativeIntervalMinutes?: number;
+}

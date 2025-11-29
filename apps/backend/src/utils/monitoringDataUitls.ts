@@ -37,9 +37,10 @@ export function downsampleData(data: TimeSeriesData[], targetCount: number): Tim
  * 時系列データを指定された時間間隔で間引く（平均値を使用）
  * @param data 元の時系列データ
  * @param intervalMs 間引き間隔（ミリ秒）
+ * @param decimals 小数点以下の桁数（指定された場合、その桁数で丸める）
  * @returns 間引き後のデータ
  */
-export function downsampleDataByInterval(data: TimeSeriesData[], intervalMs: number): TimeSeriesData[] {
+export function downsampleDataByInterval(data: TimeSeriesData[], intervalMs: number, decimals?: number): TimeSeriesData[] {
     if (intervalMs <= 0 || data.length === 0) {
         return data;
     }
@@ -49,6 +50,12 @@ export function downsampleDataByInterval(data: TimeSeriesData[], intervalMs: num
     let sum = 0;
     let count = 0;
 
+    const roundValue = (val: number): number => {
+        if (decimals === undefined) return val;
+        const factor = Math.pow(10, decimals);
+        return Math.round(val * factor) / factor;
+    };
+
     for (const point of data) {
         const timestamp = point.timestamp.getTime();
         
@@ -57,7 +64,7 @@ export function downsampleDataByInterval(data: TimeSeriesData[], intervalMs: num
             if (count > 0) {
                 result.push({
                     timestamp: new Date(currentBucketStart),
-                    value: sum / count
+                    value: roundValue(sum / count)
                 });
             }
             
@@ -75,7 +82,7 @@ export function downsampleDataByInterval(data: TimeSeriesData[], intervalMs: num
     if (count > 0) {
         result.push({
             timestamp: new Date(currentBucketStart),
-            value: sum / count
+            value: roundValue(sum / count)
         });
     }
 

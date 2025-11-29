@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import * as dataSaveService from 'src/services/dataSaveService';
+import * as IOModuleService from 'src/services/IOModuleService';
 import { getIsDataExist } from 'src/services/trendDataService';
-import { getCumulativeValue } from 'src/services/AnalysisService';
+import { getCumulativeValue, getAggregatedCumulativeTrend } from 'src/services/AnalysisService';
 import { trendSpan } from '@monitoring/shared/enum';
 import { csvDataRequest ,trendDataRequest,getIsDataExistRequestModel } from '@monitoring/shared/api';
 
@@ -22,8 +23,20 @@ export async function getTrendData(req: Request, res: Response) {
         span: span as trendSpan,
     };
 
+    // チャンネル設定からdecimalsを取得
+    const modules = IOModuleService.getAllModules();
+    let decimals: number | undefined;
+    
+    for (const module of modules) {
+        const channel = module.input_channels.find(c => c.channel_uuid === String(channel_uuid));
+        if (channel) {
+            decimals = channel.decimals;
+            break;
+        }
+    }
+
     // トレンドデータ取得処理
-    const trendData = await dataSaveService.getTrendData(trendDataRequest);
+    const trendData = await dataSaveService.getTrendData(trendDataRequest, decimals);
     res.json(trendData);
     return;
 };
@@ -79,5 +92,33 @@ export async function  getCumulativeValueController(req: Request, res: Response)
     const cumulativeValue = await getCumulativeValue(cumulativeValueRequest);
     
     res.json(cumulativeValue);
+    return;
+}
+
+export async function getAggregatedTrendData(req: Request, res: Response) {
+    const { channel_uuid, start_time, end_time, interval_minutes } = req.query;
+
+    // バリデーション
+    if (!channel_uuid || !start_time || !end_time || !interval_minutes) {
+        res.status(400).json({ error: 'Missing required parameters' });
+        return;
+    }
+
+    const trendDataRequest: trendDataRequest = {
+        channel_uuid: String(channel_uuid),
+        start_time: String(start_time),
+        end_time: String(end_time),
+        span: trendSpan.Dayly, // span is not strictly used for aggregation logic but required by type
+    };
+
+    const interval = Number(interval_minutes);
+    if (isNaN(interval) || interval <= 0) {
+        res.status(400).json({ error: 'Invalid interval_minutes' });
+        return;
+    }
+
+    // 集計データ取得処理
+    const aggregatedData = await getAggregatedCumulativeTrend(trendDataRequest, interval);
+    res.json(aggregatedData);
     return;
 }

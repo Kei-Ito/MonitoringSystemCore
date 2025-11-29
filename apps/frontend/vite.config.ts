@@ -26,32 +26,31 @@ export default defineConfig(({command }: ConfigEnv) => {
       }),
       VitePWA({
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.png'],
+        includeAssets: ['favicon.png', 'pwa-192x192.png', 'pwa-512x512.png'],
         manifest: {
-          name: 'UV Monitoring App',
-          short_name: 'Monitoring App',
+          name: 'UV Monitoring System',
+          short_name: 'UV Monitor',
+          description: 'UV Monitoring System Application',
           start_url: '/',
           display: 'standalone',
           background_color: '#ffffff',
           theme_color: '#1e90ff',
           icons: [
             {
-              src: '/favicon.png',
+              src: '/pwa-192x192.png',
               sizes: '192x192',
-              type: 'image/png',
-              purpose: 'any'
+              type: 'image/png'
             },
             {
-              src: '/favicon.png',
+              src: '/pwa-512x512.png',
+              sizes: '512x512',
+              type: 'image/png'
+            },
+            {
+              src: '/pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
-              purpose: 'any'
-            },
-            {
-              src: '/favicon.png',
-              sizes: '192x192',
-              type: 'image/png',
-              purpose: 'maskable'
+              purpose: 'any maskable'
             }
           ]
         },

@@ -20,6 +20,19 @@ export const getTrendData = (channel_uuid: string, startDate: Date, endDate: Dat
     signal: options?.signal,
   });
 
+export const getAggregatedTrendData = (channel_uuid: string, startDate: Date, endDate: Date, intervalMinutes: number, options?: { signal?: AbortSignal }) =>
+  request<{ timestamp: string, value: number }[]>({
+    method: 'get',
+    url: '/trend_data/aggregated',
+    params: {
+      channel_uuid,
+      start_time: startDate.toISOString(),
+      end_time: endDate.toISOString(),
+      interval_minutes: intervalMinutes,
+    },
+    signal: options?.signal,
+  });
+
 export async function getCsvData(inputChannelIds: number[], startDate: Date, endDate: Date) {
   try {
     const response = await axios.get(`${endpoint}export_csv`, {

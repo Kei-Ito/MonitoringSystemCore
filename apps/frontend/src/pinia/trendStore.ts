@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
 import { useChartStore } from './chartStore';
 import { useChannelValuesStore } from './channelValuesStore';
-import { getTrendData } from '@/service/trendDataService';
+import { getTrendData, getAggregatedTrendData } from '@/service/trendDataService';
+import type { ChartOptions } from '@monitoring/shared/types/model/ChartConfig/ChartConfig';
 
 export const useTrendStore = defineStore('trendStore', {
   state: () => {
@@ -60,12 +61,24 @@ export const useTrendStore = defineStore('trendStore', {
         const { trendCharts } = chartStore;
         
         const channel_uuid_list = new Set<string>();
+        // チャンネルごとの取得モードを記録 (uuid -> options)
+        const channelOptions = new Map<string, ChartOptions | null>();
         
         // チャートで使用しているチャンネルの一覧を取得
         Object.keys(trendCharts).forEach((key) => {
           const chart = trendCharts[key];
           if (chart.channel_uuids && chart.channel_uuids.length > 0) {
-            chart.channel_uuids.forEach((uuid) => channel_uuid_list.add(uuid));
+            const options = chart.chart_options as ChartOptions;
+            chart.channel_uuids.forEach((uuid) => {
+              channel_uuid_list.add(uuid);
+              
+              // 積算設定があればそれを採用
+              if (options?.isCumulative) {
+                  channelOptions.set(uuid, options);
+              } else if (!channelOptions.has(uuid)) {
+                  channelOptions.set(uuid, null);
+              }
+            });
           }
         });
 
@@ -95,11 +108,21 @@ export const useTrendStore = defineStore('trendStore', {
 
         for (const uuid of targetUuids) {
           try {
-            await getTrendData(
-              uuid, 
-              this.selectedDateRange.startDate, 
-              this.selectedDateRange.endDate
-            );
+            const options = channelOptions.get(uuid);
+            if (options?.isCumulative && options.cumulativeIntervalMinutes) {
+                await getAggregatedTrendData(
+                    uuid,
+                    this.selectedDateRange.startDate,
+                    this.selectedDateRange.endDate,
+                    options.cumulativeIntervalMinutes
+                );
+            } else {
+                await getTrendData(
+                  uuid, 
+                  this.selectedDateRange.startDate, 
+                  this.selectedDateRange.endDate
+                );
+            }
           } finally {
             channelValuesStore.setChannelLoading(uuid, false);
           }

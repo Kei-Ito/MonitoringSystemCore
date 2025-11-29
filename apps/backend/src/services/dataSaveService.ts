@@ -322,7 +322,8 @@ async function loadCsvColumn(
     filePath: string,
     targetColumn: string,
     resolutionMs: number = 0, // 0の場合は間引きなし
-    date?: Date // キャッシュファイル生成用
+    date?: Date, // キャッシュファイル生成用
+    decimals?: number // 丸め桁数
 ): Promise<{ timestamp: Date; value: number }[]> {
     
     // キャッシュ利用判定: 解像度が指定されており、かつ日付が指定されている（＝過去データ）場合
@@ -393,7 +394,7 @@ async function loadCsvColumn(
 
     // 間引き処理とキャッシュ保存
     if (resolutionMs > 0 && date) {
-        const downsampled = downsampleDataByInterval(results, resolutionMs);
+        const downsampled = downsampleDataByInterval(results, resolutionMs, decimals);
         
         // キャッシュ保存（非同期で実行し、レスポンスをブロックしない）
         (async () => {
@@ -436,11 +437,44 @@ function getDateRangeList(startDate: Date, endDate: Date): Date[] {
 }
 
 /**
+ * トレンドデータの取得期間に基づいて間引き解像度（ミリ秒）を決定する
+ * @param startDate 開始日時
+ * @param endDate 終了日時
+ * @returns 間引き解像度（ミリ秒）。0の場合は間引きなし。
+ */
+function determineResolution(startDate: Date, endDate: Date): number {
+    const durationMs = endDate.getTime() - startDate.getTime();
+    const hours = durationMs / (1000 * 60 * 60);
+
+    // 24時間までならそのまま
+    if (hours <= 24) {
+        return 0; // そのまま
+    } 
+    // 72時間（3日間）までなら1分単位
+    else if (hours <= 72) {
+        return 60 * 1000; // 1分単位
+    } 
+    // 192時間（8日間）までなら10分単位
+    else if (hours <= 192) {
+        return 60 * 1000 * 10; // 10分単位
+    }
+    // 720時間（30日間）までなら1時間単位
+    else if (hours <= 720){
+        return 60 * 60 * 1000; // 1時間単位
+    }
+    // それ以上なら1日単位
+    else {
+        return 24 * 60 * 60 * 1000; // 1日単位
+    }
+}
+
+/**
  * 複数日のトレンドデータを取得
  * @param trendDataRequest トレンドデータリクエスト
+ * @param decimals 丸め桁数（オプション）
  * @returns タイムスタンプと値の配列
  */
-export async function getTrendData(trendDataRequest: trendDataRequest): Promise<{ timestamp: Date; value: number }[]> {
+export async function getTrendData(trendDataRequest: trendDataRequest, decimals?: number): Promise<{ timestamp: Date; value: number }[]> {
 
     const startDate = new Date(trendDataRequest.start_time);
     const endDate = new Date(trendDataRequest.end_time);
@@ -450,19 +484,8 @@ export async function getTrendData(trendDataRequest: trendDataRequest): Promise<
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // 期間の長さを計算（ミリ秒）
-    const durationMs = endDate.getTime() - startDate.getTime();
-    const hours = durationMs / (1000 * 60 * 60);
-
     // 間引き解像度の決定
-    let resolutionMs = 0;
-    if (hours < 3) {
-        resolutionMs = 0; // そのまま
-    } else if (hours < 24) {
-        resolutionMs = 60 * 1000; // 1分単位
-    } else {
-        resolutionMs = 60 * 60 * 1000; // 1時間単位
-    }
+    const resolutionMs = determineResolution(startDate, endDate);
 
     // 各日付のデータを並列で取得
     const dataPromises = dateList.map(async date => {
@@ -487,7 +510,8 @@ export async function getTrendData(trendDataRequest: trendDataRequest): Promise<
                 filePath, 
                 trendDataRequest.channel_uuid, 
                 isPastDate ? resolutionMs : 0,
-                isPastDate ? date : undefined
+                isPastDate ? date : undefined,
+                decimals
             );
         });
 
@@ -514,7 +538,7 @@ export async function getTrendData(trendDataRequest: trendDataRequest): Promise<
     // (loadCsvColumnで今日のデータはresolution=0で返ってきている)
     
     if (resolutionMs > 0) {
-        return downsampleDataByInterval(filteredData, resolutionMs);
+        return downsampleDataByInterval(filteredData, resolutionMs, decimals);
     }
 
     return filteredData;

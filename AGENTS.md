@@ -32,7 +32,7 @@
 - 取得したデータは `saveInputDatas` により日付ディレクトリ配下の CSV に追記され、チャネルごとのログを蓄積します。【F:apps/backend/src/services/dataSaveService.ts†L1-L80】
 
 ### データベースと永続化
-- MySQL への接続は `mysql2/promise` ベースのプールを使用し、初回起動時に必要なテーブル(Modules, Channels, Measurements 等)を自動生成します。【F:apps/backend/src/infra/database/pool.ts†L1-L160】【F:apps/backend/src/config/databaseConfig.ts†L1-L8】
+- 本システムはデータベースを使用せず、全てのデータをファイルシステム（CSVおよびJSON）で管理します。
 - `databaseService` では IO モジュール／チャンネルの登録・更新、トレンドデータ取得、CSV エクスポート、ダッシュボードチャート設定管理などの永続化処理を提供します。【F:apps/backend/src/services/databaseService.ts†L1-L443】
 - トレンドデータの CSV エクスポートでは、選択したチャネルのヘッダー生成と日内データの整形を行い、BOM 付き文字列を返します。【F:apps/backend/src/services/databaseService.ts†L368-L443】
 
@@ -53,8 +53,8 @@
 ※ `/api/trend_data/export_csv` 等の追加エンドポイントはルーターではコメントアウトされているため、有効化にはルートの復帰が必要です。【F:apps/backend/src/routes/trendDataRouters.ts†L6-L9】
 
 ### 解析・集計
-- `AnalysisService` はトレンドデータの累積値を trapezoidal 積分で算出し、日別集計を `CumulativeData` テーブルに保存します。【F:apps/backend/src/services/AnalysisService.ts†L1-L66】
-- 集計値の永続化と取得は `trendDatabase` 経由で行い、既存データの有無を Result 型で返します。【F:apps/backend/src/infra/database/trendDatabase.ts†L1-L40】
+- `AnalysisService` はトレンドデータの累積値を trapezoidal 積分で算出し、結果をファイルベースのキャッシュ (`LocalData/cache`) に保存します。【F:apps/backend/src/services/AnalysisService.ts†L1-L66】
+- キャッシュは `cumulativeCacheService` を介して JSON 形式で読み書きされ、再計算のコストを削減します。【F:apps/backend/src/services/cumulativeCacheService.ts】
 
 ## フロントエンド (@monitoring/frontend)
 

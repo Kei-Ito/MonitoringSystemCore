@@ -90,6 +90,35 @@
             </div>
         </div>
 
+        <!-- 積算表示設定 -->
+        <div class="mb-3">
+            <label class="form-label fw-bold d-flex align-items-center">
+                <i class="material-icons align-middle me-1" style="font-size: 18px;">functions</i>
+                積算表示
+                <input
+                    type="checkbox"
+                    class="form-check-input ms-auto"
+                    v-model="localOptions.isCumulative"
+                    @change="emitUpdate"
+                    style="cursor: pointer;"
+                />
+            </label>
+
+            <div v-if="localOptions.isCumulative" class="cumulative-inputs mt-2">
+                <div class="mb-2">
+                    <label class="form-label small">集計間隔（分）</label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        v-model.number="localOptions.cumulativeIntervalMinutes"
+                        @change="emitUpdate"
+                        min="1"
+                        placeholder="60"
+                    />
+                </div>
+            </div>
+        </div>
+
         <!-- Y軸範囲設定 -->
         <div class="mb-3">
             <label class="form-label fw-bold d-flex align-items-center">
@@ -152,6 +181,8 @@ interface ChartOptions {
     }
     seriesColors?: Record<string, string>
     seriesLineWidths?: Record<string, number>
+    isCumulative?: boolean
+    cumulativeIntervalMinutes?: number
 }
 
 const props = defineProps<{
@@ -250,7 +281,8 @@ const onYAxisRangeEnabledChange = () => {
 <style scoped>
 .channel-colors,
 .threshold-inputs,
-.range-inputs {
+.range-inputs,
+.cumulative-inputs {
     background: #fff;
     padding: 1rem;
     border-radius: 0.5rem;
