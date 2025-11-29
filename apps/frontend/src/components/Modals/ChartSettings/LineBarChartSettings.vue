@@ -33,17 +33,21 @@
 
         <!-- 閾値設定 -->
         <div class="mb-3">
-            <label class="form-label fw-bold d-flex align-items-center">
-                <i class="material-icons align-middle me-1" style="font-size: 18px;">notifications</i>
-                閾値設定
-                <input
-                    type="checkbox"
-                    class="form-check-input ms-auto"
-                    v-model="thresholdsEnabled"
-                    @change="onThresholdsEnabledChange"
-                    style="cursor: pointer;"
-                />
-            </label>
+            <div class="d-flex align-items-center mb-2">
+                <label class="form-label fw-bold mb-0">
+                    <i class="material-icons align-middle me-1" style="font-size: 18px;">notifications</i>
+                    閾値設定
+                </label>
+                <div class="form-check form-switch ms-auto mb-0">
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        v-model="thresholdsEnabled"
+                        @change="onThresholdsEnabledChange"
+                        style="cursor: pointer;"
+                    />
+                </div>
+            </div>
 
             <div v-if="thresholdsEnabled" class="threshold-inputs mt-2">
                 <div class="row g-2 mb-2">
@@ -92,17 +96,21 @@
 
         <!-- 積算表示設定 -->
         <div class="mb-3">
-            <label class="form-label fw-bold d-flex align-items-center">
-                <i class="material-icons align-middle me-1" style="font-size: 18px;">functions</i>
-                積算表示
-                <input
-                    type="checkbox"
-                    class="form-check-input ms-auto"
-                    v-model="localOptions.isCumulative"
-                    @change="emitUpdate"
-                    style="cursor: pointer;"
-                />
-            </label>
+            <div class="d-flex align-items-center mb-2">
+                <label class="form-label fw-bold mb-0">
+                    <i class="material-icons align-middle me-1" style="font-size: 18px;">functions</i>
+                    積算表示
+                </label>
+                <div class="form-check form-switch ms-auto mb-0">
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        v-model="localOptions.isCumulative"
+                        @change="emitUpdate"
+                        style="cursor: pointer;"
+                    />
+                </div>
+            </div>
 
             <div v-if="localOptions.isCumulative" class="cumulative-inputs mt-2">
                 <div class="mb-2">
@@ -121,17 +129,21 @@
 
         <!-- Y軸範囲設定 -->
         <div class="mb-3">
-            <label class="form-label fw-bold d-flex align-items-center">
-                <i class="material-icons align-middle me-1" style="font-size: 18px;">height</i>
-                Y軸範囲
-                <input
-                    type="checkbox"
-                    class="form-check-input ms-auto"
-                    v-model="yAxisRangeEnabled"
-                    @change="onYAxisRangeEnabledChange"
-                    style="cursor: pointer;"
-                />
-            </label>
+            <div class="d-flex align-items-center mb-2">
+                <label class="form-label fw-bold mb-0">
+                    <i class="material-icons align-middle me-1" style="font-size: 18px;">height</i>
+                    Y軸範囲
+                </label>
+                <div class="form-check form-switch ms-auto mb-0">
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        v-model="yAxisRangeEnabled"
+                        @change="onYAxisRangeEnabledChange"
+                        style="cursor: pointer;"
+                    />
+                </div>
+            </div>
 
             <div v-if="yAxisRangeEnabled" class="range-inputs mt-2">
                 <div class="row g-2">
