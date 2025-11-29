@@ -38,6 +38,23 @@ function getLogDir(date: Date): string {
 }
 
 /**
+ * 日付文字列をExcelで認識可能な形式 (YYYY/MM/DD HH:mm:ss.SSS) に変換する
+ * @param dateStr ISO 8601形式の日付文字列
+ * @returns フォーマットされた日付文字列
+ */
+function formatDateForCsv(dateStr: string): string {
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+    return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
+
+/**
  * キャッシュディレクトリのパスを取得する
  * @param date 日付
  * @returns キャッシュディレクトリパス
@@ -285,8 +302,9 @@ export async function saveInputDatas(data_list: getIOModuleInputResponse[], chan
         const currentHeaderUuids = await ensureCsvHeader(data_path, channel_uuids, channelMeta);
 
         // データの追記
+        const formattedTimestamp = formatDateForCsv(timestamp);
         const sortedValues = currentHeaderUuids.slice(1).map(uuid => value_map.get(uuid) ?? '');
-        await fs.promises.appendFile(data_path, [timestamp, ...sortedValues].join(',') + '\n');
+        await fs.promises.appendFile(data_path, [formattedTimestamp, ...sortedValues].join(',') + '\n');
 
         return ok(void 0);
     } catch (error) {
