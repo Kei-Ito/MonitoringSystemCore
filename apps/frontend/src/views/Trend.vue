@@ -29,11 +29,6 @@
     </GridLayout>
     <div class="row mb-4">
       <div class="col-12" style="height: 400px;">
-        <DummyBarChartCard />
-      </div>
-    </div>
-    <div class="row mb-4">
-      <div class="col-12" style="height: 400px;">
         <DummyAreaLineChartCard  />
       </div>
     </div>
@@ -60,7 +55,6 @@ import { useChartStore } from '@/pinia/chartStore';
 import { useTrendStore } from '@/pinia/trendStore';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
-import DummyBarChartCard from '@/components/Cards/DummyBarChartCard.vue';
 import DummyAreaLineChartCard from '@/components/Cards/DummyAreaLineChartCard.vue';
 import DateRangePickerModal from '@/components/DateRangePickerModal.vue';
 
