@@ -2,8 +2,10 @@ import { onUnmounted, ref } from 'vue';
 import { useToast } from "vue-toastification";
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 import { useChannelValuesStore } from '@/pinia/channelValuesStore';
+import { useChartStore } from '@/pinia/chartStore';
 import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum';
 import type { getIOModuleInputResponse } from "@monitoring/shared/api";
+import type { ChartOptions } from "@monitoring/shared/model";
 import { getHealthCheck } from '@/api';
 
 /**
@@ -16,6 +18,7 @@ export function useWebSocket() {
   const toast = useToast();
   const monitoringStore = useMonitoringStore();
   const channelValuesStore = useChannelValuesStore();
+  const chartStore = useChartStore();
 
   let socket: WebSocket | null = null;
   let retryTimer: ReturnType<typeof setTimeout> | null = null;
@@ -23,7 +26,27 @@ export function useWebSocket() {
   function updateRuntimeValues(module_datas: getIOModuleInputResponse[]) {
     module_datas.map((module_data) => {
       module_data.channels.map((channel) => {
-        channelValuesStore.setRuntimeValue(channel.channel_uuid, channel.input_data);
+        // 積算設定を確認
+        let isCumulative = false;
+        let intervalMinutes = 60;
+        
+        for (const config of Object.values(chartStore.allChartsRecord)) {
+            if (config.channel_uuids.includes(channel.channel_uuid)) {
+                const options = config.chart_options as ChartOptions;
+                if (options?.isCumulative) {
+                    isCumulative = true;
+                    intervalMinutes = options.cumulativeIntervalMinutes || 60;
+                    break;
+                }
+            }
+        }
+
+        const runtimeValue = {
+            value: channel.input_data,
+            timestamp: new Date(),
+        };
+
+        channelValuesStore.updateRealtimeData(channel.channel_uuid, runtimeValue, isCumulative, intervalMinutes);
       });
     });
   }

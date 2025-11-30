@@ -258,6 +258,86 @@ export const useChannelValuesStore = defineStore("channelValues", {
         },
 
         /**
+         * リアルタイムデータの受信ハンドラ（分岐処理）
+         */
+        updateRealtimeData(channelUuid: string, runtimeValue: RuntimeValue, isCumulative: boolean = false, intervalMinutes: number = 60) {
+            // 積算計算用に前回の値を取得しておく
+            const previousRuntimeValue = this.channelValues[channelUuid]?.runtimeValue;
+
+            // 共通: 最新値(runtimeValue)の更新
+            this._updateChannelValue(channelUuid, runtimeValue);
+
+            if (isCumulative) {
+                // 積算値の場合の更新ロジック
+                this._updateCumulativeSeries(channelUuid, runtimeValue, previousRuntimeValue, intervalMinutes);
+            } else {
+                // 通常（瞬時値）の場合の更新ロジック
+                this._appendRealtimeSeries(channelUuid, runtimeValue);
+                this._appendTimeSeries(channelUuid, runtimeValue);
+            }
+        },
+
+        /**
+         * 積算グラフ用のリアルタイム更新処理
+         * 最新の区間に対して積分値を加算する
+         * @private
+         */
+        _updateCumulativeSeries(channelUuid: string, currentRuntimeValue: RuntimeValue, previousRuntimeValue: RuntimeValue | undefined, intervalMinutes: number) {
+            if (!this.channelValues[channelUuid]) return;
+            
+            const timeSeries = this.channelValues[channelUuid].timeSeries;
+            // データがない場合は何もしない（初回ロード待ち）か、新規作成する
+            if (timeSeries.length === 0) return;
+
+            // 配列の最後の要素（最新の区間）を取得
+            // markRawされているため、直接変更してもVueは検知しないことに注意
+            const lastIndex = timeSeries.length - 1;
+            const lastPoint = timeSeries[lastIndex];
+            
+            const currentTimestamp = new Date(currentRuntimeValue.timestamp).getTime();
+            const lastBucketStart = new Date(lastPoint.timestamp).getTime();
+            const intervalMs = intervalMinutes * 60 * 1000;
+
+            // 現在のデータが「最新の区間」に含まれるか判定
+            if (currentTimestamp < lastBucketStart + intervalMs) {
+                // --- ケースA: 同じ区間内なら値を更新（積分） ---
+                
+                if (previousRuntimeValue) {
+                    const prevTimestamp = new Date(previousRuntimeValue.timestamp).getTime();
+                    const timeDiffSec = (currentTimestamp - prevTimestamp) / 1000;
+                    
+                    // 5分以上の間隔がある場合はスキップ（AnalysisServiceと同様）
+                    const skipThresholdSec = 300;
+                    
+                    if (timeDiffSec > 0 && timeDiffSec < skipThresholdSec) {
+                        // 台形積分: (前回値 + 今回値) / 2 * 秒数
+                        const addedValue = ((previousRuntimeValue.value + currentRuntimeValue.value) / 2) * timeDiffSec;
+                        
+                        lastPoint.value += addedValue;
+                        this.channelValues[channelUuid].dataVersion++;
+                    }
+                }
+            } else {
+                // --- ケースB: 新しい区間に入った場合 ---
+                
+                // 新しい区間の開始時刻を計算
+                const newBucketStart = Math.floor(currentTimestamp / intervalMs) * intervalMs;
+                
+                // 新しい要素を追加
+                const newPoint = {
+                    timestamp: new Date(newBucketStart),
+                    value: 0 
+                };
+                
+                timeSeries.push(newPoint);
+                this.channelValues[channelUuid].dataVersion++;
+                
+                // 再帰的に呼び出して、新しい区間に値を加算する
+                this._updateCumulativeSeries(channelUuid, currentRuntimeValue, previousRuntimeValue, intervalMinutes);
+            }
+        },
+
+        /**
          * 健康状態変化時の通知処理（UI副作用を分離）
          * @private
          */
