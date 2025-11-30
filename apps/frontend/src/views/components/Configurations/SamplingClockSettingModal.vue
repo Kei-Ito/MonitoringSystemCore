@@ -83,7 +83,7 @@
             </div>
             <div v-if="interval.error" class="alert alert-danger mt-2" role="alert">
               <i class="material-icons align-middle me-1" style="font-size: 18px;">error</i>
-              サンプリング周期は1分以上に設定してください。
+              <span class="">サンプリング周期は1分以上に設定してください。</span>
             </div>
           </div>
         </div>

@@ -71,6 +71,7 @@ defineOptions({
 
 const emit = defineEmits<{
   'update-navbar-date-range': [{ text: string; callback: () => void }];
+  'update-navbar-loading': [boolean];
 }>();
 
 const chartStore = useChartStore();
@@ -79,7 +80,7 @@ const trendStore = useTrendStore();
 
 const uiStore = useUiStore();
 const { isLayoutEditMode, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
-const { selectedDateRange, isRealtimeMode } = storeToRefs(trendStore);
+const { selectedDateRange, isRealtimeMode, isLoading } = storeToRefs(trendStore);
 
 const layoutModel = ref<GridLayoutType[]>([]);
 const isUpdatingFromStore = ref(false);
@@ -169,6 +170,7 @@ const dateRangeText = computed(() => {
 });
 
 function showDateRangePicker() {
+  if (isLoading.value) return;
   isDateRangeModalVisible.value = true;
 }
 
@@ -191,9 +193,15 @@ function updateNavbarDateRange() {
   });
 }
 
+// ローディング状態を監視してNavbarに通知
+watch(isLoading, (newVal) => {
+  emit('update-navbar-loading', newVal);
+});
+
 onMounted(async () => {
   // Navbarに初期状態を通知
   updateNavbarDateRange();
+  emit('update-navbar-loading', isLoading.value);
   startDateChangeCheck();
 });
 

@@ -8,6 +8,7 @@ export interface requestParams {
   data?: unknown;
   params?: Record<string, unknown>;
   signal?: AbortSignal;
+  timeout?: number;
 }
 
 function toApiError(e: unknown): ApiError {
@@ -24,7 +25,7 @@ function toApiError(e: unknown): ApiError {
 
 const api = axios.create({
   baseURL: `/api`,
-  timeout: 1000,
+  timeout: 30000,
 });
 
 // 成功・失敗ログを一括管理するためのインターセプター
@@ -35,10 +36,10 @@ api.interceptors.response.use(
 
 /** apiリクエストを一括管理するメソッド */
 export async function request<T>(
-  { method, url, data, params, signal }: requestParams
+  { method, url, data, params, signal, timeout }: requestParams
 ): Promise<Result<T,ApiError>> {
   try {
-    const res = await api.request<T>({ method, url, data, params, signal });
+    const res = await api.request<T>({ method, url, data, params, signal, timeout });
     return ok(res.data);
   } catch (e) {
     // responseに届かない場合に備えてインターセプターではなくここでcatchする

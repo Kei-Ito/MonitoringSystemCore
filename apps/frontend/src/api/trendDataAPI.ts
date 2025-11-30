@@ -18,6 +18,7 @@ export const getTrendData = (channel_uuid: string, startDate: Date, endDate: Dat
       span: 'Daily',
     },
     signal: options?.signal,
+    timeout: 60000,
   });
 
 export const getAggregatedTrendData = (channel_uuid: string, startDate: Date, endDate: Date, intervalMinutes: number, options?: { signal?: AbortSignal }) =>
@@ -31,6 +32,7 @@ export const getAggregatedTrendData = (channel_uuid: string, startDate: Date, en
       interval_minutes: intervalMinutes,
     },
     signal: options?.signal,
+    timeout: 60000,
   });
 
 export async function getCsvData(inputChannelIds: number[], startDate: Date, endDate: Date) {
@@ -42,6 +44,7 @@ export async function getCsvData(inputChannelIds: number[], startDate: Date, end
         end_date: endDate.toISOString()
       },
       responseType: 'blob', // Blob形式でレスポンスを取得
+      timeout: 120000,
     });
     // BlobデータからURLを作成
     const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
@@ -68,26 +71,10 @@ export async function getIsDataExist(startDate: Date, endDate: Date): Promise<ge
       params: {
         start_time: startDate.toISOString(),
         end_time: endDate.toISOString()
-      } as getIsDataExistRequestModel
+      } as getIsDataExistRequestModel,
+      timeout: 60000,
     });
     return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
-export async function getCumulativeValue(channel_uuid: string, startDate: Date, endDate: Date) {
-  try {
-    const response = await axios.get(`${endpoint}get_cumulative_value`, {
-      params: {
-        channel_uuid: channel_uuid,
-        start_time: startDate.toISOString(),
-        end_time: endDate.toISOString(),
-        span: 'Daily'
-      }
-    });
-    return response;
   } catch (error) {
     console.error(error);
     throw error;

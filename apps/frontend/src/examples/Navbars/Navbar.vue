@@ -82,7 +82,7 @@
           </div>
           <div class="date-range-wrapper">
             <!-- <div class="input-label">表示範囲</div> -->
-            <button class="btn btn-outline-secondary btn-date-range d-flex align-items-center justify-content-center" @click="showDateRangePicker">
+            <button class="btn btn-outline-secondary btn-date-range d-flex align-items-center justify-content-center" @click="showDateRangePicker" :disabled="isLoading">
               <i class="material-icons me-2" style="font-size: 1.2rem;">calendar_month</i>
               <span class="date-range-text">{{ dateRangeText }}</span>
             </button>
@@ -155,6 +155,7 @@ const currentRouteName = computed<string>(() => String(route.name ?? ""));
 
 // 日付範囲テキスト（親コンポーネントから受け取る）
 const dateRangeText = ref("今日");
+const isLoading = ref(false);
 
 // 現在のルートに基づいて適切なカテゴリ選択を取得する computed プロパティ
 const selectedCategory1 = computed({
@@ -214,6 +215,10 @@ const setDateRangeText = (text: string) => {
   dateRangeText.value = text;
 };
 
+const setIsLoading = (loading: boolean) => {
+  isLoading.value = loading;
+};
+
 const isLayoutEditModeModel = computed({
   get: () => isLayoutEditMode.value,
   set: () => uiStore.toggleLayoutEditMode()
@@ -221,7 +226,8 @@ const isLayoutEditModeModel = computed({
 
 // コンポーネント外から呼び出せるようにする
 defineExpose({
-  setDateRangeText
+  setDateRangeText,
+  setIsLoading
 });
 
 // ルート変更時に選択状態を更新

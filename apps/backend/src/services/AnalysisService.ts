@@ -4,39 +4,6 @@ import * as cacheService from 'src/services/cumulativeCacheService';
 import { trendDataRequest } from '@monitoring/shared/api';
 
 /**
- * 累積データを取得するメソッド\
- * 単位はvalue * sec\
- * 要求されたデータが当日のものの場合、都度集計する
- * @param dataList 
- */
-export async function getCumulativeValue(dataRequest: trendDataRequest): Promise<number> {
-
-  const end_time = dataRequest.end_time;
-  const end_time_date = new Date(end_time);
-  const today = new Date();
-
-  // 既にキャッシュに集計データが存在するか確認
-  const cachedValue = await cacheService.loadDailyTotalCache(dataRequest.channel_uuid, end_time_date);
-
-  // すでに集計されている場合はその値を返す
-  if (cachedValue !== null) {
-    console.log('Cumulative data found in cache');
-    return cachedValue;
-  }
-
-  // 集計されていない場合や、当日のデータの場合はデータを取得して集計する
-  const dataList = await dataSaveService.getTrendData(dataRequest);
-  const cumulativeValue = calculateCumulativeValue(dataList);
-
-  // 当日のデータでなければ、集計データを保存
-  if (end_time_date.getFullYear() !== today.getFullYear() || end_time_date.getMonth() !== today.getMonth() || end_time_date.getDate() !== today.getDate()) {
-    // 集計データを保存(終了を待たない)
-    cacheService.saveDailyTotalCache(dataRequest.channel_uuid, end_time_date, cumulativeValue);
-  }
-  return cumulativeValue;
-}
-
-/**
  * 指定された期間のデータを指定された間隔で集計し、時系列の積算データを返す
  * @param dataRequest トレンドデータリクエスト
  * @param intervalMinutes 集計間隔（分）

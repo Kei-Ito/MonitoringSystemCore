@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import * as dataSaveService from 'src/services/dataSaveService';
 import * as IOModuleService from 'src/services/IOModuleService';
 import { getIsDataExist } from 'src/services/trendDataService';
-import { getCumulativeValue, getAggregatedCumulativeTrend } from 'src/services/AnalysisService';
+import { getAggregatedCumulativeTrend } from 'src/services/AnalysisService';
 import { trendSpan } from '@monitoring/shared/enum';
-import { csvDataRequest ,trendDataRequest,getIsDataExistRequestModel } from '@monitoring/shared/api';
+import { trendDataRequest,getIsDataExistRequestModel } from '@monitoring/shared/api';
 
 
 export async function getTrendData(req: Request, res: Response) {
@@ -70,28 +70,6 @@ export async function exportCsv(req: Request, res: Response) {
     }
     
     res.status(501).json({ error: 'CSV export feature is not implemented yet' });
-    return;
-}
-
-export async function  getCumulativeValueController(req: Request, res: Response) {
-    
-    const { channel_uuid, start_time, end_time } = req.query;
-    // バリデーション
-    if (!channel_uuid || !start_time || !end_time) {
-        res.status(400).json({ error: 'Missing required parameters' });
-        return;
-    }
-    const cumulativeValueRequest: trendDataRequest = {
-        channel_uuid: String(channel_uuid),
-        start_time: String(start_time),
-        end_time: String(end_time),
-        span: trendSpan.Dayly,
-    };
-    
-    // 累積値取得処理
-    const cumulativeValue = await getCumulativeValue(cumulativeValueRequest);
-    
-    res.json(cumulativeValue);
     return;
 }
 

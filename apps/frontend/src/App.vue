@@ -21,7 +21,7 @@
       <div class="flex-grow-1">
         <router-view v-slot="{ Component }">
           <keep-alive include="Trend,Dashboard">
-            <component :is="Component" @update-navbar-date-range="updateNavbarDateRange" />
+            <component :is="Component" @update-navbar-date-range="updateNavbarDateRange" @update-navbar-loading="updateNavbarLoading" />
           </keep-alive>
         </router-view>
       </div>
@@ -113,6 +113,12 @@ function updateNavbarDateRange(payload: { text: string; callback?: () => void })
   }
   if (payload.callback) {
     dateRangePickerCallback = payload.callback;
+  }
+}
+
+function updateNavbarLoading(loading: boolean) {
+  if (navbarRef.value) {
+    navbarRef.value.setIsLoading(loading);
   }
 }
 
