@@ -3,11 +3,19 @@ import * as dataSaveService from 'src/services/dataSaveService';
 import * as IOModuleService from 'src/services/IOModuleService';
 import { getIsDataExist } from 'src/services/trendDataService';
 import { getAggregatedCumulativeTrend } from 'src/services/AnalysisService';
+import HealthCheckService from 'src/services/healthCheckService';
 import { trendSpan } from '@monitoring/shared/enum';
 import { trendDataRequest,getIsDataExistRequestModel } from '@monitoring/shared/api';
 
 
 export async function getTrendData(req: Request, res: Response) {
+    // ヘルスチェック: ドライブがマウントされていない場合はエラーを返す
+    const healthService = HealthCheckService.getInstance();
+    if (!healthService.getHealthStatus().drivesMounted) {
+        res.status(503).json({ error: 'Data storage is not available (Drive not mounted)' });
+        return;
+    }
+
     const {channel_uuid , start_time, end_time, span } = req.query;
 
     // バリデーション
@@ -42,6 +50,13 @@ export async function getTrendData(req: Request, res: Response) {
 };
 
 export async function getIsDataExistController(req: Request, res: Response) {
+    // ヘルスチェック: ドライブがマウントされていない場合はエラーを返す
+    const healthService = HealthCheckService.getInstance();
+    if (!healthService.getHealthStatus().drivesMounted) {
+        res.status(503).json({ error: 'Data storage is not available (Drive not mounted)' });
+        return;
+    }
+
     const { start_time, end_time } = req.query;
     // バリデーション
     if (!start_time || !end_time) {
@@ -74,6 +89,13 @@ export async function exportCsv(req: Request, res: Response) {
 }
 
 export async function getAggregatedTrendData(req: Request, res: Response) {
+    // ヘルスチェック: ドライブがマウントされていない場合はエラーを返す
+    const healthService = HealthCheckService.getInstance();
+    if (!healthService.getHealthStatus().drivesMounted) {
+        res.status(503).json({ error: 'Data storage is not available (Drive not mounted)' });
+        return;
+    }
+
     const { channel_uuid, start_time, end_time, interval_minutes } = req.query;
 
     // バリデーション

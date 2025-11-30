@@ -6,7 +6,9 @@ import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum';
 import type { getIOModuleInputResponse } from "@monitoring/shared/api";
 import { getHealthCheck } from '@/api';
 
-// グローバルなドライブマウント警告状態
+/**
+ * ドライブマウント警告の表示状態
+ */
 export const showDriveMountWarning = ref(false);
 export const driveMountPath = ref('');
 
@@ -33,7 +35,7 @@ export function useWebSocket() {
         const healthData = healthResult.value.data;
         
         if (!healthData.drivesMounted) {
-          showDriveMountWarning.value = false;////////ここをtrueに変更////////
+          showDriveMountWarning.value = true;////////ここをtrueに変更////////
           driveMountPath.value = healthData.dataRootPath;
           
           toast.error(

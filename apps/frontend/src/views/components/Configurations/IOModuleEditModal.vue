@@ -25,7 +25,7 @@
       </div>
 
       <!-- デバイス固有設定 -->
-      <div v-if="isVisibleSpecificSettingTable&&isAdmin" class="settings-section mb-4">
+      <div v-if="isVisibleSpecificSettingTable" class="settings-section mb-4">
         <div class="section-header mb-3">
           <i class="material-icons align-middle me-2">settings</i>
           <span class="fw-bold">デバイス固有設定</span>

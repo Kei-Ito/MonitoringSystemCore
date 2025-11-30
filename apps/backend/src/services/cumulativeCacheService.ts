@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { SystemSettingService } from 'src/config/SystemSetting';
+import HealthCheckService from 'src/services/healthCheckService';
 
 const configService = SystemSettingService.getInstance();
 
@@ -42,6 +43,12 @@ export async function loadAggregatedCache(channel_uuid: string, intervalMinutes:
 }
 
 export async function saveAggregatedCache(channel_uuid: string, intervalMinutes: number, date: Date, cache: DailyIntervalCache): Promise<void> {
+    // ドライブがマウントされていない場合は保存しない
+    const healthService = HealthCheckService.getInstance();
+    if (!healthService.getHealthStatus().drivesMounted) {
+        return;
+    }
+
     const filePath = getAggregatedCachePath(channel_uuid, intervalMinutes, date);
     const dirPath = path.dirname(filePath);
     
@@ -67,6 +74,12 @@ export async function loadDailyTotalCache(channel_uuid: string, date: Date): Pro
 }
 
 export async function saveDailyTotalCache(channel_uuid: string, date: Date, value: number): Promise<void> {
+    // ドライブがマウントされていない場合は保存しない
+    const healthService = HealthCheckService.getInstance();
+    if (!healthService.getHealthStatus().drivesMounted) {
+        return;
+    }
+
     const filePath = getDailyTotalCachePath(channel_uuid, date);
     const dirPath = path.dirname(filePath);
     
