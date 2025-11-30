@@ -1444,7 +1444,8 @@
         "isCumulative": true,
         "seriesLineWidths": {
           "10149": 2
-        }
+        },
+        "cumulativeIntervalMinutes": 60
       },
       "category1": "照射炉3",
       "category2": "消費電力"
