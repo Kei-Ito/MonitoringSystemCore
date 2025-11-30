@@ -35,8 +35,8 @@ export const addSamplingInterval: RequestHandler = async (req: Request, res: Res
   try {
     const { name, period } = req.body as {name: string, period: number};
     
-    if (!name || !period || period <= 0) {
-      res.status(400).json({ message: '名前と周期が必要です' });
+    if (!name || !period || period < 60000) {
+      res.status(400).json({ message: '名前と周期(1分以上)が必要です' });
       return;
     }
     
@@ -80,8 +80,8 @@ export const updateSamplingInterval: RequestHandler = async (req: Request, res: 
       return;
     }
     
-    if (period !== undefined && period <= 0) {
-      res.status(400).json({ message: '周期は0より大きい値です' });
+    if (period !== undefined && period < 60000) {
+      res.status(400).json({ message: '周期は1分(60000ms)以上の値です' });
       return;
     }
     

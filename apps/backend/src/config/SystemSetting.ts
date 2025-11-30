@@ -34,12 +34,12 @@ export class SystemSettingService {
         const interval1: SamplingInterval = {
             uuid: uuidv4(),
             name: '高速サンプリング',
-            period: 1000
+            period: 60000
         };
         const interval2: SamplingInterval = {
             uuid: uuidv4(),
             name: '低速サンプリング',
-            period: 5000
+            period: 300000
         };
         return {
             samplingIntervals: [interval1, interval2],

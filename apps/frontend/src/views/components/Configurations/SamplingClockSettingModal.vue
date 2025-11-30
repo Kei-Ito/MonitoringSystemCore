@@ -83,7 +83,7 @@
             </div>
             <div v-if="interval.error" class="alert alert-danger mt-2" role="alert">
               <i class="material-icons align-middle me-1" style="font-size: 18px;">error</i>
-              サンプリング周期は1秒以上に設定してください。
+              サンプリング周期は1分以上に設定してください。
             </div>
           </div>
         </div>
@@ -188,7 +188,7 @@ async function save() {
   for (const interval of intervals.value) {
     interval.error = false;
     const period = serializeTime(interval.hours, interval.minutes, interval.seconds);
-    if (period === 0) {
+    if (period < 60000) {
       interval.error = true;
       hasError = true;
     }
@@ -262,7 +262,7 @@ function serializeTime(hours: number, minutes: number, seconds: number): number 
 async function addNewInterval() {
   const result = await addSamplingInterval({
     name: '新規サンプリング',
-    period: 1000
+    period: 60000
   });
 
   if (result.ok) {
