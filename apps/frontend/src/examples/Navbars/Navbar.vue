@@ -83,7 +83,8 @@
           <div class="date-range-wrapper">
             <!-- <div class="input-label">表示範囲</div> -->
             <button class="btn btn-outline-secondary btn-date-range d-flex align-items-center justify-content-center" @click="showDateRangePicker" :disabled="isLoading">
-              <i class="material-icons me-2" style="font-size: 1.2rem;">calendar_month</i>
+              <span v-if="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              <i v-else class="material-icons me-2" style="font-size: 1.2rem;">calendar_month</i>
               <span class="date-range-text">{{ dateRangeText }}</span>
             </button>
           </div>
