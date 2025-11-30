@@ -3084,6 +3084,102 @@
         "updated_at": "2025-08-19T13:58:02.750Z",
         "sampling_interval_uuid": "fast",
         "save_rawdata": false
+      },
+      {
+        "channel_uuid": "10044",
+        "channel_name": "消費電力(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "W",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 1000
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10044,
+          "data_length": 2,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-30T00:00:00.000Z",
+        "updated_at": "2025-11-30T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10049",
+        "channel_name": "消費電力(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "W",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 1000
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10049,
+          "data_length": 2,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-30T00:00:00.000Z",
+        "updated_at": "2025-11-30T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10149",
+        "channel_name": "消費電力(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "W",
+        "channel_number": -1,
+        "decimals": 2,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1000,
+          "dst_min": 0,
+          "dst_max": 1000
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10149,
+          "data_length": 2,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-11-30T00:00:00.000Z",
+        "updated_at": "2025-11-30T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
       }
     ],
     "output_channels": [],

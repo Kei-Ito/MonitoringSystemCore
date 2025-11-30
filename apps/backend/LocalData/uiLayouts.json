@@ -1308,6 +1308,96 @@
       },
       "category1": "照射炉3",
       "category2": "炉内温度"
+    },
+    {
+      "chart_uuid": "chart_power_consumption_1",
+      "chart_type": "BarChart",
+      "channel_uuids": [
+        "10044"
+      ],
+      "chart_title": "消費電力",
+      "chart_unit": "kWh",
+      "grid_layout": {
+        "i": "chart_power_consumption_1",
+        "x": 0,
+        "y": 100,
+        "w": 12,
+        "h": 10,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 1000,
+        "minValue": 0,
+        "colors": [
+          "#5470c6"
+        ]
+      },
+      "category1": "照射炉1",
+      "category2": "消費電力"
+    },
+    {
+      "chart_uuid": "chart_power_consumption_2",
+      "chart_type": "BarChart",
+      "channel_uuids": [
+        "10049"
+      ],
+      "chart_title": "消費電力",
+      "chart_unit": "kWh",
+      "grid_layout": {
+        "i": "chart_power_consumption_2",
+        "x": 0,
+        "y": 100,
+        "w": 12,
+        "h": 10,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 1000,
+        "minValue": 0,
+        "colors": [
+          "#91cc75"
+        ]
+      },
+      "category1": "照射炉2",
+      "category2": "消費電力"
+    },
+    {
+      "chart_uuid": "chart_power_consumption_3",
+      "chart_type": "BarChart",
+      "channel_uuids": [
+        "10149"
+      ],
+      "chart_title": "消費電力",
+      "chart_unit": "kWh",
+      "grid_layout": {
+        "i": "chart_power_consumption_3",
+        "x": 0,
+        "y": 100,
+        "w": 12,
+        "h": 10,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "maxValue": 1000,
+        "minValue": 0,
+        "colors": [
+          "#fac858"
+        ]
+      },
+      "category1": "照射炉3",
+      "category2": "消費電力"
     }
   ]
 }
