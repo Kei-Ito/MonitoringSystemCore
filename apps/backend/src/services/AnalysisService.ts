@@ -190,7 +190,8 @@ function calculateCumulativeValue(
     }
 
     const avgValue = (currentData.value + next.value) / 2;
-    const sectionValue = avgValue * timeDiffSec;
+    // Ws (J) -> Wh に変換するため 3600 で割る
+    const sectionValue = (avgValue * timeDiffSec) / 3600;
     totalValue += sectionValue
   }
 

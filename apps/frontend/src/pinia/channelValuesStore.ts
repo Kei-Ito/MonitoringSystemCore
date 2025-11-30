@@ -311,7 +311,8 @@ export const useChannelValuesStore = defineStore("channelValues", {
                     
                     if (timeDiffSec > 0 && timeDiffSec < skipThresholdSec) {
                         // 台形積分: (前回値 + 今回値) / 2 * 秒数
-                        const addedValue = ((previousRuntimeValue.value + currentRuntimeValue.value) / 2) * timeDiffSec;
+                        // Ws (J) -> Wh に変換するため 3600 で割る
+                        const addedValue = (((previousRuntimeValue.value + currentRuntimeValue.value) / 2) * timeDiffSec) / 3600;
                         
                         lastPoint.value += addedValue;
                         this.channelValues[channelUuid].dataVersion++;
