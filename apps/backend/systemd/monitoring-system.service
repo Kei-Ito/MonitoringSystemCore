@@ -6,15 +6,10 @@ After=network.target
 Type=simple
 
 # アプリを置いたディレクトリ
-WorkingDirectory=/opt/my-app
+WorkingDirectory=/home/clpi/MonitoringSystem/MonitoringSystemCoreService/apps/backend/
 
 # node の絶対パスを指定（which で確認）
-ExecStart=/usr/bin/node dist/server.js
-
-# 環境変数（必要に応じて）
-Environment=NODE_ENV=production
-# 例：PORT=3000 など
-# Environment=PORT=3000
+ExecStart=/home/clpi/.nvm/versions/node/v22.14.0/bin/node dist/server.js
 
 # 異常終了時の自動再起動
 Restart=always
