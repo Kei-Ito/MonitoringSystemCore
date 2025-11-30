@@ -156,6 +156,12 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
     if (response.ok) {
       const input_datas = response.value;
 
+      // データ収集サービスからのレスポンスが不正な場合のガード
+      if (!input_datas || !input_datas.channels) {
+        console.warn(`Invalid data received for module ${module.module_uuid}:`, input_datas);
+        return;
+      }
+
       // キャッシュからチャンネルUUIDのセットを取得
       const targetChannelUuids = mapping.channelUuidsByModule.get(module.module_uuid);
       if (!targetChannelUuids) return;

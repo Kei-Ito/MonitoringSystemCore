@@ -42,7 +42,7 @@
         },
         "created_at": "2025-08-19T12:41:05.117Z",
         "updated_at": "2025-08-19T12:41:05.117Z",
-        "sampling_interval_uuid": "slow",
+        "sampling_interval_uuid": "fast",
         "save_rawdata": true
       },
       {
@@ -3139,7 +3139,7 @@
           "alert_max_threshold": null
         },
         "specific_channel_setting": {
-          "register_address": 10049,
+          "register_address": 10094,
           "data_length": 2,
           "slave_id": 1,
           "function_code": 3
@@ -3171,7 +3171,7 @@
           "alert_max_threshold": null
         },
         "specific_channel_setting": {
-          "register_address": 10149,
+          "register_address": 10144,
           "data_length": 2,
           "slave_id": 1,
           "function_code": 3

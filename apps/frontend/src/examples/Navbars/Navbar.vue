@@ -23,7 +23,7 @@
           <div class="d-flex gap-2 align-items-end">
             <!-- 照射炉選択（カテゴリ1）のマルチセレクト -->
             <div class="multiselect-wrapper">
-              <multiselect v-model="selectedCategory1" :options="category1List??[]" :multiple="false" :close-on-select="true"
+              <multiselect v-model="selectedCategory1" :options="availableCategory1List" :multiple="false" :close-on-select="true"
                 :clear-on-select="false" :searchable="false" :allow-empty="false" :preserve-search="false" selectLabel=""
                 selectedLabel="" deselectLabel="" placeholder="Category1を選択" :preselect-first="false" :disabled="isLayoutEditMode">
                 <!-- マルチセレクト時のテンプレート -->
@@ -48,7 +48,7 @@
 
             <!-- カテゴリ2のマルチセレクト -->
             <div class="multiselect-wrapper">
-              <multiselect v-model="selectedCategory2" :options="category2List??[]" :multiple="true" :close-on-select="false"
+              <multiselect v-model="selectedCategory2" :options="availableCategory2List" :multiple="true" :close-on-select="false"
                 :clear-on-select="false" :preserve-search="false" placeholder="" :searchable="false" selectLabel=""
                 selectedLabel="" deselectLabel="" :preselect-first="false" :disabled="isLayoutEditMode">
                 <!-- マルチセレクト時のテンプレート -->
@@ -125,6 +125,7 @@ import { useRoute } from "vue-router";
 
 import ToggleBtn from "@/components/ToggleBtn.vue";
 import { useUiStore } from "@/pinia/uiStore";
+import { useChartStore } from "@/pinia/chartStore";
 
 
 /* Emits */
@@ -134,6 +135,7 @@ const emit = defineEmits<{
 }>();
 
 const uiStore = useUiStore();
+const chartStore = useChartStore();
 
 /* Route */
 const route = useRoute();
@@ -157,6 +159,44 @@ const currentRouteName = computed<string>(() => String(route.name ?? ""));
 // 日付範囲テキスト（親コンポーネントから受け取る）
 const dateRangeText = ref("今日");
 const isLoading = ref(false);
+
+// 現在のページに存在するカテゴリーのみを抽出する computed プロパティ
+const availableCategory1List = computed(() => {
+  const allCategories = category1List.value ?? [];
+  let pageCharts: any[] = [];
+
+  if (currentRouteName.value === 'Dashboard') {
+    pageCharts = chartStore.uiLayouts.dashboard ?? [];
+  } else if (currentRouteName.value === 'Trend') {
+    pageCharts = chartStore.uiLayouts.trend ?? [];
+  } else {
+    return [];
+  }
+
+  // ページ内のチャートで使用されている category1 を収集
+  const usedCategories = new Set(pageCharts.map(c => c.category1).filter(c => c));
+
+  // 全リストのうち、使用されているものだけをフィルタリングして返す（順序維持のため）
+  return allCategories.filter(cat => usedCategories.has(cat));
+});
+
+const availableCategory2List = computed(() => {
+  const allCategories = category2List.value ?? [];
+  let pageCharts: any[] = [];
+
+  if (currentRouteName.value === 'Dashboard') {
+    pageCharts = chartStore.uiLayouts.dashboard ?? [];
+  } else if (currentRouteName.value === 'Trend') {
+    pageCharts = chartStore.uiLayouts.trend ?? [];
+  } else {
+    return [];
+  }
+
+  // ページ内のチャートで使用されている category2 を収集
+  const usedCategories = new Set(pageCharts.map(c => c.category2).filter(c => c));
+
+  return allCategories.filter(cat => usedCategories.has(cat));
+});
 
 // 現在のルートに基づいて適切なカテゴリ選択を取得する computed プロパティ
 const selectedCategory1 = computed({

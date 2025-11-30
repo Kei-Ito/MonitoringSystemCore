@@ -1334,7 +1334,24 @@
         "minValue": 0,
         "colors": [
           "#5470c6"
-        ]
+        ],
+        "thresholds": {
+          "min": null,
+          "max": null,
+          "color": "#ff0000"
+        },
+        "visibility": {
+          "minY": null,
+          "maxY": null
+        },
+        "seriesColors": {
+          "10044": "#5470c6"
+        },
+        "isCumulative": true,
+        "seriesLineWidths": {
+          "10044": 2
+        },
+        "cumulativeIntervalMinutes": 60
       },
       "category1": "照射炉1",
       "category2": "消費電力"
@@ -1364,7 +1381,24 @@
         "minValue": 0,
         "colors": [
           "#91cc75"
-        ]
+        ],
+        "thresholds": {
+          "min": null,
+          "max": null,
+          "color": "#ff0000"
+        },
+        "visibility": {
+          "minY": null,
+          "maxY": null
+        },
+        "seriesColors": {
+          "10049": "#5470c6"
+        },
+        "isCumulative": true,
+        "seriesLineWidths": {
+          "10049": 2
+        },
+        "cumulativeIntervalMinutes": 60
       },
       "category1": "照射炉2",
       "category2": "消費電力"
@@ -1394,7 +1428,23 @@
         "minValue": 0,
         "colors": [
           "#fac858"
-        ]
+        ],
+        "thresholds": {
+          "min": null,
+          "max": null,
+          "color": "#ff0000"
+        },
+        "visibility": {
+          "minY": null,
+          "maxY": null
+        },
+        "seriesColors": {
+          "10149": "#5470c6"
+        },
+        "isCumulative": true,
+        "seriesLineWidths": {
+          "10149": 2
+        }
       },
       "category1": "照射炉3",
       "category2": "消費電力"
