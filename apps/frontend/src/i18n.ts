@@ -79,6 +79,9 @@ const translations:any = {
     },
     trend: {
       select_date_range: '表示期間を選択',
+    },
+    chart: {
+      settings: 'グラフ設定',
     }
   },
   en: {
@@ -156,6 +159,9 @@ const translations:any = {
     },
     trend: {
       select_date_range: 'Select Date Range',
+    },
+    chart: {
+      settings: 'Chart Settings',
     }
   },
   zh: {
@@ -233,6 +239,9 @@ const translations:any = {
     },
     trend: {
       select_date_range: '选择日期范围',
+    },
+    chart: {
+      settings: '图表设置',
     }
   },
   ko: {
@@ -310,6 +319,9 @@ const translations:any = {
     },
     trend: {
       select_date_range: '날짜 범위 선택',
+    },
+    chart: {
+      settings: '차트 설정',
     }
   }
 }

@@ -49,11 +49,11 @@ function formatTime(value: string | number): string {
 }
 
 const optionBuilder = () => {
-    const thresholds = chartRef.value.chart_options.thresholds;
-    const minY = chartRef.value.chart_options.visibility?.minY;
-    const maxY = chartRef.value.chart_options.visibility?.maxY;
-    const seriesColors = chartRef.value.chart_options.seriesColors ?? {};
-    const seriesLineWidths = chartRef.value.chart_options.seriesLineWidths ?? {};
+    const thresholds = chartRef.value.chart_options?.thresholds ?? { min: null, max: null, color: null };
+    const minY = chartRef.value.chart_options?.visibility?.minY;
+    const maxY = chartRef.value.chart_options?.visibility?.maxY;
+    const seriesColors = chartRef.value.chart_options?.seriesColors ?? {};
+    const seriesLineWidths = chartRef.value.chart_options?.seriesLineWidths ?? {};
 
     // 折れ線（dataset から列名でマッピング）
     const lineSeries = props.series.map((s, idx) => {
