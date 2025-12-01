@@ -3,51 +3,102 @@ import { useChartStore } from './chartStore';
 import { useChannelValuesStore } from './channelValuesStore';
 import { getTrendData, getAggregatedTrendData } from '@/service/trendDataService';
 import type { ChartOptions } from '@monitoring/shared/types/model/ChartConfig/ChartConfig';
+import { TrendPresetMode } from '@monitoring/shared/enum';
+
+/**
+ * プリセットモードに応じた日付範囲を計算する
+ */
+function calculateDateRangeForPreset(mode: TrendPresetMode): { startDate: Date; endDate: Date } {
+  const now = new Date();
+  const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+  
+  switch (mode) {
+    case TrendPresetMode.Realtime: {
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      return { startDate: today, endDate: endOfToday };
+    }
+    case TrendPresetMode.LastWeek: {
+      const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6, 0, 0, 0);
+      return { startDate: weekAgo, endDate: endOfToday };
+    }
+    case TrendPresetMode.LastMonth: {
+      const monthAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29, 0, 0, 0);
+      return { startDate: monthAgo, endDate: endOfToday };
+    }
+    default:
+      // Custom モードでは既存の日付範囲を維持するため、ここでは今日をデフォルト
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      return { startDate: today, endDate: endOfToday };
+  }
+}
 
 export const useTrendStore = defineStore('trendStore', {
   state: () => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-    const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+    const initialRange = calculateDateRangeForPreset(TrendPresetMode.Realtime);
     
     return {
-      selectedDateRange: {
-        startDate: today,
-        endDate: endOfToday
-      },
+      selectedDateRange: initialRange,
       isLoading: false,
-      isRealtimeMode: true
+      /** @deprecated 後方互換性のため残す。presetMode を使用してください */
+      isRealtimeMode: true,
+      /** 現在のプリセットモード */
+      presetMode: TrendPresetMode.Realtime as TrendPresetMode
     };
   },
   actions: {
-    setTrendCondition(isRealtime: boolean, range: { startDate: Date; endDate: Date }) {
-      this.selectedDateRange = range;
-      this.isRealtimeMode = isRealtime;
+    /**
+     * プリセットモードで表示条件を設定
+     */
+    setPresetMode(mode: TrendPresetMode, customRange?: { startDate: Date; endDate: Date }) {
+      this.presetMode = mode;
+      // 後方互換性: isRealtimeMode を更新
+      this.isRealtimeMode = mode === TrendPresetMode.Realtime;
+      
+      if (mode === TrendPresetMode.Custom && customRange) {
+        this.selectedDateRange = customRange;
+      } else {
+        this.selectedDateRange = calculateDateRangeForPreset(mode);
+      }
+      
       this.fetchAllTrendData();
     },
     /**
+     * @deprecated 後方互換性のため残す。setPresetMode を使用してください
+     */
+    setTrendCondition(isRealtime: boolean, range: { startDate: Date; endDate: Date }) {
+      if (isRealtime) {
+        this.setPresetMode(TrendPresetMode.Realtime);
+      } else {
+        this.setPresetMode(TrendPresetMode.Custom, range);
+      }
+    },
+    /**
      * 日付が変わったかどうかをチェックし、
-     * 今日モードであれば日付範囲を更新する
+     * プリセットモード（リアルタイム、直近1週間、直近1ヶ月）であれば日付範囲を更新する
      */
     checkDateChange() {
-      if (!this.isRealtimeMode) return;
+      // カスタムモードの場合は何もしない
+      if (this.presetMode === TrendPresetMode.Custom) return;
       
       const now = new Date();
       const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
       
-      // ストアのstartDateと比較
-      // もしストアのstartDateが今日でなければ（つまり日付が変わっていたら）、更新する
-      if (this.selectedDateRange.startDate.getTime() !== todayStart.getTime()) {
-        const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
-        
+      // 現在の endDate の日付部分を取得
+      const currentEndDateStart = new Date(
+        this.selectedDateRange.endDate.getFullYear(),
+        this.selectedDateRange.endDate.getMonth(),
+        this.selectedDateRange.endDate.getDate(),
+        0, 0, 0
+      );
+      
+      // 日付が変わっていたら更新
+      if (currentEndDateStart.getTime() !== todayStart.getTime()) {
         // 日付が変わったので、既存の時系列データをクリア
         const channelValuesStore = useChannelValuesStore();
         channelValuesStore.clearAllTimeSeries();
 
-        this.selectedDateRange = {
-          startDate: todayStart,
-          endDate: todayEnd
-        };
+        // プリセットモードに応じた新しい日付範囲を計算
+        this.selectedDateRange = calculateDateRangeForPreset(this.presetMode);
         
         // データ再取得
         this.fetchAllTrendData();

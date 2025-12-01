@@ -1,9 +1,0 @@
-{
-  "model": "codex-mini-latest",
-  "approvalMode": "auto-edit",
-  "history": {
-    "maxSize": 1000,
-    "saveHistory": true,
-    "sensitivePatterns": []
-  }
-}

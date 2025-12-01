@@ -37,7 +37,7 @@
       :show="isDateRangeModalVisible"
       :start-date="selectedDateRange.startDate"
       :end-date="selectedDateRange.endDate"
-      :initial-is-realtime="trendStore.isRealtimeMode"
+      :initial-preset-mode="trendStore.presetMode"
       @close="hideDateRangePicker"
       @date-range-selected="updateDateRange"
     />
@@ -53,6 +53,7 @@ import type { GridLayout as GridLayoutType } from '@monitoring/shared/model';
 import { useUiStore } from '@/pinia/uiStore';
 import { useChartStore } from '@/pinia/chartStore';
 import { useTrendStore } from '@/pinia/trendStore';
+import { TrendPresetMode } from '@monitoring/shared/enum';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
 import DummyAreaLineChartCard from '@/components/Cards/DummyAreaLineChartCard.vue';
@@ -74,7 +75,7 @@ const trendStore = useTrendStore();
 
 const uiStore = useUiStore();
 const { isLayoutEditMode, trendViewCategory1Selected, trendViewCategory2Selected } = storeToRefs(uiStore);
-const { selectedDateRange, isRealtimeMode, isLoading } = storeToRefs(trendStore);
+const { selectedDateRange, presetMode, isLoading } = storeToRefs(trendStore);
 
 const layoutModel = ref<GridLayoutType[]>([]);
 const isUpdatingFromStore = ref(false);
@@ -138,29 +139,36 @@ const isDateRangeModalVisible = ref(false);
 
 // 日付範囲のテキスト表示
 const dateRangeText = computed(() => {
-  if (isRealtimeMode.value) {
-    return "リアルタイム (当日)";
+  switch (presetMode.value) {
+    case TrendPresetMode.Realtime:
+      return "リアルタイム（今日）";
+    case TrendPresetMode.LastWeek:
+      return "直近1週間";
+    case TrendPresetMode.LastMonth:
+      return "直近1ヶ月";
+    case TrendPresetMode.Custom:
+    default: {
+      const start = selectedDateRange.value.startDate;
+      const end = selectedDateRange.value.endDate;
+      
+      const formatDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${year}/${month}/${day}`;
+      };
+      
+      const startStr = formatDate(start);
+      const endStr = formatDate(end);
+      
+      // 同じ日の場合は1つだけ表示
+      if (startStr === endStr) {
+        return startStr;
+      }
+      
+      return `${startStr} - ${endStr}`;
+    }
   }
-
-  const start = selectedDateRange.value.startDate;
-  const end = selectedDateRange.value.endDate;
-  
-  const formatDate = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${year}/${month}/${day}`;
-  };
-  
-  const startStr = formatDate(start);
-  const endStr = formatDate(end);
-  
-  // 同じ日の場合は1つだけ表示
-  if (startStr === endStr) {
-    return startStr;
-  }
-  
-  return `${startStr} - ${endStr}`;
 });
 
 function showDateRangePicker() {
@@ -172,8 +180,8 @@ function hideDateRangePicker() {
   isDateRangeModalVisible.value = false;
 }
 
-function updateDateRange(payload: { isRealtime: boolean; startDate: Date; endDate: Date }) {
-  trendStore.setTrendCondition(payload.isRealtime, {
+function updateDateRange(payload: { presetMode: TrendPresetMode; startDate: Date; endDate: Date }) {
+  trendStore.setPresetMode(payload.presetMode, {
     startDate: payload.startDate,
     endDate: payload.endDate
   });
@@ -223,7 +231,7 @@ onDeactivated(() => {
 });
 
 // 日付範囲が変更されたらNavbarに通知
-watch([dateRangeText, isRealtimeMode], () => {
+watch([dateRangeText, presetMode], () => {
   updateNavbarDateRange();
 });
 

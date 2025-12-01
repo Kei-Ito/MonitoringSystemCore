@@ -6,4 +6,5 @@ export * from "./ChartTypes";
 export * from "./IOModuleStatus";
 export * from "./IOModuleTypes";
 export * from "./ModbusFunctionCode";
+export * from "./TrendPresetMode";
 export * from "./trendSpan";
