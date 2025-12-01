@@ -45,6 +45,7 @@ export class SystemSettingService {
             samplingIntervals: [interval1, interval2],
             dataRootPath: "",
             driveUUID: "",
+            dataRetentionDays: 365, // デフォルト: 1年間
             category1list: [],
             category2list: [],
             dashboardViewCategory1Selected: [],
@@ -61,10 +62,22 @@ export class SystemSettingService {
         const result: Result<SystemSettingData> = await json.loadJson<SystemSettingData>(jsonPath);
         if (result.ok) {
             this._systemSetting = result.value;
+            const defaultSetting = this.createDefaultSystemSetting();
+            let needsSave = false;
+            
             // samplingIntervalsがない場合はデフォルトを設定
             if (!this._systemSetting.samplingIntervals) {
-                const defaultSetting = this.createDefaultSystemSetting();
                 this._systemSetting.samplingIntervals = defaultSetting.samplingIntervals;
+                needsSave = true;
+            }
+            
+            // dataRetentionDaysがない場合はデフォルトを設定
+            if (this._systemSetting.dataRetentionDays === undefined) {
+                this._systemSetting.dataRetentionDays = defaultSetting.dataRetentionDays;
+                needsSave = true;
+            }
+            
+            if (needsSave) {
                 await this.saveSystemSetting();
             }
         } else {
@@ -82,6 +95,7 @@ export class SystemSettingService {
             samplingIntervals: this._systemSetting?.samplingIntervals ?? defaultSetting.samplingIntervals,
             dataRootPath: this._systemSetting?.dataRootPath ?? "",
             driveUUID: this._systemSetting?.driveUUID ?? "",
+            dataRetentionDays: this._systemSetting?.dataRetentionDays ?? defaultSetting.dataRetentionDays,
             category1list: this._systemSetting?.category1list ?? [],
             category2list: this._systemSetting?.category2list ?? [],
             dashboardViewCategory1Selected: this._systemSetting?.dashboardViewCategory1Selected ?? [],

@@ -16,6 +16,7 @@ import { initializeIOModules } from './services/IOModuleService.js';
 import { initializeLayouts } from './services/uiService.js';
 import { SystemSettingService } from './config/SystemSetting.js';
 import HealthCheckService from './services/healthCheckService.js';
+import { startDataCleanupScheduler } from './services/dataCleanupService.js';
 
 async function bootstrap() {
   const app = express();
@@ -80,6 +81,9 @@ async function bootstrap() {
   // 起動時にヘルスチェックを実行
   const healthService = HealthCheckService.getInstance();
   await healthService.checkDriveMount();
+
+  // データクリーンアップスケジューラを開始（起動時に即時実行 + 24時間ごとに定期実行）
+  startDataCleanupScheduler();
 
   // 未定義のルートに対してindex.htmlを返す
   app.get('*', (req: Request, res: Response) => {
