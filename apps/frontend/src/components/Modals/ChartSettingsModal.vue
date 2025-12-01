@@ -131,6 +131,18 @@
                                 <GaugeHorizontalBarSettings v-if="isGaugeOrHorizontalBar"
                                     :options="localSettings.chart_options" @update="updateChartOptions" />
                             </div>
+
+                            <!-- 表示区間設定セクション（トレンド用グラフのみ） -->
+                            <div v-if="isLineOrBarChart" class="date-range-section mt-4 pt-3">
+                                <h6 class="subsection-title mb-3">
+                                    <i class="material-icons align-middle me-2">schedule</i>
+                                    表示区間設定
+                                </h6>
+                                <CustomDateRangeSettings
+                                    :options="localSettings.chart_options"
+                                    @update="updateChartOptions"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,6 +174,7 @@ import HorizontalBarChart from '@/components/Charts/HorizontalBarChart.vue'
 import LineChart from '@/components/Charts/LineChart.vue'
 import LineBarChartSettings from '@/components/Modals/ChartSettings/LineBarChartSettings.vue'
 import GaugeHorizontalBarSettings from '@/components/Modals/ChartSettings/GaugeHorizontalBarSettings.vue'
+import CustomDateRangeSettings from '@/components/Modals/ChartSettings/CustomDateRangeSettings.vue'
 import { useSeries } from '@/pinia/useSeries'
 import { useMonitoringStore } from '@/pinia/monitoringStore'
 import { useUiStore } from '@/pinia/uiStore'
@@ -290,6 +303,10 @@ const save = () => {
 }
 
 .appearance-section {
+    border-top: 2px solid #dee2e6;
+}
+
+.date-range-section {
     border-top: 2px solid #dee2e6;
 }
 
