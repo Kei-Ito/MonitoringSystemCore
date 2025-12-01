@@ -55,6 +55,42 @@ function formatDateForCsv(dateStr: string): string {
 }
 
 /**
+ * システムのタイムゾーンオフセット文字列を取得
+ * 例: "+09:00" (JST), "+00:00" (UTC), "-05:00" (EST)
+ * @returns タイムゾーンオフセット文字列
+ */
+function getSystemTimezoneOffset(): string {
+    const now = new Date();
+    const offsetMinutes = -now.getTimezoneOffset(); // getTimezoneOffset()は符号が逆
+    const sign = offsetMinutes >= 0 ? '+' : '-';
+    const absMinutes = Math.abs(offsetMinutes);
+    const hours = String(Math.floor(absMinutes / 60)).padStart(2, '0');
+    const minutes = String(absMinutes % 60).padStart(2, '0');
+    return `${sign}${hours}:${minutes}`;
+}
+
+// 起動時にシステムのタイムゾーンオフセットを取得してキャッシュ
+const SYSTEM_TIMEZONE_OFFSET = getSystemTimezoneOffset();
+
+/**
+ * CSVのタイムスタンプ文字列（YYYY/MM/DD HH:mm:ss.SSS形式）をDateオブジェクトに変換する
+ * CSVはシステムのローカル時刻で保存されているため、システムのタイムゾーンを適用する
+ * @param timestampStr CSVのタイムスタンプ文字列
+ * @returns Dateオブジェクト
+ */
+function parseCsvTimestamp(timestampStr: string): Date {
+    // "YYYY/MM/DD HH:mm:ss.SSS" または "YYYY/MM/DD HH:mm:ss" 形式を想定
+    // ISO 8601形式に変換してシステムのタイムゾーンを付与
+    // "2024/01/15 10:00:00.000" -> "2024-01-15T10:00:00.000+09:00"
+    const normalized = timestampStr
+        .replace(/\//g, '-')           // YYYY/MM/DD -> YYYY-MM-DD
+        .replace(' ', 'T')             // スペース -> T
+        + SYSTEM_TIMEZONE_OFFSET;      // システムのタイムゾーンを付与
+    
+    return new Date(normalized);
+}
+
+/**
  * キャッシュディレクトリのパスを取得する
  * @param date 日付
  * @returns キャッシュディレクトリパス
@@ -380,9 +416,10 @@ async function loadCsvColumn(
                 if (row[targetColumn] !== undefined) {
                     const val = Number(row[targetColumn]);
                     // 1列目のヘッダー名は 'HEADER' なので、row['HEADER'] でタイムスタンプを取得
+                    // CSVのタイムスタンプは日本時間で保存されているため、明示的にJSTとしてパース
                     if (!isNaN(val) && row['HEADER']) {
                         results.push({
-                            timestamp: new Date(row['HEADER']),
+                            timestamp: parseCsvTimestamp(row['HEADER']),
                             value: val,
                         });
                     }
