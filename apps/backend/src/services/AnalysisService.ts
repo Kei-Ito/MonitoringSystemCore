@@ -2,6 +2,11 @@ import { Mesurement } from 'src/models/MesurementModel';
 import * as dataSaveService from 'src/services/dataSaveService';
 import * as cacheService from 'src/services/cumulativeCacheService';
 import { trendDataRequest } from '@monitoring/shared/api';
+import { 
+  calculateTrapezoidalIntegral, 
+  isWithinSkipThreshold,
+  SKIP_THRESHOLD_MS 
+} from '@monitoring/shared/utils';
 
 /**
  * 指定された期間のデータを指定された間隔で集計し、時系列の積算データを返す
@@ -160,13 +165,13 @@ export async function getAggregatedCumulativeTrend(dataRequest: trendDataRequest
 
 /**
  * 累積データを計算するメソッド。
- * 単位はvalue * sec 
  * @param dataList 累積データを計算するためのデータリスト
  * @param skipThreshold スキップする時間間隔の閾値（ミリ秒）
+ * @returns 積算値 (Wh)
  */
 function calculateCumulativeValue(
   dataList: Mesurement[],
-  skipThreshold: number = 300000
+  skipThreshold: number = SKIP_THRESHOLD_MS
 ): number {
   if (dataList.length === 0) {
     return 0;
@@ -185,14 +190,12 @@ function calculateCumulativeValue(
     const timeDiffSec = timeDiffMs / 1000;
 
     // 5分以上の間隔がある場合はスキップ
-    if (timeDiffMs >= skipThreshold) {
+    if (!isWithinSkipThreshold(timeDiffSec)) {
       continue;
     }
 
-    const avgValue = (currentData.value + next.value) / 2;
-    // Ws (J) -> Wh に変換するため 3600 で割る
-    const sectionValue = (avgValue * timeDiffSec) / 3600;
-    totalValue += sectionValue
+    // 共通関数で台形積分を計算
+    totalValue += calculateTrapezoidalIntegral(currentData.value, next.value, timeDiffSec);
   }
 
   return totalValue;

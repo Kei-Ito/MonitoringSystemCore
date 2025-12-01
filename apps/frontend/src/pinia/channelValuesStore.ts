@@ -1,4 +1,9 @@
 import type { ChannelValue, ChannelRuntimeValue, RuntimeValue } from "@monitoring/shared/model";
+import { 
+    calculateTrapezoidalIntegral, 
+    calculateBucketStart, 
+    isWithinSkipThreshold 
+} from "@monitoring/shared/utils";
 import { defineStore } from "pinia";
 import { markRaw } from "vue";
 import { DeviceHealthEnum } from '@/uniqueComponents/DeviceHealthEnum';
@@ -306,13 +311,14 @@ export const useChannelValuesStore = defineStore("channelValues", {
                     const prevTimestamp = new Date(previousRuntimeValue.timestamp).getTime();
                     const timeDiffSec = (currentTimestamp - prevTimestamp) / 1000;
                     
-                    // 5分以上の間隔がある場合はスキップ（AnalysisServiceと同様）
-                    const skipThresholdSec = 300;
-                    
-                    if (timeDiffSec > 0 && timeDiffSec < skipThresholdSec) {
-                        // 台形積分: (前回値 + 今回値) / 2 * 秒数
-                        // Ws (J) -> Wh に変換するため 3600 で割る
-                        const addedValue = (((previousRuntimeValue.value + currentRuntimeValue.value) / 2) * timeDiffSec) / 3600;
+                    // 共通関数でスキップ判定
+                    if (isWithinSkipThreshold(timeDiffSec)) {
+                        // 共通関数で台形積分を計算
+                        const addedValue = calculateTrapezoidalIntegral(
+                            previousRuntimeValue.value, 
+                            currentRuntimeValue.value, 
+                            timeDiffSec
+                        );
                         
                         lastPoint.value += addedValue;
                         this.channelValues[channelUuid].dataVersion++;
@@ -321,8 +327,8 @@ export const useChannelValuesStore = defineStore("channelValues", {
             } else {
                 // --- ケースB: 新しい区間に入った場合 ---
                 
-                // 新しい区間の開始時刻を計算
-                const newBucketStart = Math.floor(currentTimestamp / intervalMs) * intervalMs;
+                // 共通関数で新しい区間の開始時刻を計算
+                const newBucketStart = calculateBucketStart(currentTimestamp, intervalMinutes);
                 
                 // 新しい要素を追加
                 const newPoint = {
