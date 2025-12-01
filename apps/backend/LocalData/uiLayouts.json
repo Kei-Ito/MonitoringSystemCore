@@ -982,8 +982,23 @@
         "maxH": null
       },
       "chart_options": {
-        "useCustomDateRange": true,
-        "customPresetMode": "last_week"
+        "useCustomDateRange": false,
+        "customPresetMode": "last_month",
+        "thresholds": {
+          "min": null,
+          "max": null,
+          "color": "#ff0000"
+        },
+        "visibility": {
+          "minY": null,
+          "maxY": null
+        },
+        "seriesColors": {
+          "10020": "#5470c6"
+        },
+        "seriesLineWidths": {
+          "10020": 4
+        }
       },
       "category1": "照射炉1",
       "category2": "炉内温度"
@@ -1315,11 +1330,8 @@
         "maxH": null
       },
       "chart_options": {
-        "maxValue": 1000,
-        "minValue": 0,
-        "colors": [
-          "#5470c6"
-        ],
+        "useCustomDateRange": true,
+        "customPresetMode": "realtime",
         "thresholds": {
           "min": null,
           "max": null,

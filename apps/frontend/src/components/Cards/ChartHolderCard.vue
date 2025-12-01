@@ -66,8 +66,12 @@ import { useSeries } from '@/pinia/useSeries'
 import { useChannelValuesStore } from '@/pinia/channelValuesStore'
 import { useUiStore } from '@/pinia/uiStore'
 import { useChartStore } from '@/pinia/chartStore'
+import { useTrendStore } from '@/pinia/trendStore'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'vue-toastification'
+import { getTrendData, getAggregatedTrendData } from '@/service/trendDataService'
+import type { ChartOptions } from '@monitoring/shared/model'
+import { TrendPresetMode } from '@monitoring/shared/enum'
 
 /* ---------- props & series ---------- */
 const props = defineProps<{ 
@@ -77,6 +81,7 @@ const series  = useSeries(props.chart.chart_uuid)
 const channelValuesStore = useChannelValuesStore()
 const uiStore = useUiStore()
 const chartStore = useChartStore()
+const trendStore = useTrendStore()
 const toast = useToast()
 const { color } = storeToRefs(uiStore)
 
@@ -119,10 +124,139 @@ const closeSettings = () => {
   isSettingsModalVisible.value = false
 }
 
+/**
+ * グラフ設定が変更された際に、データの再取得が必要かどうかを判定する
+ */
+function needsDataRefresh(oldOptions: ChartOptions | undefined, newOptions: ChartOptions | undefined): boolean {
+  // 積算値表示の変更をチェック
+  if ((oldOptions?.isCumulative ?? false) !== (newOptions?.isCumulative ?? false)) {
+    return true
+  }
+  
+  // 積算間隔の変更をチェック
+  if (oldOptions?.isCumulative && newOptions?.isCumulative) {
+    if (oldOptions?.cumulativeIntervalMinutes !== newOptions?.cumulativeIntervalMinutes) {
+      return true
+    }
+  }
+  
+  // 個別区間設定の有効/無効の変更をチェック
+  if ((oldOptions?.useCustomDateRange ?? false) !== (newOptions?.useCustomDateRange ?? false)) {
+    return true
+  }
+  
+  // 個別区間設定が有効な場合の詳細変更をチェック
+  if (newOptions?.useCustomDateRange) {
+    // プリセットモードの変更
+    if (oldOptions?.customPresetMode !== newOptions?.customPresetMode) {
+      return true
+    }
+    
+    // カスタム期間の変更（カスタムモードの場合のみ）
+    if (newOptions?.customPresetMode === TrendPresetMode.Custom) {
+      if (oldOptions?.customStartDate !== newOptions?.customStartDate ||
+          oldOptions?.customEndDate !== newOptions?.customEndDate) {
+        return true
+      }
+    }
+  }
+  
+  return false
+}
+
+/**
+ * チャートの個別区間設定から日付範囲を計算する
+ */
+function calculateDateRangeForChart(options: ChartOptions): { startDate: Date; endDate: Date } {
+  const mode = options.customPresetMode ?? TrendPresetMode.Realtime
+  const now = new Date()
+  const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999)
+
+  if (mode === TrendPresetMode.Custom) {
+    const startDate = options.customStartDate 
+      ? new Date(options.customStartDate)
+      : new Date()
+    const endDate = options.customEndDate 
+      ? new Date(options.customEndDate)
+      : new Date()
+    
+    startDate.setHours(0, 0, 0, 0)
+    endDate.setHours(23, 59, 59, 999)
+    
+    return { startDate, endDate }
+  }
+
+  // プリセットモードに応じた日付範囲を計算
+  switch (mode) {
+    case TrendPresetMode.LastWeek: {
+      const weekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6, 0, 0, 0)
+      return { startDate: weekAgo, endDate: endOfToday }
+    }
+    case TrendPresetMode.LastMonth: {
+      const monthAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 29, 0, 0, 0)
+      return { startDate: monthAgo, endDate: endOfToday }
+    }
+    case TrendPresetMode.Realtime:
+    default: {
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
+      return { startDate: today, endDate: endOfToday }
+    }
+  }
+}
+
+/**
+ * チャートのチャンネルデータを再取得する
+ */
+async function refetchChartData(chart: ChartConfig) {
+  if (!chart.channel_uuids || chart.channel_uuids.length === 0) return
+
+  const options = chart.chart_options as ChartOptions | undefined
+  
+  // 日付範囲を決定
+  let dateRange: { startDate: Date; endDate: Date }
+  if (options?.useCustomDateRange) {
+    dateRange = calculateDateRangeForChart(options)
+  } else {
+    // グローバル設定を使用
+    dateRange = trendStore.selectedDateRange
+  }
+  
+  // チャンネルごとにデータを取得
+  for (const uuid of chart.channel_uuids) {
+    channelValuesStore.setChannelLoading(uuid, true)
+    try {
+      if (options?.isCumulative && options.cumulativeIntervalMinutes) {
+        await getAggregatedTrendData(
+          uuid,
+          dateRange.startDate,
+          dateRange.endDate,
+          options.cumulativeIntervalMinutes
+        )
+      } else {
+        await getTrendData(uuid, dateRange.startDate, dateRange.endDate)
+      }
+    } finally {
+      channelValuesStore.setChannelLoading(uuid, false)
+    }
+  }
+}
+
 const handleUpdate = async (updatedConfig: ChartConfig) => {
+  // 変更前のオプションを保存
+  const oldOptions = props.chart.chart_options as ChartOptions | undefined
+  const newOptions = updatedConfig.chart_options as ChartOptions | undefined
+  
+  // データ再取得が必要かどうかを判定
+  const shouldRefresh = needsDataRefresh(oldOptions, newOptions)
+  
   const result = await chartStore.updateChartConfig(updatedConfig)
   if (result.ok) {
     toast.success('グラフ設定を更新しました')
+    
+    // データ再取得が必要な場合は実行
+    if (shouldRefresh) {
+      await refetchChartData(updatedConfig)
+    }
   } else {
     toast.error('グラフ設定の更新に失敗しました')
   }

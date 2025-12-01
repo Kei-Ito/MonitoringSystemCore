@@ -228,9 +228,12 @@ const chartChannels = computed(() => {
     }).filter(ch => ch !== null)
 })
 
-// チャートオプションの更新
+// チャートオプションの更新（既存のオプションとマージ）
 const updateChartOptions = (options: any) => {
-    localSettings.value.chart_options = options
+    localSettings.value.chart_options = {
+        ...localSettings.value.chart_options,
+        ...options
+    }
 }
 
 // モーダルが開いたときに設定をリセット

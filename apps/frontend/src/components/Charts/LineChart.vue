@@ -6,6 +6,7 @@ import type { ChannelSeries,ChartConfig } from '@monitoring/shared/model'
 import { computed,toRef, watch } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
+import { getTimeAxisLabelConfig } from '@/utils/timeAxisFormatter'
 
 // ----- props -----
 const props = defineProps<{
@@ -42,18 +43,15 @@ const defaultPalette = [
 const chartRef = toRef(props, 'chart')
 let isDataZoomInitialized = false
 
-
-function formatTime(value: string | number): string {
-  const d = new Date(value)
-  return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`
-}
-
 const optionBuilder = () => {
     const thresholds = chartRef.value.chart_options?.thresholds ?? { min: null, max: null, color: null };
     const minY = chartRef.value.chart_options?.visibility?.minY;
     const maxY = chartRef.value.chart_options?.visibility?.maxY;
     const seriesColors = chartRef.value.chart_options?.seriesColors ?? {};
     const seriesLineWidths = chartRef.value.chart_options?.seriesLineWidths ?? {};
+
+    // 時間範囲に応じたX軸ラベル設定を取得
+    const axisLabelConfig = getTimeAxisLabelConfig(seriesData.value)
 
     // 折れ線（dataset から列名でマッピング）
     const lineSeries = props.series.map((s, idx) => {
@@ -122,7 +120,11 @@ const optionBuilder = () => {
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
         tooltip: { trigger: 'axis', axisPointer: { type: 'line' } }, // ← 1箇所に統一
-        xAxis: { type: 'time', boundaryGap: ['0%', '0%'], axisLabel: { formatter: formatTime }},
+        xAxis: { 
+            type: 'time', 
+            boundaryGap: ['0%', '0%'], 
+            axisLabel: axisLabelConfig
+        },
         yAxis: { type: 'value' ,min:minY??undefined,max:maxY??undefined},
         visualMap: visualMaps,                                    // ← 配列で渡す
         series: [...lineSeries, ...(thresholdLineSeries ? [thresholdLineSeries] : [])] // ← 上書きしない

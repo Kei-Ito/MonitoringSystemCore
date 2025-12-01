@@ -6,6 +6,7 @@ import type { ChannelSeries, ChartConfig } from '@monitoring/shared/model'
 import { computed, toRef, watch } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
+import { getTimeAxisLabelConfig } from '@/utils/timeAxisFormatter'
 
 // ----- props -----
 const props = defineProps<{
@@ -44,34 +45,13 @@ let isDataZoomInitialized = false
 
 
 const optionBuilder = () => {
-    const thresholds = chartRef.value.chart_options.thresholds;
-    const minY = chartRef.value.chart_options.visibility?.minY;
-    const maxY = chartRef.value.chart_options.visibility?.maxY;
-    const seriesColors = chartRef.value.chart_options.seriesColors ?? {};
+    const thresholds = chartRef.value.chart_options?.thresholds ?? { min: null, max: null, color: null };
+    const minY = chartRef.value.chart_options?.visibility?.minY;
+    const maxY = chartRef.value.chart_options?.visibility?.maxY;
+    const seriesColors = chartRef.value.chart_options?.seriesColors ?? {};
 
-    // データ範囲の計算
-    let minTime = Infinity;
-    let maxTime = -Infinity;
-    let hasData = false;
-
-    seriesData.value.forEach(series => {
-        series.forEach(point => {
-            const t = point[0];
-            if (t < minTime) minTime = t;
-            if (t > maxTime) maxTime = t;
-            hasData = true;
-        });
-    });
-
-    const isLongSpan = hasData && (maxTime - minTime) >= 24 * 60 * 60 * 1000;
-
-    const dateFormatter = (value: number) => {
-        const d = new Date(value);
-        if (isLongSpan) {
-             return `${d.getMonth() + 1}/${d.getDate()}`;
-        }
-        return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
-    };
+    // 時間範囲に応じたX軸ラベル設定を取得
+    const axisLabelConfig = getTimeAxisLabelConfig(seriesData.value)
 
     // 棒グラフ
     const barSeries = props.series.map((s, idx) => {
@@ -132,7 +112,11 @@ const optionBuilder = () => {
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
         tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        xAxis: { type: 'time', boundaryGap: ['10%', '10%'], axisLabel: { formatter: dateFormatter }},
+        xAxis: { 
+            type: 'time', 
+            boundaryGap: ['10%', '10%'], 
+            axisLabel: axisLabelConfig
+        },
         yAxis: { type: 'value' ,min:minY??undefined,max:maxY??undefined},
         visualMap: visualMaps,                                    // ← 配列で渡す
         series: [...barSeries, ...(thresholdLineSeries ? [thresholdLineSeries] : [])] // ← 上書きしない
