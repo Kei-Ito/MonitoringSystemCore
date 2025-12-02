@@ -1,5 +1,48 @@
 <template>
     <div>
+        <!-- Y軸範囲設定 -->
+        <div class="mb-3">
+            <div class="d-flex align-items-center mb-2">
+                <label class="form-label fw-bold mb-0">
+                    <i class="material-icons align-middle me-1" style="font-size: 18px;">height</i>
+                    Y軸範囲
+                </label>
+                <div class="form-check form-switch ms-auto mb-0">
+                    <input
+                        type="checkbox"
+                        class="form-check-input"
+                        v-model="yAxisRangeEnabled"
+                        @change="onYAxisRangeEnabledChange"
+                        style="cursor: pointer;"
+                    />
+                </div>
+            </div>
+
+            <div v-if="yAxisRangeEnabled" class="range-inputs mt-2">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <label class="form-label small">最小値</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            v-model.number="localOptions.visibility.minY"
+                            @change="emitUpdate"
+                            placeholder="自動"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small">最大値</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            v-model.number="localOptions.visibility.maxY"
+                            @change="emitUpdate"
+                            placeholder="自動"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- チャンネルの色と線の太さ設定 -->
         <div class="mb-3">
             <label class="form-label fw-bold">
@@ -126,50 +169,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Y軸範囲設定 -->
-        <div class="mb-3">
-            <div class="d-flex align-items-center mb-2">
-                <label class="form-label fw-bold mb-0">
-                    <i class="material-icons align-middle me-1" style="font-size: 18px;">height</i>
-                    Y軸範囲
-                </label>
-                <div class="form-check form-switch ms-auto mb-0">
-                    <input
-                        type="checkbox"
-                        class="form-check-input"
-                        v-model="yAxisRangeEnabled"
-                        @change="onYAxisRangeEnabledChange"
-                        style="cursor: pointer;"
-                    />
-                </div>
-            </div>
-
-            <div v-if="yAxisRangeEnabled" class="range-inputs mt-2">
-                <div class="row g-2">
-                    <div class="col-6">
-                        <label class="form-label small">最小値</label>
-                        <input
-                            type="number"
-                            class="form-control"
-                            v-model.number="localOptions.visibility.minY"
-                            @change="emitUpdate"
-                            placeholder="自動"
-                        />
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label small">最大値</label>
-                        <input
-                            type="number"
-                            class="form-control"
-                            v-model.number="localOptions.visibility.maxY"
-                            @change="emitUpdate"
-                            placeholder="自動"
-                        />
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -246,6 +245,18 @@ watch(() => props.options, (newOptions) => {
     })
 }, { immediate: true })
 
+/**
+ * 値を数値またはnullに変換する
+ * 空文字列、NaN、undefinedの場合はnullを返す
+ */
+const toNumberOrNull = (value: unknown): number | null => {
+    if (value === '' || value === null || value === undefined) {
+        return null
+    }
+    const num = Number(value)
+    return isNaN(num) ? null : num
+}
+
 // 変更を親に通知
 const emitUpdate = () => {
     const updated = JSON.parse(JSON.stringify(localOptions.value))
@@ -259,11 +270,19 @@ const emitUpdate = () => {
     // 閾値が無効の場合はnullに
     if (!thresholdsEnabled.value) {
         updated.thresholds = { min: null, max: null, color: '#ff0000' }
+    } else {
+        // 閾値の値を数値またはnullに変換
+        updated.thresholds.min = toNumberOrNull(updated.thresholds.min)
+        updated.thresholds.max = toNumberOrNull(updated.thresholds.max)
     }
     
     // Y軸範囲が無効の場合はnullに
     if (!yAxisRangeEnabled.value) {
         updated.visibility = { minY: null, maxY: null }
+    } else {
+        // Y軸範囲の値を数値またはnullに変換
+        updated.visibility.minY = toNumberOrNull(updated.visibility.minY)
+        updated.visibility.maxY = toNumberOrNull(updated.visibility.maxY)
     }
     
     emit('update', updated)

@@ -27,11 +27,6 @@
         />
       </GridItem>
     </GridLayout>
-    <div class="row mb-4">
-      <div class="col-12" style="height: 400px;">
-        <DummyAreaLineChartCard  />
-      </div>
-    </div>
 
     <date-range-picker-modal
       :show="isDateRangeModalVisible"
@@ -56,7 +51,6 @@ import { useTrendStore } from '@/pinia/trendStore';
 import { TrendPresetMode } from '@monitoring/shared/enum';
 
 import ChartHolderCard from '@/components/Cards/ChartHolderCard.vue';
-import DummyAreaLineChartCard from '@/components/Cards/DummyAreaLineChartCard.vue';
 import DateRangePickerModal from '@/components/DateRangePickerModal.vue';
 
 // KeepAliveのinclude="Trend"と一致させるために明示的に名前を定義

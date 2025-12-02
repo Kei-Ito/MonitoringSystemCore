@@ -1461,8 +1461,8 @@
         "10028",
         "10029"
       ],
-      "chart_title": "詰まり判定(照射炉1)",
-      "chart_unit": " ",
+      "chart_title": "検知センサ",
+      "chart_unit": "回",
       "grid_layout": {
         "i": "chart034",
         "x": 0,
@@ -1503,8 +1503,8 @@
         "10078",
         "10079"
       ],
-      "chart_title": "詰まり判定(照射炉2)",
-      "chart_unit": " ",
+      "chart_title": "検知センサ(照射炉2)",
+      "chart_unit": "回",
       "grid_layout": {
         "i": "chart035",
         "x": 0,
@@ -1524,7 +1524,7 @@
           "color": "#FF0000"
         },
         "visibility": {
-          "maxY": 1,
+          "maxY": "",
           "minY": 0
         },
         "seriesColors": {
@@ -1567,8 +1567,8 @@
         "10128",
         "10129"
       ],
-      "chart_title": "詰まり判定(照射炉3)",
-      "chart_unit": " ",
+      "chart_title": "検知センサ(照射炉3)",
+      "chart_unit": "回",
       "grid_layout": {
         "i": "chart036",
         "x": 0,

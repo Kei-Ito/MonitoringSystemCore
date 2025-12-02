@@ -116,6 +116,18 @@
                                 </div>
                             </div>
 
+                            <!-- 表示区間設定セクション（トレンド用グラフのみ） -->
+                            <div v-if="isLineOrBarChart" class="date-range-section mt-4 pt-3">
+                                <h6 class="subsection-title mb-3">
+                                    <i class="material-icons align-middle me-2">schedule</i>
+                                    表示区間設定
+                                </h6>
+                                <CustomDateRangeSettings
+                                    :options="localSettings.chart_options"
+                                    @update="updateChartOptions"
+                                />
+                            </div>
+
                             <!-- 外観設定セクション -->
                             <div class="appearance-section mt-4 pt-3">
                                 <h6 class="subsection-title mb-3">
@@ -130,18 +142,6 @@
                                 <!-- ゲージチャート / 横バーチャート用設定 -->
                                 <GaugeHorizontalBarSettings v-if="isGaugeOrHorizontalBar"
                                     :options="localSettings.chart_options" @update="updateChartOptions" />
-                            </div>
-
-                            <!-- 表示区間設定セクション（トレンド用グラフのみ） -->
-                            <div v-if="isLineOrBarChart" class="date-range-section mt-4 pt-3">
-                                <h6 class="subsection-title mb-3">
-                                    <i class="material-icons align-middle me-2">schedule</i>
-                                    表示区間設定
-                                </h6>
-                                <CustomDateRangeSettings
-                                    :options="localSettings.chart_options"
-                                    @update="updateChartOptions"
-                                />
                             </div>
                         </div>
                     </div>
