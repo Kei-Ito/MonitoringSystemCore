@@ -284,63 +284,65 @@ export const useChannelValuesStore = defineStore("channelValues", {
 
         /**
          * 積算グラフ用のリアルタイム更新処理
-         * 最新の区間に対して積分値を加算する
+         * 現在時刻が属する区間を探して積分値を加算する
          * @private
          */
         _updateCumulativeSeries(channelUuid: string, currentRuntimeValue: RuntimeValue, previousRuntimeValue: RuntimeValue | undefined, intervalMinutes: number) {
             if (!this.channelValues[channelUuid]) return;
             
             const timeSeries = this.channelValues[channelUuid].timeSeries;
-            // データがない場合は何もしない（初回ロード待ち）か、新規作成する
+            // データがない場合は何もしない（初回ロード待ち）
             if (timeSeries.length === 0) return;
 
-            // 配列の最後の要素（最新の区間）を取得
-            // markRawされているため、直接変更してもVueは検知しないことに注意
-            const lastIndex = timeSeries.length - 1;
-            const lastPoint = timeSeries[lastIndex];
-            
             const currentTimestamp = new Date(currentRuntimeValue.timestamp).getTime();
-            const lastBucketStart = new Date(lastPoint.timestamp).getTime();
-            const intervalMs = intervalMinutes * 60 * 1000;
-
-            // 現在のデータが「最新の区間」に含まれるか判定
-            if (currentTimestamp < lastBucketStart + intervalMs) {
-                // --- ケースA: 同じ区間内なら値を更新（積分） ---
-                
-                if (previousRuntimeValue) {
-                    const prevTimestamp = new Date(previousRuntimeValue.timestamp).getTime();
-                    const timeDiffSec = (currentTimestamp - prevTimestamp) / 1000;
-                    
-                    // 共通関数でスキップ判定
-                    if (isWithinSkipThreshold(timeDiffSec)) {
-                        // 共通関数で台形積分を計算
-                        const addedValue = calculateTrapezoidalIntegral(
-                            previousRuntimeValue.value, 
-                            currentRuntimeValue.value, 
-                            timeDiffSec
-                        );
-                        
-                        lastPoint.value += addedValue;
-                        this.channelValues[channelUuid].dataVersion++;
-                    }
+            
+            // 現在時刻が属する区間の開始時刻を計算
+            const currentBucketStart = calculateBucketStart(currentTimestamp, intervalMinutes);
+            
+            // timeSeries から現在時刻が属する区間を探す
+            // markRawされているため、直接変更してもVueは検知しないことに注意
+            let targetPoint: RuntimeValue | undefined;
+            for (const point of timeSeries) {
+                const pointTime = new Date(point.timestamp).getTime();
+                if (pointTime === currentBucketStart) {
+                    targetPoint = point;
+                    break;
                 }
-            } else {
-                // --- ケースB: 新しい区間に入った場合 ---
-                
-                // 共通関数で新しい区間の開始時刻を計算
-                const newBucketStart = calculateBucketStart(currentTimestamp, intervalMinutes);
-                
+            }
+            
+            // 該当する区間が見つからない場合は新規作成
+            if (!targetPoint) {
                 // 新しい要素を追加
                 const newPoint = {
-                    timestamp: new Date(newBucketStart),
+                    timestamp: new Date(currentBucketStart),
                     value: 0 
                 };
-                
                 timeSeries.push(newPoint);
+                // タイムスタンプ順にソート
+                timeSeries.sort((a, b) => 
+                    new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+                );
+                targetPoint = newPoint;
                 this.channelValues[channelUuid].dataVersion++;
+            }
+            
+            // 積分値を加算
+            if (previousRuntimeValue) {
+                const prevTimestamp = new Date(previousRuntimeValue.timestamp).getTime();
+                const timeDiffSec = (currentTimestamp - prevTimestamp) / 1000;
                 
-                // 再帰的に呼び出して、新しい区間に値を加算する
-                this._updateCumulativeSeries(channelUuid, currentRuntimeValue, previousRuntimeValue, intervalMinutes);
+                // 共通関数でスキップ判定
+                if (isWithinSkipThreshold(timeDiffSec)) {
+                    // 共通関数で台形積分を計算
+                    const addedValue = calculateTrapezoidalIntegral(
+                        previousRuntimeValue.value, 
+                        currentRuntimeValue.value, 
+                        timeDiffSec
+                    );
+                    
+                    targetPoint.value += addedValue;
+                    this.channelValues[channelUuid].dataVersion++;
+                }
             }
         },
 

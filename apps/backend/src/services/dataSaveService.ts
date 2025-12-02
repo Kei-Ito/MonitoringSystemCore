@@ -43,7 +43,14 @@ function getLogDir(date: Date): string {
  * @returns フォーマットされた日付文字列
  */
 function formatDateForCsv(dateStr: string): string {
-    const date = new Date(dateStr);
+    let date = new Date(dateStr);
+    
+    // Invalid Date の場合は現在時刻を使用し、警告をログ出力
+    if (isNaN(date.getTime())) {
+        console.warn(`[dataSaveService] Invalid timestamp received: "${dateStr}". Using current time as fallback.`);
+        date = new Date();
+    }
+    
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');

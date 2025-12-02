@@ -3,7 +3,7 @@
     {
       "uuid": "fast",
       "name": "高速サンプリング",
-      "period": 64000
+      "period": 1000
     },
     {
       "uuid": "slow",
