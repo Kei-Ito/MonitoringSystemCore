@@ -33,7 +33,7 @@ export const getSamplingIntervals: RequestHandler = async (req: Request, res: Re
  */
 export const addSamplingInterval: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const { name, period } = req.body as {name: string, period: number};
+    const { name, period, requiresAdmin = false } = req.body as {name: string, period: number, requiresAdmin?: boolean};
     
     if (!name || !period || period < 60000) {
       res.status(400).json({ message: '名前と周期(1分以上)が必要です' });
@@ -44,7 +44,8 @@ export const addSamplingInterval: RequestHandler = async (req: Request, res: Res
     const newInterval: SamplingInterval = {
       uuid: uuidv4(),
       name,
-      period
+      period,
+      requiresAdmin
     };
     
     // 2つのインターバルが既に存在する場合はエラー
@@ -73,9 +74,9 @@ export const addSamplingInterval: RequestHandler = async (req: Request, res: Res
 export const updateSamplingInterval: RequestHandler = async (req: Request, res: Response) => {
   try {
     const { uuid } = req.params as { uuid: string };
-    const { name, period } = req.body as {name?: string, period?: number};
+    const { name, period, requiresAdmin } = req.body as {name?: string, period?: number, requiresAdmin?: boolean};
     
-    if (!name && !period) {
+    if (name === undefined && period === undefined && requiresAdmin === undefined) {
       res.status(400).json({ message: '更新する項目がありません' });
       return;
     }
@@ -95,8 +96,9 @@ export const updateSamplingInterval: RequestHandler = async (req: Request, res: 
     
     const updatedInterval: SamplingInterval = {
       ...systemSetting.samplingIntervals[intervalIndex],
-      ...(name && { name }),
-      ...(period && { period })
+      ...(name !== undefined && { name }),
+      ...(period !== undefined && { period }),
+      ...(requiresAdmin !== undefined && { requiresAdmin })
     };
     
     const updatedIntervals = [...systemSetting.samplingIntervals];

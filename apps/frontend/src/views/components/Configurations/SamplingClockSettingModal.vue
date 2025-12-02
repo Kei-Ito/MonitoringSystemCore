@@ -11,7 +11,13 @@
       <!-- サンプリングインターバル一覧 -->
       <div class="row">
         <div v-for="interval in intervals" :key="interval.uuid" class="col-12 col-xl-6 mb-4">
-          <div class="interval-item h-100">
+          <div class="interval-item h-100" :class="{ 'interval-locked': interval.requiresAdmin && !isAdmin }">
+            <!-- ロック表示（管理者権限が必要で非管理者の場合） -->
+            <div v-if="interval.requiresAdmin && !isAdmin" class="locked-overlay">
+              <i class="material-icons lock-icon">lock</i>
+              <span class="lock-text">管理者権限が必要です</span>
+            </div>
+            
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="flex-grow-1 me-3">
                 <div class="editable-name-wrapper">
@@ -21,6 +27,7 @@
                     class="form-control form-control-lg form-control-prominent editable-name-input fs-4"
                     v-model="interval.name"
                     placeholder="サンプリング設定の名前を入力"
+                    :disabled="interval.requiresAdmin && !isAdmin"
                   />
                 </div>
               </div>
@@ -54,6 +61,7 @@
                   min="0"
                   max="24"
                   required
+                  :disabled="interval.requiresAdmin && !isAdmin"
                 />
               </div>
               <span class="time-separator">:</span>
@@ -66,6 +74,7 @@
                   min="0"
                   max="60"
                   required
+                  :disabled="interval.requiresAdmin && !isAdmin"
                 />
               </div>
               <span class="time-separator">:</span>
@@ -78,12 +87,34 @@
                   min="0"
                   max="60"
                   required
+                  :disabled="interval.requiresAdmin && !isAdmin"
                 />
               </div>
             </div>
             <div v-if="interval.error" class="alert alert-danger mt-2" role="alert">
               <i class="material-icons align-middle me-1" style="font-size: 18px;">error</i>
               <span class="">サンプリング周期は1分以上に設定してください。</span>
+            </div>
+
+            <!-- 管理者権限要求設定 -->
+            <div class="mt-3" v-if="isAdmin">
+              <div class="form-check form-switch d-flex align-items-center">
+                <input
+                  class="form-check-input me-2"
+                  type="checkbox"
+                  :id="'requiresAdmin-' + interval.uuid"
+                  v-model="interval.requiresAdmin"
+                  :disabled="!isAdmin"
+                  role="switch"
+                />
+                <label class="form-check-label" :for="'requiresAdmin-' + intervaign-middll.uuid">
+                  <i class="material-icons ale me-1" style="font-size: 18px;">admin_panel_settings</i>
+                  管理者権限の要求
+                </label>
+              </div>
+              <small class="text-muted ms-4">
+                この設定を有効にすると、管理者以外はこのサンプリング設定を変更できなくなります。
+              </small>
             </div>
           </div>
         </div>
@@ -203,7 +234,8 @@ async function save() {
     const period = serializeTime(interval.hours, interval.minutes, interval.seconds);
     const result = await updateSamplingIntervalAPI(interval.uuid, {
       name: interval.name,
-      period
+      period,
+      requiresAdmin: interval.requiresAdmin
     });
     
     // ストアも更新
@@ -211,7 +243,8 @@ async function save() {
       systemSettingStore.updateSamplingInterval({
         uuid: interval.uuid,
         name: interval.name,
-        period
+        period,
+        requiresAdmin: interval.requiresAdmin
       });
     }
   }
@@ -318,11 +351,45 @@ watch(
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .interval-item:hover {
   border-color: #007bff;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.interval-item.interval-locked {
+  border-color: #ffc107;
+  background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+}
+
+.interval-item.interval-locked:hover {
+  border-color: #ffb300;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.locked-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  color: #856404;
+}
+
+.lock-icon {
+  font-size: 20px;
+  color: #856404;
+}
+
+.lock-text {
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .form-label {

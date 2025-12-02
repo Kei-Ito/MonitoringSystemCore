@@ -1034,7 +1034,7 @@
         },
         "created_at": "2025-08-19T13:58:02.750Z",
         "updated_at": "2025-08-19T13:58:02.750Z",
-        "sampling_interval_uuid": "fast",
+        "sampling_interval_uuid": "system",
         "save_rawdata": false
       },
       {
@@ -2058,7 +2058,7 @@
         },
         "created_at": "2025-08-19T13:58:02.750Z",
         "updated_at": "2025-08-19T13:58:02.750Z",
-        "sampling_interval_uuid": "fast",
+        "sampling_interval_uuid": "system",
         "save_rawdata": false
       },
       {
@@ -3082,7 +3082,7 @@
         },
         "created_at": "2025-08-19T13:58:02.750Z",
         "updated_at": "2025-08-19T13:58:02.750Z",
-        "sampling_interval_uuid": "fast",
+        "sampling_interval_uuid": "system",
         "save_rawdata": false
       },
       {

@@ -34,12 +34,14 @@ export class SystemSettingService {
         const interval1: SamplingInterval = {
             uuid: uuidv4(),
             name: '高速サンプリング',
-            period: 60000
+            period: 60000,
+            requiresAdmin: false
         };
         const interval2: SamplingInterval = {
             uuid: uuidv4(),
             name: '低速サンプリング',
-            period: 300000
+            period: 300000,
+            requiresAdmin: false
         };
         return {
             samplingIntervals: [interval1, interval2],
@@ -69,6 +71,14 @@ export class SystemSettingService {
             if (!this._systemSetting.samplingIntervals) {
                 this._systemSetting.samplingIntervals = defaultSetting.samplingIntervals;
                 needsSave = true;
+            } else {
+                // 既存のサンプリングインターバルにrequiresAdminがない場合はデフォルト値を設定
+                for (const interval of this._systemSetting.samplingIntervals) {
+                    if (interval.requiresAdmin === undefined) {
+                        interval.requiresAdmin = false;
+                        needsSave = true;
+                    }
+                }
             }
             
             // dataRetentionDaysがない場合はデフォルトを設定

@@ -3,12 +3,20 @@
     {
       "uuid": "fast",
       "name": "高速サンプリング",
-      "period": 1000
+      "period": 1000,
+      "requiresAdmin": false
     },
     {
       "uuid": "slow",
       "name": "低速サンプリング",
-      "period": 60000
+      "period": 60000,
+      "requiresAdmin": false
+    },
+    {
+      "uuid": "system",
+      "name": "状態監視、検知センサ用サンプリング",
+      "period": 1000,
+      "requiresAdmin": true
     }
   ],
   "dataRootPath": "/media/clpi/HD-WHAU3",
