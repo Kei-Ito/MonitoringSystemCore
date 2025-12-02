@@ -11,7 +11,7 @@ import uiRouters from './routes/uiRouters';
 import systemSettingRoutes from './routes/systemSettingRouters.js';
 import systemRoutes from './routes/systemRouters.js';
 import healthRoutes from './routes/healthRouters.js';
-import { getIsSamplingIntervalRunning } from './services/IOModuleService.js';
+import { getIsSamplingIntervalRunning, getCurrentInputData } from './services/IOModuleService.js';
 import { initializeIOModules } from './services/IOModuleService.js';
 import { initializeLayouts } from './services/uiService.js';
 import { SystemSettingService } from './config/SystemSetting.js';
@@ -50,13 +50,27 @@ async function bootstrap() {
   };
 
   wss.on('connection', (ws) => {
-    // ① SystemSettingService からサンプリングの状態を取得
+    console.log('Client connected to WebSocket');
+    
+    // ① サンプリング状態を送信
     const isSamplingOn = getIsSamplingIntervalRunning();
-    // ② クライアントへ送信
     ws.send(JSON.stringify({
       type: 'samplingStatus',
       data: isSamplingOn 
     }));
+
+    // ② サンプリング中の場合、最新の全チャンネルデータを送信
+    if (isSamplingOn) {
+      const currentData = getCurrentInputData();
+      
+      if (currentData && currentData.length > 0) {
+        ws.send(JSON.stringify({
+          type: 'InitialData',
+          data: currentData
+        }));
+      }
+    }
+
     ws.on('close', () => console.log('Client disconnected'));
   });
 

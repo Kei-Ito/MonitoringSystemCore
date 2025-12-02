@@ -9,6 +9,15 @@
       <p class="text-sm mb-4">{{ $t('system_control.description') }}</p>
       
       <div class="d-flex gap-3 justify-content-center">
+        <button  
+          class="btn btn-outline-warning btn-lg d-flex align-items-center justify-content-center system-control-btn"
+          @click="handleReboot"
+          :disabled="isProcessing"
+          style="width: 200px;"
+        >
+          <i class="material-icons me-2 btn-icon">restart_alt</i>
+          <span class="btn-text">{{ $t('system_control.reboot') }}</span>
+        </button>
         
         <button  
           class="btn btn-outline-danger btn-lg d-flex align-items-center justify-content-center system-control-btn"
@@ -99,6 +108,11 @@ const confirmButtonText = computed(() => {
     ? t('system_control.confirm_shutdown')
     : t('system_control.confirm_reboot');
 });
+
+function handleReboot() {
+  actionType.value = 'reboot';
+  showConfirmModal.value = true;
+}
 
 function handleShutdown() {
   actionType.value = 'shutdown';

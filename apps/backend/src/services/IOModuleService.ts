@@ -421,6 +421,10 @@ export function stopIOModuleInputSamplingInterval(broadcast: (data: any) => void
     console.log(`サンプリング停止: ${uuid}`);
   }
   intervalIds.clear();
+  
+  // キャッシュをクリア
+  currentInputDatas = [];
+  
   broadcast({ type: 'StopSampling' });
 };
 

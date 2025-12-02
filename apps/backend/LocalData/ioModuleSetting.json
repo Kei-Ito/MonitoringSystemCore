@@ -3086,7 +3086,7 @@
         "save_rawdata": false
       },
       {
-        "channel_uuid": "10044",
+        "channel_uuid": "10040",
         "channel_name": "消費電力(照射炉1)",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
@@ -3098,7 +3098,7 @@
           "src_min": 0,
           "src_max": 1000,
           "dst_min": 0,
-          "dst_max": 1000
+          "dst_max": 10
         },
         "threshold": {
           "warning_min_threshold": null,
@@ -3107,7 +3107,7 @@
           "alert_max_threshold": null
         },
         "specific_channel_setting": {
-          "register_address": 10044,
+          "register_address": 10040,
           "data_length": 2,
           "slave_id": 1,
           "function_code": 3
@@ -3118,7 +3118,7 @@
         "save_rawdata": true
       },
       {
-        "channel_uuid": "10049",
+        "channel_uuid": "10090",
         "channel_name": "消費電力(照射炉2)",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
@@ -3130,7 +3130,7 @@
           "src_min": 0,
           "src_max": 1000,
           "dst_min": 0,
-          "dst_max": 1000
+          "dst_max": 10
         },
         "threshold": {
           "warning_min_threshold": null,
@@ -3139,7 +3139,7 @@
           "alert_max_threshold": null
         },
         "specific_channel_setting": {
-          "register_address": 10094,
+          "register_address": 10090,
           "data_length": 2,
           "slave_id": 1,
           "function_code": 3
@@ -3150,7 +3150,7 @@
         "save_rawdata": true
       },
       {
-        "channel_uuid": "10149",
+        "channel_uuid": "10140",
         "channel_name": "消費電力(照射炉3)",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
@@ -3162,7 +3162,7 @@
           "src_min": 0,
           "src_max": 1000,
           "dst_min": 0,
-          "dst_max": 1000
+          "dst_max": 10
         },
         "threshold": {
           "warning_min_threshold": null,
@@ -3171,13 +3171,877 @@
           "alert_max_threshold": null
         },
         "specific_channel_setting": {
-          "register_address": 10144,
+          "register_address": 10140,
           "data_length": 2,
           "slave_id": 1,
           "function_code": 3
         },
         "created_at": "2025-11-30T00:00:00.000Z",
         "updated_at": "2025-11-30T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10021",
+        "channel_name": "検知センサ1(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10021,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10022",
+        "channel_name": "検知センサ2(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10022,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10023",
+        "channel_name": "検知センサ3(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10023,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10024",
+        "channel_name": "検知センサ4(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10024,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10025",
+        "channel_name": "検知センサ5(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10025,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10026",
+        "channel_name": "検知センサ6(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10026,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10027",
+        "channel_name": "検知センサ7(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10027,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10028",
+        "channel_name": "検知センサ8(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10028,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10029",
+        "channel_name": "検知センサ9(照射炉1)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10029,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10071",
+        "channel_name": "検知センサ1(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10071,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10072",
+        "channel_name": "検知センサ2(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10072,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10073",
+        "channel_name": "検知センサ3(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10073,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10074",
+        "channel_name": "検知センサ4(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10074,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10075",
+        "channel_name": "検知センサ5(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10075,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10076",
+        "channel_name": "検知センサ6(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10076,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10077",
+        "channel_name": "検知センサ7(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10077,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10078",
+        "channel_name": "検知センサ8(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10078,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10079",
+        "channel_name": "検知センサ9(照射炉2)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10079,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10121",
+        "channel_name": "検知センサ1(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10121,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10122",
+        "channel_name": "検知センサ2(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10122,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10123",
+        "channel_name": "検知センサ3(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10123,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10124",
+        "channel_name": "検知センサ4(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10124,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10125",
+        "channel_name": "検知センサ5(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10125,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10126",
+        "channel_name": "検知センサ6(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10126,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10127",
+        "channel_name": "検知センサ7(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10127,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10128",
+        "channel_name": "検知センサ8(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10128,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
+        "sampling_interval_uuid": "fast",
+        "save_rawdata": true
+      },
+      {
+        "channel_uuid": "10129",
+        "channel_name": "検知センサ9(照射炉3)",
+        "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
+        "direction": "input",
+        "unit": "",
+        "channel_number": -1,
+        "decimals": 0,
+        "normalize": {
+          "is_enabled": false,
+          "src_min": 0,
+          "src_max": 1,
+          "dst_min": 0,
+          "dst_max": 1
+        },
+        "threshold": {
+          "warning_min_threshold": null,
+          "warning_max_threshold": null,
+          "alert_min_threshold": null,
+          "alert_max_threshold": null
+        },
+        "specific_channel_setting": {
+          "register_address": 10129,
+          "data_length": 1,
+          "slave_id": 1,
+          "function_code": 3
+        },
+        "created_at": "2025-12-02T00:00:00.000Z",
+        "updated_at": "2025-12-02T00:00:00.000Z",
         "sampling_interval_uuid": "fast",
         "save_rawdata": true
       }
