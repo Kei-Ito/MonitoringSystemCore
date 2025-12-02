@@ -51,9 +51,9 @@ import { storeToRefs } from 'pinia'
 import { onMounted, onUnmounted, ref, computed } from "vue";
 
 import SplashWindow from "@/components/SplashWindow.vue";
-import AppFooter from "@/examples/Footer.vue";
-import Navbar from "@/components/Navbars/Navbar.vue";
-import Sidenav from "@/examples/Sidenav/index.vue";
+import AppFooter from "@/components/PageLayout/Footer.vue";
+import Navbar from "@/components/PageLayout/Navbars/Navbar.vue";
+import Sidenav from "@/components/PageLayout/Sidenav/index.vue";
 import DriveMountWarningModal from "@/components/DriveMountWarningModal.vue";
 import { useUiStore } from "@/pinia/uiStore";
 import { useAppInitializer } from '@/composables/useAppInitializer';
@@ -168,15 +168,16 @@ function handleReload() {
 
 </script>
 <style>
-/* スプラッシュ表示中はサイドバーの中身を隠す */
-.sidenav.splash-hidden-content > * {
-  opacity: 0;
-  transition: opacity 0.5s ease-in;
-}
+/* スプラッシュ表示中はサイドバーの中身を隠す（大画面のみ） */
+@media (min-width: 1200px) {
+  .sidenav.splash-hidden-content > * {
+    opacity: 0;
+  }
 
-/* クラスが外れたらフェードイン */
-.sidenav:not(.splash-hidden-content) > * {
-  opacity: 1;
-  transition: opacity 0.8s ease-out;
+  /* クラスが外れたらフェードイン */
+  .sidenav:not(.splash-hidden-content) > * {
+    opacity: 1;
+    transition: opacity 0.8s ease-out;
+  }
 }
 </style>

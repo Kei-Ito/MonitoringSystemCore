@@ -115,7 +115,7 @@ import illustrationSignin from '@/assets/img/illustrations/illustration-signin.j
 import MaterialButton from '@/components/MaterialButton.vue';
 import MaterialCheckbox from '@/components/MaterialCheckbox.vue';
 import MaterialInput from '@/components/MaterialInput.vue';
-import Navbar from '@/examples/PageLayout/Navbar.vue';
+import Navbar from '@/views/SignUp/Navbar.vue';
 import { useUiStore } from '@/pinia/uiStore';
 
 

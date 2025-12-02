@@ -33,7 +33,7 @@
 import { storeToRefs } from 'pinia';
 
 import MonitoringView from "@/components/MonitoringView.vue";
-import SidenavList from '@/examples/Sidenav/SidenavList.vue';
+import SidenavList from '@/components/PageLayout/Sidenav/SidenavList.vue';
 import { useUiStore } from "@/pinia/uiStore";
 import DeviceHealthList from "@/uniqueComponents/DeviceHealthList.vue";
 
