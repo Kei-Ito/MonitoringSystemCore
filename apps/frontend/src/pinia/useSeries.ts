@@ -23,7 +23,17 @@ export function useSeries(chartUuid: string) {
   const series = computed(() => {
     if (!chart.value) return []
     return chart.value.channel_uuids.map((cu: string) => {
-      const cv = channelValues.value[cu] ?? {};
+      const cv = channelValues.value[cu];
+      
+      if (!cv) {
+        console.warn(`⚠️ Channel ${cu} not found in channelValues`);
+        return {
+          ...channelMap.value[cu],
+          runtimeValue: undefined,
+          timeSeries: [],
+          realtimeSeries: [],
+        };
+      }
       
       return {
         ...channelMap.value[cu],

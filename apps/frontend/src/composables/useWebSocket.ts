@@ -24,6 +24,12 @@ export function useWebSocket() {
   let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
   function updateRuntimeValues(module_datas: getIOModuleInputResponse[]) {
+    if (!module_datas || module_datas.length === 0) {
+      console.warn('⚠️ updateRuntimeValues: No data received');
+      return;
+    }
+    
+    let updatedChannels = 0;
     module_datas.map((module_data) => {
       module_data.channels.map((channel) => {
         // 積算設定を確認
@@ -47,8 +53,11 @@ export function useWebSocket() {
         };
 
         channelValuesStore.updateRealtimeData(channel.channel_uuid, runtimeValue, isCumulative, intervalMinutes);
+        updatedChannels++;
       });
     });
+    
+    console.log(`✅ Updated ${updatedChannels} channels in store`);
   }
 
   async function performHealthCheck() {
@@ -104,7 +113,10 @@ export function useWebSocket() {
         switch (message.type) {
           case "InitialData":
             // WebSocket接続時に送られてくる初期データ（全チャンネルの最新値）
-            console.log('Received initial data from server');
+            console.log('📥 Received InitialData:', {
+              moduleCount: message.data?.length,
+              totalChannels: message.data?.reduce((sum: number, m: any) => sum + (m.channels?.length || 0), 0)
+            });
             updateRuntimeValues(message.data);
             break;
           case "IOModuleData":
