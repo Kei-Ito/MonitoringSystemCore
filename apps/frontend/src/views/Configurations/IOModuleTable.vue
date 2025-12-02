@@ -83,8 +83,8 @@ import type { IOModule } from "@monitoring/shared/model";
 import { storeToRefs } from 'pinia';
 import { ref } from "vue";
 
-import IOModuleAddModal from "@/views/components/Configurations/IOModuleAddModal.vue";
-import IOModuleEditModal from '@/views/components/Configurations/IOModuleEditModal.vue';
+import IOModuleAddModal from "@/views/Configurations/IOModuleAddModal.vue";
+import IOModuleEditModal from '@/views/Configurations/IOModuleEditModal.vue';
 import { IOModuleTypeImages } from "@/enum/IOModuleTypeImages";
 import { useMonitoringStore } from '@/pinia/monitoringStore';
 import { useUiStore } from '@/pinia/uiStore';

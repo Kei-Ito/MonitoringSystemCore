@@ -52,7 +52,7 @@ import { onMounted, onUnmounted, ref, computed } from "vue";
 
 import SplashWindow from "@/components/SplashWindow.vue";
 import AppFooter from "@/examples/Footer.vue";
-import Navbar from "@/examples/Navbars/Navbar.vue";
+import Navbar from "@/components/Navbars/Navbar.vue";
 import Sidenav from "@/examples/Sidenav/index.vue";
 import DriveMountWarningModal from "@/components/DriveMountWarningModal.vue";
 import { useUiStore } from "@/pinia/uiStore";

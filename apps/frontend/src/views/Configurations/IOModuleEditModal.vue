@@ -238,7 +238,7 @@ import BaseModal from "@/components/BaseModal.vue";
 import ChannelSpecificSettingModal from '@/components/ChannelSpecificSettingModal.vue';
 import CheckModal from '@/components/Modals/CheckModal.vue';
 import { addChannel, deleteChannel, deleteIOModule, updateIOModule } from '@/service/monitoringService';
-import InputDataSettingModal from '@/views/components/Configurations/InputDataSettingModal.vue';
+import InputDataSettingModal from '@/views/Configurations/InputDataSettingModal.vue';
 import { useSystemSettingStore } from '@/pinia/systemSettingStore';
 import { useUiStore } from '@/pinia/uiStore';
 
