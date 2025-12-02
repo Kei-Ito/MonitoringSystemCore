@@ -107,8 +107,8 @@
                   :disabled="!isAdmin"
                   role="switch"
                 />
-                <label class="form-check-label" :for="'requiresAdmin-' + intervaign-middll.uuid">
-                  <i class="material-icons ale me-1" style="font-size: 18px;">admin_panel_settings</i>
+                <label class="form-check-label" :for="'requiresAdmin-' + interval.uuid">
+                  <i class="material-icons align-middle me-1" style="font-size: 18px;">admin_panel_settings</i>
                   管理者権限の要求
                 </label>
               </div>
