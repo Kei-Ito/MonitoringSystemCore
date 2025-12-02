@@ -102,6 +102,11 @@ export function useWebSocket() {
       ws.onmessage = (event: MessageEvent) => {
         const message = JSON.parse(event.data);
         switch (message.type) {
+          case "InitialData":
+            // WebSocket接続時に送られてくる初期データ（全チャンネルの最新値）
+            console.log('Received initial data from server');
+            updateRuntimeValues(message.data);
+            break;
           case "IOModuleData":
             updateRuntimeValues(message.data);
             if (monitoringStore.isSampling) {
