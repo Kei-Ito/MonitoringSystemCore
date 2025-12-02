@@ -1,12 +1,16 @@
 [Unit]
 Description=Monitoring System Core Service
 After=network.target monitoring-hardware.service
+Wants=monitoring-hardware.service
 
 [Service]
 Type=simple
 
 # アプリを置いたディレクトリ
 WorkingDirectory=/home/clpi/MonitoringSystem/MonitoringSystemCoreService/apps/backend/
+
+# FASTAPIサーバーが起動するまで待機（ポート8000が利用可能になるまで）
+ExecStartPre=/bin/bash -c 'until curl -s http://localhost:8000/health > /dev/null 2>&1; do sleep 1; done'
 
 # node の絶対パスを指定（which で確認）
 ExecStart=/home/clpi/.nvm/versions/node/v22.14.0/bin/node dist/server.js
