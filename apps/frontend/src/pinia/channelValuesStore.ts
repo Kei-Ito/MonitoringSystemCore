@@ -206,7 +206,6 @@ export const useChannelValuesStore = defineStore("channelValues", {
          */
         _updateChannelValue(channelUuid: string, runtimeValue: RuntimeValue) {
             if (!this.channelValues[channelUuid]) {
-                console.log(`📝 Creating new channel entry: ${channelUuid}`, runtimeValue);
                 this.channelValues[channelUuid] = {
                     channel_uuid: channelUuid,
                     runtimeValue,
