@@ -1,6 +1,6 @@
 [Unit]
 Description=Monitoring System Core Service
-After=network.target
+After=network.target monitoring-hardware.service
 
 [Service]
 Type=simple
