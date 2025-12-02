@@ -3086,7 +3086,7 @@
         "save_rawdata": false
       },
       {
-        "channel_uuid": "10044",
+        "channel_uuid": "10040",
         "channel_name": "消費電力(照射炉1)",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
@@ -3107,7 +3107,7 @@
           "alert_max_threshold": null
         },
         "specific_channel_setting": {
-          "register_address": 10044,
+          "register_address": 10040,
           "data_length": 2,
           "slave_id": 1,
           "function_code": 3
@@ -3118,7 +3118,7 @@
         "save_rawdata": true
       },
       {
-        "channel_uuid": "10049",
+        "channel_uuid": "10090",
         "channel_name": "消費電力(照射炉2)",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
@@ -3139,7 +3139,7 @@
           "alert_max_threshold": null
         },
         "specific_channel_setting": {
-          "register_address": 10094,
+          "register_address": 10090,
           "data_length": 2,
           "slave_id": 1,
           "function_code": 3
@@ -3150,7 +3150,7 @@
         "save_rawdata": true
       },
       {
-        "channel_uuid": "10149",
+        "channel_uuid": "10140",
         "channel_name": "消費電力(照射炉3)",
         "module_uuid": "f6841e95-6d0b-4e31-b4d2-1f9a5673edd7",
         "direction": "input",
@@ -3171,7 +3171,7 @@
           "alert_max_threshold": null
         },
         "specific_channel_setting": {
-          "register_address": 10144,
+          "register_address": 10140,
           "data_length": 2,
           "slave_id": 1,
           "function_code": 3
