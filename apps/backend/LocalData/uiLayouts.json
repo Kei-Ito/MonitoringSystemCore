@@ -1462,7 +1462,7 @@
         "10029"
       ],
       "chart_title": "検知センサ",
-      "chart_unit": "回",
+      "chart_unit": "",
       "grid_layout": {
         "i": "chart034",
         "x": 0,
@@ -1477,13 +1477,35 @@
       },
       "chart_options": {
         "thresholds": {
-          "max": 80,
+          "max": 0.5,
           "min": 0,
           "color": "#FF0000"
         },
         "visibility": {
-          "maxY": 80,
+          "maxY": 1,
           "minY": 0
+        },
+        "seriesColors": {
+          "10021": "#5470c6",
+          "10022": "#91cc75",
+          "10023": "#fac858",
+          "10024": "#ee6666",
+          "10025": "#73c0de",
+          "10026": "#3ba272",
+          "10027": "#fc8452",
+          "10028": "#9a60b4",
+          "10029": "#ea7ccc"
+        },
+        "seriesLineWidths": {
+          "10021": 4,
+          "10022": 4,
+          "10023": 4,
+          "10024": 4,
+          "10025": 4,
+          "10026": 4,
+          "10027": 4,
+          "10028": 4,
+          "10029": 4
         }
       },
       "category1": "照射炉1",
@@ -1504,7 +1526,7 @@
         "10079"
       ],
       "chart_title": "検知センサ(照射炉2)",
-      "chart_unit": "回",
+      "chart_unit": "",
       "grid_layout": {
         "i": "chart035",
         "x": 0,
@@ -1520,11 +1542,11 @@
       "chart_options": {
         "thresholds": {
           "max": 0.5,
-          "min": -20,
+          "min": null,
           "color": "#FF0000"
         },
         "visibility": {
-          "maxY": "",
+          "maxY": 1,
           "minY": 0
         },
         "seriesColors": {
@@ -1568,7 +1590,7 @@
         "10129"
       ],
       "chart_title": "検知センサ(照射炉3)",
-      "chart_unit": "回",
+      "chart_unit": "",
       "grid_layout": {
         "i": "chart036",
         "x": 0,
@@ -1583,13 +1605,35 @@
       },
       "chart_options": {
         "thresholds": {
-          "max": 80,
-          "min": 0,
+          "max": 0.5,
+          "min": null,
           "color": "#FF0000"
         },
         "visibility": {
-          "maxY": 80,
+          "maxY": 1,
           "minY": 0
+        },
+        "seriesColors": {
+          "10121": "#5470c6",
+          "10122": "#91cc75",
+          "10123": "#fac858",
+          "10124": "#ee6666",
+          "10125": "#73c0de",
+          "10126": "#3ba272",
+          "10127": "#fc8452",
+          "10128": "#9a60b4",
+          "10129": "#ea7ccc"
+        },
+        "seriesLineWidths": {
+          "10121": 4,
+          "10122": 4,
+          "10123": 4,
+          "10124": 4,
+          "10125": 4,
+          "10126": 4,
+          "10127": 4,
+          "10128": 4,
+          "10129": 4
         }
       },
       "category1": "照射炉3",

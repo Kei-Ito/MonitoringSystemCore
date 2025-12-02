@@ -490,12 +490,7 @@ function determineResolution(startDate: Date, endDate: Date): number {
     const durationMs = endDate.getTime() - startDate.getTime();
     const hours = durationMs / (1000 * 60 * 60);
 
-    // 24時間までならそのまま
-    if (hours <= 24) {
-        return 0; // そのまま
-    } 
-    // 72時間（3日間）までなら1分単位
-    else if (hours <= 72) {
+    if (hours <= 72) {
         return 60 * 1000; // 1分単位
     } 
     // 192時間（8日間）までなら10分単位
@@ -513,12 +508,19 @@ function determineResolution(startDate: Date, endDate: Date): number {
 }
 
 /**
- * 複数日のトレンドデータを取得
+ * 複数日のトレンドデータを取得（共通処理）
  * @param trendDataRequest トレンドデータリクエスト
- * @param decimals 丸め桁数（オプション）
+ * @param options オプション設定
  * @returns タイムスタンプと値の配列
  */
-export async function getTrendData(trendDataRequest: trendDataRequest, decimals?: number): Promise<{ timestamp: Date; value: number }[]> {
+async function getTrendDataInternal(
+    trendDataRequest: trendDataRequest, 
+    options: { 
+        skipDownsample?: boolean;  // 間引き処理をスキップするか（積算計算用）
+        decimals?: number;         // 丸め桁数
+    } = {}
+): Promise<{ timestamp: Date; value: number }[]> {
+    const { skipDownsample = false, decimals } = options;
 
     const startDate = new Date(trendDataRequest.start_time);
     const endDate = new Date(trendDataRequest.end_time);
@@ -528,8 +530,8 @@ export async function getTrendData(trendDataRequest: trendDataRequest, decimals?
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // 間引き解像度の決定
-    const resolutionMs = determineResolution(startDate, endDate);
+    // 間引き解像度の決定（スキップフラグがtrueの場合は0）
+    const resolutionMs = skipDownsample ? 0 : determineResolution(startDate, endDate);
 
     // 各日付のデータを並列で取得
     const dataPromises = dateList.map(async date => {
@@ -540,21 +542,20 @@ export async function getTrendData(trendDataRequest: trendDataRequest, decimals?
         const files = await fs.promises.readdir(dirPath);
         const csvFiles = files.filter(f => f.startsWith('data') && f.endsWith('.csv'));
 
-        // キャッシュを利用するか判定（今日の日付でなければキャッシュ可）
+        // キャッシュを利用するか判定（今日の日付でなければキャッシュ可、かつ間引きが有効な場合）
         const checkDate = new Date(date);
         checkDate.setHours(0, 0, 0, 0);
         const isPastDate = checkDate.getTime() < today.getTime();
+        const useCache = isPastDate && !skipDownsample;
 
         // 各CSVファイルからデータを読み込む
         const filePromises = csvFiles.map(file => {
             const filePath = path.join(dirPath, file);
-            // 過去データなら解像度を指定してキャッシュ利用/生成を行う
-            // 今日データなら解像度0（生データ）で読み込み、後でまとめて間引く（キャッシュしない）
             return loadCsvColumn(
                 filePath, 
                 trendDataRequest.channel_uuid, 
-                isPastDate ? resolutionMs : 0,
-                isPastDate ? date : undefined,
+                useCache ? resolutionMs : 0,
+                useCache ? date : undefined,
                 decimals
             );
         });
@@ -575,15 +576,31 @@ export async function getTrendData(trendDataRequest: trendDataRequest, decimals?
     // タイムスタンプでソート
     filteredData.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
-    // 今日のデータが含まれている場合、または解像度が0の場合は、
-    // 結合後に再度間引きを行う必要があるかもしれないが、
-    // 過去データは既に間引かれているので、今日のデータだけ間引いて結合するのが理想。
-    // しかし実装を簡単にするため、ここでは「今日のデータ」も結合後に同じ解像度で間引く。
-    // (loadCsvColumnで今日のデータはresolution=0で返ってきている)
-    
-    if (resolutionMs > 0) {
+    // 間引き処理（スキップフラグがfalseで解像度が指定されている場合のみ）
+    if (!skipDownsample && resolutionMs > 0) {
         return downsampleDataByInterval(filteredData, resolutionMs, decimals);
     }
 
     return filteredData;
+}
+
+/**
+ * 複数日のトレンドデータを取得（表示用、間引きあり）
+ * @param trendDataRequest トレンドデータリクエスト
+ * @param decimals 丸め桁数（オプション）
+ * @returns タイムスタンプと値の配列
+ */
+export async function getTrendData(trendDataRequest: trendDataRequest, decimals?: number): Promise<{ timestamp: Date; value: number }[]> {
+    return getTrendDataInternal(trendDataRequest, { decimals });
+}
+
+/**
+ * 複数日のトレンドデータを取得（積算計算用、生データ）
+ * 間引き処理を行わず、全データポイントを返す。
+ * 積算値の計算精度を保つために使用する。
+ * @param trendDataRequest トレンドデータリクエスト
+ * @returns タイムスタンプと値の配列
+ */
+export async function getRawTrendData(trendDataRequest: trendDataRequest): Promise<{ timestamp: Date; value: number }[]> {
+    return getTrendDataInternal(trendDataRequest, { skipDownsample: true });
 }

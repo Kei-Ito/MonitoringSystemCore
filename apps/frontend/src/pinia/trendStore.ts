@@ -218,7 +218,8 @@ export const useTrendStore = defineStore('trendStore', {
 
           targetUuids.forEach(uuid => channelValuesStore.setChannelLoading(uuid, true));
 
-          for (const uuid of targetUuids) {
+          // 並列でデータ取得（パフォーマンス改善）
+          const globalFetchPromises = targetUuids.map(async (uuid) => {
             try {
               const options = globalChannelOptions.get(uuid);
               if (options?.isCumulative && options.cumulativeIntervalMinutes) {
@@ -238,35 +239,43 @@ export const useTrendStore = defineStore('trendStore', {
             } finally {
               channelValuesStore.setChannelLoading(uuid, false);
             }
-          }
+          });
+
+          await Promise.all(globalFetchPromises);
         }
 
-        // 個別期間設定を持つチャートのデータ取得
+        // 個別期間設定を持つチャートのデータ取得（並列化）
+        const customFetchPromises: Promise<void>[] = [];
         for (const [, chartData] of customRangeCharts) {
           const { dateRange, channelUuids, options } = chartData;
           
           for (const uuid of channelUuids) {
             channelValuesStore.setChannelLoading(uuid, true);
-            try {
-              if (options?.isCumulative && options.cumulativeIntervalMinutes) {
-                await getAggregatedTrendData(
-                  uuid,
-                  dateRange.startDate,
-                  dateRange.endDate,
-                  options.cumulativeIntervalMinutes
-                );
-              } else {
-                await getTrendData(
-                  uuid,
-                  dateRange.startDate,
-                  dateRange.endDate
-                );
+            const fetchPromise = (async () => {
+              try {
+                if (options?.isCumulative && options.cumulativeIntervalMinutes) {
+                  await getAggregatedTrendData(
+                    uuid,
+                    dateRange.startDate,
+                    dateRange.endDate,
+                    options.cumulativeIntervalMinutes
+                  );
+                } else {
+                  await getTrendData(
+                    uuid,
+                    dateRange.startDate,
+                    dateRange.endDate
+                  );
+                }
+              } finally {
+                channelValuesStore.setChannelLoading(uuid, false);
               }
-            } finally {
-              channelValuesStore.setChannelLoading(uuid, false);
-            }
+            })();
+            customFetchPromises.push(fetchPromise);
           }
         }
+
+        await Promise.all(customFetchPromises);
       } finally {
         this.isLoading = false;
       }

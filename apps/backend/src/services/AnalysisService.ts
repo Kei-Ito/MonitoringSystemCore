@@ -104,8 +104,8 @@ export async function getAggregatedCumulativeTrend(dataRequest: trendDataRequest
     return intervals.map(i => ({ timestamp: i.start, value: i.value! }));
   }
 
-  // 生データ取得
-  const dataList = await dataSaveService.getTrendData(dataRequest);
+  // 生データ取得（積算計算用なので間引きなしの生データを使用）
+  const dataList = await dataSaveService.getRawTrendData(dataRequest);
   // タイムスタンプでソート
   dataList.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 

@@ -221,8 +221,8 @@ const defaultColors = [
 watch(() => props.options, (newOptions) => {
     localOptions.value = JSON.parse(JSON.stringify(newOptions))
     
-    // 閾値の有効/無効を判定
-    thresholdsEnabled.value = newOptions.thresholds?.min != null && newOptions.thresholds?.max != null
+    // 閾値の有効/無効を判定（どちらか一方でも値があれば有効）
+    thresholdsEnabled.value = newOptions.thresholds?.min != null || newOptions.thresholds?.max != null
     
     // Y軸範囲の有効/無効を判定
     yAxisRangeEnabled.value = newOptions.visibility?.minY != null || newOptions.visibility?.maxY != null
