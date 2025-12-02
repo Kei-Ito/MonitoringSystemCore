@@ -1320,7 +1320,7 @@
       "grid_layout": {
         "i": "chart_power_consumption_1",
         "x": 0,
-        "y": 100,
+        "y": 33,
         "w": 12,
         "h": 10,
         "static": false,
@@ -1364,7 +1364,7 @@
       "grid_layout": {
         "i": "chart_power_consumption_2",
         "x": 0,
-        "y": 100,
+        "y": 33,
         "w": 12,
         "h": 10,
         "static": false,
@@ -1411,7 +1411,7 @@
       "grid_layout": {
         "i": "chart_power_consumption_3",
         "x": 0,
-        "y": 100,
+        "y": 33,
         "w": 12,
         "h": 10,
         "static": false,
@@ -1446,6 +1446,154 @@
       },
       "category1": "照射炉3",
       "category2": "消費電力"
+    },
+    {
+      "chart_uuid": "chart034",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10021",
+        "10022",
+        "10023",
+        "10024",
+        "10025",
+        "10026",
+        "10027",
+        "10028",
+        "10029"
+      ],
+      "chart_title": "詰まり判定(照射炉1)",
+      "chart_unit": " ",
+      "grid_layout": {
+        "i": "chart034",
+        "x": 0,
+        "y": 44,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 80,
+          "min": 0,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 80,
+          "minY": 0
+        }
+      },
+      "category1": "照射炉1",
+      "category2": "ワーク検出"
+    },
+    {
+      "chart_uuid": "chart035",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10071",
+        "10072",
+        "10073",
+        "10074",
+        "10075",
+        "10076",
+        "10077",
+        "10078",
+        "10079"
+      ],
+      "chart_title": "詰まり判定(照射炉2)",
+      "chart_unit": " ",
+      "grid_layout": {
+        "i": "chart035",
+        "x": 0,
+        "y": 44,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 0.5,
+          "min": -20,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 1,
+          "minY": 0
+        },
+        "seriesColors": {
+          "10071": "#5470c6",
+          "10072": "#91cc75",
+          "10073": "#fac858",
+          "10074": "#ee6666",
+          "10075": "#73c0de",
+          "10076": "#3ba272",
+          "10077": "#fc8452",
+          "10078": "#9a60b4",
+          "10079": "#ea7ccc"
+        },
+        "seriesLineWidths": {
+          "10071": 4,
+          "10072": 4,
+          "10073": 4,
+          "10074": 4,
+          "10075": 4,
+          "10076": 4,
+          "10077": 4,
+          "10078": 4,
+          "10079": 4
+        }
+      },
+      "category1": "照射炉2",
+      "category2": "ワーク検出"
+    },
+    {
+      "chart_uuid": "chart036",
+      "chart_type": "LineChart",
+      "channel_uuids": [
+        "10121",
+        "10122",
+        "10123",
+        "10124",
+        "10125",
+        "10126",
+        "10127",
+        "10128",
+        "10129"
+      ],
+      "chart_title": "詰まり判定(照射炉3)",
+      "chart_unit": " ",
+      "grid_layout": {
+        "i": "chart036",
+        "x": 0,
+        "y": 44,
+        "w": 12,
+        "h": 11,
+        "static": false,
+        "minW": null,
+        "minH": null,
+        "maxW": null,
+        "maxH": null
+      },
+      "chart_options": {
+        "thresholds": {
+          "max": 80,
+          "min": 0,
+          "color": "#FF0000"
+        },
+        "visibility": {
+          "maxY": 80,
+          "minY": 0
+        }
+      },
+      "category1": "照射炉3",
+      "category2": "ワーク検出"
     }
   ]
 }
