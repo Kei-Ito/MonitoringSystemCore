@@ -30,8 +30,12 @@ export function useWebSocket() {
     }
     
     let updatedChannels = 0;
+    const channelUuids: string[] = [];
+    
     module_datas.map((module_data) => {
       module_data.channels.map((channel) => {
+        channelUuids.push(channel.channel_uuid);
+        
         // 積算設定を確認
         let isCumulative = false;
         let intervalMinutes = 60;
@@ -57,7 +61,13 @@ export function useWebSocket() {
       });
     });
     
-    console.log(`✅ Updated ${updatedChannels} channels in store`);
+    console.log(`✅ Updated ${updatedChannels} channels in store:`, channelUuids.slice(0, 5), '...');
+    
+    // ストアの状態を確認
+    console.log('📊 ChannelValues store state:', {
+      totalChannels: Object.keys(channelValuesStore.channelValues).length,
+      firstFewKeys: Object.keys(channelValuesStore.channelValues).slice(0, 5)
+    });
   }
 
   async function performHealthCheck() {

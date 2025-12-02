@@ -64,12 +64,17 @@ async function bootstrap() {
       const currentData = getCurrentInputData();
       
       if (currentData && currentData.length > 0) {
-        console.log(`Sending initial sensor data to new client: ${currentData.length} modules`);
+        const totalChannels = currentData.reduce((sum, m) => sum + (m.channels?.length || 0), 0);
+        console.log(`📤 Sending InitialData: ${currentData.length} modules, ${totalChannels} channels`);
         ws.send(JSON.stringify({
           type: 'InitialData',
           data: currentData
         }));
+      } else {
+        console.log('⚠️ No data available to send (currentData is empty)');
       }
+    } else {
+      console.log('ℹ️ Sampling is not running, skipping InitialData');
     }
 
     ws.on('close', () => console.log('Client disconnected'));
