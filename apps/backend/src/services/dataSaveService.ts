@@ -1,6 +1,7 @@
 import { getIOModuleInputResponse } from '@monitoring/shared/api';
 import { csvDataRequest, trendDataRequest, getIsDataExistRequestModel } from '@monitoring/shared/api';
 import { SystemSettingService } from 'src/config/SystemSetting';
+import HealthCheckService from 'src/services/healthCheckService';
 import { Result, ok, err } from '@monitoring/shared/utils';
 import { downsampleData, downsampleDataByInterval } from 'src/utils/monitoringDataUitls';
 import readline from 'readline';
@@ -328,6 +329,18 @@ const BOM = '\uFEFF';
 export async function saveInputDatas(data_list: getIOModuleInputResponse[], channelMeta?: Map<string, { name: string, unit: string }>, suffix?: string): Promise<Result<void>> {
     if (data_list.length === 0) return ok(void 0);
 
+    // ドライブがマウントされていない場合は、再マウントを試行する
+    const healthService = HealthCheckService.getInstance();
+    if (!healthService.getHealthStatus().drivesMounted) {
+        console.log('Drive not mounted. Attempting to mount...');
+        await healthService.checkDriveMount();
+        
+        // 再確認
+        if (!healthService.getHealthStatus().drivesMounted) {
+            return err('Drive is not mounted');
+        }
+    }
+
     await acquireLock();
 
     try {
@@ -335,6 +348,19 @@ export async function saveInputDatas(data_list: getIOModuleInputResponse[], chan
 
         //　timestampからcsvのパスを生成
         const data_path = generatePathfromDate(new Date(timestamp), suffix);
+
+        // ルートパスが存在しない場合は保存しない（二重チェック）
+        // ここでも存在しない場合は、再度ヘルスチェックを走らせる価値があるかもしれないが、
+        // 上記のcheckDriveMountで確認済みのはずなので、ここではエラーを返す
+        if (!fs.existsSync(configService.getSystemSetting().dataRootPath)) {
+             // パスが存在しない場合も、念のためヘルスチェックを更新してからエラーを返す
+             await healthService.checkDriveMount();
+             if (!healthService.getHealthStatus().drivesMounted) {
+                 return err('Drive is not mounted (path check failed)');
+             }
+             // それでもパスがない（マウントは成功しているがディレクトリがないなど）
+             return err(`Data root path does not exist: ${configService.getSystemSetting().dataRootPath}`);
+        }
 
         // ディレクトリがなければ作成
         await fs.promises.mkdir(path.dirname(data_path), { recursive: true });
@@ -443,7 +469,19 @@ async function loadCsvColumn(
         // キャッシュ保存（非同期で実行し、レスポンスをブロックしない）
         (async () => {
             try {
+                // ドライブがマウントされていない場合は保存しない
+                const healthService = HealthCheckService.getInstance();
+                if (!healthService.getHealthStatus().drivesMounted) {
+                    return;
+                }
+
                 const cacheDir = getCacheDir(date);
+                
+                // ルートパスが存在しない場合は保存しない
+                if (!fs.existsSync(configService.getSystemSetting().dataRootPath)) {
+                    return;
+                }
+
                 await fs.promises.mkdir(cacheDir, { recursive: true });
                 const cacheFileName = `cache_${targetColumn}_${resolutionMs}.json`;
                 const cacheFilePath = path.join(cacheDir, cacheFileName);

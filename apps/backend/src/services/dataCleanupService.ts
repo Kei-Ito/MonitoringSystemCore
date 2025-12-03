@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { SystemSettingService } from 'src/config/SystemSetting';
+import HealthCheckService from 'src/services/healthCheckService';
 
 const configService = SystemSettingService.getInstance();
 
@@ -293,6 +293,21 @@ export async function runDataCleanup(): Promise<{ dataDeleted: number; cacheDele
     // dataRootPathが設定されていない場合はスキップ
     if (!dataRootPath) {
         console.log('[DataCleanup] dataRootPath is not configured. Skipping cleanup.');
+        return { dataDeleted: 0, cacheDeleted: 0 };
+    }
+
+    // ドライブがマウントされていない場合はクリーンアップを実行しない
+    const healthService = HealthCheckService.getInstance();
+    if (!healthService.getHealthStatus().drivesMounted) {
+        console.warn('[DataCleanup] Drive is not mounted. Skipping cleanup.');
+        return { dataDeleted: 0, cacheDeleted: 0 };
+    }
+
+    // ルートパスが存在しない場合は実行しない
+    try {
+        await fs.access(dataRootPath);
+    } catch {
+        console.warn(`[DataCleanup] Data root path does not exist: ${dataRootPath}. Skipping cleanup.`);
         return { dataDeleted: 0, cacheDeleted: 0 };
     }
     

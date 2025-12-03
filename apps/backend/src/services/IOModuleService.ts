@@ -260,12 +260,12 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
   if (!saveResult.ok) {
     console.error(`データ保存に失敗しました: ${saveResult.error}`);
     
-    // ヘルスチェックを実行
+    // dataSaveService内で既にヘルスチェック（再マウント試行）が行われているため、
+    // ここでは最新の状態を取得して通知を行うだけでよい
     const healthCheckService = HealthCheckService.getInstance();
-    await healthCheckService.checkDriveMount();
     const healthStatus = healthCheckService.getHealthStatus();
     
-    // ドライブマウントに問題がある場合はサンプリングを停止
+    // ドライブマウントに問題がある場合はエラー通知
     if (!healthStatus.drivesMounted) {
       console.error('ドライブマウントに問題があります。データの保存をスキップします。');
       console.error('エラー詳細:', healthStatus.errors);
