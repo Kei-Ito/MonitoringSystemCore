@@ -59,7 +59,7 @@ const optionBuilder = () => {
             min: chartRef.value.chart_options.minValue ?? 0,
             max: chartRef.value.chart_options.maxValue ?? 100,
         },
-        yAxis: { type: 'category' },
+        yAxis: { type: 'category', inverse: true },
         tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
         grid: {
             top: 30,
