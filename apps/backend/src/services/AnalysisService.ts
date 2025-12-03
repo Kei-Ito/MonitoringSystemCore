@@ -80,7 +80,7 @@ export async function getAggregatedCumulativeTrend(dataRequest: trendDataRequest
       intervalsByDate.get(dateKey)!.push(i);
   });
 
-  let needsRawData = false;
+  const missingRangesByDate = new Map<string, { min: Date, max: Date }>();
 
   // 日付ごとにキャッシュをロードして適用
   for (const [dateKey, dateIntervals] of intervalsByDate) {
@@ -94,18 +94,38 @@ export async function getAggregatedCumulativeTrend(dataRequest: trendDataRequest
           if (cache[timeKey] !== undefined) {
               interval.value = cache[timeKey];
           } else {
-              needsRawData = true;
+              // キャッシュがない場合、範囲を記録
+              const currentRange = missingRangesByDate.get(dateKey);
+              if (currentRange) {
+                  if (interval.start < currentRange.min) currentRange.min = interval.start;
+                  if (interval.end > currentRange.max) currentRange.max = interval.end;
+              } else {
+                  missingRangesByDate.set(dateKey, { min: interval.start, max: interval.end });
+              }
           }
       }
   }
 
   // 全てキャッシュにあれば終了
-  if (!needsRawData) {
+  if (missingRangesByDate.size === 0) {
     return intervals.map(i => ({ timestamp: i.start, value: i.value! }));
   }
 
-  // 生データ取得（積算計算用なので間引きなしの生データを使用）
-  const dataList = await dataSaveService.getRawTrendData(dataRequest);
+  // 生データ取得（不足している範囲のみ）
+  let dataList: Mesurement[] = [];
+  
+  const promises = Array.from(missingRangesByDate.entries()).map(async ([_, range]) => {
+      const dailyRequest: trendDataRequest = {
+          ...dataRequest,
+          start_time: range.min.toISOString(),
+          end_time: range.max.toISOString()
+      };
+      return await dataSaveService.getRawTrendData(dailyRequest);
+  });
+
+  const results = await Promise.all(promises);
+  dataList = results.flat();
+
   // タイムスタンプでソート
   dataList.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
 
