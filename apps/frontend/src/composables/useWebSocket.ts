@@ -159,6 +159,21 @@ export function useWebSocket() {
             // ヘルスチェックを実行して状態を更新
             performHealthCheck();
             break;
+          case "StorageError":
+            // サンプリングは継続するので isSampling は変更しない
+            const storageErrors = message.errors || [];
+            
+            if (storageErrors.length > 0) {
+              console.error("ストレージエラー詳細:", storageErrors);
+            }
+            
+            // ドライブマウント警告を表示 (これがモーダルを出す)
+            showDriveMountWarning.value = true;
+            driveMountPath.value = message.path || '';
+
+            // ヘルスチェックを実行して状態を更新
+            performHealthCheck();
+            break;
           case "samplingStatus":
             monitoringStore.isSampling = message.data;
             break;

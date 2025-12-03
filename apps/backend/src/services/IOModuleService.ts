@@ -267,20 +267,18 @@ async function getIOModuleInput(broadcast: (data: any) => void, samplingInterval
     
     // ドライブマウントに問題がある場合はサンプリングを停止
     if (!healthStatus.drivesMounted) {
-      console.error('ドライブマウントに問題があるため、サンプリングを停止します');
+      console.error('ドライブマウントに問題があります。データの保存をスキップします。');
       console.error('エラー詳細:', healthStatus.errors);
-      
-      // サンプリングを停止
-      stopIOModuleInputSamplingInterval(broadcast);
       
       // エラー通知をフロントエンドに送信
       broadcast({
-        type: 'SamplingError',
-        message: 'データ保存に失敗したため、サンプリングを停止しました',
-        errors: healthStatus.errors
+        type: 'StorageError',
+        message: 'データ保存に失敗しました。ストレージを確認してください。',
+        errors: healthStatus.errors,
+        path: healthStatus.dataRootPath
       });
       
-      return; // 以降の処理をスキップ
+      // サンプリングは継続するため、returnしない
     }
   }
 
