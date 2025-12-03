@@ -35,8 +35,8 @@ export const addSamplingInterval: RequestHandler = async (req: Request, res: Res
   try {
     const { name, period, requiresAdmin = false } = req.body as {name: string, period: number, requiresAdmin?: boolean};
     
-    if (!name || !period || period < 60000) {
-      res.status(400).json({ message: '名前と周期(1分以上)が必要です' });
+    if (!name || !period || (!requiresAdmin && period < 60000)) {
+      res.status(400).json({ message: '名前と周期が必要です' });
       return;
     }
     
@@ -81,16 +81,19 @@ export const updateSamplingInterval: RequestHandler = async (req: Request, res: 
       return;
     }
     
-    if (period !== undefined && period < 60000) {
-      res.status(400).json({ message: '周期は1分(60000ms)以上の値です' });
-      return;
-    }
-    
     const systemSetting = systemSettingService.getSystemSetting();
     const intervalIndex = systemSetting.samplingIntervals.findIndex(i => i.uuid === uuid);
     
     if (intervalIndex === -1) {
       res.status(404).json({ message: 'サンプリングインターバルが見つかりません' });
+      return;
+    }
+    
+    // 管理者権限が必要な設定かどうかを判定（更新後の値を考慮）
+    const isAdminRequired = requiresAdmin !== undefined ? requiresAdmin : systemSetting.samplingIntervals[intervalIndex].requiresAdmin;
+    
+    if (period !== undefined && !isAdminRequired && period < 60000) {
+      res.status(400).json({ message: '周期は1分(60000ms)以上の値です(管理者向け設定を除く)' });
       return;
     }
     

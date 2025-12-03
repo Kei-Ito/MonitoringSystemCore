@@ -219,7 +219,8 @@ async function save() {
   for (const interval of intervals.value) {
     interval.error = false;
     const period = serializeTime(interval.hours, interval.minutes, interval.seconds);
-    if (period < 60000) {
+    // 管理者権限が必要な設定の場合は1分未満でもOK
+    if (!interval.requiresAdmin && period < 60000) {
       interval.error = true;
       hasError = true;
     }
