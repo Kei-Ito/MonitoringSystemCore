@@ -3,7 +3,7 @@
     {
       "uuid": "fast",
       "name": "高速サンプリング",
-      "period": 1000,
+      "period": 60000,
       "requiresAdmin": false
     },
     {

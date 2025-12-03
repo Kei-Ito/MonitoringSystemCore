@@ -9,7 +9,7 @@
     "created_at": "2025-08-19T12:38:28.975Z",
     "updated_at": "2025-08-19T12:38:28.975Z",
     "specific_device_setting": {
-      "host_address": "localhost",
+      "host_address": "10.10.10.10",
       "port": 502
     },
     "input_channels": [
@@ -984,9 +984,9 @@
         "normalize": {
           "is_enabled": false,
           "src_min": 0,
-          "src_max": 600,
+          "src_max": 1000,
           "dst_min": 0,
-          "dst_max": 60
+          "dst_max": 10
         },
         "threshold": {
           "warning_min_threshold": null,
@@ -2008,9 +2008,9 @@
         "normalize": {
           "is_enabled": false,
           "src_min": 0,
-          "src_max": 600,
+          "src_max": 1000,
           "dst_min": 0,
-          "dst_max": 60
+          "dst_max": 10
         },
         "threshold": {
           "warning_min_threshold": null,
@@ -3032,9 +3032,9 @@
         "normalize": {
           "is_enabled": false,
           "src_min": 0,
-          "src_max": 600,
+          "src_max": 1000,
           "dst_min": 0,
-          "dst_max": 60
+          "dst_max": 10
         },
         "threshold": {
           "warning_min_threshold": null,
