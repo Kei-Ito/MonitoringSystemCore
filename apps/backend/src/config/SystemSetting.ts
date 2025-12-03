@@ -48,6 +48,7 @@ export class SystemSettingService {
             dataRootPath: "",
             driveUUID: "",
             dataRetentionDays: 365, // デフォルト: 1年間
+            autoStartSampling: false, // デフォルト: 自動開始しない
             category1list: [],
             category2list: [],
             dashboardViewCategory1Selected: [],
@@ -87,6 +88,12 @@ export class SystemSettingService {
                 needsSave = true;
             }
             
+            // autoStartSamplingがない場合はデフォルトを設定
+            if (this._systemSetting.autoStartSampling === undefined) {
+                this._systemSetting.autoStartSampling = defaultSetting.autoStartSampling;
+                needsSave = true;
+            }
+            
             if (needsSave) {
                 await this.saveSystemSetting();
             }
@@ -106,6 +113,7 @@ export class SystemSettingService {
             dataRootPath: this._systemSetting?.dataRootPath ?? "",
             driveUUID: this._systemSetting?.driveUUID ?? "",
             dataRetentionDays: this._systemSetting?.dataRetentionDays ?? defaultSetting.dataRetentionDays,
+            autoStartSampling: this._systemSetting?.autoStartSampling ?? defaultSetting.autoStartSampling,
             category1list: this._systemSetting?.category1list ?? [],
             category2list: this._systemSetting?.category2list ?? [],
             dashboardViewCategory1Selected: this._systemSetting?.dashboardViewCategory1Selected ?? [],

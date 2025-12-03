@@ -99,6 +99,15 @@ async function bootstrap() {
   // データクリーンアップスケジューラを開始（起動時に即時実行 + 24時間ごとに定期実行）
   startDataCleanupScheduler();
 
+  // autoStartSamplingフラグがtrueの場合、サンプリングを自動開始
+  const systemSetting = configService.getSystemSetting();
+  if (systemSetting.autoStartSampling === true) {
+    console.log('システム設定により、サンプリングを自動開始します...');
+    const { startIOModuleInputSamplingInterval } = await import('./services/IOModuleService.js');
+    await startIOModuleInputSamplingInterval(broadcast);
+    console.log('サンプリングを開始しました');
+  }
+
   // 未定義のルートに対してindex.htmlを返す
   app.get('*', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, './../../frontend/dist', 'index.html'));

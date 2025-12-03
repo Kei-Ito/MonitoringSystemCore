@@ -5,6 +5,7 @@ export interface SystemSettingData {
     dataRootPath: string;
     driveUUID?: string; // ドライブのUUID（マウントに使用）
     dataRetentionDays: number; // データ保存期間（日数）。この期間を過ぎたデータは自動削除される
+    autoStartSampling?: boolean; // バックエンド起動時に自動的にサンプリングを開始するか
     category1list: string[];
     category2list: string[];
     dashboardViewCategory1Selected: string[];
