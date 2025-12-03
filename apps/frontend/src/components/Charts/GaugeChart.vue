@@ -6,6 +6,7 @@ import type { ChartConfig } from '@monitoring/shared/model'
 import { toRef, watch } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
+import { useMonitoringStore } from '@/pinia/monitoringStore'
 
 // ----- props -----
 const props = defineProps<{
@@ -17,10 +18,20 @@ const props = defineProps<{
 const seriesRef = toRef(props, 'series') // props.seriesをrefに変換
 const chartRef = toRef(props, 'chart')
 
+const monitoringStore = useMonitoringStore()
+
 // ------ 表示設定 -----
 const optionBuilder = () => {
 
     const s = seriesRef.value[0].runtimeValue ?? { value: 0, channel_name: '' }
+    const series = seriesRef.value[0]
+    let decimals = 2
+    if (series) {
+        const channel = monitoringStore.channelMap[series.channel_uuid]
+        if (channel) {
+            decimals = channel.decimals
+        }
+    }
     /** ゲージの色設定 */
     const thresholds = chartRef.value.chart_options.thresholds;
     const colors = chartRef.value.chart_options.colors.map(
@@ -79,7 +90,7 @@ const optionBuilder = () => {
             detail: {
                 show: true,
                 valueAnimation: true,
-                formatter: (value: number) => value.toFixed(2),
+                formatter: (value: number) => value.toFixed(decimals),
                 color: 'inherit'
             },
         }],

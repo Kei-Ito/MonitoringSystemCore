@@ -6,6 +6,7 @@ import type { ChannelSeries, ChartConfig } from '@monitoring/shared/model'
 import { computed, toRef, watch } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
+import { useMonitoringStore } from '@/pinia/monitoringStore'
 
 // ----- props -----
 const props = defineProps<{
@@ -34,6 +35,8 @@ const datasetSource = computed(() => [
 const seriesRef = toRef(props, 'series'); // props.seriesをrefに変換
 const chartRef = toRef(props, 'chart');
 
+const monitoringStore = useMonitoringStore()
+
 const optionBuilder = () => {
     const colors = chartRef.value.chart_options.colors;
     const thresholds = chartRef.value.chart_options.thresholds;
@@ -60,7 +63,24 @@ const optionBuilder = () => {
             max: chartRef.value.chart_options.maxValue ?? 100,
         },
         yAxis: { type: 'category', inverse: true },
-        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        tooltip: { 
+            trigger: 'axis', 
+            axisPointer: { type: 'shadow' },
+            formatter: (params: any) => {
+                if (!Array.isArray(params) || params.length === 0) return ''
+                const param = params[0]
+                const seriesIndex = param.dataIndex
+                const series = props.series[seriesIndex]
+                let valueStr = param.value[1]
+                if (series) {
+                    const channel = monitoringStore.channelMap[series.channel_uuid]
+                    if (channel) {
+                        valueStr = param.value[1].toFixed(channel.decimals)
+                    }
+                }
+                return `${param.marker} ${param.name}: ${valueStr}`
+            }
+        },
         grid: {
             top: 30,
             left: 10,

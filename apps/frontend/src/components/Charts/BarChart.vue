@@ -7,6 +7,7 @@ import { computed, toRef, watch } from 'vue'
 
 import { useEChart } from '@/components/Charts/useEChart'
 import { getTimeAxisLabelConfig } from '@/utils/timeAxisFormatter'
+import { useMonitoringStore } from '@/pinia/monitoringStore'
 
 // ----- props -----
 const props = defineProps<{
@@ -107,11 +108,36 @@ const optionBuilder = () => {
         : null
 
 
+    const monitoringStore = useMonitoringStore()
+
      const option: any = {
         animation: false,
         grid: { top: 40, left: 10, right: 25, containLabel: true },
         legend: { top: 0, icon: 'rect', itemWidth: 32, itemHeight: 3 ,textStyle: { color: 'white' }},
-        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+        tooltip: { 
+            trigger: 'axis', 
+            axisPointer: { type: 'shadow' },
+            formatter: (params: any[]) => {
+                if (!Array.isArray(params) || params.length === 0) return ''
+                const time = new Date(params[0].value[0]).toLocaleString()
+                let result = `${time}<br/>`
+                params.forEach((param: any) => {
+                    if (param.seriesName) {
+                        const seriesIndex = param.seriesIndex
+                        const series = props.series[seriesIndex]
+                        let valueStr = param.value[1]
+                        if (series) {
+                            const channel = monitoringStore.channelMap[series.channel_uuid]
+                            if (channel) {
+                                valueStr = param.value[1].toFixed(channel.decimals)
+                            }
+                        }
+                        result += `${param.marker} ${param.seriesName}: ${valueStr}<br/>`
+                    }
+                })
+                return result
+            }
+        },
         xAxis: { 
             type: 'time', 
             boundaryGap: ['10%', '10%'], 
